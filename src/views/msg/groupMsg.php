@@ -54,6 +54,10 @@
 
 <script type="text/javascript">
 
+    languageName = navigator.language == "en-US" ? "en" : "zh";
+
+    languageName = "zh";
+
     $(window).resize(function () {
         setFontSize();
     });
@@ -88,9 +92,7 @@
         history.pushState(null, null, document.URL);
     });
 
-    var languageName = navigator.language == "en-US" ? "en" : "zh";
 
-    var languageName = "zh";
     jQuery.i18n.properties({
         name: "lang",
         path: '../../public/js/config/',

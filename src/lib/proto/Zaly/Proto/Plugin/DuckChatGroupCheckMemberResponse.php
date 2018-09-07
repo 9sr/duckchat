@@ -18,9 +18,18 @@ class DuckChatGroupCheckMemberResponse extends \Google\Protobuf\Internal\Message
      */
     private $memberType = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $memberType
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Plugin\DuckchatGroupCheckMember::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

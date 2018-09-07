@@ -1,4 +1,12 @@
 <?php
+
+define("DEVELOPER_MODE", false);
+if (DEVELOPER_MODE) {
+    tideways_xhprof_enable();
+}
+
+$timeRequestStart = microtime(true);
+
 //$_SERVER['REQUEST_URI'] = "/User/100369-api.html
 ini_set("display_errors", "Off");
 ini_set("log_errors", "On");
@@ -30,3 +38,19 @@ if(!isset($_ENV['WPF_URL_CONTROLLER_NAME'])) {
 }
 
 require_once(__DIR__ . "/lib/wpf/init.php");
+
+if (DEVELOPER_MODE) {
+    $config = require_once (__DIR__ . "/config.developer.php");
+    $logDir = $config["xhprofDir"];
+    $timeRequestEnd = microtime(true);
+    $timeCost = intval(($timeRequestEnd - $timeRequestStart) * 1000);
+    if ($timeCost > 100) {
+        $data = tideways_xhprof_disable();
+        file_put_contents(
+            "{$logDir}/{$timeCost}ms" . uniqid() . ".file.xhprof",
+            serialize($data)
+        );
+    } else {
+        tideways_xhprof_disable();
+    }
+}

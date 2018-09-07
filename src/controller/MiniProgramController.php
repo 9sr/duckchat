@@ -32,9 +32,28 @@ abstract class MiniProgramController extends \Wpf_Controller
         $this->logger = new Wpf_Logger();
     }
 
-    protected abstract function doRequest();
 
     protected abstract function getMiniProgramId();
+
+    //for permission
+
+    /**
+     * 在处理正式请求之前，预处理一些操作，比如权限校验
+     * @return bool
+     */
+    protected abstract function preRequest();
+
+    /**
+     * 处理正式的请求逻辑，比如跳转界面，post获取信息等
+     */
+    protected abstract function doRequest();
+
+    /**
+     * preRequest && doRequest 发生异常情况，执行
+     * @param $ex
+     * @return mixed
+     */
+    protected abstract function requestException($ex);
 
     /**
      * 根据http request cookie中的duckchat_sessionId 做权限判断
@@ -67,21 +86,17 @@ abstract class MiniProgramController extends \Wpf_Controller
             }
 
             $this->userId = $userPublicProfile->getUserId();
-            $this->ctx->Wpf_Logger->info("", "---------------UserID=" . $this->userId);
-
-            if (!$this->ctx->Site_Config->isManager($this->userId)) {
-                //不是管理员，exception
-                throw new Exception("user has no permission");
-            }
+            $this->ctx->Wpf_Logger->info("", "Mini Program Request UserId=" . $this->userId);
 
             $this->getAndSetClientLang();
 
+            $this->preRequest();
             $this->doRequest();
         } catch (Exception $ex) {
             $this->ctx->Wpf_Logger->error($tag, "error msg =" . $ex);
-            //echo permission page
-            $this->showPermissionPage();
+            $this->requestException($ex);
         }
+
     }
 
     /**
@@ -196,10 +211,10 @@ abstract class MiniProgramController extends \Wpf_Controller
         return $header['_' . $key];
     }
 
-    public function showPermissionPage()
+    protected function showPermissionPage()
     {
-        $apiPageLogin = ZalyConfig::getConfig("apiPageLogin");
-        header("Location:" . $apiPageLogin);
+//        $apiPageLogin = ZalyConfig::getConfig("apiPageLogin");
+//        header("Location:" . "http://www.akaxin.com/");
         exit();
     }
 

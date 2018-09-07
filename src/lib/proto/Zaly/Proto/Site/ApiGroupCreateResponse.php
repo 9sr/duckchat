@@ -18,9 +18,18 @@ class ApiGroupCreateResponse extends \Google\Protobuf\Internal\Message
      */
     private $profile = null;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Zaly\Proto\Core\AllGroupProfile $profile
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGroupCreate::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

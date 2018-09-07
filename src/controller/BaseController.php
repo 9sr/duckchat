@@ -35,6 +35,7 @@ abstract class BaseController extends \Wpf_Controller
         "api.session.verify",
         "api.passport.passwordFindPassword",
         "api.passport.passwordResetPassword",
+        "api.passport.passwordUpdateInvitationCode",
         "api.plugin.proxy",
     ];
     protected $sessionIdTimeOut = 36000000; //10个小时的毫秒
@@ -316,20 +317,26 @@ abstract class BaseController extends \Wpf_Controller
 
     public function getPublicUserProfile($userInfo)
     {
-        $publicUserProfile = new \Zaly\Proto\Core\PublicUserProfile();
-        $avatar = isset($userInfo['avatar']) ? $userInfo['avatar'] : "";
-        $publicUserProfile->setAvatar($avatar);
-        $publicUserProfile->setUserId($userInfo['userId']);
-        $publicUserProfile->setLoginname($userInfo['loginName']);
-        $publicUserProfile->setNickname($userInfo['nickname']);
-        $publicUserProfile->setNicknameInLatin($userInfo['nicknameInLatin']);
+        try{
+            $publicUserProfile = new \Zaly\Proto\Core\PublicUserProfile();
+            $avatar = isset($userInfo['avatar']) ? $userInfo['avatar'] : "";
+            $publicUserProfile->setAvatar($avatar);
+            $publicUserProfile->setUserId($userInfo['userId']);
+            $publicUserProfile->setLoginname($userInfo['loginName']);
+            $publicUserProfile->setNickname($userInfo['nickname']);
+            $publicUserProfile->setNicknameInLatin($userInfo['nicknameInLatin']);
 
-        if (isset($userInfo['availableType'])) {
-            $publicUserProfile->setAvailableType($userInfo['availableType']);
-        } else {
-            $publicUserProfile->setAvailableType(\Zaly\Proto\Core\UserAvailableType::UserAvailableNormal);
+            if (isset($userInfo['availableType'])) {
+                $publicUserProfile->setAvailableType($userInfo['availableType']);
+            } else {
+                $publicUserProfile->setAvailableType(\Zaly\Proto\Core\UserAvailableType::UserAvailableNormal);
+            }
+            return $publicUserProfile;
+        }catch (Exception $ex) {
+            $this->ctx->Wpf_Logger->error("get public user profile", $ex);
+            $publicUserProfile = new \Zaly\Proto\Core\PublicUserProfile();
+            return $publicUserProfile;
         }
-        return $publicUserProfile;
     }
 
     public function getGroupMemberUserProfile($user)

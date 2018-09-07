@@ -140,7 +140,7 @@ class ZalyHelper
 
     public static function isEmail($email)
     {
-        return preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/", $email);
+        return preg_match("/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/", $email);
     }
 
     public static function isPhoneNumber($phoneNumber)

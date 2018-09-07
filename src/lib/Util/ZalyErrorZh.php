@@ -55,6 +55,7 @@ class ZalyErrorZh extends ZalyErrorBase
 
         "error.verify.token" => "验证码错误",
         "error.update.pwd" => "更新密码失败",
+        "error.update.invitationCode" => "更新邀请码失败",
 
         "error.loginName.length" => "登录名长度不合法",
         "error.password.length" => "密码长度不合法",

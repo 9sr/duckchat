@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Site;
 
 /**
- * Protobuf enum <code>Site\ApiGroupUpdateType</code>
+ * Protobuf type <code>site.ApiGroupUpdateType</code>
  */
 class ApiGroupUpdateType
 {

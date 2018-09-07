@@ -423,7 +423,7 @@
          * @param url
          * @param target
          */
-        function zalyjsCommonOpenPage(url, target = "_blank") {
+        function zalyjsCommonOpenPage(url) {
             // window.open(url, target);
             location.href = url;
         }
@@ -545,11 +545,10 @@
     $(document).on("click", "#user-list-id", function () {
         var userId = $(this).attr("userId");
 
-        var url = "index.php?action=manage.user.profile&lang=" + getLanguage() + "&userId=" + userId;
+        var url = "./index.php?action=manage.user.profile&lang=" + getLanguage() + "&userId=" + userId;
 
         zalyjsCommonOpenPage(url);
     });
-
 
 </script>
 

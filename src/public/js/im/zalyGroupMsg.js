@@ -75,7 +75,7 @@ function getNotMsgImg(userId, avatarImgId)
     }
     sessionStorage.setItem(userImgKey, Date.parse(new Date()));
 
-    var requestUrl =  "./index.php?action=http.file.downloadMessageFile&fileId="+avatarImgId+"&returnBase64=0&isGroupMessage=1";
+    var requestUrl =  downloadFileUrl + "&fileId="+avatarImgId+"&returnBase64=0";
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
@@ -98,7 +98,7 @@ function getMsgImg(imgId, isGroupMessage, msgId)
     if(imgId == undefined || imgId == "" || imgId.length<1) {
         return false;
     }
-    var requestUrl = "./index.php?action=http.file.downloadMessageFile&fileId="+imgId + "&returnBase64=0&isGroupMessage="+isGroupMessage+"&messageId="+msgId;
+    var requestUrl = downloadFileUrl +  "&fileId="+imgId + "&returnBase64=0&isGroupMessage="+isGroupMessage+"&messageId="+msgId;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {

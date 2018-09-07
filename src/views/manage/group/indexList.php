@@ -324,10 +324,6 @@
 
 <div class="wrapper" id="wrapper">
 
-    <!--    <div style="width: 100%"><input type="search" style="width: 100%"></div>-->
-
-
-    <!--   part 2  -->
     <div class="layout-all-row">
 
         <div class="list-item-center">
@@ -342,12 +338,6 @@
                             <?php } else { ?>
                                 Site Group List
                             <?php } ?>
-                        </div>
-
-                        <div class="" style="margin-right: 10px">
-                            <!--                            <button id="uic-manage" type="button" class="create_button" url-value=""-->
-                            <!--                                    style="margin-top: 7px;font-size: 14px">管理-->
-                            <!--                            </button>-->
                         </div>
 
                     </div>
@@ -532,15 +522,11 @@
 
 <script type="text/javascript">
 
-
     $(document).on("click", "#group-list-id", function () {
         var groupId = $(this).attr("groupId");
-        alert("groupId=" + groupId);
         var url = "index.php?action=manage.group.profile&lang=" + getLanguage() + "&groupId=" + groupId;
-
         zalyjsCommonOpenPage(url);
     });
-    
 
 </script>
 

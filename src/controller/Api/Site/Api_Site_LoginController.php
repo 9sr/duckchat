@@ -52,7 +52,7 @@ class Api_Site_LoginController extends \BaseController
 //            $this->ctx->Wpf_Logger->info("api.site.login", " -devicePubkPem=" . $devicePubkPem);
 
             if (!$preSessionId) {
-                $errorCode = $this->zalyError->errorSession;
+                $errorCode = $this->zalyError->errorSiteLogin;
                 $errorInfo = $this->zalyError->getErrorInfo($errorCode);
                 $this->setRpcError($errorCode, $errorInfo);
                 throw new Exception($errorInfo);
@@ -73,7 +73,7 @@ class Api_Site_LoginController extends \BaseController
             $this->setRpcError($this->defaultErrorCode, "");
             $this->rpcReturn($transportData->getAction(), $response);
         } catch (Exception $ex) {
-            $errorCode = $this->zalyError->errorSession;
+            $errorCode = $this->zalyError->errorSiteLogin;
             $errorInfo = $this->zalyError->getErrorInfo($errorCode);
             $this->ctx->Wpf_Logger->error($tag, "=========error=" . $ex->getMessage());
 

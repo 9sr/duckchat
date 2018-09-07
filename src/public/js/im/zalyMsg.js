@@ -355,6 +355,7 @@ function handleSyncMsgForRoom(results)
             }
         }
     }catch (error) {
+        console.log("error msg ==" + error.message);
         isSyncingMsg = false;
     }
 }
@@ -374,9 +375,11 @@ function handleSyncMsg(msg)
         getFriendApplyList();
         return;
     };
+
     var msg = handleMsgInfo(msg);
     var currentChatSessionId = localStorage.getItem(chatSessionIdKey);
     var isNewMsg = handleMsgForMsgRoom(msg.chatSessionId, msg);
+
 
     ///是自己群的消息，并且是新消息
     if(msg.chatSessionId  == currentChatSessionId && isNewMsg) {
@@ -466,6 +469,7 @@ function handleMsgForMsgRoom(chatSessionId, pushMsg)
 
         if(pushMsg != undefined) {
             msgList.push(pushMsg);
+
             var isNewMsg = uniqueMsgAndCheckMsgId(msgList, pushMsg.msgId, roomChatSessionKey);
 
             return isNewMsg;
@@ -883,6 +887,7 @@ function getMsgSizeForDiv(msg)
     }
     return getMsgSize(msg['image'].width, msg['image'].height, h, w);
 }
+
 function getWebMsgHref(msgId, msgRoomType)
 {
     var url = "./index.php?action=http.file.downloadWebMsg&msgId="+msgId+"&isGroupMessage="+(msgRoomType==GROUP_MSG ? 1 : 0);

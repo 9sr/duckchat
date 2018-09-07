@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\MessageRoomType</code>
+ * Protobuf type <code>core.MessageRoomType</code>
  */
 class MessageRoomType
 {

@@ -67,7 +67,7 @@ function handleImSendRequest(action, reqData, callback)
         var header = {};
         header[HeaderSessionid] = sessionId;
         header[HeaderHostUrl] = originDomain;
-        header[HeaderUserClientLang] = languageName = navigator.language == "en-US" ? "0" : "1";
+        header[HeaderUserClientLang] = languageName  == "en-US" ? "0" : "1";
 
         var packageId = localStorage.getItem(PACKAGE_ID);
 
@@ -81,6 +81,7 @@ function handleImSendRequest(action, reqData, callback)
         var packageId = localStorage.setItem(PACKAGE_ID, (Number(packageId)+1));
 
         var transportDataJson = JSON.stringify(transportData);
+
         var enableWebsocketGw = localStorage.getItem(websocketGW);
         if(enableWebsocketGw == "true" && wsUrl != null && wsUrl) {
             websocketIm(transportDataJson, callback);

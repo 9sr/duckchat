@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\PluginLoadingType</code>
+ * Protobuf type <code>core.PluginLoadingType</code>
  */
 class PluginLoadingType
 {

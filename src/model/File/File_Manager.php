@@ -25,10 +25,10 @@ class File_Manager
         $this->wpf_Logger = new Wpf_Logger();
     }
 
-    public function getPath($dateDir, $fileId)
+    public function getPath($dateDir, $fileId, $isCreateFolder = true)
     {
         $dirName = WPF_LIB_DIR . "/../{$this->attachmentDir}/$dateDir";
-        if (!is_dir($dirName)) {
+        if (!is_dir($dirName) && $isCreateFolder) {
             mkdir($dirName, 0755, true);
         }
         return $dirName . "/" . $fileId;
@@ -43,7 +43,7 @@ class File_Manager
         $fileName = explode("-", $fileId);
         $dirName = $fileName[0];
         $fileId = $fileName[1];
-        $path = $this->getPath($dirName, $fileId);
+        $path = $this->getPath($dirName, $fileId, false);
         return file_get_contents($path);
     }
 

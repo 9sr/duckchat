@@ -14,9 +14,17 @@ use Google\Protobuf\Internal\GPBUtil;
 class ApiGroupQuitResponse extends \Google\Protobuf\Internal\Message
 {
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGroupQuit::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
 }

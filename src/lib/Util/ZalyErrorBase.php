@@ -63,6 +63,7 @@ abstract class  ZalyErrorBase
 
     public $errorPreSessionId = "error.preSessionId";
     public $errorLoginPassportPassword = "error.login.passportPassword";
+    public $errorUpdateInvitation = "error.update.invitationCode";
 
     public $errorVerifyToken = "error.verify.token";
     public $errorUpdatePwd = "error.update.pwd";

@@ -21,9 +21,18 @@ class ApiGroupQuitRequest extends \Google\Protobuf\Internal\Message
      */
     private $groupId = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $groupId
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGroupQuit::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

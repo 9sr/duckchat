@@ -655,8 +655,6 @@
                             <div class="item-body-desc">Open SSL</div>
                         <?php } ?>
 
-                        <!--                        <div class="item-body-desc">ZALY SSL PORT</div>-->
-                        <!--                        <div class="item-body-desc">WS SSL PORT</div>-->
                         <div class="item-body-tail">
                             <?php if ($lang == "1") { ?>
                                 暂不支持此功能
@@ -707,11 +705,18 @@
                             <?php } ?>
 
                             <div class="item-body-tail">
-                                <div class="item-body-value"><?php
-                                    if (isset($wsPort) && $wsPort != 0) {
-                                        echo $wsPort;
-                                    }
-                                    ?></div>
+                                <?php if (isset($wsPort) && $wsPort > 0) { ?>
+                                    <div class="item-body-value"><?php echo $wsPort; ?></div>
+                                <?php } else { ?>
+                                    <div class="item-body-desc"><?php
+                                        if ($lang == 1) {
+                                            echo "未设置端口表示未开启";
+                                        } else {
+                                            echo "disable with empty port";
+                                        }
+                                        ?></div>
+                                <?php } ?>
+
                                 <img class="more-img"
                                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
                             </div>
@@ -1026,44 +1031,54 @@
 
 
         function uploadImageFile(obj) {
-            console.log("ismobile:" + isMobile());
-            if (isMobile()) {
-                //mobile
-                alert("alert");
-            } else {
 
-                if (obj) {
-                    if (obj.files) {
-                        var formData = new FormData();
+            if (obj) {
+                if (obj.files) {
+                    var formData = new FormData();
 
-                        formData.append("file", obj.files.item(0));
-                        formData.append("fileType", "FileImage");
-                        formData.append("isMessageAttachment", false);
+                    formData.append("file", obj.files.item(0));
+                    formData.append("fileType", "FileImage");
+                    formData.append("isMessageAttachment", false);
 
-                        var src = window.URL.createObjectURL(obj.files.item(0));
+                    var src = window.URL.createObjectURL(obj.files.item(0));
 
-                        uploadFileToServer(formData, src);
+                    uploadFileToServer(formData, src);
 
-                        //上传以后本地展示的
-                        // $(".user-image-upload").attr("src", src);
-                    }
-                    return obj.value;
+                    //上传以后本地展示的
+                    $(".site-logo-image").attr("src", src);
                 }
+                return obj.value;
             }
+
         }
 
         function uploadFileToServer(formData, src) {
+
+            var url = "./index.php?action=http.file.uploadWeb";
+
+            if (isMobile()) {
+                url = "/_api_file_upload_/?fileType=1";  //fileType=1,表示文件
+            }
+
             $.ajax({
-                url: "./index.php?action=http.file.uploadWeb",
+                url: url,
                 type: "post",
                 data: formData,
                 contentType: false,
                 processData: false,
-                success: function (imageFileId) {
-                    console.log("imageId ==" + imageFileId);
-                    if (imageFileId) {
-                        updateSiteLogo(imageFileId);
+                success: function (imageFileIdResult) {
+
+                    if (imageFileIdResult) {
+                        var fileId = imageFileIdResult;
+                        if (isMobile()) {
+                            var res = JSON.parse(imageFileIdResult);
+                            fileId = res.fileId;
+                        }
+                        updateSiteLogo(fileId);
+                    } else {
+                        alert(getLanguage() == 1 ? "上传返回结果空 " : "empty response");
                     }
+
                 },
                 error: function (err) {
                     alert("update image error");
@@ -1095,11 +1110,19 @@
             }
         }
 
-        function showSiteLogo(fileId) {
-            var requestUrl = "./index.php?action=http.file.downloadMessageFile&fileId=" + fileId + "&returnBase64=0";
-            var xhttp = new XMLHttpRequest();
-            console.log("showSiteLogo imageId ==" + fileId);
+        downloadFileUrl = "./index.php?action=http.file.downloadFile";
 
+
+        function showSiteLogo(fileId) {
+
+            var requestUrl = "./_api_file_download_/test?fileId=" + fileId;
+
+
+            if (!isMobile()) {
+                requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
+            }
+
+            var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
                     var blob = this.response;
@@ -1231,7 +1254,17 @@
         });
 
         function enableRealNameResponse(url, data, result) {
-            alert(result);
+            if (result) {
+
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
 
@@ -1250,7 +1283,17 @@
         });
 
         function enableUicResponse(url, data, result) {
-            alert(result);
+            if (result) {
+
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
 
@@ -1268,7 +1311,17 @@
         });
 
         function enableAddFriendResponse(url, data, result) {
-            alert(result);
+            if (result) {
+
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
         //enable tmp chat
@@ -1285,7 +1338,17 @@
         });
 
         function enableTmpChatResponse(url, data, result) {
-            alert(result);
+            if (result) {
+
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
         //enable create group
@@ -1302,7 +1365,17 @@
         });
 
         function enableCreateGroupResponse(url, data, result) {
-            alert(result);
+            if (result) {
+
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
         //enable share group chat
@@ -1319,7 +1392,17 @@
         });
 
         function enableShareGroupResponse(url, data, result) {
-            alert(result);
+            if (result) {
+
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
         //enable share user
@@ -1336,7 +1419,17 @@
         });
 
         function enableShareUserResponse(url, data, result) {
-            alert(result);
+            if (result) {
+
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
         $("#enableAddFriendSwitch").change(function () {
@@ -1352,7 +1445,17 @@
         });
 
         function enableAddFriendResponse(url, data, result) {
-            alert(result);
+            if (result) {
+
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
 
@@ -1406,7 +1509,16 @@
         });
 
         function enableWebWidgetResponse(url, data, result) {
-            alert(result);
+            if (result) {
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
         //site managers
@@ -1430,8 +1542,6 @@
         //site RSAPublicKeyPem
         $("#site-rsa-pubk-pem").click(function () {
             var url = "index.php?action=manage.config.pubk&lang=" + getLanguage();
-
-            alert("url=" + url);
             zalyjsCommonOpenPage(url);
         });
 
@@ -1500,9 +1610,17 @@
 
 
         function updatePushTypeResponse(url, data, result) {
-            alert(result);
-            alert(url);
-            alert(data.key);
+            if (result) {
+
+                var res = JSON.parse(result);
+
+                if (!"success" == res.errCode) {
+                    alert(getLanguage() == 1 ? "操作失败" : "update error");
+                }
+
+            } else {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
         }
 
     </script>

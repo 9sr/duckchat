@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\GatewayType</code>
+ * Protobuf type <code>core.GatewayType</code>
  */
 class GatewayType
 {

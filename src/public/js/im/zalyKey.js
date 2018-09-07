@@ -190,3 +190,8 @@ reqTimeout = 1000*60*5;///5分钟
 
 defaultUserName = "匿名";
 
+downloadFileUrl = "./index.php?action=http.file.downloadFile";
+languageName = navigator.language == "en-US" ? "en" : "zh";
+
+languageName = "zh";
+

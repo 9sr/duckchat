@@ -45,7 +45,7 @@ function handleClientSendRequest(action, reqData, callback, isHttp)
         var header = {};
         header[HeaderSessionid] = sessionId;
         header[HeaderHostUrl] = originDomain;
-        header[HeaderUserClientLang] = languageName = navigator.language == "en-US" ? "0" : "1";
+        header[HeaderUserClientLang] = languageName  == "en-US" ? "0" : "1";
 
         var packageId = localStorage.getItem(PACKAGE_ID);
 
@@ -56,9 +56,10 @@ function handleClientSendRequest(action, reqData, callback, isHttp)
             "packageId" : Number(packageId),
         };
 
-        var packageId = localStorage.setItem(PACKAGE_ID, (Number(packageId)+1));
-        this.callback = callback;
+        localStorage.setItem(PACKAGE_ID, (Number(packageId)+1));
+
         var transportDataJson = JSON.stringify(transportData);
+
         var enableWebsocketGW = localStorage.getItem(websocketGW);
         if(enableWebsocketGW == "true" && !isHttp  && wsUrl != null && wsUrl) {
             putWsQueue(transportDataJson, callback);

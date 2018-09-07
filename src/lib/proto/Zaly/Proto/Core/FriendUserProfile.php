@@ -32,9 +32,23 @@ class FriendUserProfile extends \Google\Protobuf\Internal\Message
      */
     private $relation = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Zaly\Proto\Core\PublicUserProfile $profile
+     *           friend user profile
+     *     @type bool $mute
+     *           true:mute false:not mute
+     *     @type int $relation
+     *           relation between to user
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\User::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

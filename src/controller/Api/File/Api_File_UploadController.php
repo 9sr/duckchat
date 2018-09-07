@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: childeYin<尹少爷>
@@ -7,7 +8,7 @@
  */
 class Api_File_UploadController extends \BaseController
 {
-    private $classNameForRequest  = '\Zaly\Proto\Site\ApiFileUploadRequest';
+    private $classNameForRequest = '\Zaly\Proto\Site\ApiFileUploadRequest';
 
     public function rpcRequestClassName()
     {
@@ -15,7 +16,9 @@ class Api_File_UploadController extends \BaseController
     }
 
     /**
-     * @param \Zaly\Proto\Site\ApiFileUploadRequest $request
+     * @param \Zaly\Proto\Site\ApiFileUploadRequest $request $request
+     * @param \Google\Protobuf\Internal\Message $transportData
+     * @throws Exception
      */
     public function rpc(\Google\Protobuf\Internal\Message $request, \Google\Protobuf\Internal\Message $transportData)
     {
@@ -23,15 +26,21 @@ class Api_File_UploadController extends \BaseController
         $fileType = $request->getFileType();
         $isMessageAttachment = $request->getIsMessageAttachment();
 
-        $fileId = $this->ctx->File_Manager->saveFile($file);
-        if (empty($fileId)) {
-            $this->setRpcError("error.file.wrong", "the file type is not supported.");
-        }
-
         $response = new \Zaly\Proto\Site\ApiFileUploadResponse();
-        $response->setFileId($fileId);
-        $this->setRpcError($this->defaultErrorCode, "");
+        try {
+            $fileId = $this->ctx->File_Manager->saveFile($file);
+            if (empty($fileId)) {
+                $this->setRpcError("error.file.wrong", "the file type is not supported.");
+            }
+            $response->setFileId($fileId);
+            $this->setRpcError($this->defaultErrorCode, "");
+
+        } catch (Exception $e) {
+            $this->setRpcError("error.alert", $e->getMessage());
+            $this->logger->error($this->action, $e);
+        }
         $this->rpcReturn($this->getRequestAction(), $response);
+        return;
     }
 }
 

@@ -146,6 +146,7 @@
             /*height: 3rem;*/
             font-size: 16px;
             /*color: rgba(76, 59, 177, 1);*/
+            margin-top: 5px;
             margin-left: 10px;
         }
 
@@ -323,6 +324,7 @@
         }
 
         .item-body-value {
+            margin-top: 5px;
             margin-right: 5px;
         }
 
@@ -459,12 +461,7 @@
             <div class="item-row">
                 <div class="item-body">
                     <div class="item-body-display">
-
-                        <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">用户ID</div>
-                        <?php } else { ?>
-                            <div class="item-body-desc">User ID</div>
-                        <?php } ?>
+                        <div class="item-body-desc">ID</div>
 
                         <div class="item-body-tail" id="user-nickname-text">
                             <div class="item-body-value"><?php echo $userId ?></div>
@@ -533,7 +530,6 @@
 
 
                         <div class="item-body-tail" id="user-avatar-img-id" fileId="<?php echo $avatar ?>">
-
                             <div class="item-body-value">
                                 <img id="user-avatar-img" class="site-image"
                                      onclick="uploadFile('user-avatar-img-input')"
@@ -718,14 +714,23 @@
         $("#" + obj).click();
     }
 
-    function showImage(fileId, htmlImgId) {
-        var requestUrl = "./index.php?action=http.file.downloadMessageFile&fileId=" + fileId + "&returnBase64=0";
-        var xhttp = new XMLHttpRequest();
+    downloadFileUrl = "./index.php?action=http.file.downloadFile";
 
+    function showImage(fileId, htmlImgId) {
+
+        var requestUrl = "./_api_file_download_/test?fileId=" + fileId;
+
+
+        if (!isMobile()) {
+            requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
+        }
+
+        var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
                 var blob = this.response;
                 var src = window.URL.createObjectURL(blob);
+
                 $("#" + htmlImgId).attr("src", src);
             }
         };
@@ -736,46 +741,54 @@
     }
 
     function uploadImageFile(obj) {
-        if (isMobile()) {
-            //mobile
-            alert("alert");
-        } else {
+        if (obj) {
+            if (obj.files) {
+                var formData = new FormData();
 
-            if (obj) {
-                if (obj.files) {
-                    var formData = new FormData();
+                formData.append("file", obj.files.item(0));
+                formData.append("fileType", "FileImage");
+                formData.append("isMessageAttachment", false);
 
-                    formData.append("file", obj.files.item(0));
-                    formData.append("fileType", "FileImage");
-                    formData.append("isMessageAttachment", false);
+                var src = window.URL.createObjectURL(obj.files.item(0));
 
-                    var src = window.URL.createObjectURL(obj.files.item(0));
+                uploadFileToServer(formData, src);
 
-                    uploadFileToServer(formData, src);
-
-                    //直接放图片
-                    $("#user-avatar-img").attr("src", src);
-                }
-                return obj.value;
+                //直接放图片
+                $("#user-avatar-img").attr("src", src);
             }
+            return obj.value;
         }
+
     }
 
     function uploadFileToServer(formData, src) {
+        var url = "./index.php?action=http.file.uploadWeb";
+
+        if (isMobile()) {
+            url = "/_api_file_upload_/?fileType=1";  //fileType=1,表示文件
+        }
+
         $.ajax({
-            url: "./index.php?action=http.file.uploadWeb",
+            url: url,
             type: "post",
             data: formData,
             contentType: false,
             processData: false,
-            success: function (imageFileId) {
-                if (imageFileId) {
-                    updateServerImage(imageFileId)
+            success: function (imageFileIdResult) {
+                if (imageFileIdResult) {
+                    var fileId = imageFileIdResult;
+                    if (isMobile()) {
+                        var res = JSON.parse(imageFileIdResult);
+                        fileId = res.fileId;
+                    }
+                    updateServerImage(fileId);
+                } else {
+                    alert(getLanguage() == 1 ? "上传返回结果空 " : "empty response");
                 }
             },
             error: function (err) {
                 alert("update image error");
-                return false;
+                // return false;
             }
         });
     }
@@ -982,6 +995,7 @@
         }
 
     }
+
 
 </script>
 

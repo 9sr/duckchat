@@ -20,4 +20,17 @@ abstract class Manage_CommonController extends MiniProgramController
     }
 
 
+    protected function preRequest()
+    {
+        if (!$this->ctx->Site_Config->isManager($this->userId)) {
+            //不是管理员，exception
+            throw new Exception("user has no permission");
+        }
+    }
+
+    protected function requestException($ex)
+    {
+        $this->showPermissionPage();
+    }
+
 }

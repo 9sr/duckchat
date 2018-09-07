@@ -34,6 +34,15 @@ jQuery.i18n.properties({
 
 
 
+refererKey = "site_referer";
+siteConfig = {};
+enableInvitationCode=0;
+enableRealName=0;
+sitePubkPem="";
+invitationCode='';
+nickname="";
+allowShareRealname=0;
+preSessionId="";
 refererUrl = document.referrer;
 secondNum  = 120;
 isSending  = false;
@@ -42,6 +51,43 @@ var protocol = window.location.protocol;
 var host = window.location.host;
 var pathname = window.location.pathname;
 originDomain = protocol+"//"+host+pathname;
+isRegister=false;
+
+
+function zalyLoginConfig(results) {
+    if(typeof results == "object" ) {
+        siteConfig = results;
+    } else {
+        siteConfig = JSON.parse(results);
+    }
+    enableInvitationCode = siteConfig.enableInvitationCode;
+    enableRealName=siteConfig.enableRealName;
+    sitePubkPem = siteConfig.sitePubkPem;
+}
+
+function loginSuccess()
+{
+    handleRedirect();
+}
+
+function handleRedirect()
+{
+    if(refererUrl) {
+        if(refererUrl.indexOf("?") > -1) {
+            refererUrl = refererUrl+"&preSessionId="+preSessionId+"&isRegister="+isRegister;
+        } else {
+            refererUrl = refererUrl+"?preSessionId="+preSessionId+"&isRegister="+isRegister;
+        }
+        window.location.href = refererUrl;
+    }
+}
+
+
+function loginFailed()
+{
+    zalyjsAlert("登录失败");
+    console.log("登录失败");
+}
 
 if(refererUrl != undefined && refererUrl.length>1) {
     siteConfigJsUrl = "./index.php?action=page.siteConfig&callback=zalyLoginConfig";
@@ -99,35 +145,9 @@ $(".input_login_site").bind('input porpertychange',function(){
     }
 });
 
-$(".login_input_loginName").bind('input porpertychange',function(){
-    if($(".login_input_loginName").val().length>0) {
-        $(".login_input_loginName").addClass("black");
-    }
-    enableLoginSiteBtn();
-});
-
-$(".login_input_pwd").bind('input porpertychange',function(){
-    if($(".login_input_pwd").val().length>0) {
-        $(".login_input_pwd").addClass("black");
-    }
-    enableLoginSiteBtn();
-});
-
-function enableLoginSiteBtn()
-{
-    if($(".login_input_pwd").val().length>0 && $(".login_input_loginName").val().length>0) {
-        $(".login_button").attr("disabled", false);
-        $(".login_button").addClass("btn-enable-color");
-    } else {
-        $(".login_button").attr("disabled", true);
-        $(".login_button").removeClass("btn-enable-color");
-    }
-}
-
 function registerForPassportPassword()
 {
-    // $(".input_login_site").val("")/**/;
-    var html = template("tpl-login-div", {
+    var html = template("tpl-register-div", {
         enableInvitationCode : enableInvitationCode
     });
     html = handleHtmlLanguage(html);
@@ -143,7 +163,7 @@ function returnRegisterDiv() {
 
 function handleHtmlLanguage(html)
 {
-
+    console.log($.i18n.map['registerBtnTip']);
     $(html).find("[data-local-placeholder]").each(function () {
         var placeholderValue = $(this).attr("data-local-placeholder");
         var placeholder = $(this).attr("placeholder");
@@ -154,12 +174,12 @@ function handleHtmlLanguage(html)
     $(html).find("[data-local-value]").each(function () {
         var changeHtmlValue = $(this).attr("data-local-value");
         var valueHtml = $(this).html();
-
         var newValueHtml = $.i18n.map[changeHtmlValue];
-
+        // $(this).html(newValueHtml);
         html = html.replace(valueHtml, newValueHtml);
     });
 
+    console.log(html);
 
     return html;
 }
@@ -252,11 +272,11 @@ function checkRegisterInfo()
     $(".register_input_email_failed")[0].style.display = "none";
 
     if(registerPassword != repassword) {
-        alert($.i18n.map["passwordIsNotSameJsTip"]);
+        zalyjsAlert($.i18n.map["passwordIsNotSameJsTip"]);
         return false;
     }
     if(!validateEmail(registerEmail)) {
-        alert($.i18n.map["emailJsTip"]);
+        zalyjsAlert($.i18n.map["emailJsTip"]);
         return false;
     }
     return true;
@@ -272,34 +292,80 @@ function isLoginName(loginName)
     return reg.test(loginName);
 }
 
+function loginNameExist()
+{
+    zalyjsAlert("用户名已经在站点被注册");
+}
+
+function loginNameNotExist()
+{
+    if(sitePubkPem.length<1) {
+        zalyjsAlert("站点公钥获取失败");
+        return false;
+    }
+
+    var action = "api.passport.passwordReg";
+    var reqData = {
+        loginName:registerLoginName,
+        password:registerPassword,
+        email:registerEmail,
+        nickname:registernNickname,
+        sitePubkPem:sitePubkPem,
+        invitationCode:invitationCode,
+    }
+    handleClientSendRequest(action, reqData, handlePassportPasswordReg);
+}
 
 $(document).on("click", ".register_button", function () {
+    invitationCode = $(".register_input_code").val();
     var flag = checkRegisterInfo();
     if(flag == false) {
         return false;
     }
-
-    invitationCode = $(".register_input_code").val();
     var jsUrl = "./index.php?action=page.js&loginName="+registerLoginName+"&success_callback=loginNameExist&fail_callback=loginNameNotExist";
     addJsByDynamic(jsUrl);
 });
 
+$(document).on("click", ".update_code_btn", function () {
+    invitationCode = $(".update_input_code").val();
+    var action = "api.passport.passwordUpdateInvitationCode";
+    var reqData = {
+        sitePubkPem:sitePubkPem,
+        invitationCode:invitationCode,
+        preSessionId:preSessionId,
+    }
+    handleClientSendRequest(action, reqData, handlePassportPasswordUpdateInvationCode);
+});
+
+function handlePassportPasswordUpdateInvationCode(results)
+{
+    isRegister = true;
+    preSessionId = results.preSessionId;
+    if(refererUrl != undefined && refererUrl.length>1) {
+        handleRedirect();
+    } else {
+        console.log("call js " + clientType + " zalyJsLoginSuccess" + " == presessionid=="+preSessionId);
+        zalyjsLoginSuccess(loginName, preSessionId, isRegister, loginFailed);
+    }
+}
 
 function handlePassportPasswordReg(results)
 {
-    var preSessionId = results.preSessionId;
+    isRegister = true;
+    preSessionId = results.preSessionId;
     if(refererUrl != undefined && refererUrl.length>1) {
-        handleRedirect(preSessionId, 1);
+        handleRedirect();
     } else {
-        zalyjsLoginSuccess(registerLoginName, preSessionId, true, loginFailed, "loginFailed");
+        zalyjsLoginSuccess(registerLoginName, preSessionId, isRegister, loginFailed);
     }
 }
 
 function validateEmail(email)
 {
-    var re = /\S+@\S+\.\S+/;
+    var re = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
     return re.test(email);
 }
+
 
 $(document).on("click", ".login_button", function () {
 
@@ -308,13 +374,15 @@ $(document).on("click", ".login_button", function () {
     var isFocus = false;
     if(loginName == "" || loginName == undefined || loginName.length<0) {
         $(".login_input_loginName").focus();
-        $(".login_input_loginName").addClass("outline");
+        $(".login_input_loginName_failed")[0].style.display = "block";
         isFocus = true;
     }
+
     if(loginPassword == "" || loginPassword == undefined || loginPassword.length<0) {
-        $(".login_input_pwd").addClass("outline");
+        $(".login_input_pwd_failed")[0].style.display = "block";
         if (isFocus == false) {
             $(".login_input_pwd").focus();
+            $(".login_input_loginName_failed")[0].style.display = "none";
             isFocus = true;
         }
     }
@@ -322,8 +390,10 @@ $(document).on("click", ".login_button", function () {
     if(isFocus == true ) {
         return false;
     }
+    $(".login_input_pwd_failed")[0].style.display = "none";
+
     if(sitePubkPem.length<1) {
-        alert("站点公钥获取失败");
+        zalyjsAlert("站点公钥获取失败");
         return false;
     }
     var action = "api.passport.passwordLogin";
@@ -337,20 +407,34 @@ $(document).on("click", ".login_button", function () {
 
 function handleApiPassportPasswordLogin(results)
 {
-    var preSessionId = results.preSessionId;
+    isRegister = false;
+    preSessionId = results.preSessionId;
     if(refererUrl != undefined && refererUrl.length>1) {
-        handleRedirect(preSessionId, 0);
+        var jsUrl = "./index.php?action=page.js&loginName="+loginName+"&success_callback=loginSuccess&fail_callback=loginFailNeedRegister";
+        addJsByDynamic(jsUrl);
     } else {
-        zalyjsLoginSuccess(loginName, preSessionId, false, loginFailed, "loginFailed");
+        zalyjsLoginSuccess(loginName, preSessionId, isRegister, loginFailNeedRegister);
     }
 }
 
-function loginFailed(results)
+function loginFailNeedRegister()
 {
-    console.log(results);
+    if(enableInvitationCode != "1") {
+        if(isRegister == true) {
+            console.log("isRegister is always true isregister ==" + isRegister);
+            return false;
+        }
+        isRegister = true;
+        if(refererUrl != undefined && refererUrl.length>1) {
+            handleRedirect();
+        } else {
+            zalyjsLoginSuccess(loginName, preSessionId, isRegister, loginFailed);
+        }
+    } else {
+        $(".zaly_login_by_pwd")[0].style.display = "none";
+        $(".zaly_site_update-invitecode")[0].style.display = "block";
+    }
 }
-
-
 
 function getVerifyCode()
 {
@@ -360,7 +444,7 @@ function getVerifyCode()
     var loginName = $(".forget_input_loginName").val();
     if(loginName.length < 1) {
         ////TODO 换成 页面漂浮报错
-        alert($.i18n.map["loginNameNotNullJsTip"]);
+        zalyjsAlert($.i18n.map["loginNameNotNullJsTip"]);
         return false;
     }
 
@@ -409,7 +493,7 @@ $(document).on("click", ".reset_pwd_button", function () {
     var loginName = $(".forget_input_loginName").val();
 
     if(repassword != password) {
-        alert($.i18n.map["passwordIsNotSameJsTip"]);
+        zalyjsAlert($.i18n.map["passwordIsNotSameJsTip"]);
         return;
     }
     if(loginName == "" || loginName == undefined || loginName.length<0) {
@@ -443,7 +527,8 @@ function handleResetPwd()
 
 function returnLoginPage()
 {
-    window.location.reload();
+    $(".zaly_site_register-repwd")[0].style.display = "none";
+    $(".zaly_login_by_pwd")[0].style.display = "block";
 }
 
 function clearLoginName()

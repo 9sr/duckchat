@@ -36,7 +36,6 @@ body,html {
 }
 
 .login_name_div{
-    height:4rem;
     position: relative;
     font-size:1.88rem;
     font-family:PingFangSC-Regular;
@@ -44,8 +43,11 @@ body,html {
     margin-top: 5rem;
 }
 
+.margin-top4 {
+    margin-top: 4rem;
+}
+
 .input_login_site {
-    height: 4rem;
     top: 0;
     bottom: 0;
     right: 0;
@@ -53,6 +55,7 @@ body,html {
     margin: auto 0;
     margin-left: 3rem;
     width: 25rem;
+    line-height: 3rem;
 }
 
 .img {
@@ -64,7 +67,6 @@ body,html {
     right: 0;
     left: 0;
     margin: auto 0;
-    margin-bottom:  1rem;
 }
 .img-failed {
     width: 2rem;
@@ -127,7 +129,7 @@ input,
 .register_site {
     font-size:1.88rem;
     font-family:PingFangSC-Regular;
-    color:rgba(223,223,223,1);
+    color:rgba(20,16,48,1);
     vertical-align:middle;
     outline: none;
     border-style:none;
@@ -186,9 +188,6 @@ input:active,
     color:rgba(20,16,48,1);
 }
 
-.login_name_div {
-    margin-top: 1rem;
-}
 .color-white {
     color: white;
 }
@@ -205,6 +204,10 @@ input:active,
 .register_button:hover,
 .register_button:focus,
 .register_button:active,
+.update_code_btn,
+.update_code_btn:hover,
+.update_code_btn:focus,
+.update_code_btn:active,
 .register_code_button,
 .register_code_button:hover,
 .register_code_button:focus,
@@ -285,7 +288,9 @@ input:active,
     position: absolute;
     cursor: pointer;
 }
-
+.margin-top2 {
+    margin-top: 2rem;
+}
 @media (max-width: 500px) {
     .zaly_login {
         width: 100%;
@@ -302,7 +307,9 @@ input:active,
     .login-header {
         display:none;
     }
-    .login_name_div {
-        margin-top: 7rem;
+
+    .login_name_div_mobile {
+        margin-top:7rem;
     }
+
 }

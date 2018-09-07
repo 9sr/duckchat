@@ -4,6 +4,8 @@ landingPageUrl="";
 var config  = localStorage.getItem(siteConfigKey);
 var enableWebsocketGw = localStorage.getItem(websocketGW);
 
+
+
 wsUrlSuffix = "?body_format=json";
 
 var packageId = localStorage.getItem(PACKAGE_ID);

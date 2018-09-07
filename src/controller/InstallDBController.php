@@ -606,10 +606,10 @@ class InstallDBController
         $sql = 'insert into
                     sitePlugin(pluginId, name, logo, sort, landingPageUrl,landingPageWithProxy, usageType,loadingType,permissionType,authKey)
                 values
-                    (107,
+                    (106,
                     "gif",
                     "", 
-                    107,
+                    106,
                     "index.php?action=miniProgram.gif.index",
                     1,
                      ' . Zaly\Proto\Core\PluginUsageType::PluginUsageGroupMessage . ', 

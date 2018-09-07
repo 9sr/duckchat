@@ -8,14 +8,19 @@ class Wpf_Autoloader {
 		$this->pathList = array();
 	}
 
+	private $registedClasses = array();
+	public function registerClass(array $classAndPath) {
+        $this->registedClasses = $classAndPath;
+    }
+
 	public function addDir($dir) {
 		$this->pathList[] = $dir;
 	}
-	
+
 	public function addNamedDir($name, $dir) {
 		$this->pathList[$name] = $dir;
 	}
-	
+
 	public function classNameToPath($className) {
 		$path = '';
 		$lastpos = strrpos($className, "_");
@@ -32,13 +37,20 @@ class Wpf_Autoloader {
 	}
 
 	public function load($className) {
-		$classNamePath = $this->classNameToPath($className);
-        foreach ($this->pathList as $dir) {
-			$tmppath = $dir . $classNamePath;
-			if (file_exists($tmppath)) {
-				require_once($tmppath);
-				return;
-			}
-		}
+
+        $classNamePath = "";
+	    if (isset($this->registedClasses[$className])) {
+            $classNamePath = WPF_LIB_DIR . "/../" . $this->registedClasses[$className];
+        } else {
+            $classNamePath = $this->classNameToPath($className);
+            foreach ($this->pathList as $dir) {
+                $tmppath = $dir . $classNamePath;
+                if (file_exists($tmppath)) {
+                    $classNamePath = $tmppath;
+                    break;
+                }
+            }
+        }
+        require_once ($classNamePath);
 	}
 }

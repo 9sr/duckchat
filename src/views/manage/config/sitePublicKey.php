@@ -245,8 +245,6 @@
 
 <body>
 
-<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
-
 <div class="wrapper" id="wrapper">
 
     <!--  site basic config  -->
@@ -297,31 +295,6 @@
     </div>
 
 </div>
-
-
-<div class="popup-template" style="visibility:hidden;">
-
-    <div class="config-hidden" id="popup-group">
-
-        <div class="flex-container">
-            <div class="header_tip_font popup-group-title" data-local-value="createGroupTip">创建群组</div>
-        </div>
-
-        <div class="" style="text-align: center">
-            <input type="text" class="popup-group-input"
-                   data-local-placeholder="enterGroupNamePlaceholder" placeholder="please input">
-        </div>
-
-        <div class="line"></div>
-
-        <div class="" style="text-align:center; ">
-            <button type="button" class="create_button" data-local-value="createTip">Save</button>
-        </div>
-
-    </div>
-
-</div>
-
 
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
 
@@ -441,6 +414,34 @@
 
 <script type="text/javascript">
 
+
+    var timeOutEvent = 0;
+
+    $(function () {
+        $(".site-pubk-pem").on({
+            touchstart: function (e) {
+                //超时事件
+                timeOutEvent = setTimeout(longPress, 1000);
+                e.preventDefault();
+            },
+            touchmove: function () {
+                clearTimeout(timeOutEvent);
+                timeOutEvent = 0;
+            },
+            touchend: function () {
+                clearTimeout(timeOutEvent);
+                if (timeOutEvent == 0) {
+                    alert(getLanguage() == 1 ? "复制成功" : "Copied to Clipboard");
+                }
+                return false;
+            }
+        });
+    });
+
+
+    function longPress() {
+        // alert("long press");
+    }
 
 </script>
 

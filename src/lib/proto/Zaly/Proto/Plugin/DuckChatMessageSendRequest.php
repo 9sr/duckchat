@@ -21,9 +21,18 @@ class DuckChatMessageSendRequest extends \Google\Protobuf\Internal\Message
      */
     private $message = null;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Zaly\Proto\Core\Message $message
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Plugin\DuckchatMessageSend::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

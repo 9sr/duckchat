@@ -149,6 +149,11 @@
             margin-left: 10px;
         }
 
+        .item-body-value {
+            margin-top: 5px;
+            margin-right: 5px;
+        }
+
         .more-img {
             width: 8px;
             height: 13px;
@@ -313,6 +318,15 @@
             transform: translateX(20px);
         }
 
+        .site-image {
+            width: 30px;
+            height: 30px;
+            /*margin-top: 5px;*/
+            margin-bottom: 7px;
+            /*border-radius: 50%;*/
+            cursor: pointer;
+        }
+
     </style>
 
 
@@ -424,7 +438,13 @@
 
 
                         <div class="item-body-tail">
-                            <div class="item-body-value"><?php echo $maxMembers ?></div>
+                            <div class="item-body-value"><?php
+                                if (isset($maxMembers) && $maxMembers > 0) {
+                                    echo $maxMembers;
+                                } else {
+                                    echo 100;
+                                }
+                                ?></div>
                             <img class="more-img"
                                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
                         </div>
@@ -704,8 +724,17 @@
         // $("#" + obj).click();
     }
 
+    downloadFileUrl = "./index.php?action=http.file.downloadFile";
+
+
     function showImage(fileId, htmlImgId) {
-        var requestUrl = "./index.php?action=http.file.downloadMessageFile&fileId=" + fileId + "&returnBase64=0";
+
+        var requestUrl = "./_api_file_download_/test?fileId=" + fileId;
+
+        if (!isMobile()) {
+            requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
+        }
+
         var xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function () {
@@ -792,8 +821,6 @@
         var value = $(".popup-group-input").val();
         var keyName = $("#update-user-button").attr("data");
 
-        alert("groupId=" + groupId + " name=" + keyName + " value=" + value);
-
         if (keyName == null || keyName == "") {
             alert("update fail");
             return;
@@ -812,7 +839,18 @@
     }
 
     function updateGroupResponse(url, data, result) {
-        alert(result);
+        if (result) {
+            var res = JSON.parse(result);
+
+            if ("success" == res.errCode) {
+                location.reload();
+            } else {
+                alert(getLanguage() == 1 ? "删除失败" : "delete error");
+            }
+
+        } else {
+            alert(getLanguage() == 1 ? "删除失败" : "delete error");
+        }
     }
 
     //enable realName
@@ -831,6 +869,7 @@
         zalyjsCommonAjaxPostJson(url, data, enableShareGroupResponse)
     });
 
+    //暂时无用
     function enableShareGroupResponse(url, data, result) {
         alert(result);
     }
@@ -841,10 +880,6 @@
         var groupId = $("#group-id").attr("data");
         var isChecked = $(this).is(':checked')
         var url = "index.php?action=manage.group.update&lang=" + getLanguage();
-
-
-        alert("groupid=" + groupId);
-        alert("key=" + 'addDefaultGroup');
 
         var data = {
             'groupId': groupId,
@@ -857,7 +892,18 @@
     });
 
     function addDefaultGroupResponse(url, data, result) {
-        alert(result);
+        if (result) {
+            var res = JSON.parse(res);
+
+            if ("success" == res.errCode) {
+
+            } else {
+                alert(getLanguage() == 1 ? "删除失败" : "delete error");
+            }
+
+        } else {
+            alert(getLanguage() == 1 ? "删除失败" : "delete error");
+        }
     }
 
 
@@ -885,7 +931,19 @@
 
 
     function removeGroupResponse(url, data, result) {
-        alert(result);
+        if (result) {
+            var res = JSON.parse(res);
+
+            if ("success" == res.errCode) {
+                var url = "index.php?action=manage.group&lang=" + getLanguage();
+                window.location.href = url;
+            } else {
+                alert(getLanguage() == 1 ? "删除失败" : "delete error");
+            }
+
+        } else {
+            alert(getLanguage() == 1 ? "删除失败" : "delete error");
+        }
     }
 
 

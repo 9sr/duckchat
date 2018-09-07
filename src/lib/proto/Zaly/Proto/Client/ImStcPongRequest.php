@@ -20,9 +20,18 @@ class ImStcPongRequest extends \Google\Protobuf\Internal\Message
      */
     private $random = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $random
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Client\ImStcPong::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

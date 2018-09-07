@@ -159,6 +159,7 @@ class Api_Group_BaseController extends BaseController
             $publicUserProfile = $this->getPublicUserProfile($user);
             if ($user['memberType'] == $ownerType) {
                 $ownerUser = $publicUserProfile;
+                $groupProfile->setOwner($ownerUser);
             } else if ($user["memberType"] == $adminType) {
                 $adminUsers[] = $publicUserProfile;
             }
@@ -168,7 +169,6 @@ class Api_Group_BaseController extends BaseController
             $groupProfile->setAdmins($adminUsers);
         }
 
-        $groupProfile->setOwner($ownerUser);
         $speakers = (isset($group['speakers']) && $group['speakers'] != "")
             ? json_decode($group['speakers'], true)
             : [];

@@ -524,16 +524,13 @@
 
     $(document).on("click", "#group-list-id", function () {
         var groupId = $(this).attr("groupId");
-        alert("groupId=" + groupId);
         var url = "index.php?action=manage.group.profile&lang=" + getLanguage() + "&groupId=" + groupId;
-
         zalyjsCommonOpenPage(url);
     });
 
 
     $(document).on("click", "#miniProgram-list-id", function () {
         var url = "index.php?action=manage.miniProgram.list";
-        // alert("url=" + url);
         zalyjsCommonOpenPage(url);
     });
 

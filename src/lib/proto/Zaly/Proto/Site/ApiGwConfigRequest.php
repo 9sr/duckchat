@@ -22,9 +22,19 @@ class ApiGwConfigRequest extends \Google\Protobuf\Internal\Message
      */
     private $host = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $type
+     *     @type string $host
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGwConfig::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

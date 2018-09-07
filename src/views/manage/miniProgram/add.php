@@ -369,7 +369,6 @@
             </div>
             <div class="division-line"></div>
 
-            <!--      part1: site logo      -->
             <div class="item-row" id="mini-program-icon-id">
                 <div class="item-body">
                     <div class="item-body-display">
@@ -712,6 +711,9 @@
         $("#" + obj).click();
     }
 
+    downloadFileUrl = "./index.php?action=http.file.downloadFile";
+
+
     function uploadImageFile(obj) {
         if (isMobile()) {
             //mobile
@@ -760,7 +762,7 @@
     }
 
     function showLocalImage(fileId) {
-        var requestUrl = "/index.php?action=http.file.downloadMessageFile&fileId=" + fileId + "&returnBase64=0";
+        var requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
         var xhttp = new XMLHttpRequest();
         console.log("showSiteLogo imageId ==" + fileId);
 

@@ -16,6 +16,14 @@ class MiniProgram_Square_IndexController extends MiniProgramController
         return $this->squarePluginId;
     }
 
+    public function preRequest()
+    {
+        if (!$this->ctx->Site_Config->isManager($this->userId)) {
+            //不是管理员，exception
+            throw new Exception("user has no permission");
+        }
+    }
+
     public function doRequest()
     {
         header('Access-Control-Allow-Origin: *');
@@ -31,4 +39,10 @@ class MiniProgram_Square_IndexController extends MiniProgramController
         }
 
     }
+
+    public function requestException($ex)
+    {
+//        $this->showPermissionPage();
+    }
+
 }

@@ -11,8 +11,14 @@ class Manage_IndexController extends Manage_CommonController
 
     public function doRequest()
     {
-        //jump to backStage management
-        echo $this->display("manage_index");
+        $page = $_GET['page'];
+        $params = ["lang" => $this->language];
+
+        if ("home" == $page) {
+            echo $this->display("manage_home", $params);
+        } else {
+            echo $this->display("manage_index", $params);
+        }
         return;
     }
 
