@@ -167,6 +167,7 @@ class ZalyCurl
             $this->_getRequestParams($params);
             $this->_setHeader($headers);
             $this->setRequestMethod($method);
+            curl_setopt($this->_curlObj, CURLOPT_ENCODING, "gzip");
             curl_setopt($this->_curlObj, CURLOPT_URL, $url);
             curl_setopt($this->_curlObj, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($this->_curlObj, CURLOPT_MAXREDIRS, 6);

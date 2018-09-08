@@ -136,8 +136,8 @@ class Api_Plugin_ProxyController extends \BaseController
 
         $invalidHeaderKey = array(
             "transfer-encoding",
-//            "content-encoding",
-//            "content-length"
+            "content-encoding",
+            "content-length"
         );
 
         foreach ($header as $key => $val) {
