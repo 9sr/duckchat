@@ -79,5 +79,5 @@
 
 ## 官方与联系方式
 
-- DuckChat官方网站 http://duck.chat
+- DuckChat官方网站 http://duckchat.akaxin.com
 - QQ2群：`131466613` （Duckchat爱好者GaGa 2群）
