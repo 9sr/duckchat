@@ -101,7 +101,7 @@ class InstallDBController
             }
 
             $params = [
-                "isPhpVersionValid" => version_compare(PHP_VERSION, "7.0.0") >= 1,
+                "isPhpVersionValid" => version_compare(PHP_VERSION, "5.6.0") >= 0,
                 "isLoadOpenssl" => extension_loaded("openssl") && false != ZalyRsa::newRsaKeyPair(2048),
                 "isLoadPDOSqlite" => extension_loaded("pdo_sqlite"),
                 "isLoadCurl" => extension_loaded("curl"),

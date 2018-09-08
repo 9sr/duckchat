@@ -35,6 +35,10 @@ class  Api_Friend_ApplyController extends BaseController
             }
             $greetings = $request->getGreetings();
 
+            //check site allow addfriend
+
+            $this->checkSiteAddFriendConfig($this->userId);
+
             //check is friend before is friend,with exception
             $this->checkIsFriend($toUserId);
 
@@ -50,7 +54,22 @@ class  Api_Friend_ApplyController extends BaseController
             $this->ctx->Message_Client->proxyNewFriendApplyMessage($toUserId, $this->userId, $toUserId);
         } catch (Exception $ex) {
             $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex->getMessage());
+            $this->setRpcError("error.alert", $ex->getMessage());
             $this->rpcReturn($transportData->getAction(), new $this->classNameForResponse());
+        }
+    }
+
+    private function checkSiteAddFriendConfig($userId)
+    {
+        $enableAddFriend = $this->ctx->Site_Config->getConfigValue(SiteConfig::SITE_ENABLE_ADD_FRIEND);
+
+        if (empty($enableAddFriend)) {
+
+            $isManager = $this->ctx->Site_Config->isManager($userId);
+            if (!$isManager) {
+                throw new Exception("site disable add friend");
+            }
+
         }
     }
 

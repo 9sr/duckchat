@@ -75,6 +75,7 @@ class Api_Group_CreateController extends Api_Group_BaseController
 
         } catch (Exception $ex) {
             $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex->getMessage());
+            $this->setRpcError("error.alert", $ex->getMessage());
             $this->rpcReturn($transportData->getAction(), new $this->classNameForResponse());
         }
     }
