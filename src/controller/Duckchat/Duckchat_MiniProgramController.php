@@ -34,6 +34,7 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
     protected $language = Zaly\Proto\Core\UserClientLangType::UserClientLangEN;
 
     protected $pluginMiniProgramId;
+    protected $pluginMiniProgramProfile;
     /**
      * @var BaseCtx
      */
@@ -79,11 +80,19 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
 
         $this->pluginMiniProgramId = $_GET['miniProgramId'];
 
+        if (empty($this->pluginMiniProgramId)) {
+            throw new Exception("request with empty miniProgram ID");
+        }
+
+        //校验miniProgram
+        $this->pluginMiniProgramProfile = $this->getMiniProgramProfile($this->pluginMiniProgramId);
+
+        if (empty($this->pluginMiniProgramProfile)) {
+            throw new Exception("request with error miniProgram profile");
+        }
+
         // 接收的 加密的数据流
         $secretReqData = file_get_contents("php://input");
-
-        // 将数据转为TransportData
-        $this->requestTransportData = new \Zaly\Proto\Core\TransportData();
 
         ////判断 request proto 类 是否存在。
         $requestClassName = $this->rpcRequestClassName();
@@ -93,16 +102,23 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
             trigger_error("no request proto class: " . $requestClassName, E_USER_ERROR);
             die();
         }
+
+        $authKey = $this->pluginMiniProgramProfile['authKey'];
+
+        $requestData = $this->ctx->ZalyAes->decrypt($secretReqData, $authKey);
+
+        // 将数据转为TransportData
+        $this->requestTransportData = new \Zaly\Proto\Core\TransportData();
         try {
             if ("json" == $this->bodyFormatType) {
                 if (empty($secretReqData)) {
                     $secretReqData = "{}";
                 }
-                $this->requestTransportData->mergeFromJsonString($secretReqData);
+                $this->requestTransportData->mergeFromJsonString($requestData);
             } else if ("pb" == $this->bodyFormatType) {
-                $this->requestTransportData->mergeFromString($secretReqData);
+                $this->requestTransportData->mergeFromString($requestData);
             } else if ("base64pb" == $this->bodyFormatType) {
-                $realData = base64_decode($secretReqData);
+                $realData = base64_decode($requestData);
                 $this->requestTransportData->mergeFromString($realData);
             }
         } catch (Exception $e) {
@@ -203,7 +219,30 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
         } else {
             return;
         }
-        echo $body;
+
+        //这里用小程序的authKey进行AES加密
+        $authKey = $this->pluginMiniProgramProfile['authKey'];
+        $encryptedBody = $this->ctx->ZalyAes->encrypt($body, $authKey);
+        echo $encryptedBody;
+    }
+
+
+    private function getMiniProgramProfile($miniProgramId)
+    {
+        $miniProgramProfile = $this->ctx->SitePluginTable->getPluginById($miniProgramId);
+
+        if (!empty($miniProgramProfile)) {
+
+            if (empty($miniProgramProfile['authKey'])) {
+                if (empty($authKey)) {
+                    $config = $this->ctx->SiteConfigTable->selectSiteConfig(SiteConfig::SITE_PLUGIN_PLBLIC_KEY);
+                    $miniProgramProfile['authKey'] = $config[SiteConfig::SITE_PLUGIN_PLBLIC_KEY];
+                }
+            }
+
+        }
+
+        return $miniProgramProfile;
     }
 
     protected function finish_request()

@@ -24,14 +24,16 @@ abstract class HttpBaseController extends \Wpf_Controller
         "page.login",
         "page.js",
         "page.siteConfig",
-        "page.loginSite",
-        "page.jump"
+        "page.passport.login",
+        "page.passport.account",
+        "page.jump",
     ];
     private $groupType = "g";
     private $u2Type = "u";
     private $jumpRoomType = "";
     private $jumpRoomId = "";
     private $jumpRelation="";
+    private $siteCookieName = "zaly_site_user";
 
     public function __construct(Wpf_Ctx $context)
     {
@@ -95,7 +97,7 @@ abstract class HttpBaseController extends \Wpf_Controller
             if($preSessionId) {
                 $userProfile = $this->ctx->Site_Login->checkPreSessionIdFromPlatform($preSessionId);
                 $this->userId = $userProfile["userId"];
-                $this->setCookieBase64($this->userId);
+                $this->setCookieBase64($this->userId, $this->siteCookieName);
             }
         }
     }
@@ -156,7 +158,7 @@ abstract class HttpBaseController extends \Wpf_Controller
             throw new Exception("user not exists");
         }
 
-        $sessionInfo = $this->ctx->SiteSessionTable->getSessionInfoByUserId($this->userId);
+        $sessionInfo = $this->ctx->SiteSessionTable->getWebUserSessionInfo($this->userId);
         $this->ctx->Wpf_Logger->info($tag, json_encode($sessionInfo));
         if (!$sessionInfo) {
             throw new Exception("session is not ok");
@@ -175,7 +177,7 @@ abstract class HttpBaseController extends \Wpf_Controller
     public function setLogout()
     {
         $x = isset($_GET['x']) ? $_GET['x'] : "";
-        setcookie ("zaly_site_user", "", time()-3600, "/", "", false, true);
+        setcookie ($this->siteCookieName, "", time()-3600, "/", "", false, true);
         $apiPageLogin = ZalyConfig::getConfig("apiPageLogin");
         if($x) {
             if (strpos($apiPageLogin, "?")) {
@@ -218,13 +220,6 @@ abstract class HttpBaseController extends \Wpf_Controller
         $params['jumpRelation'] = $this->jumpRelation;
 
         return parent::display($viewName, $params);
-    }
-
-    public function setCookieBase64($userId)
-    {
-        $cookieAes = $this->ctx->ZalyAes->encrypt($userId, $this->ctx->ZalyAes->cookieKey);
-        $cookieBase64 = base64_encode($cookieAes);
-        setcookie("zaly_site_user", $cookieBase64, time() + $this->sessionIdTimeOut, "/", "", false, true);
     }
 
     /**

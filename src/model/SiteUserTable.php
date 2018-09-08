@@ -307,4 +307,16 @@ class SiteUserTable extends BaseTable
 
     }
 
+    public function updateNextFriendVersion($userId)
+    {
+        $version = $this->getUserFriendVersion($userId);
+
+        $friendVersion = 1;
+        if (!empty($version)) {
+            $friendVersion = $version['friendVersion'] + 1;
+        }
+
+        return $this->updateUserFriendVersion($userId, $friendVersion);
+    }
+
 }

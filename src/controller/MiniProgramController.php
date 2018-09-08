@@ -25,6 +25,7 @@ abstract class MiniProgramController extends \Wpf_Controller
 
     protected $language = Zaly\Proto\Core\UserClientLangType::UserClientLangEN;
     protected $requestData;
+    protected $loginName;
 
     public function __construct(Wpf_Ctx $context)
     {
@@ -86,6 +87,7 @@ abstract class MiniProgramController extends \Wpf_Controller
             }
 
             $this->userId = $userPublicProfile->getUserId();
+            $this->loginName = $userPublicProfile->getLoginName();
             $this->ctx->Wpf_Logger->info("", "Mini Program Request UserId=" . $this->userId);
 
             $this->getAndSetClientLang();
@@ -93,6 +95,7 @@ abstract class MiniProgramController extends \Wpf_Controller
             $this->preRequest();
             $this->doRequest();
         } catch (Exception $ex) {
+            echo $ex->getMessage();
             $this->ctx->Wpf_Logger->error($tag, "error msg =" . $ex);
             $this->requestException($ex);
         }
@@ -109,9 +112,13 @@ abstract class MiniProgramController extends \Wpf_Controller
         $tag = __CLASS__ . "-" . __FUNCTION__;
         try {
 
-            //$duckchatSessionId
-            //可以本地解析sessionId，为了逻辑一致，直接http远程获取
-            $response = $this->requestDuckChatSessionProfile($duckchatSessionId, $miniProgramId);
+            $action = "duckchat.session.profile";
+            $requestData = new Zaly\Proto\Plugin\DuckChatSessionProfileRequest();
+            $requestData->setEncryptedSessionId($duckchatSessionId);
+
+            $response = $this->requestDuckChatInnerApi($miniProgramId, $action, $requestData);
+
+            $this->logger->info($tag, "response=" . json_encode($response));
 
             if (empty($response)) {
                 throw new Exception("get empty response by duckchat_sessionid error");
@@ -125,34 +132,53 @@ abstract class MiniProgramController extends \Wpf_Controller
         }
     }
 
+
     /**
-     * @param $duckchatSessionid
-     * @return bool|Zaly\Proto\Plugin\DuckChatSessionProfileResponse
+     * 通用本地小程序，发送请求调用 DuckChat inner api
+     * @param $miniProgramId
+     * @param $action
+     * @param $requestProtoData
+     * @return \Google\Protobuf\unpacked
+     * @throws Exception
      */
-    private function requestDuckChatSessionProfile($duckchatSessionid, $miniProgramId)
+    public function requestDuckChatInnerApi($miniProgramId, $action, $requestProtoData)
     {
-        $requestData = new Zaly\Proto\Plugin\DuckChatSessionProfileRequest();
+        $miniProgramProfile = $this->getMiniProgramProfile($miniProgramId);
 
-        $requestData->setEncryptedSessionId($duckchatSessionid);
-        $duckChatAction = "duckchat.session.profile";
-        try {
-            $siteAddress = ZalyConfig::getConfig("siteAddress");
-            $requestUrl = $siteAddress . "/?action=" . $duckChatAction . "&body_format=pb&miniProgramId=" . $miniProgramId;
+        $authKey = $miniProgramProfile['authKey'];
 
-            $this->ctx->Wpf_Logger->info($duckChatAction, "http request url =" . $requestUrl);
+        $requestTransportDataString = $this->buildTransportData($action, $requestProtoData);
 
-            $httpResponse = $this->ctx->ZalyCurl->requestWithActionByPb($duckChatAction, $requestData, $requestUrl, 'post');
+        //加密发送
+        $encryptedTransportData = $this->ctx->ZalyAes->encrypt($requestTransportDataString, $authKey);
 
-            return $this->buildResponseFromHttp($requestUrl, $httpResponse);
-        } catch (Exception $e) {
-            $this->ctx->Wpf_Logger->error($duckChatAction, $e);
-        }
+        $siteAddress = ZalyConfig::getConfig("siteAddress");
+        $requestUrl = $siteAddress . "/?action=" . $action . "&body_format=pb&miniProgramId=" . $miniProgramId;
 
-        return false;
+        $this->ctx->Wpf_Logger->info($action, "http request url =" . $requestUrl);
+
+        $encryptedHttpTransportResponse = $this->ctx->ZalyCurl->requestDataByAction($action, $encryptedTransportData, $requestUrl, 'POST');
+
+        //解密结果
+        $httpResponse = $this->ctx->ZalyAes->decrypt($encryptedHttpTransportResponse, $authKey);
+
+        return $this->buildResponseFromHttp($requestUrl, $httpResponse);
+    }
+
+    private function buildTransportData($action, $requestBody)
+    {
+        $anyBody = new \Google\Protobuf\Any();
+        $anyBody->pack($requestBody);
+
+        $transportData = new \Zaly\Proto\Core\TransportData();
+        $transportData->setAction($action);
+        $transportData->setBody($anyBody);
+        return $transportData->serializeToString();
     }
 
     private function buildResponseFromHttp($url, $httpResponse)
     {
+
         $urlParams = parse_url($url);
         $query = isset($urlParams['query']) ? $urlParams['query'] : [];
         $urlParams = $this->ctx->ZalyCurl->convertUrlQuery($query);
@@ -203,6 +229,24 @@ abstract class MiniProgramController extends \Wpf_Controller
 
     }
 
+    private function getMiniProgramProfile($miniProgramId)
+    {
+        $miniProgramProfile = $this->ctx->SitePluginTable->getPluginById($miniProgramId);
+
+        if (!empty($miniProgramProfile)) {
+
+            if (empty($miniProgramProfile['authKey'])) {
+                if (empty($authKey)) {
+                    $config = $this->ctx->SiteConfigTable->selectSiteConfig(SiteConfig::SITE_PLUGIN_PLBLIC_KEY);
+                    $miniProgramProfile['authKey'] = $config[SiteConfig::SITE_PLUGIN_PLBLIC_KEY];
+                }
+            }
+
+        }
+
+        return $miniProgramProfile;
+    }
+
     private function getHeaderValue($header, $key)
     {
         if (empty($header)) {
@@ -218,13 +262,6 @@ abstract class MiniProgramController extends \Wpf_Controller
         exit();
     }
 
-    // no use
-    public function setCookieBase64($userId)
-    {
-        $cookieAes = $this->ctx->ZalyAes->encrypt($userId, $this->ctx->ZalyAes->cookieKey);
-        $cookieBase64 = base64_encode($cookieAes);
-        setcookie("zaly_site_user", $cookieBase64, time() + $this->sessionIdTimeOut, "/", "", false, true);
-    }
 
     protected function getAndSetClientLang()
     {

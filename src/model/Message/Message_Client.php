@@ -488,7 +488,7 @@ class Message_Client
             if ($fromNickName) {
                 $pushText = $fromNickName . " apply to you as a friend";
             }
-            $msgRoomType = \Zaly\Proto\Platform\PushRoomType::PushRoomU2;
+            $msgRoomType = \Zaly\Proto\Core\MessageRoomType::MessageRoomU2;
             $this->ctx->Push_Client->sendNotification($msgRoomType, $msgType, $fromUserId, $toUserId, $pushText);
             return $result;
         } catch (Exception $e) {

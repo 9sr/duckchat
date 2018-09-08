@@ -5,6 +5,7 @@ body,html {
     padding:0;
     margin:0;
     -webkit-tap-highlight-color: transparent;
+    background:url("http://duckchat.akaxin.com/border_line.png") ;
 }
 
 .zaly_container {
@@ -52,7 +53,6 @@ body,html {
     bottom: 0;
     right: 0;
     left: 0;
-    margin: auto 0;
     margin-left: 3rem;
     width: 25rem;
     line-height: 3rem;
@@ -281,7 +281,7 @@ input:active,
 
 .get_verify_code{
     bottom: 0.5rem;
-    font-size:1.88rem;
+    font-size:1.66rem;
     font-family:PingFangSC-Regular;
     color:#4C3BB1;
     right: 0;

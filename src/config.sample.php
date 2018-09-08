@@ -15,9 +15,10 @@
      'apiPageWidget' => './index.php?action=page.widget',
      'apiPageSiteInit' => "./index.php?action=installDB",
      'apiSiteLogin' => './index.php?action=api.site.login&body_format=pb',
-     'session_verify_100' => 'http://open.akaxin.com:5208/index.php?action=api.session.verify&body_format=pb',
-     'session_verify_105' => 'http://127.0.0.1:5207/index.php?action=api.session.verify&body_format=pb',
+     'session_verify_101' => 'http://open.akaxin.com:5208/index.php?action=api.session.verify&body_format=pb',
+     'session_verify_102' => 'http://127.0.0.1/index.php?action=api.session.verify&body_format=pb',
      "siteAddress" => '',
+     'passport_cookie_name' => "duckchat_passport_cookie",
      'mail' =>
          array (
              'host' => 'smtp.126.com',

@@ -48,7 +48,7 @@ class Api_Group_InvitableFriendsController extends Api_Group_BaseController
                 throw new Exception($errorInfo);
             }
 
-            $results = $this->getInvitableFriendsFromDB($groupId, $offset, $pageSize);
+            $results = $this->getInvitableFriendsFromDB($this->userId, $groupId, $offset, $pageSize);
             $userCount = $this->getUserCount($groupId);
 
             $response = $this->buildGroupInvitableFriendsResponse($results, $userCount);
@@ -63,10 +63,10 @@ class Api_Group_InvitableFriendsController extends Api_Group_BaseController
 
     }
 
-    ///TODO 理论上 加群的时候，不会返回已经在群里的人
-    private function getInvitableFriendsFromDB($groupId, $offset, $pageSize)
+
+    private function getInvitableFriendsFromDB($userId, $groupId, $offset, $pageSize)
     {
-        $result = $this->ctx->SiteUserTable->getUserListNotInGroup($groupId, $offset, $pageSize);
+        $result = $this->ctx->SiteUserFriendTable->getUserFriendListNotInGroup($userId, $groupId, $offset, $pageSize);
         return $result;
     }
 

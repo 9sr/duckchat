@@ -6,9 +6,9 @@ html, body{
     overflow:hidden;
     width: 100%;
     height: 100%;
-    background: rgba(245,244,249,1);
     font-size: 10.66px;
-
+    background:url("http://duckchat.akaxin.com/border_line.png") rgba(245,244,249,1) ;
+    background-size: 1px 1px;
 }
 
 .widget {

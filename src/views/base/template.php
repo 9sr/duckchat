@@ -93,17 +93,7 @@
     </div>
 
     <div id="search-user-div">
-        <div class="search-user-header">
-            <div class="search-user-header-content">
-               <input type="text" class="form-control create_group_box_div_input search-user-input" onkeypress="searchUser()" onkeydown="searchUser()" >
-           </div>
-            <img src="../../public/img/msg/search_icon.png" style="width:2rem; height:2rem;">
-        </div>
-        <div class="search-user-content">
-            <div class="search-user-img">
-               <img src="../../public/img/msg/search_friend.png">
-            </div>
-        </div>
+
     </div>
 
 

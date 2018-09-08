@@ -716,11 +716,12 @@ function appendMsgHtml(msg)
         sendBySelf = true;
         userId = token;
     }
-    var userAvatar;
     var msgTime = getMsgTimeByMsg(msg.timeServer);
     var groupUserImageClassName = msg.roomType == GROUP_MSG ? "group-user-img" : "";
     var msgStatus = msg.status ? msg.status : "";
     var userAvatar = sendBySelf ? avatar : msg.userAvatar;
+    var userAvatarSrc = sendBySelf ?  localStorage.getItem(selfInfoAvatar) : "";
+
     if(sendBySelf) {
         switch(msgType) {
             case MessageType.MessageText :
@@ -733,6 +734,7 @@ function appendMsgHtml(msg)
                     msgContent:msgContent,
                     msgStatus:msgStatus,
                     avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
                     userId:token
                 });
                 break;
@@ -747,6 +749,7 @@ function appendMsgHtml(msg)
                     avatar:userAvatar,
                     width:imgObject.width,
                     height:imgObject.height,
+                    userAvatarSrc:userAvatarSrc,
                     userId:token
                 });
                 break;
@@ -764,6 +767,7 @@ function appendMsgHtml(msg)
                     groupUserImg : groupUserImageClassName,
                     avatar:userAvatar,
                     hrefURL:hrefUrl,
+                    userAvatarSrc:userAvatarSrc,
                     userId:token
                 });
                 break;
@@ -1031,13 +1035,15 @@ function uploadMsgImgToServer(formData, src, type)
     var chatSessionType = localStorage.getItem(chatSessionId);
 
     $.ajax({
-        url:"./index.php?action=http.file.uploadWeb",
+        url:uploadFileUrl,
         type:"post",
         data:formData,
         contentType:false,
         processData:false,
-        success:function(fileName){
-            console.log("file upload " + fileName);
+        success:function(fileInfo){
+            var fileInfo = JSON.parse(fileInfo);
+            var fileName = fileInfo['fileId'];
+
             if(fileName) {
                 if(fileName == "failed") {
                     alert("发送失败,稍后重试");
@@ -1054,6 +1060,8 @@ function uploadMsgImgToServer(formData, src, type)
                 } else if(type == uploadImgForSelfAvatar) {
                     updateUserAvatar(fileName);
                 }
+            } else {
+                alert("上传失败");
             }
         },
         error:function(err){

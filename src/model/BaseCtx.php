@@ -8,8 +8,8 @@
  * @property File_Manager File_Manager
  * @property Site_Login Site_Login
  * @property SiteConfig SiteConfig
- *
  * @property Site_Config Site_Config
+ * @property Site_Default Site_Default
  *
  * @property SiteConfigTable SiteConfigTable
  * @property SiteSessionTable SiteSessionTable
@@ -62,7 +62,7 @@ class BaseCtx extends Wpf_Ctx
     {
         $sqliteConfig = ZalyConfig::getConfig("sqlite");
         $this->_dbName = $sqliteConfig['sqliteDBName'];
-        if(!empty($this->_dbName)   && file_exists(dirname(__FILE__)."/../".$this->_dbName)) {
+        if (!empty($this->_dbName) && file_exists(dirname(__FILE__) . "/../" . $this->_dbName)) {
             switch ($this->dbType) {
                 case "sqlite":
                     $dbInfo = $this->_dbPath . "/" . $this->_dbName;

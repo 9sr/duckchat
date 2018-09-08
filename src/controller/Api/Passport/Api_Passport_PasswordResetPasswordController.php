@@ -39,18 +39,11 @@ class Api_Passport_PasswordResetPasswordController extends BaseController
 
     private function  checkToken($loginName, $token)
     {
-        $tag = __CLASS__ . '-' . __FUNCTION__;
-
         $codeInfo = $this->ctx->PassportPasswordTokenTable->getCodeInfoByLoginName($loginName);
         $time = ZalyHelper::getMsectime();
         $tokenTime  = $codeInfo['timeReg'];
         $timeExpire =  $time - $tokenTime;
 
-        $this->ctx->Wpf_Logger->info($tag, "code info  =" .json_encode($codeInfo));
-
-        $this->ctx->Wpf_Logger->info($tag, " tokenTime=" . $tokenTime);
-        $this->ctx->Wpf_Logger->info($tag, "now time =" .$time);
-        $this->ctx->Wpf_Logger->info($tag, "time expire =" . $timeExpire);
         if(!$codeInfo || $token != $codeInfo['token'] || ($timeExpire > $this->tokenExipreTime)) {
             $errorCode = $this->zalyError->errorVerifyToken;
             $errorInfo = $this->zalyError->getErrorInfo($errorCode);

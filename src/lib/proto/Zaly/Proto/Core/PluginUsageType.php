@@ -35,5 +35,9 @@ class PluginUsageType
      * Generated from protobuf enum <code>PluginUsageGroupMessage = 5;</code>
      */
     const PluginUsageGroupMessage = 5;
+    /**
+     * Generated from protobuf enum <code>PluginUsageAccountSafe = 6;</code>
+     */
+    const PluginUsageAccountSafe = 6;
 }
 

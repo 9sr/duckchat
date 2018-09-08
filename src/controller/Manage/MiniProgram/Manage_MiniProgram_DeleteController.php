@@ -6,7 +6,7 @@
  * Time: 6:40 PM
  */
 
-class Manage_MiniProgram_DeleteControllerController extends Manage_CommonController
+class Manage_MiniProgram_DeleteController extends Manage_CommonController
 {
 
     protected function doRequest()

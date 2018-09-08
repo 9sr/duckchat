@@ -57,7 +57,9 @@ class ZalyErrorEn extends  ZalyErrorBase
         "error.update.pwd" => "Update password failed",
         "error.update.invitationCode" => "Update invitation failed",
         "error.loginName.length" => "LoginName length is illegal",
-        "error.password.length" => "Password length is illegal"
+        "error.password.length" => "Password length is illegal",
+
+        "error.session.clear" => "clear failed",
     ];
 
     public function getErrorInfo($errorCode)

@@ -68,6 +68,8 @@ abstract class  ZalyErrorBase
     public $errorVerifyToken = "error.verify.token";
     public $errorUpdatePwd = "error.update.pwd";
 
+    public $errorSessionClear = "error.session.clear";
+
 
 
     abstract public function getErrorInfo($errorCode);

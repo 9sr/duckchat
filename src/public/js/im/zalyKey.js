@@ -180,7 +180,7 @@ groupIdsKey = "group_ids";
 sendMsgImgUrlKey = "msg_img_url_";
 msgIdInChatSessionKey = "msgId_in_chatSession_";
 reqProfile = "req_profile_";
-
+selfInfoAvatar="self_avatar";
 
 uploadImgForMsg  = "uploadImgForMsg";
 uploadImgForSelfAvatar = "uploadImgForSelfAvatar";
@@ -192,6 +192,8 @@ defaultUserName = "匿名";
 
 downloadFileUrl = "./index.php?action=http.file.downloadFile";
 languageName = navigator.language == "en-US" ? "en" : "zh";
+
+uploadFileUrl = './index.php?action=http.file.uploadWeb';
 
 languageName = "zh";
 

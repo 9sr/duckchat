@@ -286,13 +286,7 @@ abstract class BaseController extends \Wpf_Controller
         $timeActive = $sessionInfo['timeActive'];
         $nowTime = $this->ctx->ZalyHelper->getMsectime();
 
-        ///TODO 临时屏蔽 sessionId 时间过期
-
-        $this->ctx->Wpf_Logger->info("sessionTime", "session nowtime=" . $nowTime);
-        $this->ctx->Wpf_Logger->info("sessionTime", "session timeActive=" . $timeActive);
-        $this->ctx->Wpf_Logger->info("sessionTime", "session sessonTimeOut=" . $this->sessionIdTimeOut);
-        $this->ctx->Wpf_Logger->info("sessionTime", "(nowTime - timeActive) > sessionIdTimeOut" . (($nowTime - $timeActive) > $this->sessionIdTimeOut) ? 1 : 0);
-
+        ///TODO 临时屏蔽 sessionId 时间过
 //        if (($nowTime - $timeActive) > $this->sessionIdTimeOut) {
 //            $this->ctx->Wpf_Logger->error($tag, "session  time out  , session id = " . $sessionId);
 //

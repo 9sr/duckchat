@@ -11,8 +11,11 @@ class Http_File_UploadWebController extends \HttpBaseController
 {
 
     private $defaultImgSize = 5*1024*1024;///5M
+    ///
     public function index()
     {
+        $originFileName = "";
+
         try{
             $tag = __CLASS__.'-'.__FUNCTION__;
             $isMessageAttachment = isset( $_POST['isMessageAttachment']) ?  $_POST['isMessageAttachment'] : false;
@@ -26,18 +29,18 @@ class Http_File_UploadWebController extends \HttpBaseController
                 throw new Exception("上传失败");
             }
 
-            $originFileName = "";
             switch ($fileType) {
                 case \Zaly\Proto\Core\FileType::FileImage:
                 case "FileImage":
                     $originFileName = $this->saveImgFile($file);
                     break;
             }
-            echo $originFileName;
+            $fileInfo = ["fileId" => $originFileName];
+            echo json_encode($fileInfo);
         }catch (Exception $ex) {
             $this->ctx->Wpf_Logger->error($tag, "shaoye error msg =" . $ex->getMessage());
-            header("HTTP/1.0 404 Not Found");
-            echo "failed";
+            $fileInfo = ["fileId" => $originFileName];
+            echo json_encode($fileInfo);
         }
     }
 

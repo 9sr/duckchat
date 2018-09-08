@@ -27,6 +27,8 @@ class File_Manager
 
     public function getPath($dateDir, $fileId, $isCreateFolder = true)
     {
+        $fileId = str_replace("../", "", $fileId);
+        $dateDir = str_replace("../", "", $dateDir);
         $dirName = WPF_LIB_DIR . "/../{$this->attachmentDir}/$dateDir";
         if (!is_dir($dirName) && $isCreateFolder) {
             mkdir($dirName, 0755, true);
@@ -43,6 +45,7 @@ class File_Manager
         $fileName = explode("-", $fileId);
         $dirName = $fileName[0];
         $fileId = $fileName[1];
+
         $path = $this->getPath($dirName, $fileId, false);
         return file_get_contents($path);
     }

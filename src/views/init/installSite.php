@@ -69,13 +69,11 @@
 
             <div class="init_check_info input_div justify-content-between " >
                 <div  class="init_check">
-
                 请选择登录方式：
                 </div>
                 <div class="init_check_result choose_login_type">
                     <select id="verifyPluginId" >
-                        <option class="selectOption" pluginId="105">本地账户密码校验</option>
-                        <option  class="selectOption"  pluginId="100">平台校验</option>
+                        <option class="selectOption" pluginId="102">本地账户密码校验</option>
                     </select>
                 </div>
             </div>

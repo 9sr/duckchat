@@ -715,43 +715,48 @@
 
 
     function uploadImageFile(obj) {
-        if (isMobile()) {
-            //mobile
-            alert("is mobile");
-        } else {
+        if (obj) {
+            if (obj.files) {
+                var formData = new FormData();
 
-            if (obj) {
-                if (obj.files) {
-                    var formData = new FormData();
+                formData.append("file", obj.files.item(0));
+                formData.append("fileType", "FileImage");
+                formData.append("isMessageAttachment", false);
 
-                    formData.append("file", obj.files.item(0));
-                    formData.append("fileType", "FileImage");
-                    formData.append("isMessageAttachment", false);
+                var src = window.URL.createObjectURL(obj.files.item(0));
 
-                    var src = window.URL.createObjectURL(obj.files.item(0));
+                uploadFileToServer(formData, src);
 
-                    uploadFileToServer(formData, src);
-
-                    $(".user-image-upload").attr("src", src);
-                }
-                return obj.value;
+                $("#mini-program-image").attr("src", src);
             }
+            return obj.value;
         }
     }
 
     function uploadFileToServer(formData, src) {
+
+        var url = "./index.php?action=http.file.uploadWeb";
+
+        if (isMobile()) {
+            url = "/_api_file_upload_/?fileType=1";  //fileType=1,表示文件
+        }
+
         $.ajax({
-            url: "./index.php?action=http.file.uploadWeb",
+            url: url,
             type: "post",
             data: formData,
             contentType: false,
             processData: false,
-            success: function (imageFileId) {
-                console.log("imageId ==" + imageFileId);
-                alert("===== fileid=" + imageFileId);
-                if (imageFileId) {
-                    $("#mini-program-fileid").attr("fileId", imageFileId);
-                    showLocalImage(imageFileId);
+            success: function (imageFileIdResult) {
+                if (imageFileIdResult) {
+                    var fileId = imageFileIdResult;
+                    if (isMobile()) {
+                        var res = JSON.parse(imageFileIdResult);
+                        fileId = res.fileId;
+                    }
+                    updateServerImage(fileId);
+                } else {
+                    alert(getLanguage() == 1 ? "上传返回结果空 " : "empty response");
                 }
             },
             error: function (err) {
@@ -913,10 +918,10 @@
             return;
         }
 
-        if (imageFileId == null || imageFileId == "") {
-            alert(getLanguage() == 1 ? "请重新选择小程序图标" : "mini program icon is empty");
-            return;
-        }
+        // if (imageFileId == null || imageFileId == "") {
+        //     alert(getLanguage() == 1 ? "请重新选择小程序图标" : "mini program icon is empty");
+        //     return;
+        // }
 
         var data = {
             // name: miniProgramName

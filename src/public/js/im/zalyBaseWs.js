@@ -5,7 +5,6 @@ var config  = localStorage.getItem(siteConfigKey);
 var enableWebsocketGw = localStorage.getItem(websocketGW);
 
 
-
 wsUrlSuffix = "?body_format=json";
 
 var packageId = localStorage.getItem(PACKAGE_ID);
@@ -19,6 +18,7 @@ var host = window.location.host;
 var pathname = window.location.pathname;
 originDomain = protocol+"//"+host+pathname;
 
+$(":input").attr("autocapitalize", "off");
 
 function ZalyIm(params)
 {

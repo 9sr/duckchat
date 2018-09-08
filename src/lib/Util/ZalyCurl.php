@@ -18,6 +18,41 @@ class ZalyCurl
         $this->wpf_Logger = new Wpf_Logger();
     }
 
+    public function requestPBDataByAction($action, $transportData, $url, $method = "post")
+    {
+        $this->requestDataByAction($action, $transportData->serializeToString(), $url, $method);
+    }
+
+
+    public function requestPBJsonDataByAction($action, $transportData, $url, $method = "POST")
+    {
+        $this->requestDataByAction($action, $transportData->serializeToJsonString(), $url, $method);
+    }
+
+    public function requestDataByAction($action, $params, $url, $method)
+    {
+        $tag = __CLASS__ . '-' . __FUNCTION__;
+        try {
+            $this->_curlObj = curl_init();
+            $this->_getRequestParams($params);
+//            $this->_setHeader($headers);
+            $this->setRequestMethod($method);
+            curl_setopt($this->_curlObj, CURLOPT_URL, $url);
+            curl_setopt($this->_curlObj, CURLOPT_TIMEOUT, $this->timeOut);
+
+            if (($resp = curl_exec($this->_curlObj)) === false) {
+                $this->wpf_Logger->error('when run Router, unexpected error :', curl_error($this->_curlObj));
+                throw new Exception(curl_error($this->_curlObj));
+            }
+            curl_close($this->_curlObj);
+            return $resp;
+        } catch (\Exception $e) {
+            $message = sprintf("msg:%s file:%s:%d", $e->getMessage(), $e->getFile(), $e->getLine());
+            $this->wpf_Logger->error($tag, 'when run Router, unexpected error :', $message);
+            throw new Exception($e->getMessage());
+        }
+    }
+
     /**
      * @param $action
      * @param $requestBody
@@ -46,14 +81,14 @@ class ZalyCurl
             curl_setopt($this->_curlObj, CURLOPT_TIMEOUT, $this->timeOut);
 
             if (($resp = curl_exec($this->_curlObj)) === false) {
-                $this->wpf_Logger->error('when run Router, unexpected error :' , curl_error($this->_curlObj));
+                $this->wpf_Logger->error('when run Router, unexpected error :', curl_error($this->_curlObj));
                 throw new Exception(curl_error($this->_curlObj));
             }
             curl_close($this->_curlObj);
             return $resp;
         } catch (\Exception $e) {
             $message = sprintf("msg:%s file:%s:%d", $e->getMessage(), $e->getFile(), $e->getLine());
-            $this->wpf_Logger->error($tag, 'when run Router, unexpected error :' , $message);
+            $this->wpf_Logger->error($tag, 'when run Router, unexpected error :', $message);
             throw new Exception($e->getMessage());
         }
     }
@@ -89,7 +124,7 @@ class ZalyCurl
             return $resp;
         } catch (\Exception $e) {
             $message = sprintf("msg:%s file:%s:%d", $e->getMessage(), $e->getFile(), $e->getLine());
-            $this->wpf_Logger->error($tag, 'when run Router, unexpected error :' , $message);
+            $this->wpf_Logger->error($tag, 'when run Router, unexpected error :', $message);
             throw new Exception($e->getMessage());
         }
     }
@@ -200,22 +235,19 @@ class ZalyCurl
                 curl_setopt($this->_curlObj, CURLOPT_NOBODY, true);
                 break;
             case 'GET':
-                //	TRUE to include the header in the output.
-                curl_setopt($this->_curlObj, CURLOPT_HEADER, false);
+
                 //TRUE to reset the HTTP request method to GET. Since GET is the default, this is only necessary if the request method has been changed.
                 curl_setopt($this->_curlObj, CURLOPT_HTTPGET, true);
                 //TRUE to return the transfer as a string of the return value of curl_exec() instead of outputting it directly.
                 curl_setopt($this->_curlObj, CURLOPT_RETURNTRANSFER, true);
                 break;
             case 'POST':
-                curl_setopt($this->_curlObj, CURLOPT_HEADER, false);
                 curl_setopt($this->_curlObj, CURLOPT_NOBODY, false);
                 curl_setopt($this->_curlObj, CURLOPT_POST, true);
                 curl_setopt($this->_curlObj, CURLOPT_POSTFIELDS, $this->_bodyContent);
                 curl_setopt($this->_curlObj, CURLOPT_RETURNTRANSFER, true);
                 break;
             default:
-                curl_setopt($this->_curlObj, CURLOPT_HEADER, false);
                 curl_setopt($this->_curlObj, CURLOPT_HTTPGET, true);
                 curl_setopt($this->_curlObj, CURLOPT_RETURNTRANSFER, true);
         }
@@ -236,13 +268,11 @@ class ZalyCurl
     {
         $headers = array();
         if (!$baseHeaders) {
-            curl_setopt($this->_curlObj, CURLOPT_HEADER, 0);
             return false;
         }
         foreach ($baseHeaders as $key => $value) {
             $headers[] = $key . ': ' . $value;
         }
-        curl_setopt($this->_curlObj, CURLOPT_HEADER, 1);
         curl_setopt($this->_curlObj, CURLOPT_HTTPHEADER, $headers);
     }
 }

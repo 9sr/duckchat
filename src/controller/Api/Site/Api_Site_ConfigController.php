@@ -30,7 +30,6 @@ class Api_Site_ConfigController extends \BaseController
         $tag = __CLASS__ . '-' . __FUNCTION__;
 
         try {
-
             $requestHeader = $transportData->getHeader();
             $hostUrl = $requestHeader[TransportDataHeaderKey::HeaderHostUrl];
 
@@ -217,6 +216,7 @@ class Api_Site_ConfigController extends \BaseController
             $config->setEnableRealName($configData[SiteConfig::SITE_ENABLE_REAL_NAME]);
             $config->setEnableWidgetWeb($configData[SiteConfig::SITE_ENABLE_WEB_WIDGET]);
             $config->setSiteIdPubkBase64($configData[SiteConfig::SITE_ID_PUBK_PEM]);
+            $config->setAccountSafePluginId($configData[SiteConfig::SITE_PASSPORT_ACCOUNT_SAFE_PLUGIN_ID]);
 
             $response->setConfig($config);
 

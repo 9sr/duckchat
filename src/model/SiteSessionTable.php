@@ -132,4 +132,46 @@ class SiteSessionTable extends BaseTable
         }
         return null;
     }
+
+    public function getWebUserSessionInfo($userId)
+    {
+        $tag = __CLASS__ . '-' . __FUNCTION__;
+        $startTime = microtime(true);
+        $sql = "select $this->selectColumns from $this->table where userId=:userId and deviceId=:deviceId limit 1;";
+
+        try {
+            $prepare = $this->db->prepare($sql);
+            $this->handlePrepareError($tag, $prepare);
+            $prepare->bindValue(":userId", $userId);
+            $prepare->bindValue(":deviceId", sha1(""));
+            $flag = $prepare->execute();
+            $userSessionInfo = $prepare->fetch(\PDO::FETCH_ASSOC);
+            return $userSessionInfo;
+        } catch (Exception $e) {
+            $this->ctx->Wpf_Logger->error($tag, $e);
+        } finally {
+            $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $userId, $startTime);
+        }
+        return false;
+    }
+
+    public function deleteSessionByUserId($userId)
+    {
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+        $startTime = microtime(true);
+        try {
+            $sql = "delete from $this->table where userId=:userId;";
+            $prepare = $this->db->prepare($sql);
+            $this->handlePrepareError($tag, $prepare);
+
+            $prepare->bindValue(":userId", $userId);
+            return $prepare->execute();
+        } catch (Exception $e) {
+            $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $userId, $startTime);
+        } finally {
+
+        }
+        return false;
+    }
+
 }

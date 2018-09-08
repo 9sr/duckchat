@@ -82,8 +82,10 @@ function getNotMsgImg(userId, avatarImgId)
             var blob = this.response;
             var src = window.URL.createObjectURL(blob);
             // Typical action to be performed when the document is ready:
-
             $(".info-avatar-"+userId).attr("src", src);
+            if(userId == token) {
+                localStorage.setItem(selfInfoAvatar, src);
+            }
             sessionStorage.removeItem(userImgKey);
         }
     };
@@ -381,6 +383,8 @@ $(document).on("click", ".l-sb-item", function(){
             getFriendList();
             break;
         case "search":
+            var html = template("tpl-search-user-div", {});
+            $("#search-user-div").html(html);
             showWindow($("#search-user-div"));
             break;
 
@@ -2317,6 +2321,9 @@ function searchUser(event)
         return;
     }
     var searchValue = $(".search-user-input").val();
+    if(searchValue.length<1) {
+        return;
+    }
     var action = "api.friend.search";
     var reqData = {
         keywords:searchValue,
@@ -2353,6 +2360,7 @@ $(document).on("click", ".search-add-friend-btn", function () {
     var userId = $(this).attr("userId");
     sendFriendApplyReq(userId, "", "");
     $(this).attr("disabled", "disabled");
+    alert("发送申请成功");
 });
 
 function closeMaskDiv(str)

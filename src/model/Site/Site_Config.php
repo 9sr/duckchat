@@ -90,4 +90,10 @@ class Site_Config
         }
 
     }
+
+    public function getSiteDefaultFriendsAndGroups()
+    {
+        return $this->ctx->SiteConfigTable->selectSiteConfig([SiteConfig::SITE_DEFAULT_FRIENDS, SiteConfig::SITE_DEFAULT_GROUPS]);
+    }
+
 }

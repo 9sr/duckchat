@@ -51,6 +51,7 @@ class SiteConfig
     const SITE_OWNER = "owner";
 
     const SITE_PLUGIN_PLBLIC_KEY = "pluginPublicKey";
+    const SITE_PASSPORT_ACCOUNT_SAFE_PLUGIN_ID = "passportAccountSafePluginId";
 
     public static function getPubkAndPrikPem()
     {
@@ -117,7 +118,7 @@ class SiteConfig
         self::SITE_ENABLE_INVITATION_CODE => 0,
         self::SITE_ENABLE_REAL_NAME => 0,
 
-        self::SITE_OPEN_WEB_EDITION => 0,
+        self::SITE_OPEN_WEB_EDITION => 1,
         self::SITE_WS_PORT => 0,
         self::SITE_ZALY_PORT => 0,
         self::SITE_ENABLE_WEB_WIDGET => 0,

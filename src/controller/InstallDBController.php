@@ -8,11 +8,16 @@
  */
 class InstallDBController
 {
+    private $logger;
     private $_dbPath = ".";
-    private $loginPluginIds = [100, 105];
+    private $loginPluginIds = [101, 102];
+    private $passportAccountSafePluginId = 104;
     private $configName = "config.php";
     private $sampleConfigName = "config.sample.php";
     private $_dbName;
+    /**
+     * @var \PDO
+     */
     private $db;
 
     /**
@@ -20,13 +25,17 @@ class InstallDBController
      */
     private $helper;
 
+    function __construct()
+    {
+        $this->logger = new Wpf_Logger();
+        $this->helper = new ZalyHelper();
+    }
+
     public function doIndex()
     {
-        $this->helper = new ZalyHelper();
-
-        $configFileName = dirname(__FILE__) . "/../". $this->configName;
-        $sampleFileName = dirname(__FILE__) . "/../". $this->sampleConfigName;
-        if(file_exists($configFileName)) {
+        $configFileName = dirname(__FILE__) . "/../" . $this->configName;
+        $sampleFileName = dirname(__FILE__) . "/../" . $this->sampleConfigName;
+        if (file_exists($configFileName)) {
             $config = require($configFileName);
             $sqliteName = $config['sqlite']['sqliteDBName'];
         } else {
@@ -52,16 +61,19 @@ class InstallDBController
                 $hosts = explode(":", $serverHost);
                 $host = array_shift($hosts);
                 $scheme = isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http";
-                $sessionVerifyUrl = $scheme . "://" . $serverHost . '/index.php?action=api.session.verify&body_format=pb';
+
+                $siteAddress = $scheme . "://" . $serverHost;
+                $sessionVerifyUrl = $siteAddress . '/index.php?action=api.session.verify&body_format=pb';
 
                 $loginPluginId = $_POST['pluginId'];
                 $dbNameKey = ZalyHelper::generateStrKey(8);
                 $sqliteName = "db." . md5($dbNameKey) . ".sqlite3";
                 $config['sqlite']['sqliteDBName'] = $sqliteName;
-                $config['loginPluginId'] = in_array($loginPluginId, $this->loginPluginIds) ? $loginPluginId : 100;
-                $config['session_verify_105'] = $sessionVerifyUrl;
+                $config['loginPluginId'] = in_array($loginPluginId, $this->loginPluginIds) ? $loginPluginId : 101;
+                $config['session_verify_102'] = $sessionVerifyUrl;
                 $config['msectime'] = ZalyHelper::getMsectime();
-                $config['siteAddress'] = $scheme . "://" . $serverHost;
+                $config['siteAddress'] = $siteAddress;
+
                 $contents = var_export($config, true);
                 file_put_contents($configFileName, "<?php\n return {$contents};\n ");
                 if (function_exists("opcache_reset")) {
@@ -168,16 +180,12 @@ class InstallDBController
     {
 //        $loginPluginId = 100;
         $loginPluginId = ZalyConfig::getConfig("loginPluginId");
-        $this->_insertSiteLoginPlugin();
         $this->_insertSiteConfig($siteName, $loginPluginId);
 
         $ownerUic = '000000';
         $this->_insertSiteOwnerUic($ownerUic);
 
-        //admin web
-        $this->_insertSiteManagerPlugin($siteHost, $Port);
-        //user square
-        $this->_insertSiteUserSquarePlugin($siteHost, $Port);
+        $this->initPluginMiniProgram();
 
         return;
     }
@@ -297,8 +305,8 @@ class InstallDBController
                 userAgentType INTEGER,
                 gatewayURL VARCHAR(100),
                 gatewaySocketId VARCHAR(100),
-                UNIQUE(sessionId,userId)
-            );";
+                UNIQUE(sessionId,userId),
+                UNIQUE(userId,deviceId));";
         $prepare = $this->db->prepare($sql);
         $this->handelPrepareError($prepare);
         $prepare->execute();
@@ -518,6 +526,7 @@ class InstallDBController
         $siteConfig[SiteConfig::SITE_LOGIN_PLUGIN_ID] = $loginPluginId;
 
         $siteConfig[SiteConfig::SITE_PLUGIN_PLBLIC_KEY] = (new ZalyHelper())->generateStrKey(32);
+        $siteConfig[SiteConfig::SITE_PASSPORT_ACCOUNT_SAFE_PLUGIN_ID] = $this->passportAccountSafePluginId;
 
         $pubkAndPrikPems = SiteConfig::getPubkAndPrikPem();
         $siteConfig = array_merge($siteConfig, $pubkAndPrikPems);
@@ -545,140 +554,160 @@ class InstallDBController
         $prepare->execute();
     }
 
-    private function _insertSiteLoginPlugin()
+
+    /**
+     * 增加默认扩展小程序
+     */
+    private function initPluginMiniProgram()
     {
-        $sql = 'insert into
-                    sitePlugin(pluginId, name, logo, sort, landingPageUrl,landingPageWithProxy,usageType,loadingType,permissionType,authKey)
-                values
-                    (100,
-                    "登录注册页面",
-                    "", 
-                    100,
-                    "http://open.akaxin.com:5208/index.php?action=page.login",
-                    0,
-                    ' . Zaly\Proto\Core\PluginUsageType::PluginUsageLogin . ', 
-                    ' . Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage . ', 
-                    ' . Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll . ',
-                    "");
-                ';
+        $miniPrograms = [
+            [
+                'pluginId' => 100,
+                'name' => "管理后台小程序",
+                'logo' => "",
+                'sort' => 10,
+                'landingPageUrl' => "index.php?action=manage.index",
+                'landingPageWithProxy' => 1, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageIndex,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAdminOnly,
+                'authKey' => "",
+            ],
+            [
+                'pluginId' => 101,
+                'name' => "平台登陆小程序",
+                'logo' => "",
+                'sort' => 101,
+                'landingPageUrl' => "http://open.akaxin.com:5208/index.php?action=page.login",
+                'landingPageWithProxy' => 1, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageLogin,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+                'authKey' => "",
+            ],
+            [
+                'pluginId' => 102,
+                'name' => "密码登陆小程序",
+                'logo' => "",
+                'sort' => 102, //order = 102
+                'landingPageUrl' => "index.php?action=page.passport.login",
+                'landingPageWithProxy' => 1, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageLogin,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+                'authKey' => "",
+            ],
+            [
+                'pluginId' => 103,
+                'name' => "DC文档",
+                'logo' => "",
+                'sort' => 1, //order = 2
+                'landingPageUrl' => "http://duckchat.akaxin.com/wiki/",
+                'landingPageWithProxy' => 0, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageIndex,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+                'authKey' => "",
+            ],
+            [
+                'pluginId' => 104,
+                'name' => "gif小程序",
+                'logo' => "",
+                'sort' => 2, //order = 2
+                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
+                'landingPageWithProxy' => 1, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageU2Message,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+                'authKey' => "",
+            ],
+            [
+                'pluginId' => 104,
+                'name' => "gif小程序",
+                'logo' => "",
+                'sort' => 2, //order = 2
+                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
+                'landingPageWithProxy' => 1, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageGroupMessage,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+                'authKey' => "",
+            ],
+            [
+                'pluginId' => 105,
+                'name' => "账户安全",
+                'logo' => "",
+                'sort' => 104, //order = 2
+                'landingPageUrl' => "index.php?action=miniProgram.passport.account",
+                'landingPageWithProxy' => 1, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageAccountSafe,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+                'authKey' => "",
+            ],
+        ];
 
-        $prepare = $this->db->prepare($sql);
-        $this->handelPrepareError($prepare);
-        $prepare->execute();
-
-        $sql = 'insert into
-                    sitePlugin(pluginId, name, logo, sort, landingPageUrl,landingPageWithProxy, usageType,loadingType,permissionType,authKey)
-                values
-                    (105,
-                    "密码账号注册页面",
-                    "", 
-                    105,
-                    "index.php?action=page.loginSite",
-                    1,
-                     ' . Zaly\Proto\Core\PluginUsageType::PluginUsageLogin . ', 
-                     ' . Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage . ', 
-                     ' . Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll . ',
-                     "");
-                ';
-        $prepare = $this->db->prepare($sql);
-        $this->handelPrepareError($prepare);
-        $prepare->execute();
-
-        $sql = 'insert into
-                    sitePlugin(pluginId, name, logo, sort, landingPageUrl,landingPageWithProxy, usageType,loadingType,permissionType,authKey)
-                values
-                    (106,
-                    "gif",
-                    "", 
-                    106,
-                    "index.php?action=miniProgram.gif.index",
-                    1,
-                     ' . Zaly\Proto\Core\PluginUsageType::PluginUsageU2Message . ', 
-                     ' . Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox . ', 
-                     ' . Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll . ',
-                     "");
-                ';
-        $prepare = $this->db->prepare($sql);
-        $this->handelPrepareError($prepare);
-        $prepare->execute();
-
-
-        $sql = 'insert into
-                    sitePlugin(pluginId, name, logo, sort, landingPageUrl,landingPageWithProxy, usageType,loadingType,permissionType,authKey)
-                values
-                    (106,
-                    "gif",
-                    "", 
-                    106,
-                    "index.php?action=miniProgram.gif.index",
-                    1,
-                     ' . Zaly\Proto\Core\PluginUsageType::PluginUsageGroupMessage . ', 
-                     ' . Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox . ', 
-                     ' . Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll . ',
-                     "");
-                ';
-        $prepare = $this->db->prepare($sql);
-        $this->handelPrepareError($prepare);
-        $prepare->execute();
+        $this->_insertSiteLoginPlugin($miniPrograms);
 
     }
 
-    private function _insertSiteManagerPlugin($host, $port)
+
+    private function _insertSiteLoginPlugin($miniPrograms)
     {
-        $pluginAddress = "http://" . $host . ":" . $port . "/index.php?action=manage.index";
-        $sql = 'insert into
-                    sitePlugin(pluginId, name, logo, sort, landingPageUrl, landingPageWithProxy,usageType,loadingType,permissionType,authKey)
-                values
-                    (101,
-                    "manager",
-                    "", 
-                    1,
-                    "' . $pluginAddress . '",
-                    1,
-                     ' . Zaly\Proto\Core\PluginUsageType::PluginUsageIndex . ', 
-                     ' . Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage . ', 
-                     ' . Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll . ',
-                     "");
-                ';
-        $prepare = $this->db->prepare($sql);
-        $this->handelPrepareError($prepare);
-        $prepare->execute();
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+        $this->db->beginTransaction();
+        try {
+            foreach ($miniPrograms as $miniProgram) {
+                $this->insertData("sitePlugin", $miniProgram);
+            }
+            $this->db->commit();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $this->logger->error($tag, $e);
+        }
+
+        $this->logger->info($tag, "init site miniProgram finish");
     }
 
-    private function _insertSiteUserSquarePlugin($host, $port)
+    public function insertData($tableName, $data)
     {
-        $pluginAddress = "http://" . $host . ":" . $port . "/index.php?action=manage.index";
-        $sql = 'insert into
-                    sitePlugin(pluginId, name, logo, sort, landingPageUrl,landingPageWithProxy, usageType,loadingType,permissionType,authKey)
-                values
-                    (102,
-                    "square",
-                    "", 
-                    2,
-                    "' . $pluginAddress . '",
-                    1,
-                    ' . Zaly\Proto\Core\PluginUsageType::PluginUsageIndex . ', 
-                    ' . Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage . ', 
-                    ' . Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll . ',
-                     "");
-                ';
-
+        $startTime = microtime(true);
+        $tag = __CLASS__ . "-" . __FUNCTION__;
+        $insertKeys = array_keys($data);
+        $insertKeyStr = implode(",", $insertKeys);
+        $placeholderStr = "";
+        foreach ($insertKeys as $key => $val) {
+            $placeholderStr .= ",:" . $val . "";
+        }
+        $placeholderStr = trim($placeholderStr, ",");
+        if (!$placeholderStr) {
+            throw new Exception("insert data fail with empty values");
+        }
+        $sql = " insert into  $tableName({$insertKeyStr}) values ({$placeholderStr});";
         $prepare = $this->db->prepare($sql);
         $this->handelPrepareError($prepare);
-
-        $prepare->execute();
+        foreach ($data as $key => $val) {
+            $prepare->bindValue(":" . $key, $val);
+        }
+        $flag = $prepare->execute();
+        $this->logger->writeSqlLog($tag, $sql, $data, $startTime);
+        $count = $prepare->rowCount();
+        if (!$flag || !$count) {
+            throw new Exception("insert data fail");
+        }
+        return true;
     }
 
     function handelPrepareError($prepare)
     {
         $this->wpf_Logger = new Wpf_Logger();
-        $tag = __CLASS__.'-'.__FUNCTION__;
+        $tag = __CLASS__ . ' - ' . __FUNCTION__;
         if (!$prepare) {
             $error = [
                 "error_code" => $this->db->errorCode(),
                 "error_info" => $this->db->errorInfo(),
             ];
-            $this->wpf_Logger->error($tag, "error_msg=".json_encode($error));
+            $this->wpf_Logger->error($tag, "error_msg=" . json_encode($error));
         }
     }
 }

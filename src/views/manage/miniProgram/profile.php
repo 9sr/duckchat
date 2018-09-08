@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Config Manage</title>
+    <title><?php if ($lang == "1") { ?>小程序<?php } else { ?>Mini Program<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
@@ -1054,7 +1054,7 @@
 
         var pluginId = $("#mini-program-id").attr("data");
 
-        alert("pluginId=" + pluginId + "name=" + name + " value=" + value);
+        // alert("pluginId=" + pluginId + "name=" + name + " value=" + value);
 
         var data = {
             'pluginId': pluginId,

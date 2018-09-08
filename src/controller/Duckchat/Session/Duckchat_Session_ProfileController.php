@@ -65,9 +65,10 @@ class Duckchat_Session_ProfileController extends Duckchat_MiniProgramController
             $this->rpcReturn($this->requestAction, $response);
         } catch (Exception $e) {
             $this->setRpcError("error.alert", $e->getMessage());
+            $response = new $this->classNameForResponse();
             $this->ctx->Wpf_Logger->error($this->requestAction, $e);
+            $this->rpcReturn($this->requestAction, new Zaly\Proto\Plugin\DuckChatSessionProfileResponse());
         }
-        $this->rpcReturn($this->requestAction, $response);
         return;
     }
 
@@ -75,7 +76,6 @@ class Duckchat_Session_ProfileController extends Duckchat_MiniProgramController
     {
         return $this->ctx->SitePluginTable->getPluginById($pluginId);
     }
-
 
     private function buildRequestResponse($userProfile)
     {

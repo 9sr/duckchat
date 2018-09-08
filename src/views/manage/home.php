@@ -367,6 +367,15 @@
         location.href = url;
     }
 
+    function zalyjsCommonOpenNewPage(url) {
+        if (isMobile()) {
+            zalyjsNavOpenPage(url);
+        } else {
+            // window.open(url, target);
+            location.href = url;
+        }
+    }
+
 </script>
 
 <script type="text/javascript">
@@ -379,22 +388,22 @@
     $("#mini-program-id").click(function () {
         var url = "index.php?action=manage.miniProgram&lang=" + getLanguage();
         // alert("url=" + url);
-        zalyjsCommonOpenPage(url);
+        zalyjsCommonOpenNewPage(url);
     });
 
     $("#user-manage-id").click(function () {
         var url = "index.php?action=manage.user&lang=" + getLanguage();
-        zalyjsCommonOpenPage(url);
+        zalyjsCommonOpenNewPage(url);
     });
 
     $("#group-manage-id").click(function () {
         var url = "index.php?action=manage.group&lang=" + getLanguage();
-        zalyjsCommonOpenPage(url);
+        zalyjsCommonOpenNewPage(url);
     });
 
     $("#uic-manage-id").click(function () {
         var url = "index.php?action=manage.uic&page=index&lang=" + getLanguage();
-        zalyjsCommonOpenPage(url);
+        zalyjsCommonOpenNewPage(url);
     });
 
     $("#data-report-id").click(function () {

@@ -37,9 +37,6 @@
                         </div>
                     </div>
 
-                    <div class="preemptiveVersionDiv">
-                        <img class='preemptive_version' src="../../public/img/preemptive_version.png"/>
-                    </div>
                     <div class="appDownload" style="display: none;">
                         <img class='app_download' src="../../public/img/dowload.png"/>
                     </div>

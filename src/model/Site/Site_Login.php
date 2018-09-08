@@ -179,7 +179,15 @@ class Site_Login
 
             //save profile to db
             $userProfile['availableType'] = \Zaly\Proto\Core\UserAvailableType::UserAvailableNormal;
-            $this->insertSiteUserProfile($userProfile);
+
+            $result = $this->insertSiteUserProfile($userProfile);
+
+            if ($result) {
+                $this->ctx->Site_Default->addDefaultFriendsAndGroups($userProfile['userId']);
+            } else {
+                // #TODO exception
+                throw new Exception("insert user profile to db error");
+            }
 
         }
 

@@ -49,6 +49,7 @@ class Api_Plugin_ListController extends \BaseController
                 case Zaly\Proto\Core\PluginUsageType::PluginUsageU2Message:
                 case Zaly\Proto\Core\PluginUsageType::PluginUsageTmpMessage:
                 case Zaly\Proto\Core\PluginUsageType::PluginUsageGroupMessage:
+                case \Zaly\Proto\Core\PluginUsageType::PluginUsageAccountSafe:
                     break;
                 case Zaly\Proto\Core\PluginUsageType::PluginUsageLogin:
                 default:

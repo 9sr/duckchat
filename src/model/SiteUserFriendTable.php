@@ -248,4 +248,47 @@ class SiteUserFriendTable extends BaseTable
         }
         throw  new Exception("delete failed");
     }
+
+    /**
+     * get user friendList not in group
+     * @param $userId
+     * @param $groupId
+     * @param $offset
+     * @param $pageSize
+     * @return array|bool
+     */
+    public function getUserFriendListNotInGroup($userId, $groupId, $offset, $pageSize)
+    {
+        try {
+            $startTime = microtime(true);
+            $tag = __CLASS__ . "-" . __FUNCTION__;
+
+
+            $sql = "SELECT
+                    a.userId,a.loginName,a.nickname,a.nicknameInLatin,a.avatar,b.aliasName,b.aliasNameInLatin, b.mute
+                FROM
+                    $this->userTable AS a INNER JOIN $this->table AS b ON b.friendId = a.userId
+                WHERE 
+                  b.userId=:userId AND b.friendId not in (
+                      select 
+                        userId 
+                      from 
+                        siteGroupUser 
+                      where groupId=:groupId) limit :offset, :pageSize;";
+
+            $prepare = $this->db->prepare($sql);
+            $this->handlePrepareError($tag, $prepare);
+            $prepare->bindValue(":userId", $userId);
+            $prepare->bindValue(":groupId", $groupId);
+            $prepare->bindValue(":offset", $offset);
+            $prepare->bindValue(":pageSize", $pageSize);
+            $prepare->execute();
+            $result = $prepare->fetchAll(\PDO::FETCH_ASSOC);
+            $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, [$userId, $groupId, $offset, $pageSize], $startTime);
+            return $result;
+        } catch (Exception $ex) {
+            $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex->getMessage());
+            return false;
+        }
+    }
 }

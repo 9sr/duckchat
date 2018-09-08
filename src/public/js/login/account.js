@@ -54,58 +54,6 @@ originDomain = protocol+"//"+host+pathname;
 isRegister=false;
 
 
-function zalyLoginConfig(results) {
-    if(typeof results == "object" ) {
-        siteConfig = results;
-    } else {
-        siteConfig = JSON.parse(results);
-    }
-    enableInvitationCode = siteConfig.enableInvitationCode;
-    enableRealName=siteConfig.enableRealName;
-    sitePubkPem = siteConfig.sitePubkPem;
-}
-
-function loginSuccess()
-{
-    handleRedirect();
-}
-
-function handleRedirect()
-{
-    if(refererUrl) {
-        if(refererUrl.indexOf("?") > -1) {
-            refererUrl = refererUrl+"&preSessionId="+preSessionId+"&isRegister="+isRegister;
-        } else {
-            refererUrl = refererUrl+"?preSessionId="+preSessionId+"&isRegister="+isRegister;
-        }
-        window.location.href = refererUrl;
-    }
-}
-
-
-function loginFailed()
-{
-    zalyjsAlert("登录失败");
-    console.log("登录失败");
-}
-
-if(refererUrl != undefined && refererUrl.length>1) {
-    siteConfigJsUrl = "./index.php?action=page.siteConfig&callback=zalyLoginConfig";
-    addJsByDynamic(siteConfigJsUrl);
-} else {
-    zalyjsLoginConfig(zalyLoginConfig);
-}
-
-function addJsByDynamic(url)
-{
-    console.log(url);
-    var script = document.createElement("script")
-    script.type = "text/javascript";
-    //Firefox, Opera, Chrome, Safari 3+
-    script.src = url;
-    $(".zaly_container")[0].appendChild(script);
-}
-
 function changeImgByClickPwd() {
     var imgType = $(".pwd").attr("img_type");
     if(imgType == "hide") {
@@ -159,6 +107,7 @@ function registerForPassportPassword()
 function returnRegisterDiv() {
     $(".zaly_site_register-pwd")[0].style.display = "block";
     $(".zaly_site_register-invitecode")[0].style.display = "none";
+    $(".zaly_site_update-invitecode")[0].style.display = "none";
 }
 
 function handleHtmlLanguage(html)
@@ -447,13 +396,14 @@ function getVerifyCode()
         zalyjsAlert($.i18n.map["loginNameNotNullJsTip"]);
         return false;
     }
-    isSending = true;
-    showTime();
 
     var action = "api.passport.passwordFindPassword";
     var reqData = {
         "loginName" : loginName,
     };
+
+    isSending = true;
+    showTime();
 
     handleClientSendRequest(action, reqData, handleVerifyCode);
 }
@@ -482,6 +432,7 @@ function showTime()
 }
 
 $(document).on("click", ".reset_pwd_button", function () {
+    var isFoucs = false;
     var action = "api.passport.passwordResetPassword";
     var isFocus = false;
     var token = $(".forget_input_code").val();
@@ -525,34 +476,25 @@ $(document).on("click", ".reset_pwd_button", function () {
         return;
     }
 
-    if(repassword != password) {
-        zalyjsAlert($.i18n.map["passwordIsNotSameJsTip"]);
-        return;
-    }
-
     var reqData = {
         "loginName" : loginName,
         "token" :token,
         "password" :password
     };
 
-    handleClientSendRequest(action, reqData, handleResetPwd);
+    $.ajax({
+        method: "POST",
+        url:"./index.php?action=miniProgram.passport.account&mini",
+        data: reqData,
+        success:function (resp, status, request) {
+            console.log(resp);
+            var error = JSON.parse(resp);
+            if(error["errCode"].length>1) {
+                zalyjsAlert(error['errCode']);
+            }
+        },
+        failed:function (error) {
+            console.log(error);
+        }
+    });
 });
-
-function handleResetPwd()
-{
-    $(".zaly_login_by_pwd")[0].style.display = "block";
-    $(".zaly_site_register-pwd")[0].style.display = "none";
-    $(".zaly_site_register-repwd")[0].style.display = "none";
-}
-
-function returnLoginPage()
-{
-    $(".zaly_site_register-repwd")[0].style.display = "none";
-    $(".zaly_login_by_pwd")[0].style.display = "block";
-}
-
-function clearLoginName()
-{
-    $(".login_input_loginName").val("");
-}

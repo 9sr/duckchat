@@ -72,4 +72,11 @@ abstract class Wpf_Controller {
 
         return false;
     }
+
+    public function setCookieBase64($userId, $cookieName)
+    {
+        $cookieAes = $this->ctx->ZalyAes->encrypt($userId, $this->ctx->ZalyAes->cookieKey);
+        $cookieBase64 = base64_encode($cookieAes);
+        setcookie($cookieName, $cookieBase64, time() + $this->sessionIdTimeOut, "/", "", false, true);
+    }
 }

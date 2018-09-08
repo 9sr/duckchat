@@ -58,7 +58,6 @@ class Api_Passport_PasswordFindPasswordController extends  BaseController
             $this->ctx->PassportPasswordTokenTable->insertCodeInfo($codeInfo);
             $this->ctx->ZalyMail->sendEmail($toEmail, $token, $sendSiteName);
         }catch (Exception $ex) {
-            $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex->getMessage());
             $where = [
                 "loginName" => $user['loginName']
             ];

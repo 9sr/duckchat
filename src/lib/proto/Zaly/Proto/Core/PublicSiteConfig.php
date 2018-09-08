@@ -62,15 +62,19 @@ class PublicSiteConfig extends \Google\Protobuf\Internal\Message
      */
     private $loginPluginId = 0;
     /**
-     * Generated from protobuf field <code>bool enableWidgetWeb = 12;</code>
+     * Generated from protobuf field <code>int32 accountSafePluginId = 12;</code>
+     */
+    private $accountSafePluginId = 0;
+    /**
+     * Generated from protobuf field <code>bool enableWidgetWeb = 13;</code>
      */
     private $enableWidgetWeb = false;
     /**
-     * Generated from protobuf field <code>string siteIdPubkBase64 = 13;</code>
+     * Generated from protobuf field <code>string siteIdPubkBase64 = 14;</code>
      */
     private $siteIdPubkBase64 = '';
     /**
-     * Generated from protobuf field <code>.core.Version version = 14;</code>
+     * Generated from protobuf field <code>.core.Version version = 15;</code>
      */
     private $version = null;
 
@@ -92,6 +96,7 @@ class PublicSiteConfig extends \Google\Protobuf\Internal\Message
      *     @type bool $enableInvitationCode
      *     @type bool $enableRealName
      *     @type int $loginPluginId
+     *     @type int $accountSafePluginId
      *     @type bool $enableWidgetWeb
      *     @type string $siteIdPubkBase64
      *     @type \Zaly\Proto\Core\Version $version
@@ -349,7 +354,29 @@ class PublicSiteConfig extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>bool enableWidgetWeb = 12;</code>
+     * Generated from protobuf field <code>int32 accountSafePluginId = 12;</code>
+     * @return int
+     */
+    public function getAccountSafePluginId()
+    {
+        return $this->accountSafePluginId;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 accountSafePluginId = 12;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setAccountSafePluginId($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->accountSafePluginId = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool enableWidgetWeb = 13;</code>
      * @return bool
      */
     public function getEnableWidgetWeb()
@@ -358,7 +385,7 @@ class PublicSiteConfig extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>bool enableWidgetWeb = 12;</code>
+     * Generated from protobuf field <code>bool enableWidgetWeb = 13;</code>
      * @param bool $var
      * @return $this
      */
@@ -371,7 +398,7 @@ class PublicSiteConfig extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string siteIdPubkBase64 = 13;</code>
+     * Generated from protobuf field <code>string siteIdPubkBase64 = 14;</code>
      * @return string
      */
     public function getSiteIdPubkBase64()
@@ -380,7 +407,7 @@ class PublicSiteConfig extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string siteIdPubkBase64 = 13;</code>
+     * Generated from protobuf field <code>string siteIdPubkBase64 = 14;</code>
      * @param string $var
      * @return $this
      */
@@ -393,7 +420,7 @@ class PublicSiteConfig extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.core.Version version = 14;</code>
+     * Generated from protobuf field <code>.core.Version version = 15;</code>
      * @return \Zaly\Proto\Core\Version
      */
     public function getVersion()
@@ -402,7 +429,7 @@ class PublicSiteConfig extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>.core.Version version = 14;</code>
+     * Generated from protobuf field <code>.core.Version version = 15;</code>
      * @param \Zaly\Proto\Core\Version $var
      * @return $this
      */

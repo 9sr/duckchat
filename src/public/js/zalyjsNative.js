@@ -145,8 +145,9 @@ function zalyjsNavClosePlugin()
 function zalyjsAlert(str)
 {
     if (isAndroid()) {
-        window.Android.zalyjsAlert(str)
+        window.Android.zalyjsAlert(str);
     } else if(isIOS()) {
+        alert(str);
     } else {
         alert(str);
     }

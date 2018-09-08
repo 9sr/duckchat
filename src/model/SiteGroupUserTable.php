@@ -28,12 +28,12 @@ class SiteGroupUserTable extends BaseTable
      */
     public function insertGroupUserInfo($groupUserInfo)
     {
-        $this->insertData($this->table, $groupUserInfo, $this->columns);
+        return $this->insertData($this->table, $groupUserInfo, $this->columns);
     }
 
     public function updateGroupUserInfo($where, $data)
     {
-        $this->updateInfo($this->table, $where, $data, $this->columns);
+        return $this->updateInfo($this->table, $where, $data, $this->columns);
     }
 
     /**

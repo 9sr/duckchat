@@ -73,6 +73,11 @@ class Im_Cts_UpdatePointerController extends Im_BaseController
             //update group pointer
             if (!empty($groupPointerMap)) {
                 foreach ($groupPointerMap as $groupId => $groupPointer) {
+
+                    if (empty($groupPointer)) {
+                        continue;
+                    }
+
                     $currentGroupPointer = $groupPointer;
                     $maxGroupUserPointer = $this->ctx->SiteGroupMessageTable->queryMaxPointerByUser($groupId, $userId);
 
