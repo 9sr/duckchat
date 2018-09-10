@@ -27,12 +27,18 @@ class  Api_Friend_ApplyController extends BaseController
         $tag = __CLASS__ . '-' . __FUNCTION__;
         try {
             $toUserId = $request->getToUserId();
-            if (!$toUserId) {
+
+            if (empty($toUserId)) {
                 $errorCode = $this->zalyError->errorFriendApply;
                 $errorInfo = $this->zalyError->getErrorInfo($errorCode);
                 $this->setRpcError($errorCode, $errorInfo);
                 throw new Exception("no user id");
             }
+
+            if ($toUserId == $this->userId) {
+                $this->setRpcError("error.alert", "can't add yourself as a friend");
+            }
+
             $greetings = $request->getGreetings();
 
             //check site allow addfriend

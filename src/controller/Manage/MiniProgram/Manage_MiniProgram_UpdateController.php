@@ -21,10 +21,6 @@ class Manage_MiniProgram_UpdateController extends Manage_CommonController
             $name = $_POST['name'];
             $value = $_POST['value'];
 
-            $this->ctx->Wpf_Logger->info("~~~~~~~~~~~~~~~~~~", "plugin=" . $pluginId);
-            $this->ctx->Wpf_Logger->info("~~~~~~~~~~~~~~~~~~", "name=" . $name);
-            $this->ctx->Wpf_Logger->info("~~~~~~~~~~~~~~~~~~", "value=" . $value);
-
             if (empty($pluginId) || empty($name)) {
                 throw new Exception("error parameters");
             }

@@ -273,8 +273,7 @@ class ZalyCurl
         }
         $delHeaders = array("host");
         foreach ($baseHeaders as $key => $value) {
-            $key =strtolower($key);
-            if(in_array($key, $delHeaders)) {
+            if(in_array(strtolower($key), $delHeaders)) {
                 continue;
             }
             $headers[] = $key . ': ' . $value;
