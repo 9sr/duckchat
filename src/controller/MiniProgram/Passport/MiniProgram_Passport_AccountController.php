@@ -37,8 +37,6 @@ class MiniProgram_Passport_AccountController extends MiniProgramController
             if($method == "post") {
 
                 $loginName = $_POST['loginName'];
-                $newPassword = $_POST['newPassword'];
-                $oldPassword = $_POST['oldPassword'];
 
                 $siteLoginName = $this->loginName;
                 if($siteLoginName != $loginName) {
@@ -47,14 +45,8 @@ class MiniProgram_Passport_AccountController extends MiniProgramController
                     echo json_encode(["errCode" => $errorInfo]);
                     return;
                 }
-                if(strlen($newPassword)<5 || strlen($newPassword)>20) {
-                    $errorCode = $this->zalyError->errorPassowrdLength;
-                    $errorInfo = $this->zalyError->getErrorInfo($errorCode);
-                    echo json_encode(["errCode" => $errorInfo]);
-                    return;
-                }
 
-                $this->modifyPassportPassword($loginName, $oldPassword, $newPassword);
+                $this->modifyPassportPassword($loginName);
                 echo json_encode(["errCode" => "success"]);
                 return;
             } else {
@@ -69,22 +61,15 @@ class MiniProgram_Passport_AccountController extends MiniProgramController
         }
     }
 
-    private function modifyPassportPassword($loginName, $oldPassword, $newPassword)
+    private function modifyPassportPassword($loginName)
     {
         $tag = __CLASS__ . "-". __FUNCTION__;
 
         try{
-            $modifyPasswordReq = new \Zaly\Proto\Site\ApiPassportPasswordModifyPasswordRequest();
-            $modifyPasswordReq->setLoginName($loginName);
-            $modifyPasswordReq->setPassword($oldPassword);
-            $modifyPasswordReq->setNewPassword($newPassword);
-            $updatePasswordUrl =  "/index.php?action=" . $this->resetPassword . "&body_format=pb";
-            $updatePasswordUrl = ZalyHelper::getFullReqUrl($updatePasswordUrl);
-            $this->sendReq( $this->resetPassword, $updatePasswordUrl, $modifyPasswordReq);
 
             $sessionClearRequest = new \Zaly\Proto\Plugin\DuckChatSessionClearRequest();
             $sessionClearRequest->setUserId($this->userId);
-            $sessionClearUrl = "/index.php?action=" . $this->sessionClear . "&body_format=pb&miniProgramId=".$this->passporAccountPluginId;
+            $sessionClearUrl = "/index.php?action=" . $this->sessionClear . "&body_format=base64pb&miniProgramId=".$this->passporAccountPluginId;
             $sessionClearUrl = ZalyHelper::getFullReqUrl($sessionClearUrl);
             $this->sendReq($this->sessionClear, $sessionClearUrl, $sessionClearRequest);
         }catch (Exception $ex) {
@@ -104,20 +89,16 @@ class MiniProgram_Passport_AccountController extends MiniProgramController
         $transportData->setAction($action);
         $transportData->setHeader(["_".\Zaly\Proto\Core\TransportDataHeaderKey::HeaderUserClientLang => $this->language]);
         $data = $transportData->serializeToString();
+        $data = base64_encode($data);
 
         $pluginProfile =  $this->getMiniProgramProfile($this->passporAccountPluginId);
-
-        if($action == $this->sessionClear) {
-            $authKey = $pluginProfile['authKey'];
-            $data = $this->ctx->ZalyAes->encrypt($data, $authKey);
-        }
+        $authKey = $pluginProfile['authKey'];
+        $data = $this->ctx->ZalyAes->encrypt($data, $authKey);
 
         $result = $this->ctx->ZalyCurl->request("post", $url, $data);
-
-        if($action == $this->sessionClear) {
-            $authKey = $pluginProfile['authKey'];
-            $result = $this->ctx->ZalyAes->decrypt($data, $authKey);
-        }
+        $authKey = $pluginProfile['authKey'];
+        $result = $this->ctx->ZalyAes->decrypt($result, $authKey);
+        $result = base64_decode($result);
 
         //解析数据
         $transportData = new \Zaly\Proto\Core\TransportData();

@@ -2,8 +2,6 @@
 
 msgImageSize = "";
 
-isSyncingMsg = false;
-
 function getRoomList()
 {
     var roomList = handleRoomListFromLocalStorage(undefined);
@@ -269,7 +267,8 @@ function handleSetItemError(error)
 }
 enableWebsocketGw = localStorage.getItem(websocketGW);
 
-if(enableWebsocketGw == "false") {
+
+if(enableWebsocketGw == "false" || enableWebsocketGw == null) {
     ///1秒 sync
    setInterval(function (args) {
        enableWebsocketGw = localStorage.getItem(websocketGW);
@@ -298,9 +297,16 @@ function handleAuth()
 
 function syncMsgForRoom()
 {
+
+    if((Date.parse(new Date()) - isPreSyncingMsgTime) > 10000) {
+        isSyncingMsg = false;
+    }
+
     if(isSyncingMsg == true) {
         return ;
     }
+
+    isPreSyncingMsgTime = Date.parse(new Date());
     isSyncingMsg = true;
     var action = "im.cts.sync";
 

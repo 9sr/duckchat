@@ -8,23 +8,22 @@
 
         <div class="d-flex flex-row justify-content-left login_name_div margin-top2 login_name_div_mobile" >
             <image src="../../public/img/login/loginName.png" class="img"/>
-            <input type="text" id="register_input_loginName"  class="input_login_site  register_input_loginName" data-local-placeholder="registerLoginNamePlaceholder"   placeholder="用户名以字母、数字、下划线，1-16个字符" >
+            <input type="text" id="register_input_loginName"  datatype="s"  class="input_login_site  register_input_loginName" data-local-placeholder="registerLoginNamePlaceholder"  autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"  style="text-transform:lowercase" placeholder="用户名以字母、数字、下划线，1-16个字符" >
             <img src="../../public/img/msg/msg_failed.png" class="img-failed register_input_loginName_failed">
             <div class="line"></div>
         </div>
 
         <div class="login_name_div" style="margin-top: 2rem;">
             <image src="../../public/img/login/pwd.png" class="img"/>
-            <input type="password" class="input_login_site register_input_pwd"  id="register_input_pwd" data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password"  >
+            <input type="password" class="input_login_site register_input_pwd" autocapitalize="off"   id="register_input_pwd" data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password"  >
             <div class="pwd_div" onclick="changeImgByClickPwd()"><image src="../../public/img/login/hide_pwd.png" class="pwd" img_type="hide"/></div>
             <img src="../../public/img/msg/msg_failed.png" class="img-failed register_input_pwd_failed">
         </div>
         <div class="line"></div>
 
-
         <div class="login_name_div" style="margin-top: 2rem;">
             <image src="../../public/img/login/pwd.png" class="img"/>
-            <input type="password" class="input_login_site register_input_repwd"  id="register_input_repwd" data-local-placeholder="enterRepasswordPlaceholder"  placeholder="Please Enter Password Again"  >
+            <input type="password" class="input_login_site register_input_repwd" autocapitalize="off"   id="register_input_repwd" data-local-placeholder="enterRepasswordPlaceholder"  placeholder="Please Enter Password Again"  >
             <div class="repwd_div" onclick="changeImgByClickRepwd()"><image src="../../public/img/login/hide_pwd.png" class="repwd" img_type="hide"/></div>
             <img src="../../public/img/msg/msg_failed.png" class="img-failed register_input_repwd_failed">
             <div class="line" ></div>
@@ -32,14 +31,14 @@
 
         <div class="login_name_div" style="margin-top: 2rem;">
             <image src="../../public/img/login/nickname.png" class="img"/>
-            <input type="text" class="input_login_site register_input_nickname"   id="register_input_nickname" data-local-placeholder="enterNicknamePlaceholder" placeholder="Please Enter Nickname"  >
+            <input type="text" class="input_login_site register_input_nickname"  autocapitalize="off"  id="register_input_nickname" data-local-placeholder="enterNicknamePlaceholder" placeholder="Please Enter Nickname"  >
             <img src="../../public/img/msg/msg_failed.png" class="img-failed register_input_nickname_failed">
             <div class="line"></div>
         </div>
 
         <div class="login_name_div" style="margin-top: 2rem;">
             <image src="../../public/img/login/email.png" class="img"/>
-            <input type="text" class="input_login_site register_input_email"  id="register_input_email" data-local-placeholder="enterEmailPlaceholder" placeholder="Please Enter Email" >
+            <input type="text" class="input_login_site register_input_email" autocapitalize="off"  id="register_input_email" data-local-placeholder="enterEmailPlaceholder" placeholder="Please Enter Email" >
             <img src="../../public/img/msg/msg_failed.png" class="img-failed register_input_email_failed">
             <div class="line"></div>
         </div>

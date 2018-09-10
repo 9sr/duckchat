@@ -23,7 +23,7 @@
 
             <div class=" d-flex flex-row justify-content-left login_name_div margin-top4 login_name_div_mobile" >
                 <image src="../../public/img/login/loginName.png" class="img"/>
-                <input type="text" class="input_login_site  login_input_loginName"  data-local-placeholder="loginNamePlaceholder" placeholder="Please Enter LoginName" >
+                <input type="text" class="input_login_site  login_input_loginName" datatype="s" autocapitalize="off"  data-local-placeholder="loginNamePlaceholder" placeholder="Please Enter LoginName" >
                 <div class="clearLoginName" onclick="clearLoginName()"><image src="../../public/img/msg/btn-x.png" class="clearLoginName" style="width: 2rem;height:2rem;"/></div>
                 <img src="../../public/img/msg/msg_failed.png" class="img-failed login_input_loginName_failed">
             </div>
@@ -31,7 +31,7 @@
 
             <div class="login_name_div margin-top2">
                 <image src="../../public/img/login/pwd.png" class="img"/>
-                <input type="password" class="input_login_site phone_num  login_input_pwd" data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password" >
+                <input type="password" class="input_login_site phone_num  login_input_pwd" autocapitalize="off"  data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password" >
                 <div class="pwd_div" onclick="changeImgByClickPwd()"><image src="../../public/img/login/hide_pwd.png" class="pwd" img_type="hide" /></div>
                 <img src="../../public/img/msg/msg_failed.png" class="img-failed login_input_pwd_failed">
             </div>
@@ -63,14 +63,14 @@
 
             <div class="login_name_div login_name_div_mobile">
                 <image src="../../public/img/login/loginName.png" class="img"/>
-                <input type="text" class="input_login_site forget_input_loginName" data-local-placeholder="loginNamePlaceholder" placeholder="Please Enter LoginName">
+                <input type="text" class="input_login_site forget_input_loginName" datatype="s"  autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"  data-local-placeholder="loginNamePlaceholder" placeholder="Please Enter LoginName" style="text-transform:lowercase">
                 <img src="../../public/img/msg/msg_failed.png" class="img-failed forget_input_loginName_failed">
                 <div class="line"></div>
             </div>
 
             <div class=" d-flex flex-row justify-content-left login_name_div margin-top2"  >
                 <image src="../../public/img/login/code.png" class="img"/>
-                <input type="text"  value="" class="input_login_site  forget_input_code" data-local-placeholder="enterVerifyCodePlaceholder"  placeholder="Please Enter Verify Code"  >
+                <input type="text"  value="" class="input_login_site  forget_input_code" autocapitalize="off"   data-local-placeholder="enterVerifyCodePlaceholder"  placeholder="Please Enter Verify Code"  >
                 <span class="get_verify_code" onclick="getVerifyCode()" data-local-value="getVerifyCodeTip" >Get Verify Code</span>
                 <img src="../../public/img/msg/msg_failed.png" class="img-failed forget_input_code_failed">
 
@@ -79,7 +79,7 @@
 
             <div class="login_name_div forget_input_pwd_div margin-top2" style="display:none;" >
                 <image src="../../public/img/login/pwd.png" class="img"/>
-                <input type="password" class="input_login_site forget_input_pwd"  data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password" >
+                <input type="password" class="input_login_site forget_input_pwd"  autocapitalize="off"  data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password" >
                 <div class="pwd_div" onclick="changeImgByClickPwd()"><image src="../../public/img/login/hide_pwd.png" class="pwd" img_type="hide"/></div>
                 <img src="../../public/img/msg/msg_failed.png" class="img-failed forget_input_pwd_failed">
 
@@ -88,7 +88,7 @@
 
             <div class="login_name_div forget_input_repwd_div margin-top2" style=" display:none;">
                 <image src="../../public/img/login/re_pwd.png" class="img"/>
-                <input type="password" class="input_login_site forget_input_repwd"  data-local-placeholder="enterRepasswordPlaceholder"  placeholder="Please Enter Password Again"  >
+                <input type="password" class="input_login_site forget_input_repwd" autocapitalize="off"  data-local-placeholder="enterRepasswordPlaceholder"  placeholder="Please Enter Password Again"  >
                 <div class="repwd_div" onclick="changeImgByClickRepwd()"><image src="../../public/img/login/hide_pwd.png" class="pwd" img_type="hide"/></div>
                 <img src="../../public/img/msg/msg_failed.png" class="img-failed forget_input_repwd_failed">
                 <div class="line" ></div>
@@ -114,7 +114,7 @@
             </div>
 
             <div class="code_div login_name_div_mobile" style="margin-top: 8rem;">
-                <input type="text" class="input_login_site register_input_code" style="margin-left: 0rem;" data-local-placeholder="enterCodePlaceholder"  placeholder=" Enter Code"  >
+                <input type="text" class="input_login_site register_input_code" style="margin-left: 0rem;" data-local-placeholder="enterCodePlaceholder" autocapitalize="off"   placeholder=" Enter Code"  >
                 <div class="line" ></div>
             </div>
 
@@ -135,7 +135,7 @@
             </div>
 
             <div class="code_div login_name_div_mobile" style="margin-top: 8rem;">
-                <input type="text" class="input_login_site update_input_code" style="margin-left: 0rem;" data-local-placeholder="enterCodePlaceholder"  placeholder=" Enter Code"  >
+                <input type="text" class="input_login_site update_input_code" autocapitalize="off" style="margin-left: 0rem;" data-local-placeholder="enterCodePlaceholder"  placeholder=" Enter Code"  >
                 <div class="line" ></div>
             </div>
 

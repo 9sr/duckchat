@@ -14,9 +14,8 @@
      'loginPluginId' => '105',
      'apiPageWidget' => './index.php?action=page.widget',
      'apiPageSiteInit' => "./index.php?action=installDB",
-     'apiSiteLogin' => './index.php?action=api.site.login&body_format=pb',
      'session_verify_101' => 'http://open.akaxin.com:5208/index.php?action=api.session.verify&body_format=pb',
-     'session_verify_102' => './index.php?action=api.session.verify&body_format=pb',
+     'session_verify_102' => './index.php?action=api.session.verify&body_format=base64pb',
      "siteAddress" => '',
      'passport_cookie_name' => "duckchat_passport_cookie",
      'mail' =>

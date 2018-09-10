@@ -112,7 +112,6 @@ abstract class BaseController extends \Wpf_Controller
 
         $transData->setHeader($this->headers);
         $transData->setPackageId($this->requestTransportData->getPackageId());
-
         $body = "";
         if ("json" == $this->bodyFormatType) {
             $body = $transData->serializeToJsonString();
@@ -126,6 +125,7 @@ abstract class BaseController extends \Wpf_Controller
             return;
         }
         echo $body;
+        return;
     }
 
     // ignore.~

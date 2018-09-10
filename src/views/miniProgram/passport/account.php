@@ -23,7 +23,7 @@
 
             <div class="login_name_div login_name_div_mobile">
                 <image src="../../public/img/login/loginName.png" class="img"/>
-                <input type="text" class="input_login_site forget_input_loginName" data-local-placeholder="loginNamePlaceholder" placeholder="Please Enter LoginName">
+                <input type="text" class="input_login_site forget_input_loginName" datatype="s" autocapitalize="off"  data-local-placeholder="loginNamePlaceholder" placeholder="Please Enter LoginName">
                 <img src="../../../public/img/msg/msg_failed.png" class="img-failed forget_input_loginName_failed">
                 <div class="line"></div>
             </div>
@@ -31,7 +31,7 @@
 
             <div class="login_name_div forget_input_pwd_div margin-top2"  >
                 <image src="../../public/img/login/pwd.png" class="img"/>
-                <input type="password" class="input_login_site forget_input_oldPwd"  data-local-placeholder="enterOldPasswordPlaceholder"  placeholder="Please Enter Password" >
+                <input type="password" class="input_login_site forget_input_oldPwd" autocapitalize="off"  data-local-placeholder="enterOldPasswordPlaceholder"  placeholder="Please Enter Password" >
                 <div class="pwd_div" onclick="changeImgByClickOldPwd()"><image src="../../public/img/login/hide_pwd.png" class="oldPwd" img_type="hide"/></div>
                 <img src="../../../public/img/msg/msg_failed.png" class="img-failed forget_input_oldPwd_failed">
 
@@ -40,7 +40,7 @@
 
             <div class="login_name_div forget_input_pwd_div margin-top2"  >
                 <image src="../../public/img/login/pwd.png" class="img"/>
-                <input type="password" class="input_login_site forget_input_pwd"  data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password" >
+                <input type="password" class="input_login_site forget_input_pwd"  autocapitalize="off"  data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password" >
                 <div class="pwd_div" onclick="changeImgByClickPwd()"><image src="../../public/img/login/hide_pwd.png" class="pwd" img_type="hide"/></div>
                 <img src="../../../public/img/msg/msg_failed.png" class="img-failed forget_input_pwd_failed">
 
@@ -49,7 +49,7 @@
 
             <div class="login_name_div forget_input_repwd_div margin-top2" >
                 <image src="../../public/img/login/re_pwd.png" class="img"/>
-                <input type="password" class="input_login_site forget_input_repwd"  data-local-placeholder="enterRepasswordPlaceholder"  placeholder="Please Enter Password Again"  >
+                <input type="password" class="input_login_site forget_input_repwd" autocapitalize="off"   data-local-placeholder="enterRepasswordPlaceholder"  placeholder="Please Enter Password Again"  >
                 <div class="repwd_div" onclick="changeImgByClickRepwd()"><image src="../../public/img/login/hide_pwd.png" class="repwd" img_type="hide"/></div>
                 <img src="../../../public/img/msg/msg_failed.png" class="img-failed forget_input_repwd_failed">
 
@@ -188,7 +188,7 @@
         var oldPassword = $(".forget_input_oldPwd").val();
         var repassword = $(".forget_input_repwd").val();
         var newPassword = $(".forget_input_pwd").val();
-        var loginName = $(".forget_input_loginName").val();
+        loginName = $(".forget_input_loginName").val();
 
         if(loginName == "" || loginName == undefined || loginName.length<0) {
             $(".forget_input_loginName").focus();
@@ -242,13 +242,18 @@
         var reqData = {
             "loginName" : loginName,
             "newPassword" :newPassword,
-            "oldPassword" :oldPassword
+            "password" :oldPassword
         };
 
+        var action = "api.passport.passwordModifyPassword"
+        handleClientSendRequest(action, reqData, handleModifyPassword);
+    });
+
+    function handleModifyPassword() {
         $.ajax({
             method: "POST",
             url:"./index.php?action=miniProgram.passport.account&lang="+languageNum,
-            data: reqData,
+            data: {"loginName" : loginName},
             success:function (resp, status, request) {
                 var error = JSON.parse(resp);
                 if(error["errCode"].length>1) {
@@ -259,8 +264,7 @@
                 console.log(error);
             }
         });
-    });
-
+    }
 </script>
 </body>
 </html>

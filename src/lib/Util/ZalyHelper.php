@@ -175,6 +175,9 @@ class ZalyHelper
             }
             if(strpos($reqUrl, "/") == 0) {
                 $fullUrl = "{$schema}://{$host}{$reqUrl}";
+            } elseif(strpos($reqUrl, "./") == 0){
+                $reqUrl = str_replace("./", "/", $reqUrl);
+                $fullUrl = "{$schema}://{$host}{$reqUrl}";
             } else {
                 $fullUrl = "{$schema}://{$host}/{$reqUrl}";
             }

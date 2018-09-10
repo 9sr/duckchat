@@ -101,10 +101,14 @@ function handleImSendRequest(action, reqData, callback)
                     if(resp) {
                         handleReceivedImMessage(resp, callback);
                     }
+                },
+                fail: function () {
+                    isSyncingMsg = false;
                 }
             });
         }
     } catch(e) {
+        isSyncingMsg = false;
         return false;
     }
 }

@@ -1,4 +1,4 @@
-cd<?php
+<?php
 /**
  * Created by PhpStorm.
  * User: childeYin<尹少爷>
@@ -49,7 +49,6 @@ class Api_Site_LoginController extends \BaseController
             }
 
             $this->ctx->Wpf_Logger->info("api.site.login", "preSessionId=" . $preSessionId);
-//            $this->ctx->Wpf_Logger->info("api.site.login", " -devicePubkPem=" . $devicePubkPem);
 
             if (!$preSessionId) {
                 $errorCode = $this->zalyError->errorSiteLogin;
@@ -62,10 +61,10 @@ class Api_Site_LoginController extends \BaseController
             $userProfile = $this->ctx->Site_Login->checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem, 1);
 
             $realSessionId = $userProfile['sessionId'];
+
             $this->ctx->Wpf_Logger->info("api.site.login", "get platform sessionid=" . $realSessionId);
 
             $response = $this->buildApiSiteLoginResponse($userProfile, $realSessionId);
-
 
             $this->ctx->Wpf_Logger->info("api.site.login", "response=" . $response->serializeToJsonString());
 
@@ -76,7 +75,6 @@ class Api_Site_LoginController extends \BaseController
             $errorCode = $this->zalyError->errorSiteLogin;
             $errorInfo = $this->zalyError->getErrorInfo($errorCode);
             $this->ctx->Wpf_Logger->error($tag, "=========error=" . $ex->getMessage());
-
             $this->setRpcError($errorCode, $errorInfo);
             $this->rpcReturn($transportData->getAction(), new $this->classNameForResponse());
         }
@@ -92,9 +90,9 @@ class Api_Site_LoginController extends \BaseController
             $publicUserProfile = $this->getPublicUserProfile($userInfo);
 
             if (\Zaly\Proto\Core\UserAvailableType::UserAvailableBlocked == $publicUserProfile->getAvailableType()) {
+                error_log("user profile failed");
                 throw new Exception("user is blocked");
             }
-
             $allUserProfile = new \Zaly\Proto\Core\AllUserProfile();
             $allUserProfile->setPublic($publicUserProfile);
 

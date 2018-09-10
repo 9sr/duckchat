@@ -200,3 +200,5 @@ uploadFileUrl = './index.php?action=http.file.uploadWeb';
 languageName = "zh";
 languageNum = languageName == "en" ? UserClientLangEN : UserClientLangZH;
 
+isSyncingMsg = false;
+isPreSyncingMsgTime="";
