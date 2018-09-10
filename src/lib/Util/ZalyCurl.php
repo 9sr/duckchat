@@ -271,7 +271,12 @@ class ZalyCurl
         if (!$baseHeaders) {
             return false;
         }
+        $delHeaders = array("host");
         foreach ($baseHeaders as $key => $value) {
+            $key =strtolower($key);
+            if(in_array($key, $delHeaders)) {
+                continue;
+            }
             $headers[] = $key . ': ' . $value;
         }
         curl_setopt($this->_curlObj, CURLOPT_HTTPHEADER, $headers);

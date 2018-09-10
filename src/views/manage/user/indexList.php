@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Mini Program</title>
+    <title><?php if ($lang == "1") { ?>用户管理<?php } else { ?>User Management<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
@@ -18,7 +18,7 @@
             /*overflow: hidden;*/
             width: 100%;
             height: 100%;
-            background: rgba(245, 244, 249, 1);
+            background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
             overflow-y: hidden;
@@ -433,8 +433,6 @@
 
 <body>
 
-<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
-
 <div class="wrapper" id="wrapper">
 
     <!--    <div style="width: 100%"><input type="search" style="width: 100%"></div>-->
@@ -503,34 +501,6 @@
         </div>
 
     </div>
-</div>
-
-
-<div class="popup-template" style="visibility:hidden;">
-
-    <div class="config-hidden" id="popup-group">
-
-        <div class="flex-container">
-            <div class="header_tip_font popup-group-title" data-local-value="createGroupTip">创建群组</div>
-        </div>
-
-        <div class="" style="text-align: center">
-            <input type="text" class="popup-group-input"
-                   data-local-placeholder="enterGroupNamePlaceholder" placeholder="please input">
-        </div>
-
-        <div class="line"></div>
-
-        <div class="" style="text-align:center;">
-            <?php if ($lang == "1") { ?>
-                <button type="button" class="create_button" url-value="">保存</button>
-            <?php } else { ?>
-                <button type="button" class="create_button" url-value="">Save</button>
-            <?php } ?>
-        </div>
-
-    </div>
-
 </div>
 
 

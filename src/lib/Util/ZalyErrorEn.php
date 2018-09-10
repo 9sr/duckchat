@@ -60,6 +60,9 @@ class ZalyErrorEn extends  ZalyErrorBase
         "error.password.length" => "Password length is illegal",
 
         "error.session.clear" => "clear failed",
+
+        "error.updatePassword.loginName" => "LoginName unavailable",
+
     ];
 
     public function getErrorInfo($errorCode)

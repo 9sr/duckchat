@@ -62,7 +62,9 @@ class ZalyErrorZh extends ZalyErrorBase
         "error.nickname.length" => "昵称长度不合法",
         "error.site.pubkPem" => "站点公钥不合法",
 
-        "error.session.clear" => "删除失败"
+        "error.session.clear" => "删除失败",
+
+        "error.updatePassword.loginName" => "登录名不正确",
 
     ];
 

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Mini Program</title>
+    <title><?php if ($lang == "1") { ?>群组管理<?php } else { ?>Group Management<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
@@ -18,10 +18,10 @@
             /*overflow: hidden;*/
             width: 100%;
             height: 100%;
-            background: rgba(245, 244, 249, 1);
+            background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
-            overflow-y: hidden;
+            /*overflow-y: hidden;*/
 
         }
 
@@ -320,8 +320,6 @@
 
 <body>
 
-<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
-
 <div class="wrapper" id="wrapper">
 
     <div class="layout-all-row">
@@ -346,7 +344,7 @@
 
             <?php foreach ($groupList as $key => $profile) { ?>
 
-                <div class="item-row" id="group-list-id" groupId="<?php echo($profile["groupId"]) ?>">
+                <div class="item-row group-list" groupId="<?php echo($profile["groupId"]) ?>">
                     <div class="item-body">
                         <div class="item-body-display">
                             <div class="item-body-desc">
@@ -370,34 +368,6 @@
         </div>
 
     </div>
-</div>
-
-
-<div class="popup-template" style="visibility:hidden;">
-
-    <div class="config-hidden" id="popup-group">
-
-        <div class="flex-container">
-            <div class="header_tip_font popup-group-title" data-local-value="createGroupTip">创建群组</div>
-        </div>
-
-        <div class="" style="text-align: center">
-            <input type="text" class="popup-group-input"
-                   data-local-placeholder="enterGroupNamePlaceholder" placeholder="please input">
-        </div>
-
-        <div class="line"></div>
-
-        <div class="" style="text-align:center;">
-            <?php if ($lang == "1") { ?>
-                <button type="button" class="create_button" url-value="">保存</button>
-            <?php } else { ?>
-                <button type="button" class="create_button" url-value="">Save</button>
-            <?php } ?>
-        </div>
-
-    </div>
-
 </div>
 
 
@@ -522,7 +492,7 @@
 
 <script type="text/javascript">
 
-    $(document).on("click", "#group-list-id", function () {
+    $(document).on("click", ".group-list", function () {
         var groupId = $(this).attr("groupId");
         var url = "index.php?action=manage.group.profile&lang=" + getLanguage() + "&groupId=" + groupId;
         zalyjsCommonOpenPage(url);

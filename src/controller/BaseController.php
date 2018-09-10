@@ -36,6 +36,7 @@ abstract class BaseController extends \Wpf_Controller
         "api.passport.passwordFindPassword",
         "api.passport.passwordResetPassword",
         "api.passport.passwordUpdateInvitationCode",
+        "api.passport.passwordModifyPassword",
         "api.plugin.proxy",
     ];
     protected $sessionIdTimeOut = 36000000; //10个小时的毫秒
@@ -226,7 +227,6 @@ abstract class BaseController extends \Wpf_Controller
         $this->handleHeader();
 
         $this->getAndSetClientLang();
-        $this->getZalyErrorLang();
 
         $this->checkSessionId($this->action);
         $this->rpc($requestMessage, $this->requestTransportData);
@@ -363,15 +363,18 @@ abstract class BaseController extends \Wpf_Controller
         $requestTransportData = $this->requestTransportData;
         $headers = $requestTransportData->getHeader();
 
-
         $headLang = isset($headers[TransportDataHeaderKey::HeaderUserClientLang]) ? $headers[TransportDataHeaderKey::HeaderUserClientLang] : "";
 
         $this->ctx->Wpf_Logger->info("client-language", "==" . $headLang);
 
         if (isset($headLang) && $headLang == Zaly\Proto\Core\UserClientLangType::UserClientLangZH) {
             $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangZH;
+            $this->zalyError = $this->ctx->ZalyErrorZh;
+
+        } else {
+            $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangEN;
+            $this->zalyError = $this->ctx->ZalyErrorEn;
         }
 
     }
-
 }

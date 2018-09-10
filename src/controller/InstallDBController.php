@@ -11,7 +11,7 @@ class InstallDBController
     private $logger;
     private $_dbPath = ".";
     private $loginPluginIds = [101, 102];
-    private $passportAccountSafePluginId = 104;
+    private $passportAccountSafePluginId = 105;
     private $configName = "config.php";
     private $sampleConfigName = "config.sample.php";
     private $_dbName;
@@ -63,14 +63,11 @@ class InstallDBController
                 $scheme = isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http";
 
                 $siteAddress = $scheme . "://" . $serverHost;
-                $sessionVerifyUrl = $siteAddress . '/index.php?action=api.session.verify&body_format=pb';
-
                 $loginPluginId = $_POST['pluginId'];
                 $dbNameKey = ZalyHelper::generateStrKey(8);
                 $sqliteName = "db." . md5($dbNameKey) . ".sqlite3";
                 $config['sqlite']['sqliteDBName'] = $sqliteName;
                 $config['loginPluginId'] = in_array($loginPluginId, $this->loginPluginIds) ? $loginPluginId : 101;
-                $config['session_verify_102'] = $sessionVerifyUrl;
                 $config['msectime'] = ZalyHelper::getMsectime();
                 $config['siteAddress'] = $siteAddress;
 

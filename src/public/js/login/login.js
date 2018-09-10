@@ -34,7 +34,6 @@ jQuery.i18n.properties({
 
 $(":input").attr("autocapitalize", "off");
 
-refererKey = "site_referer";
 siteConfig = {};
 enableInvitationCode=0;
 enableRealName=0;
@@ -46,13 +45,18 @@ preSessionId="";
 refererUrl = document.referrer;
 secondNum  = 120;
 isSending  = false;
+refererUrlKey = "documentReferer";
+
+if(refererUrl.length>0) {
+    localStorage.setItem(refererUrlKey, refererUrl);
+    refererUrlKeyVal = localStorage.getItem(refererUrlKey);
+}
 
 var protocol = window.location.protocol;
 var host = window.location.host;
 var pathname = window.location.pathname;
 originDomain = protocol+"//"+host+pathname;
 isRegister=false;
-
 
 function zalyLoginConfig(results) {
     if(typeof results == "object" ) {
@@ -72,12 +76,14 @@ function loginSuccess()
 
 function handleRedirect()
 {
+    var refererUrl = localStorage.getItem(refererUrlKey);
     if(refererUrl) {
         if(refererUrl.indexOf("?") > -1) {
             refererUrl = refererUrl+"&preSessionId="+preSessionId+"&isRegister="+isRegister;
         } else {
             refererUrl = refererUrl+"?preSessionId="+preSessionId+"&isRegister="+isRegister;
         }
+        localStorage.clear();
         window.location.href = refererUrl;
     }
 }
@@ -86,10 +92,11 @@ function handleRedirect()
 function loginFailed()
 {
     zalyjsAlert("登录失败");
-    console.log("登录失败");
 }
 
-if(refererUrl != undefined && refererUrl.length>1) {
+getOsType();
+
+if(refererUrl != undefined && refererUrl.length>1 || clientType == "PC") {
     siteConfigJsUrl = "./index.php?action=page.siteConfig&callback=zalyLoginConfig";
     addJsByDynamic(siteConfigJsUrl);
 } else {
@@ -98,7 +105,6 @@ if(refererUrl != undefined && refererUrl.length>1) {
 
 function addJsByDynamic(url)
 {
-    console.log(url);
     var script = document.createElement("script")
     script.type = "text/javascript";
     //Firefox, Opera, Chrome, Safari 3+
@@ -163,7 +169,6 @@ function returnRegisterDiv() {
 
 function handleHtmlLanguage(html)
 {
-    console.log($.i18n.map['registerBtnTip']);
     $(html).find("[data-local-placeholder]").each(function () {
         var placeholderValue = $(this).attr("data-local-placeholder");
         var placeholder = $(this).attr("placeholder");
@@ -178,8 +183,6 @@ function handleHtmlLanguage(html)
         // $(this).html(newValueHtml);
         html = html.replace(valueHtml, newValueHtml);
     });
-
-    console.log(html);
 
     return html;
 }
@@ -229,7 +232,7 @@ function checkRegisterInfo()
     }
 
 
-    if(registerPassword == "" || registerPassword == undefined || registerPassword.length<0) {
+    if(registerPassword == "" || registerPassword == undefined || registerPassword.length<5 || registerPassword.length>20 || !isPassword(registerPassword)) {
         $(".register_input_pwd_failed")[0].style.display = "block";
         if (isFocus == false) {
             $("#register_input_pwd").focus();
@@ -292,6 +295,15 @@ function isLoginName(loginName)
     return reg.test(loginName);
 }
 
+/**
+ * 数字 字母下划线
+ * @param password
+ */
+function isPassword(password) {
+    var reg = /^[^\u4e00-\u9fa5]+$/;
+    return reg.test(password);
+}
+
 function loginNameExist()
 {
     zalyjsAlert("用户名已经在站点被注册");
@@ -344,7 +356,6 @@ function handlePassportPasswordUpdateInvationCode(results)
     if(refererUrl != undefined && refererUrl.length>1) {
         handleRedirect();
     } else {
-        console.log("call js " + clientType + " zalyJsLoginSuccess" + " == presessionid=="+preSessionId);
         zalyjsLoginSuccess(loginName, preSessionId, isRegister, loginFailed);
     }
 }
@@ -353,7 +364,7 @@ function handlePassportPasswordReg(results)
 {
     isRegister = true;
     preSessionId = results.preSessionId;
-    if(refererUrl != undefined && refererUrl.length>1) {
+    if(refererUrl != undefined && refererUrl.length>1 || clientType == "PC") {
         handleRedirect();
     } else {
         zalyjsLoginSuccess(registerLoginName, preSessionId, isRegister, loginFailed);
@@ -409,7 +420,7 @@ function handleApiPassportPasswordLogin(results)
 {
     isRegister = false;
     preSessionId = results.preSessionId;
-    if(refererUrl != undefined && refererUrl.length>1) {
+    if(refererUrl != undefined && refererUrl.length>1 || clientType == "PC") {
         var jsUrl = "./index.php?action=page.js&loginName="+loginName+"&success_callback=loginSuccess&fail_callback=loginFailNeedRegister";
         addJsByDynamic(jsUrl);
     } else {
@@ -421,7 +432,6 @@ function loginFailNeedRegister()
 {
     if(enableInvitationCode != "1") {
         if(isRegister == true) {
-            console.log("isRegister is always true isregister ==" + isRegister);
             return false;
         }
         isRegister = true;

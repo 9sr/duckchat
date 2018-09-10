@@ -147,4 +147,41 @@ class ZalyHelper
     {
         return preg_match("/^1[3456789]{1}\d{9}$/", $phoneNumber);
     }
+
+    public static function getFullReqUrl($reqUrl)
+    {
+        try{
+            $reqUrlStruct = parse_url($reqUrl);
+
+            if (!empty($reqUrlStruct["scheme"])) {
+                $query = !empty($reqUrlStruct["query"]) ? "?" . $reqUrlStruct["query"] : "";
+                $reqUrl = $reqUrlStruct["path"] . $query;
+            }
+
+            $urlInfo = parse_url($reqUrl);
+            $defaultScheme = $_SERVER['REQUEST_SCHEME'];
+            $defaultHost = $_SERVER['HTTP_HOST'];
+            $schema = "";
+            $host = "";
+            // 必须用scheme，防止用户多输//
+            if (empty($urlInfo["scheme"]) && empty($urlInfo['host'])) {
+                $schema = $defaultScheme;
+                $host = $defaultHost;
+            } else {
+                $schema = $urlInfo["scheme"];
+                $host = $urlInfo["host"];
+                $port = empty($urlInfo["port"]) ? "" : ":{$urlInfo["port"]}";
+                $host = $host . $port;
+            }
+            if(strpos($reqUrl, "/") == 0) {
+                $fullUrl = "{$schema}://{$host}{$reqUrl}";
+            } else {
+                $fullUrl = "{$schema}://{$host}/{$reqUrl}";
+            }
+
+            return $fullUrl;
+        }catch (Exception $ex) {
+            return $reqUrl;
+        }
+    }
 }

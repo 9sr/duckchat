@@ -21,8 +21,6 @@ class ZalyAes
 
     CONST KEY_PATH = "/akaxin/phpconfig";
 
-    public $cookieKey = "AlYCnz5nFusJoe1g";
-
     /**
      * aes128ecb pkcs5加密数据
      * mcrypt_encrypt 在php7.2以后弃用

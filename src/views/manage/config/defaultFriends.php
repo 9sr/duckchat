@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Mini Program</title>
+    <title><?php if ($lang == "1") { ?>默认好友<?php } else { ?>Default Friends<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
@@ -18,7 +18,7 @@
             /*overflow: hidden;*/
             width: 100%;
             height: 100%;
-            background: rgba(245, 244, 249, 1);
+            background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
             overflow-y: hidden;
@@ -35,8 +35,7 @@
             position: fixed;
             z-index: 9999;
             overflow: hidden;
-            visibility: hidden;
-            display: flex;
+            display:none;
             justify-content: center;
             align-items: center;
         }
@@ -543,7 +542,7 @@
 
         zalyjsCommonOpenPage(url);
     });
-    
+
 
 </script>
 

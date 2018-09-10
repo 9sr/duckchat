@@ -71,6 +71,7 @@ abstract class  ZalyErrorBase
     public $errorSessionClear = "error.session.clear";
 
 
+    public $errorUpdatePasswordLoginName = "error.updatePassword.loginName";
 
     abstract public function getErrorInfo($errorCode);
 }

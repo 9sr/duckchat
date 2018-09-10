@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Config Manage</title>
+    <title><?php if ($lang == "1") { ?>站点公钥<?php } else { ?>Site Public Key<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!--    <link rel=stylesheet href="../../public/css/manage_base.css"/>-->
@@ -18,7 +18,7 @@
             width: 100%;
             height: 100%;
             background: rgba(245, 245, 245, 1);
-            font-size: 10.66px;
+            font-size: 14px;
 
         }
 

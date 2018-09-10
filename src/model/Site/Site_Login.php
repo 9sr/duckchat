@@ -30,10 +30,11 @@ class Site_Login
     /**
      * @param $preSessionId
      * @param string $devicePubkPem
+     * @param int $clientSideType
      * @return array
      * @throws Exception
      */
-    public function checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem = "")
+    public function checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem = "", $clientSideType = 1)
     {
 
         try {
@@ -47,7 +48,7 @@ class Site_Login
             //get intivation first
             $uicInfo = $this->getIntivationCode($loginUserProfile->getInvitationCode());
 
-            $userProfile = $this->doSiteLoginAction($loginUserProfile, $devicePubkPem, $uicInfo);
+            $userProfile = $this->doSiteLoginAction($loginUserProfile, $devicePubkPem, $uicInfo, $clientSideType);
 
             //set site owner
             $this->checkAndSetSiteOwner($userProfile['userId'], $uicInfo);
@@ -94,11 +95,9 @@ class Site_Login
 
             $pluginIds = $this->ctx->SiteConfigTable->selectSiteConfig(SiteConfig::SITE_LOGIN_PLUGIN_ID);
             $pluginId = $pluginIds[SiteConfig::SITE_LOGIN_PLUGIN_ID];
-
             $sessionVerifyUrl = ZalyConfig::getSessionVerifyUrl($pluginId);
-
+            $sessionVerifyUrl = ZalyHelper::getFullReqUrl($sessionVerifyUrl);
             $this->ctx->Wpf_Logger->error("api.site.login", "get profile from platform url=" . $sessionVerifyUrl);
-
             $result = $this->ctx->ZalyCurl->request("post", $sessionVerifyUrl, $data);
 
             //解析数据
@@ -142,10 +141,11 @@ class Site_Login
      * @param Zaly\Proto\Platform\LoginUserProfile $loginUserProfile
      * @param $devicePubkPem
      * @param $uicInfo
+     * @param $clientSideType
      * @return array
      * @throws Exception
      */
-    private function doSiteLoginAction($loginUserProfile, $devicePubkPem, $uicInfo)
+    private function doSiteLoginAction($loginUserProfile, $devicePubkPem, $uicInfo, $clientSideType)
     {
         if (!$loginUserProfile) {
             $errorCode = $this->zalyError->errorSession;
@@ -192,7 +192,7 @@ class Site_Login
         }
 
         //这里
-        $sessionId = $this->insertOrUpdateUserSession($userProfile, $devicePubkPem);
+        $sessionId = $this->insertOrUpdateUserSession($userProfile, $devicePubkPem, $clientSideType);
         $userProfile['sessionId'] = $sessionId;
         return $userProfile;
     }
@@ -264,9 +264,10 @@ class Site_Login
      *
      * @param $userProfile
      * @param $devicePubkPem
+     * @param $clientSideType
      * @return string
      */
-    private function insertOrUpdateUserSession($userProfile, $devicePubkPem)
+    private function insertOrUpdateUserSession($userProfile, $devicePubkPem, $clientSideType)
     {
         $sessionId = $this->ctx->ZalyHelper->generateStrId();
         $deviceId = sha1($devicePubkPem);
@@ -285,6 +286,7 @@ class Site_Login
                 "ipActive" => "",
                 "userAgent" => "",
                 "userAgentType" => "",
+                "clientSideType" => $clientSideType,
             ];
             $this->ctx->SiteSessionTable->insertSessionInfo($sessionInfo);
         } catch (Exception $ex) {

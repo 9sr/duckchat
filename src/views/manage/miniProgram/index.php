@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?php if ($lang == "1") { ?>小程序<?php } else { ?>Mini Program<?php } ?></title>
+    <title><?php if ($lang == "1") { ?>小程序管理<?php } else { ?>Mini Program Management<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!--    <link href="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.css" rel="stylesheet">-->
@@ -331,8 +331,6 @@
 
 <body>
 
-<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
-
 <div class="wrapper" id="wrapper">
 
     <!--  site basic config  -->
@@ -357,8 +355,8 @@
                             <div class="item-body-desc" style="margin-top: 7px;">Public Secret Key</div>
 
                             <div class="item-body-tail">
-                                <button type="button" class="create_button" url-value=""
-                                        style="margin-top: 7px;font-size: 14px">
+                                <button id="create-plugin-public-key" type="button" class="create_button" url-value=""
+                                        style="margin-top: 7px;font-size: 14px" onclick="createNewKey();">
                                     Create Key
                                 </button>
                             </div>
@@ -437,35 +435,6 @@
 
     </div>
 </div>
-
-
-<div class="popup-template" style="visibility:hidden;">
-
-    <div class="config-hidden" id="popup-group">
-
-        <div class="flex-container">
-            <div class="header_tip_font popup-group-title" data-local-value="createGroupTip">创建群组</div>
-        </div>
-
-        <div class="" style="text-align: center">
-            <input type="text" class="popup-group-input"
-                   data-local-placeholder="enterGroupNamePlaceholder" placeholder="please input">
-        </div>
-
-        <div class="line"></div>
-
-        <div class="" style="text-align:center;">
-            <?php if ($lang == "1") { ?>
-                <button type="button" class="create_button" url-value="">保存</button>
-            <?php } else { ?>
-                <button type="button" class="create_button" url-value="">Save</button>
-            <?php } ?>
-        </div>
-
-    </div>
-
-</div>
-
 
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
 <script src="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.js"></script>
@@ -634,7 +603,6 @@
     }
 
     function createKeyResponse(url, data, result) {
-        alert(result);
         window.location.reload();
     }
 

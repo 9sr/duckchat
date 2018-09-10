@@ -50,6 +50,19 @@ class Site_Config
         return null;
     }
 
+
+    public function isSiteOwner($userId)
+    {
+        $siteOwner = $this->getSiteOwner();
+        if (empty($userId) || empty($siteOwner)) {
+            return false;
+        }
+
+        if ($userId == $siteOwner) {
+            return true;
+        }
+    }
+
     /**
      * get managers ,site has many managers
      *

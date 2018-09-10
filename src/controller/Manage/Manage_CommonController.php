@@ -28,8 +28,13 @@ abstract class Manage_CommonController extends MiniProgramController
         }
     }
 
+    /**
+     * @param Exception $ex
+     * @return mixed|void
+     */
     protected function requestException($ex)
     {
+        echo $ex->getMessage();
         $this->showPermissionPage();
     }
 

@@ -32,7 +32,7 @@ abstract class HttpBaseController extends \Wpf_Controller
     private $u2Type = "u";
     private $jumpRoomType = "";
     private $jumpRoomId = "";
-    private $jumpRelation="";
+    private $jumpRelation = "";
     private $siteCookieName = "zaly_site_user";
 
     public function __construct(Wpf_Ctx $context)
@@ -96,8 +96,7 @@ abstract class HttpBaseController extends \Wpf_Controller
             $preSessionId = isset($_GET['preSessionId']) ? $_GET['preSessionId'] : "";
             if($preSessionId) {
                 $userProfile = $this->ctx->Site_Login->checkPreSessionIdFromPlatform($preSessionId);
-                $this->userId = $userProfile["userId"];
-                $this->setCookieBase64($this->userId, $this->siteCookieName);
+                $this->setCookieBase64($userProfile["sessionId"], $this->siteCookieName);
             }
         }
     }
@@ -145,25 +144,16 @@ abstract class HttpBaseController extends \Wpf_Controller
     {
         $tag = __CLASS__ . "-" . __FUNCTION__;
 
-        $cookie  = isset($_COOKIE['zaly_site_user'] ) ?  $_COOKIE['zaly_site_user'] : "";
-        if(!$cookie) {
+        $this->sessionId   = isset($_COOKIE['zaly_site_user'] ) ?  $_COOKIE['zaly_site_user'] : "";
+        if(!$this->sessionId) {
             throw new Exception("cookie is not found");
         }
-        $cookieDecode = base64_decode($cookie);
 
-        $this->userId = $this->ctx->ZalyAes->decrypt($cookieDecode, $this->ctx->ZalyAes->cookieKey);
-
-        $this->userInfo = $this->ctx->SiteUserTable->getUserByUserId($this->userId);
-        if (!$this->userInfo) {
-            throw new Exception("user not exists");
-        }
-
-        $sessionInfo = $this->ctx->SiteSessionTable->getWebUserSessionInfo($this->userId);
-        $this->ctx->Wpf_Logger->info($tag, json_encode($sessionInfo));
-        if (!$sessionInfo) {
+        $this->sessionInfo = $this->ctx->SiteSessionTable->getSessionInfoBySessionId($this->sessionId);
+        if (!$this->sessionInfo) {
             throw new Exception("session is not ok");
         }
-        $timeActive = $sessionInfo['timeActive'];
+        $timeActive = $this->sessionInfo['timeActive'];
 
         $nowTime = $this->ctx->ZalyHelper->getMsectime();
 
@@ -171,7 +161,14 @@ abstract class HttpBaseController extends \Wpf_Controller
             throw new Exception("session is not ok");
         }
 
-        $this->sessionId = $sessionInfo['sessionId'];
+        $this->userInfo = $this->ctx->SiteUserTable->getUserByUserId($this->sessionInfo['userId']);
+        if (!$this->userInfo) {
+            throw new Exception("user is not ok");
+        }
+
+        $this->sessionId = $this->sessionInfo['sessionId'];
+        $this->userId = $this->userInfo['userId'];
+
     }
 
     public function setLogout()

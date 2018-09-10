@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Config Manage</title>
+    <title><?php if ($lang == "1") { ?>站点设置<?php } else { ?>Site Config<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
@@ -17,9 +17,9 @@
             font-family: PingFangSC-Regular, "MicrosoftYaHei";
             /*overflow: hidden;*/
             width: 100%;
-            height: 100%;
+            /*height: 100%;*/
             background: rgba(245, 245, 245, 1);
-            font-size: 10.66px;
+            font-size: 14px;
             overflow-x: hidden;
         }
 
@@ -872,7 +872,7 @@
 
     <div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
 
-    <div class="popup-template" style="visibility:hidden;">
+    <div class="popup-template" style="display:none;">
 
         <div class="config-hidden" id="popup-group">
 

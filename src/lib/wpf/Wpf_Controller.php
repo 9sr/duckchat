@@ -46,17 +46,6 @@ abstract class Wpf_Controller {
 		return isset($_REQUEST[$key]) ? $_REQUEST[$key] : null;
 	}
 
-    public function getZalyErrorLang()
-    {
-        $requestTransportData = $this->requestTransportData;
-        $headers = $requestTransportData->getHeader();
-        if(!isset($headers[TransportDataHeaderKey::HeaderUserClientLang])
-            || ($headers[TransportDataHeaderKey::HeaderUserClientLang] == \Zaly\Proto\Core\UserClientLangType::UserClientLangZH)) {
-            $this->zalyError = $this->ctx->ZalyErrorZh;
-        } else {
-            $this->zalyError = $this->ctx->ZalyErrorEn;
-        }
-    }
 
     public function checkDBIsExist()
     {
@@ -73,10 +62,8 @@ abstract class Wpf_Controller {
         return false;
     }
 
-    public function setCookieBase64($userId, $cookieName)
+    public function setCookieBase64($val, $cookieName)
     {
-        $cookieAes = $this->ctx->ZalyAes->encrypt($userId, $this->ctx->ZalyAes->cookieKey);
-        $cookieBase64 = base64_encode($cookieAes);
-        setcookie($cookieName, $cookieBase64, time() + $this->sessionIdTimeOut, "/", "", false, true);
+        setcookie($cookieName, $val, time() + $this->sessionIdTimeOut, "/", "", false, true);
     }
 }

@@ -932,6 +932,7 @@ function sendMsgBySend() {
         alert("文本过长");
         return false;
     }
+    $(".msg_content").val('');
 
     sendMsg(chatSessionId, chatSessionType, msgContent, MessageType.MessageText);
 }

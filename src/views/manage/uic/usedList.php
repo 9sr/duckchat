@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Mini Program</title>
+    <title><?php if ($lang == "1") { ?>已使用邀请码<?php } else { ?>Used Invitation Code<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.css" rel="stylesheet">
 
@@ -16,7 +16,7 @@
             /*overflow: hidden;*/
             width: 100%;
             height: 100%;
-            background: rgba(245, 244, 249, 1);
+            background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
             /*overflow-y: hidden;*/
@@ -491,7 +491,7 @@
 </script>
 
 <script type="text/javascript">
-    
+
 
 </script>
 

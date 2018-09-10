@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?php if ($lang == "1") { ?>添加小程序<?php } else { ?>Add Mini Program<?php } ?></title>
+    <title><?php if ($lang == "1") { ?>小程序添加<?php } else { ?>Add Mini Program<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
@@ -18,8 +18,8 @@
             /*overflow: hidden;*/
             width: 100%;
             height: 100%;
-            background: rgba(245, 244, 249, 1);
-            font-size: 10.66px;
+            background: rgba(245, 245, 245, 1);
+            font-size: 14px;
             overflow-x: hidden;
             overflow-y: hidden;
 

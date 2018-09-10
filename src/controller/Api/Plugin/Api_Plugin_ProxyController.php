@@ -105,8 +105,11 @@ class Api_Plugin_ProxyController extends \BaseController
                 $port = empty($pluginUrl["port"]) ? "" : ":{$pluginUrl["port"]}";
                 $host = $host . $port;
             }
-
-            $url = "{$schema}://{$host}/{$reqUrl}";
+            if(strpos($reqUrl, "/") == 0) {
+                $url = "{$schema}://{$host}{$reqUrl}";
+            } else {
+                $url = "{$schema}://{$host}/{$reqUrl}";
+            }
             return $url;
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->info($tag, " error_msg=" . $e->getMessage());

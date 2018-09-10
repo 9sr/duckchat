@@ -25,6 +25,9 @@ MessageType = {
 
 };
 
+UserClientLangZH = "1";
+UserClientLangEN = "0";
+
 MessageTypeNum = {
     MessageInvalid : 0,
     MessageNotice  : "1",
@@ -46,7 +49,6 @@ FriendRelation = {
     FriendRelationFollowForGroup : "FriendRelationFollowForGroup",
     FriendRelationFollowForWeb   : "FriendRelationFollowForWeb",
 }
-
 
 MessageStatus  = {
     MessageStatusSending : "MessageStatusSending",
@@ -196,4 +198,5 @@ languageName = navigator.language == "en-US" ? "en" : "zh";
 uploadFileUrl = './index.php?action=http.file.uploadWeb';
 
 languageName = "zh";
+languageNum = languageName == "en" ? UserClientLangEN : UserClientLangZH;
 

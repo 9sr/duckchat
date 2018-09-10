@@ -67,7 +67,8 @@ function handleImSendRequest(action, reqData, callback)
         var header = {};
         header[HeaderSessionid] = sessionId;
         header[HeaderHostUrl] = originDomain;
-        header[HeaderUserClientLang] = languageName  == "en-US" ? "0" : "1";
+        header[HeaderUserClientLang] = languageName  == "en-US" ? UserClientLangEN : UserClientLangZH;
+        header[HeaderUserAgent] = navigator.userAgent;
 
         var packageId = localStorage.getItem(PACKAGE_ID);
 

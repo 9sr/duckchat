@@ -380,7 +380,6 @@ function handleSyncMsg(msg)
     var currentChatSessionId = localStorage.getItem(chatSessionIdKey);
     var isNewMsg = handleMsgForMsgRoom(msg.chatSessionId, msg);
 
-
     ///是自己群的消息，并且是新消息
     if(msg.chatSessionId  == currentChatSessionId && isNewMsg) {
         appendMsgHtml(msg);
@@ -849,7 +848,6 @@ function appendMsgHtml(msg)
 
     // html = "请前往客户端查看web消息";
     $(".right-chatbox").append(html);
-    $(".msg_content").val('');
     getNotMsgImg(userId, userAvatar);
     getMsgImgSrc(msg, msgId);
 }
@@ -1065,7 +1063,7 @@ function uploadMsgImgToServer(formData, src, type)
             }
         },
         error:function(err){
-            console.log("file upload " + fileName);
+            console.log("file upload failed");
             alert("发送失败,稍后重试");
             return false;
         }

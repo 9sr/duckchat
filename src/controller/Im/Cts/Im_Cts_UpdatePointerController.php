@@ -65,6 +65,8 @@ class Im_Cts_UpdatePointerController extends Im_BaseController
                         $currentU2Pointer = $maxU2Pointer;
                     }
                     $this->ctx->Wpf_Logger->info("im.cts.updatePointer", "pointer=" . $currentU2Pointer);
+
+                    //clientSideType=1: 手机客户端  clientSideType=2:web端
                     $this->ctx->SiteU2MessageTable->updatePointer($userId, $deviceId, "1", $currentU2Pointer);
                 }
             }

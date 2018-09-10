@@ -19,11 +19,12 @@ class Manage_User_ProfileController extends Manage_CommonController
         $config = $this->ctx->SiteConfigTable->selectSiteConfig(SiteConfig::SITE_MANAGERS);
         $siteManagerStr = $config[SiteConfig::SITE_MANAGERS];
 
+        $params['isSiteOwner'] = $this->ctx->Site_Config->isSiteOwner($userId);
+
         if ($siteManagerStr) {
             $isSiteManager = in_array($userId, explode(",", $siteManagerStr));
             $params['isSiteManager'] = $isSiteManager;
         }
-
 
         $config = $this->ctx->SiteConfigTable->selectSiteConfig(SiteConfig::SITE_DEFAULT_FRIENDS);
         $defaultFriendStr = $config[SiteConfig::SITE_DEFAULT_FRIENDS];

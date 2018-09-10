@@ -15,8 +15,8 @@
             overflow: hidden;
             width: 100%;
             height: 100%;
-            background: rgba(245, 244, 249, 1);
-            font-size: 10.66px;
+            background: rgba(245, 245, 245, 1);
+            font-size: 14px;
 
         }
 
@@ -73,7 +73,7 @@
             width: 100%;
             height: 50px;
             margin-left: 1rem;
-            margin-top: 1rem;
+            margin-top: 7px;
             flex-direction: row;
         }
 
@@ -137,8 +137,7 @@
                 </div>
                 <div class="item-body">
                     <div class="item-body-display">
-                        <div class="item-body-desc">
-                            <?php if ($lang == "1") { ?>
+                        <div class="item-body-desc"><?php if ($lang == "1") { ?>
                                 站点设置
                             <?php } else { ?>
                                 Site Config
@@ -382,7 +381,7 @@
 
     $("#site-config-id").click(function () {
         var url = "/index.php?action=manage.config&lang=" + getLanguage();
-        zalyjsCommonOpenPage(url);
+        zalyjsCommonOpenNewPage(url);
     });
 
     $("#mini-program-id").click(function () {

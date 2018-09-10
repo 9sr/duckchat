@@ -139,7 +139,6 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
         $this->handleHeader();
 
         $this->getAndSetClientLang();
-        $this->getZalyErrorLang();
 
         $this->rpc($requestMessage, $this->requestTransportData);
     }
@@ -260,15 +259,17 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
         $requestTransportData = $this->requestTransportData;
         $headers = $requestTransportData->getHeader();
 
-
         $headLang = isset($headers[TransportDataHeaderKey::HeaderUserClientLang]) ? $headers[TransportDataHeaderKey::HeaderUserClientLang] : "";
 
         $this->ctx->Wpf_Logger->info("client-language", "==" . $headLang);
 
         if (isset($headLang) && $headLang == Zaly\Proto\Core\UserClientLangType::UserClientLangZH) {
             $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangZH;
+            $this->zalyError = $this->ctx->ZalyErrorZh;
+        } else {
+            $this->language = \Zaly\Proto\Core\UserClientLangType::UserClientLangEN;
+            $this->zalyError = $this->ctx->ZalyErrorEn;
         }
-
     }
 
     /**

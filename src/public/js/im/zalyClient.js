@@ -46,6 +46,7 @@ function handleClientSendRequest(action, reqData, callback, isHttp)
         header[HeaderSessionid] = sessionId;
         header[HeaderHostUrl] = originDomain;
         header[HeaderUserClientLang] = languageName  == "en-US" ? "0" : "1";
+        header[HeaderUserAgent] = navigator.userAgent;
 
         var packageId = localStorage.getItem(PACKAGE_ID);
 

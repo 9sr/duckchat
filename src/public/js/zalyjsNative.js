@@ -58,7 +58,7 @@ function getOsType() {
     } else if (u.indexOf('iPhone') > -1) {
         clientType = 'IOS';
     } else {
-        clientType = "";
+        clientType = "PC";
     }
 }
 

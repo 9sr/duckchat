@@ -8,11 +8,13 @@
 
 class Push_Client
 {
+    private $logger;
     private $ctx;
     private $pushAction = "api.push.notification";
 
     public function __construct(BaseCtx $ctx)
     {
+        $this->logger = new Wpf_Logger();
         $this->ctx = $ctx;
     }
 
@@ -30,6 +32,18 @@ class Push_Client
         try {
 
             $siteConfig = $this->getSiteConfig();
+
+            $pushType = $siteConfig[SiteConfig::SITE_SUPPORT_PUSH_TYPE];
+
+            if (empty($pushType)) {
+                $pushType = 0;
+            }
+
+            if (Zaly\Proto\Core\PushType::PushDisabled == $pushType) {
+                $this->logger->info($this->pushAction, "site disable push function");
+                return;
+            }
+
             $pushHeader = new \Zaly\Proto\Platform\PushHeader();
 
             //sign time seconds
@@ -51,7 +65,11 @@ class Push_Client
             $pushBody->setFromUserId($fromUserId);
             $userNickName = $this->ctx->SiteUserTable->getUserNickName($fromUserId);
             $pushBody->setFromUserName($userNickName);
-            $pushBody->setPushContent($pushText);
+
+            if (Zaly\Proto\Core\PushType::PushWithMessageContent == $pushType) {
+                $pushBody->setPushContent($pushText);
+            }
+
             if (\Zaly\Proto\Core\MessageRoomType::MessageRoomGroup == $roomType) {
                 $pushBody->setRoomId($toId);
                 $pushBody->setRoomName($this->getGroupName($toId));

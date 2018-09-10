@@ -48,7 +48,7 @@ class Api_Site_LoginController extends \BaseController
                 throw new Exception("with error parameters");
             }
 
-            $this->ctx->Wpf_Logger->info("api.site.login", " =========preSessionId=" . $preSessionId);
+            $this->ctx->Wpf_Logger->info("api.site.login", "preSessionId=" . $preSessionId);
 //            $this->ctx->Wpf_Logger->info("api.site.login", " -devicePubkPem=" . $devicePubkPem);
 
             if (!$preSessionId) {
@@ -58,8 +58,8 @@ class Api_Site_LoginController extends \BaseController
                 throw new Exception($errorInfo);
             }
 
-            //get user profile from platform
-            $userProfile = $this->ctx->Site_Login->checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem);
+            //get user profile from platform clientSiteType=1:mobile client
+            $userProfile = $this->ctx->Site_Login->checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem, 1);
 
             $realSessionId = $userProfile['sessionId'];
             $this->ctx->Wpf_Logger->info("api.site.login", "get platform sessionid=" . $realSessionId);

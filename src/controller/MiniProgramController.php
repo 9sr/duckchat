@@ -152,10 +152,10 @@ abstract class MiniProgramController extends \Wpf_Controller
         //加密发送
         $encryptedTransportData = $this->ctx->ZalyAes->encrypt($requestTransportDataString, $authKey);
 
-        $siteAddress = ZalyConfig::getConfig("siteAddress");
-        $requestUrl = $siteAddress . "/?action=" . $action . "&body_format=pb&miniProgramId=" . $miniProgramId;
+        $requestUrl = "/?action=" . $action . "&body_format=pb&miniProgramId=" . $miniProgramId;
+        $requestUrl = ZalyHelper::getFullReqUrl($requestUrl);
 
-        $this->ctx->Wpf_Logger->info($action, "http request url =" . $requestUrl);
+        $this->ctx->Wpf_Logger->error($action, "fihttp request url =" . $requestUrl);
 
         $encryptedHttpTransportResponse = $this->ctx->ZalyCurl->requestDataByAction($action, $encryptedTransportData, $requestUrl, 'POST');
 
@@ -269,6 +269,10 @@ abstract class MiniProgramController extends \Wpf_Controller
 
         if (isset($headLang) && $headLang == Zaly\Proto\Core\UserClientLangType::UserClientLangZH) {
             $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangZH;
+            $this->zalyError = $this->ctx->ZalyErrorZh;
+        } else {
+            $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangEN;
+            $this->zalyError = $this->ctx->ZalyErrorEn;
         }
     }
 
