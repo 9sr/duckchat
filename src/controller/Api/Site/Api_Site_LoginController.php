@@ -90,7 +90,6 @@ class Api_Site_LoginController extends \BaseController
             $publicUserProfile = $this->getPublicUserProfile($userInfo);
 
             if (\Zaly\Proto\Core\UserAvailableType::UserAvailableBlocked == $publicUserProfile->getAvailableType()) {
-                error_log("user profile failed");
                 throw new Exception("user is blocked");
             }
             $allUserProfile = new \Zaly\Proto\Core\AllUserProfile();

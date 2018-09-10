@@ -8,7 +8,7 @@
 
         <div class="d-flex flex-row justify-content-left login_name_div margin-top2 login_name_div_mobile" >
             <image src="../../public/img/login/loginName.png" class="img"/>
-            <input type="text" id="register_input_loginName"  datatype="s"  class="input_login_site  register_input_loginName" data-local-placeholder="registerLoginNamePlaceholder"  autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"  style="text-transform:lowercase" placeholder="用户名以字母、数字、下划线，1-16个字符" >
+            <input type="text" id="register_input_loginName"  datatype="s"  class="input_login_site  register_input_loginName" data-local-placeholder="registerLoginNamePlaceholder"  autocapitalize="off"   placeholder="用户名以字母、数字、下划线，1-16个字符" >
             <img src="../../public/img/msg/msg_failed.png" class="img-failed register_input_loginName_failed">
             <div class="line"></div>
         </div>

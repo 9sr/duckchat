@@ -63,7 +63,7 @@
 
             <div class="login_name_div login_name_div_mobile">
                 <image src="../../public/img/login/loginName.png" class="img"/>
-                <input type="text" class="input_login_site forget_input_loginName" datatype="s"  autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"  data-local-placeholder="loginNamePlaceholder" placeholder="Please Enter LoginName" style="text-transform:lowercase">
+                <input type="text" class="input_login_site forget_input_loginName" datatype="s"  autocapitalize="off"   data-local-placeholder="loginNamePlaceholder" placeholder="Please Enter LoginName" >
                 <img src="../../public/img/msg/msg_failed.png" class="img-failed forget_input_loginName_failed">
                 <div class="line"></div>
             </div>
