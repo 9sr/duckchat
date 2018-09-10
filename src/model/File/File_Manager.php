@@ -50,7 +50,8 @@ class File_Manager
         return file_get_contents($path);
     }
 
-    public function contentType($fileId) {
+    public function contentType($fileId)
+    {
         if (strlen($fileId) < 1) {
             return "";
         }
@@ -135,8 +136,6 @@ class File_Manager
     }
 
     /**
-     * php gd
-     * https://blog.csdn.net/dongqinliuzi/article/details/48273185
      *
      * @param array $picList
      * @param $outImagePath
@@ -144,7 +143,7 @@ class File_Manager
      */
     private function splicingGroupAvatar($picList = array(), $outImagePath)
     {
-        $tag = __CLASS__.'-'.__FUNCTION__;
+        $tag = __CLASS__ . '-' . __FUNCTION__;
         if (!function_exists("imagecreatetruecolor")) {
             $this->wpf_Logger->error($tag, "php need support gd library, please check local php environment");
             return null;
@@ -159,98 +158,120 @@ class File_Manager
 
         $picList = array_slice($picList, 0, 9); // 只操作前9个图片
 
-        $background = imagecreatetruecolor($default_width, $default_height); // 背景图片
+        $defaultImage = imagecreatetruecolor($default_width, $default_height); //创建图片大小
 
         //int imagecolorallocate ( resource $image , int $red , int $green , int $blue ) 为一幅图像分配颜色
-        $color = imagecolorallocate($background, 202, 201, 201); // 为真彩色画布创建白色背景，再设置为透明
-        imagefill($background, 0, 0, $color);           //区域填充
-        imageColorTransparent($background, $color);     // 将某个颜色定义为透明色
+        $color = imagecolorallocate($defaultImage, 229, 229, 229); // 为真彩色画布创建白色背景，再设置为透明
+        imagefill($defaultImage, 0, 0, $color);      //区域填充
+        imageColorTransparent($defaultImage, $color);     // 将某个颜色定义为透明色
 
         $pic_count = count($picList);
-        $lineArr = array();  // 需要换行的位置
-        $space_x = 3;
-        $space_y = 3;
-        $line_x = 0;
+        $newLineArr = array();  // 需要换行的位置
+        $space_x = 10;
+        $space_y = 10;
+
+        $start_x = 0;
+        $start_y = 0;
+
+        $picElements = [];
 
         switch ($pic_count) {
-            case 1: // 正中间
-                $start_x = intval($default_width / 4);  // 开始位置X
-                $start_y = intval($default_height / 4);  // 开始位置Y
-                $pic_w = intval($default_width / 2); // 宽度
-                $pic_h = intval($default_height / 2); // 高度
+            case 1://ok
+                $element = [
+                    "x" => intval($default_width / 4),
+                    "y" => intval($default_height / 4),
+                    "w" => intval($default_width / 2),
+                    "h" => intval($default_height / 2),
+                ];
+                $picElements[] = $element;
                 break;
-            case 2: // 中间位置并排
-                $start_x = 2;
-                $start_y = intval($default_height / 4) + 3;
-                $pic_w = intval($default_width / 2) - 5;
-                $pic_h = intval($default_height / 2) - 5;
-                $space_x = 5;
+            case 2://ok
+                $pic_w = intval($default_width / 2) - 5;//width
+                $picElements = $this->buildImageElements(6, $start_x, $start_y, $pic_w, $default_height, [2]);
                 break;
             case 3:
-                $start_x = 124;   // 开始位置X
-                $start_y = 5;    // 开始位置Y
                 $pic_w = intval($default_width / 2) - 5; // 宽度
-                $pic_h = intval($default_height / 2) - 5; // 高度
-                $lineArr = array(2);
-                $line_x = 4;
+                $pic_h = $default_height; // 高度
+
+                for ($i = 0; $i < 3; $i++) {
+                    $element = [
+                        "x" => $start_x,
+                        "y" => $start_y,
+                        "w" => $pic_w,
+                        "h" => $pic_h,
+                    ];
+                    $picElements[] = $element;
+
+                    if ($i == 0) {
+                        $pic_h = intval($pic_h / 2) - 5;
+                        $start_x = $start_x + $pic_w + $space_x;
+                    } else if ($i == 1) {
+                        $start_y = $start_y + $pic_h + $space_y;
+                    }
+                }
+
                 break;
-            case 4:
-                $start_x = 4;    // 开始位置X
-                $start_y = 5;    // 开始位置Y
+            case 4: //OK
                 $pic_w = intval($default_width / 2) - 5; // 宽度
                 $pic_h = intval($default_height / 2) - 5; // 高度
-                $lineArr = array(3);
-                $line_x = 4;
+                $picElements = $this->buildImageElements(6, $start_x, $start_y, $pic_w, $pic_h, [2]);
                 break;
             case 5:
-                $start_x = 85.5;   // 开始位置X
-                $start_y = 85.5;   // 开始位置Y
-                $pic_w = intval($default_width / 3) - 5; // 宽度
-                $pic_h = intval($default_height / 3) - 5; // 高度
-                $lineArr = array(3);
-                $line_x = 5;
+                $pic_w = intval($default_width / 2) - 5;
+                $pic_h = intval($default_height / 2) - 5;
+
+                $newLineArr = array(2);
+
+                for ($i = 0; $i < 5; $i++) {
+
+                    $element = [
+                        "x" => $start_x,
+                        "y" => $start_y,
+                        "w" => $pic_w,
+                        "h" => $pic_h,
+                    ];
+                    $picElements[] = $element;
+
+                    if (in_array($i + 1, $newLineArr)) {
+                        $start_x = 0;
+                        $start_y = $start_y + $pic_h + $space_y;
+                        $pic_w = intval($default_width / 3) - 5;
+                    } else {
+                        $start_x = $start_x + $pic_w + $space_x;
+                    }
+                }
+
                 break;
-            case 6:
-                $start_x = 5;    // 开始位置X
-                $start_y = 85.5;   // 开始位置Y
+            case 6://ok
                 $pic_w = intval($default_width / 3) - 5; // 宽度
-                $pic_h = intval($default_height / 3) - 5; // 高度
-                $lineArr = array(4);
-                $line_x = 5;
+                $pic_h = intval($default_height / 2) - 5; // 高度
+                $picElements = $this->buildImageElements(6, $start_x, $start_y, $pic_w, $pic_h, [3]);
                 break;
-            case 7:
+            case 7://ok
                 $start_x = 166.5;   // 开始位置X
-                $start_y = 5;    // 开始位置Y
                 $pic_w = intval($default_width / 3) - 5; // 宽度
                 $pic_h = intval($default_height / 3) - 5; // 高度
-                $lineArr = array(2, 5);
-                $line_x = 5;
+                $picElements = $this->buildImageElements(7, $start_x, $start_y, $pic_w, $pic_h, [1, 4]);
                 break;
-            case 8:
+            case 8://ok
                 $start_x = 80.5;   // 开始位置X
-                $start_y = 5;    // 开始位置Y
                 $pic_w = intval($default_width / 3) - 5; // 宽度
                 $pic_h = intval($default_height / 3) - 5; // 高度
-                $lineArr = array(3, 6);
-                $line_x = 5;
+                $picElements = $this->buildImageElements(8, $start_x, $start_y, $pic_w, $pic_h, [2, 5]);
                 break;
-            case 9:
-                $start_x = 5;    // 开始位置X
-                $start_y = 5;    // 开始位置Y
+            case 9://ok
                 $pic_w = intval($default_width / 3) - 5; // 宽度
                 $pic_h = intval($default_height / 3) - 5; // 高度
-                $lineArr = array(4, 7);
-                $line_x = 5;
+                $picElements = $this->buildImageElements(9, $start_x, $start_y, $pic_w, $pic_h, [3, 6]);
                 break;
+            default:
+                return false;
         }
 
 
+        //设置每张图片的尺寸
         foreach ($picList as $k => $pic_path) {
-            $kk = $k + 1;
-            if (in_array($kk, $lineArr)) {
-                $start_x = $line_x;
-                $start_y = $start_y + $pic_h + $space_y;
-            }
+            $element = $picElements[$k];
             $resource = false;
             $mime = mime_content_type($pic_path);
 
@@ -264,24 +285,54 @@ class File_Manager
             if ($resource == false) {
                 continue;
             }
-            // $start_x,$start_y copy图片在背景中的位置
-            // 0,0 被copy图片的位置   $pic_w,$pic_h copy后的高度和宽度
-            imagecopyresized($background, $resource, $start_x, $start_y, 0, 0, $pic_w, $pic_h, imagesx($resource), imagesy($resource)); // 最后两个参数为原始图片宽度和高度，倒数两个参数为copy时的图片宽度和高度
-            $start_x = $start_x + $pic_w + $space_x;
+            // $start_x,$start_y copy图片在背景中的位置 0,0 被copy图片的位置   $pic_w,$pic_h copy后的高度和宽度
+            imagecopyresized($defaultImage, $resource, $element['x'], $element['y'], 0, 0, $element['w'], $element['h'], imagesx($resource), imagesy($resource)); // 最后两个参数为原始图片宽度和高度，倒数两个参数为copy时的图片宽度和高度
         }
 
-        // header("Content-type: image/jpg");
-        // imagejpeg($background);die;
+        header("Content-type: image/jpg");
 
-        // 保存图像为 $imagePath.'$fname'.'.jpg'
-        $res = imagejpeg($background, $outImagePath);
+        $res = imagejpeg($defaultImage, $outImagePath);
+
+        // 释放内存
+        imagedestroy($defaultImage);
+
         if (false === $res) {
             return false;
         }
 
-        // 释放内存
-        imagedestroy($background);
-
         return $outImagePath;
+    }
+
+    /**
+     * @param $imageSize
+     * @param $start_x
+     * @param $start_y
+     * @param $pic_w
+     * @param $pic_h
+     * @param $newLineArr
+     * @return array
+     */
+    private function buildImageElements($imageSize, $start_x, $start_y, $pic_w, $pic_h, $newLineArr)
+    {
+        $picElements = [];
+
+        for ($i = 0; $i < $imageSize; $i++) {
+            $element = [
+                "x" => $start_x,
+                "y" => $start_y,
+                "w" => $pic_w,
+                "h" => $pic_h,
+            ];
+            $picElements[] = $element;
+
+            if (in_array($i + 1, $newLineArr)) {
+                $start_x = 0;
+                $start_y = $start_y + $pic_h + 10;
+            } else {
+                $start_x = $start_x + $pic_w + 10;
+            }
+        }
+
+        return $picElements;
     }
 }
