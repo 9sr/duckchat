@@ -23,6 +23,7 @@ $(":input").attr("autocapitalize", "off");
 function ZalyIm(params)
 {
     var config = params.config;
+    DefaultTitle = config.name;
     document.title = config.name;
     var loginPluginProfile = params.loginPluginProfile;
     var webSocketGwDomain = config[siteConfigKeys.serverAddressForIM];

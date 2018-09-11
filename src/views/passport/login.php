@@ -106,7 +106,7 @@
 
     <div class="zaly_login zaly_site_register zaly_site_register-invitecode" style="display: none;">
         <div class="back">
-            <img src="../../public/img/back.png" style="margin-left: 2rem; width: 4rem;height:4rem; margin-top: 2rem;" onclick="returnRegisterDiv(); return false;"/>
+            <img src="../../public/img/back.png" style="margin-left: 2rem; width: 3rem;height:3rem; margin-top: 2rem;" onclick="returnRegisterDiv(); return false;"/>
         </div>
         <div class="login_input_div" >
             <div class="d-flex flex-row justify-content-center login-header"style="text-align: center;margin-top: 8rem;margin-bottom: 1rem;">
@@ -121,13 +121,12 @@
             <div class="d-flex flex-row justify-content-center " >
                 <button type="button" class="btn register_button"  style="margin-top: 7rem;"><span class="span_btn_tip" data-local-value="registerBtnTip">Register</span></button>
             </div>
-
         </div>
     </div>
 
     <div class="zaly_login zaly_site_register zaly_site_update-invitecode" style="display: none;">
         <div class="back">
-            <img src="../../public/img/back.png" style="margin-left: 2rem; width: 4rem;height:4rem; margin-top: 2rem;" onclick="returnRegisterDiv(); return false;"/>
+            <img src="../../public/img/back.png" style="margin-left: 2rem; width: 3rem;height:3rem; margin-top: 2rem;" onclick="returnRegisterDiv(); return false;"/>
         </div>
         <div class="login_input_div" >
             <div class="d-flex flex-row justify-content-center login-header "style="text-align: center;margin-top: 8rem;margin-bottom: 1rem;">

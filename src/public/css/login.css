@@ -141,11 +141,10 @@ input::-webkit-input-placeholder,
 .register_site::-webkit-input-placeholder{
     font-size:1.31rem;
     font-family:PingFangSC-Regular;
-    color:rgba(223,223,223,1);
+    color:rgba(153,153,153,1);
     vertical-align:middle;
     width: 25rem;
 }
-
 
 input:focus,
 input:active,

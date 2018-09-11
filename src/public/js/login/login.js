@@ -162,9 +162,13 @@ function registerForPassportPassword()
     $(".zaly_site_register-pwd")[0].style.display = "block";
 }
 
+
 function returnRegisterDiv() {
-    $(".zaly_site_register-pwd")[0].style.display = "block";
+    $(".zaly_site_register-pwd")[0].style.display = "none";
     $(".zaly_site_register-invitecode")[0].style.display = "none";
+    $(".zaly_site_register-repwd")[0].style.display = "none";
+    $(".zaly_site_update-invitecode")[0].style.display="none";
+    $(".zaly_login_by_pwd")[0].style.display = "block";
 }
 
 function handleHtmlLanguage(html)
