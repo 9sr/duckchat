@@ -39,6 +39,7 @@ class ZalyCurl
             $this->setRequestMethod($method);
             curl_setopt($this->_curlObj, CURLOPT_URL, $url);
             curl_setopt($this->_curlObj, CURLOPT_TIMEOUT, $this->timeOut);
+            curl_setopt($this->_curlObj, CURLOPT_HTTPHEADER, array('Content-Length: ' . strlen($this->_bodyContent)));
 
             if (($resp = curl_exec($this->_curlObj)) === false) {
                 $this->wpf_Logger->error('when run Router, unexpected error :', curl_error($this->_curlObj));
@@ -79,6 +80,7 @@ class ZalyCurl
             $this->setRequestMethod($method);
             curl_setopt($this->_curlObj, CURLOPT_URL, $url);
             curl_setopt($this->_curlObj, CURLOPT_TIMEOUT, $this->timeOut);
+            curl_setopt($this->_curlObj, CURLOPT_HTTPHEADER, array('Content-Length: ' . strlen($this->_bodyContent)));
 
             if (($resp = curl_exec($this->_curlObj)) === false) {
                 $this->wpf_Logger->error('when run Router, unexpected error :', curl_error($this->_curlObj));
@@ -112,6 +114,7 @@ class ZalyCurl
         try {
             $this->_curlObj = curl_init();
             $this->_getRequestParams($params);
+            $headers['Content-length'] = strlen($this->_bodyContent);
             $this->_setHeader($headers);
             $this->setRequestMethod($method);
             curl_setopt($this->_curlObj, CURLOPT_URL, $url);
