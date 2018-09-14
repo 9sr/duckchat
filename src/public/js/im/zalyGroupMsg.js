@@ -1823,17 +1823,17 @@ function displayAddFriend(userId)
 {
 
     $("#add-friend-div").attr("userId", userId);
-    $(".user-image-for-add").addClass("info-avatar-"+userId);
-    $(".user-nickname-for-add").addClass("nickname_"+userId);
-
     var friendProfile = getFriendProfile(userId, true);
     var nickname = friendProfile != false ? friendProfile.nickname : "";
     var html = template("tpl-add-friend-div", {
-       "nickname" : nickname
+        nickname: nickname,
+        userId : userId,
     });
     $("#add-friend-div").html(html);
+    getNotMsgImg(userId, friendProfile.avatar);
     showWindow($('#add-friend-div'));
 }
+
 
 $(document).on("click", ".apply-friend", function () {
     $(this)[0].style.disabled = "disabled";

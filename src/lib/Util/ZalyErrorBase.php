@@ -53,6 +53,7 @@ abstract class  ZalyErrorBase
     public $errorExistEmail     = "error.exist.email";
     public $errorExistLoginName = "error.exist.loginName";
 
+    public $errorInvalidLoginName = "error.invalid.loginName";
     public $errorLoginNameLength = "error.loginName.length";
     public $errorPassowrdLength = "error.password.length";
     public $errorNicknameLength = "error.nickname.length";
@@ -69,6 +70,8 @@ abstract class  ZalyErrorBase
     public $errorUpdatePwd = "error.update.pwd";
 
     public $errorSessionClear = "error.session.clear";
+
+    public $errorInvitationCode = "error.invitation.code";
 
 
     public $errorUpdatePasswordLoginName = "error.updatePassword.loginName";

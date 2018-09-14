@@ -111,7 +111,7 @@
         <div class="right-input">
             <div class="input-tools">
                 <img src="../../public/img/msg/emotions.png" class="emotions"/>
-                <img src="../../public/img/msg/images.png"  onclick="uploadFile('file1')" class="upload-img" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg"/>
+                <img src="../../public/img/msg/images.png" style="height: 2.06rem;" onclick="uploadFile('file1')" class="upload-img" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg"/>
                 <input type="file" id="file1" style="display:none" onchange="uploadMsgImgFromInput(this)" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
             </div>
 

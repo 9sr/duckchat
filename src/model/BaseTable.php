@@ -8,21 +8,53 @@
 
 class BaseTable
 {
-    /**
-     * @var \PDO
-     */
-    public $db;
+
     /**
      * @var BaseCtx
      */
     public $ctx;
 
-    public function __construct(Wpf_Ctx $context)
+    /**
+     * @var \PDO
+     */
+    public $db;
+
+    /**
+     * @var \PDO
+     */
+    public $dbSlave;
+
+    public function __construct(BaseCtx $context)
     {
         $this->ctx = $context;
         $this->db = $this->ctx->db;
+        $this->dbSlave = $this->ctx->db;
 
+        if ($context->isMysqlDB()) {
+            $this->initSlaveDb();
+        }
         $this->init();
+    }
+
+    public function initSlaveDb()
+    {
+        $mysqlSlaveArr = ZalyConfig::getConfig("mysqlSlave");
+        if (!empty($mysqlSlaveArr)) {
+            $slaveDbName = array_rand($mysqlSlaveArr, 1);
+            $slaveConfig = $mysqlSlaveArr[$slaveDbName];
+
+            $dbName = $slaveConfig['dbName'];
+            $dbHost = $slaveConfig['dbHost'];
+            $dbPort = $slaveConfig['dbPort'];
+            $dbUserName = $slaveConfig['dbUserName'];
+            $dbPwssword = $slaveConfig['dbPassword'];
+            $dbDsn = "mysql:host=$dbHost;port=$dbPort;dbname=$dbName;";
+            $options = array(
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+                PDO::ATTR_PERSISTENT => true,
+            );
+            $this->dbSlave = new PDO($dbDsn, $dbUserName, $dbPwssword, $options);//创建一个pdo对象
+        }
     }
 
     public function init()

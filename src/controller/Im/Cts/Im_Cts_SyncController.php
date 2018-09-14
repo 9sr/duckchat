@@ -95,18 +95,12 @@ class Im_Cts_SyncController extends Im_BaseController
 
     private function syncU2Message($userId, $deviceId, $limitCount)
     {
-        $this->ctx->Wpf_Logger->info("U2Pointer", "sync u2 message limitCount=" . $limitCount);
-
+        $isFirst = false;
         //u2 pointer
         $currentPointer = $this->ctx->SiteU2MessageTable->queryU2Pointer($userId, $deviceId);
 
         if (empty($currentPointer)) {
-            $currentPointer = 0;
-        }
-
-        $this->ctx->Wpf_Logger->info("U2Pointer", "get u2 pointer=" . $currentPointer);
-
-        if ($currentPointer == 0) {
+            $isFirst = true;
             $currentPointer = $this->ctx->SiteU2MessageTable->queryMaxU2Pointer($userId);
         }
 
@@ -114,12 +108,12 @@ class Im_Cts_SyncController extends Im_BaseController
             $currentPointer = 0;
         }
 
-        $this->ctx->Wpf_Logger->info("U2Pointer", "get finally u2 pointer=" . $currentPointer);
-
         $u2MessageList = $this->ctx->SiteU2MessageTable->queryMessage($userId, $currentPointer, $limitCount);
 
-        $tag = __CLASS__ . "->" . __FUNCTION__;
-        $this->ctx->Wpf_Logger->info($tag, "userId=" . $userId . " sync u2 message count=" . count($u2MessageList));
+        if ($isFirst) {
+            //update pointer
+            $this->ctx->SiteU2MessageTable->updatePointer($userId, $deviceId, "1", $currentPointer);
+        }
 
         return $u2MessageList;
     }

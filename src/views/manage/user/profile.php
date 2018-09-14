@@ -20,8 +20,6 @@
             background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
-            overflow-y: hidden;
-
         }
 
         /* mask and new window */
@@ -58,6 +56,7 @@
         }
 
         .item-row {
+            width: 100%;
             background: rgba(255, 255, 255, 1);
             display: flex;
             flex-direction: row;
@@ -116,7 +115,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -324,7 +323,8 @@
         }
 
         .item-body-value {
-            margin-top: 5px;
+            line-height: 28px;
+            /*margin-top: 5px;*/
             margin-right: 5px;
         }
 
@@ -458,13 +458,21 @@
 
         <div class="list-item-center">
 
-            <div class="item-row">
+            <div class="item-row" onclick="showUserId('<?php echo $userId; ?>')">
                 <div class="item-body">
-                    <div class="item-body-display">
+                    <div class="item-body-display user-id-body">
                         <div class="item-body-desc">ID</div>
 
-                        <div class="item-body-tail" id="user-nickname-text">
-                            <div class="item-body-value"><?php echo $userId ?></div>
+                        <div class="item-body-tail" id="user-id-value">
+                            <div class="item-body-value"><?php
+                                if (isset($userId)) {
+                                    $subUserId = substr($userId, 0, 4) . " **** ";
+                                    $subUserId .= substr($userId, -4);
+                                    echo $subUserId;
+                                }
+                                ?></div>
+                            <img class="more-img"
+                                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
                         </div>
                     </div>
 
@@ -533,7 +541,7 @@
                             <div class="item-body-value">
                                 <img id="user-avatar-img" class="site-image"
                                      onclick="uploadFile('user-avatar-img-input')"
-                                     src="">
+                                     src="../../public/img/msg/default_user.png">
 
                                 <input id="user-avatar-img-input" type="file" onchange="uploadImageFile(this)"
                                        accept="image/gif,image/jpeg,image/jpg,image/png,image/svg"
@@ -855,6 +863,12 @@
             wrapperMask.style.visibility = "hidden";
         }
     });
+
+
+    function showUserId(userId) {
+        var url = "index.php?action=manage.user.id&userId=" + userId + "&lang=" + getLanguage();
+        zalyjsCommonOpenPage(url);
+    }
 
 
     $(document).on("click", "#user-nickname", function () {

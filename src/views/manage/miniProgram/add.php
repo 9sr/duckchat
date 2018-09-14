@@ -21,8 +21,6 @@
             background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
-            overflow-y: hidden;
-
         }
 
         /* mask and new window */
@@ -117,7 +115,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -218,7 +216,7 @@
             /*margin-left: 10rem;*/
             padding: 0.5rem;
             width: 200px;
-            height: 5px;
+            height: 20px;
             overflow: hidden;
             text-align: right;
         }
@@ -334,7 +332,7 @@
 
 <body>
 
-<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
+<div class="wrapper-mask" id="wrapper-mask" style="display: none;"></div>
 
 <div class="wrapper" id="wrapper">
 
@@ -347,15 +345,14 @@
             <div class="item-row" id="plugin-name">
                 <div class="item-body">
                     <div class="item-body-display">
-
                         <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">小程序名称</div>
+                            <div class="item-body-desc">名称</div>
                             <div class="item-body-tail">
                                 <input id="mini-program-name-id" type="text" class="plugin-add-input"
                                        placeholder="请输入小程序名称">
                             </div>
                         <?php } else { ?>
-                            <div class="item-body-desc">Mini Program Name</div>
+                            <div class="item-body-desc">Name</div>
                             <div class="item-body-tail">
                                 <input id="mini-program-name-id" type="text" class="plugin-add-input"
                                        placeholder="input mini program name">
@@ -376,7 +373,7 @@
                         <?php if ($lang == "1") { ?>
                             <div class="item-body-desc">小程序图标</div>
                         <?php } else { ?>
-                            <div class="item-body-desc">Mini Program Icon</div>
+                            <div class="item-body-desc">Icon</div>
                         <?php } ?>
 
 
@@ -384,7 +381,7 @@
                             <div class="item-body-value" id="mini-program-fileid" fileId="">
                                 <img class="site-image" id="mini-program-image"
                                      onclick="uploadMiniProgramIcon('mini-program-logo');"
-                                     src="">
+                                     src="../../public/img/manage/plugin_default.png">
 
                                 <input id="mini-program-logo" type="file" onchange="uploadImageFile(this)"
                                        accept="image/gif,image/jpeg,image/jpg,image/png,image/svg"
@@ -414,561 +411,561 @@
                 <div class="item-body">
                     <div class="item-body-display">
                         <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">落地页URL</div>
-                        <?php } else { ?>
-                            <div class="item-body-desc">Home Page Url</div>
-                        <?php } ?>
-
-
+                        <div class="item-body-desc">落地页URL</div>
                         <div class="item-body-tail">
                             <input id="mini-program-landing-id" type="text" class="plugin-add-input"
                                    placeholder="纯网页小程序请填写页面完整URL">
+                            <?php } else { ?>
+                            <div class="item-body-desc">Home Page Url</div>
+                            <div class="item-body-tail">
+                                <input id="mini-program-landing-id" type="text" class="plugin-add-input"
+                                       placeholder="http or proxy url">
+                                <?php } ?>
+
+                            </div>
+
                         </div>
 
                     </div>
-
                 </div>
-            </div>
-            <div class="division-line"></div>
+                <div class="division-line"></div>
 
-            <div class="item-row">
-                <div class="item-body">
-                    <div class="item-body-display">
-                        <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">是否开启站点代理请求</div>
-                        <?php } else { ?>
-                            <div class="item-body-desc">Open Site HTTP Proxy</div>
-                        <?php } ?>
+                <div class="item-row">
+                    <div class="item-body">
+                        <div class="item-body-display">
+                            <?php if ($lang == "1") { ?>
+                                <div class="item-body-desc">是否开启站点代理</div>
+                            <?php } else { ?>
+                                <div class="item-body-desc">Open Site Proxy</div>
+                            <?php } ?>
 
-                        <div class="item-body-tail">
-                            <input id="openProxySwitch-id" class="weui_switch" type="checkbox">
+                            <div class="item-body-tail">
+                                <input id="openProxySwitch-id" class="weui_switch" type="checkbox">
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
+                <div class="division-line"></div>
+
             </div>
-            <div class="division-line"></div>
 
         </div>
 
-    </div>
+        <!--   part 3  -->
+        <div class="layout-all-row">
 
-    <!--   part 3  -->
-    <div class="layout-all-row">
-
-        <div class="list-item-center">
-            <div class="item-row">
-                <div class="item-body">
-                    <div class="item-body-display mini-program-usage" data="1">
-                        <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">小程序使用类别</div>
-                        <?php } else { ?>
-                            <div class="item-body-desc">Mini Program Usage</div>
-                        <?php } ?>
-
-                        <div class="item-body-tail">
+            <div class="list-item-center">
+                <div class="item-row">
+                    <div class="item-body">
+                        <div class="item-body-display mini-program-usage" data="1">
                             <?php if ($lang == "1") { ?>
-                                <div id="mini-program-usage-text" style="margin-right: 4px">首页小程序</div>
+                                <div class="item-body-desc">小程序使用类别</div>
                             <?php } else { ?>
-                                <div id="mini-program-usage-text" style="margin-right: 4px">Home Page</div>
+                                <div class="item-body-desc">MiniProgram Usage</div>
                             <?php } ?>
-                            <img class="more-img"
-                                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+
+                            <div class="item-body-tail">
+                                <?php if ($lang == "1") { ?>
+                                    <div id="mini-program-usage-text" style="margin-right: 4px">首页小程序</div>
+                                <?php } else { ?>
+                                    <div id="mini-program-usage-text" style="margin-right: 4px">Home Page</div>
+                                <?php } ?>
+                                <img class="more-img"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="division-line"></div>
+                <div class="division-line"></div>
 
-            <div class="item-row">
-                <div class="item-body">
-                    <div class="item-body-display mini-program-order">
-                        <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">小程序顺序</div>
-                        <?php } else { ?>
-                            <div class="item-body-desc">Mini Program Order</div>
-                        <?php } ?>
+                <div class="item-row">
+                    <div class="item-body">
+                        <div class="item-body-display mini-program-order">
+                            <?php if ($lang == "1") { ?>
+                                <div class="item-body-desc">排序</div>
+                            <?php } else { ?>
+                                <div class="item-body-desc">Order</div>
+                            <?php } ?>
 
-                        <div class="item-body-tail">
-                            <input id="mini-program-order-input" class="plugin-add-input" type="text" value="10">
+                            <div class="item-body-tail">
+                                <input id="mini-program-order-input" class="plugin-add-input" type="text" value="10">
+                            </div>
                         </div>
+
                     </div>
-
                 </div>
-            </div>
-            <div class="division-line"></div>
+                <div class="division-line"></div>
 
-            <div class="item-row">
-                <div class="item-body">
-                    <div class="item-body-display mini-program-display" data="0">
-                        <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">展示方式</div>
-                        <?php } else { ?>
-                            <div class="item-body-desc">Display Mode</div>
-                        <?php } ?>
-
-                        <div class="item-body-tail">
+                <div class="item-row">
+                    <div class="item-body">
+                        <div class="item-body-display mini-program-display" data="0">
                             <?php if ($lang == "1") { ?>
                                 <div class="item-body-desc">展示方式</div>
-                                <div id="mini-program-display-text" style="margin-right: 4px">新页面打开</div>
                             <?php } else { ?>
                                 <div class="item-body-desc">Display Mode</div>
-                                <div id="mini-program-display-text" style="margin-right: 4px">New Page</div>
                             <?php } ?>
-                            <img class="more-img"
-                                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+
+                            <div class="item-body-tail">
+                                <?php if ($lang == "1") { ?>
+                                    <div id="mini-program-display-text" style="margin-right: 4px">新页面打开</div>
+                                <?php } else { ?>
+                                    <div id="mini-program-display-text" style="margin-right: 4px">New Page</div>
+                                <?php } ?>
+                                <img class="more-img"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+                            </div>
                         </div>
+
                     </div>
-
                 </div>
-            </div>
-            <div class="division-line"></div>
+                <div class="division-line"></div>
 
-            <div class="item-row">
-                <div class="item-body">
-                    <div class="item-body-display mini-program-secret-key">
-                        <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">是否生成秘钥</div>
-                        <?php } else { ?>
-                            <div class="item-body-desc">Generate Secret Key</div>
-                        <?php } ?>
+                <div class="item-row">
+                    <div class="item-body">
+                        <div class="item-body-display mini-program-secret-key">
+                            <?php if ($lang == "1") { ?>
+                                <div class="item-body-desc">是否生成秘钥</div>
+                            <?php } else { ?>
+                                <div class="item-body-desc">Generate Secret Key</div>
+                            <?php } ?>
 
-                        <div class="item-body-tail">
-                            <input id="mini-program-secret-key-switch" class="weui_switch" type="checkbox">
+                            <div class="item-body-tail">
+                                <input id="mini-program-secret-key-switch" class="weui_switch" type="checkbox">
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
+                <div class="division-line"></div>
+
             </div>
-            <div class="division-line"></div>
 
         </div>
 
     </div>
 
-</div>
 
+    <div class="wrapper">
 
-<div class="wrapper">
+        <?php if ($lang == "1") { ?>
+            <button id="addMiniProgramButton" type="button" class="create_button" url-value="">保存</button>
+        <?php } else { ?>
+            <button id="addMiniProgramButton" type="button" class="create_button" url-value="">Save</button>
+        <?php } ?>
 
-    <?php if ($lang == "1") { ?>
-        <button id="addMiniProgramButton" type="button" class="create_button" url-value="">保存</button>
-    <?php } else { ?>
-        <button id="addMiniProgramButton" type="button" class="create_button" url-value="">Save</button>
-    <?php } ?>
+    </div>
 
-</div>
+    <div class="popup-template" style="display: none;">
 
-<div class="popup-template" style="visibility:hidden;">
+        <div class="config-hidden" id="popup-group">
 
-    <div class="config-hidden" id="popup-group">
+            <div class="flex-container">
+                <div class="header_tip_font popup-group-title" data-local-value="createGroupTip">创建群组</div>
+            </div>
 
-        <div class="flex-container">
-            <div class="header_tip_font popup-group-title" data-local-value="createGroupTip">创建群组</div>
-        </div>
+            <div class="" style="text-align: center">
+                <input type="text" class="popup-group-input" placeholder="please input">
+            </div>
 
-        <div class="" style="text-align: center">
-            <input type="text" class="popup-group-input" placeholder="please input">
-        </div>
+            <div class="line"></div>
 
-        <div class="line"></div>
+            <div class="" style="text-align:center;">
+                <?php if ($lang == "1") { ?>
+                    <button type="button" class="create_button" url-value="">保存</button>
+                <?php } else { ?>
+                    <button type="button" class="create_button" url-value="">Save</button>
+                <?php } ?>
+            </div>
 
-        <div class="" style="text-align:center;">
-            <?php if ($lang == "1") { ?>
-                <button type="button" class="create_button" url-value="">保存</button>
-            <?php } else { ?>
-                <button type="button" class="create_button" url-value="">Save</button>
-            <?php } ?>
         </div>
 
     </div>
 
-</div>
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+    <!--<script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"></script>-->
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>
 
 
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
-<!--<script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"></script>-->
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>
+    <script type="text/javascript">
 
+        function isAndroid() {
 
-<script type="text/javascript">
-
-    function isAndroid() {
-
-        var userAgent = window.navigator.userAgent.toLowerCase();
-        if (userAgent.indexOf("android") != -1) {
-            return true;
-        }
-
-        return false;
-    }
-
-    function isMobile() {
-        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
-            return true;
-        }
-        return false;
-    }
-
-    function getLanguage() {
-        var nl = navigator.language;
-        if ("zh-cn" == nl || "zh-CN" == nl) {
-            return 1;
-        }
-        return 0;
-    }
-
-
-    function zalyjsAjaxPostJSON(url, body, callback) {
-        zalyjsAjaxPost(url, jsonToQueryString(body), function (data) {
-            var json = JSON.parse(data)
-            callback(json)
-        })
-    }
-
-
-    function zalyjsNavOpenPage(url) {
-        var messageBody = {}
-        messageBody["url"] = url
-        messageBody = JSON.stringify(messageBody)
-
-        if (isAndroid()) {
-            window.Android.zalyjsNavOpenPage(messageBody)
-        } else {
-            window.webkit.messageHandlers.zalyjsNavOpenPage.postMessage(messageBody)
-        }
-    }
-
-    function zalyjsCommonAjaxGet(url, callBack) {
-        $.ajax({
-            url: url,
-            method: "GET",
-            success: function (result) {
-
-                callBack(url, result);
-
-            },
-            error: function (err) {
-                alert("error");
+            var userAgent = window.navigator.userAgent.toLowerCase();
+            if (userAgent.indexOf("android") != -1) {
+                return true;
             }
-        });
 
-    }
+            return false;
+        }
 
-
-    function zalyjsCommonAjaxPost(url, value, callBack) {
-        $.ajax({
-            url: url,
-            method: "POST",
-            data: value,
-            success: function (result) {
-                callBack(url, value, result);
-            },
-            error: function (err) {
-                alert("error");
+        function isMobile() {
+            if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                return true;
             }
-        });
+            return false;
+        }
 
-    }
-
-    function zalyjsCommonAjaxPostJson(url, jsonBody, callBack) {
-        $.ajax({
-            url: url,
-            method: "POST",
-            data: jsonBody,
-            success: function (result) {
-
-                callBack(url, jsonBody, result);
-
-            },
-            error: function (err) {
-                alert("error");
+        function getLanguage() {
+            var nl = navigator.language;
+            if ("zh-cn" == nl || "zh-CN" == nl) {
+                return 1;
             }
-        });
-
-    }
-
-    /**
-     * _blank    在新窗口中打开被链接文档。
-     * _self    默认。在相同的框架中打开被链接文档。
-     * _parent    在父框架集中打开被链接文档。
-     * _top    在整个窗口中打开被链接文档。
-     * framename    在指定的框架中打开被链接文档。
-     *
-     * @param url
-     * @param target
-     */
-    function zalyjsCommonOpenPage(url, target = "_blank") {
-        location.href = url;
-    }
-
-</script>
-
-<script type="text/javascript">
-
-    function uploadMiniProgramIcon(obj) {
-        $("#" + obj).val("");
-        $("#" + obj).click();
-    }
-
-    downloadFileUrl = "./index.php?action=http.file.downloadFile";
-
-
-    function uploadImageFile(obj) {
-        if (obj) {
-            if (obj.files) {
-                var formData = new FormData();
-
-                formData.append("file", obj.files.item(0));
-                formData.append("fileType", "FileImage");
-                formData.append("isMessageAttachment", false);
-
-                var src = window.URL.createObjectURL(obj.files.item(0));
-
-                uploadFileToServer(formData, src);
-
-                $("#mini-program-image").attr("src", src);
-            }
-            return obj.value;
-        }
-    }
-
-    function uploadFileToServer(formData, src) {
-
-        var url = "./index.php?action=http.file.uploadWeb";
-
-        if (isMobile()) {
-            url = "/_api_file_upload_/?fileType=1";  //fileType=1,表示文件
-        }
-
-        $.ajax({
-            url: url,
-            type: "post",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (imageFileIdResult) {
-                if (imageFileIdResult) {
-                    var fileId = imageFileIdResult;
-                    if (isMobile()) {
-                        var res = JSON.parse(imageFileIdResult);
-                        fileId = res.fileId;
-                    }
-                    updateServerImage(fileId);
-                } else {
-                    alert(getLanguage() == 1 ? "上传返回结果空 " : "empty response");
-                }
-            },
-            error: function (err) {
-                alert("update image error");
-                return false;
-            }
-        });
-    }
-
-    function showLocalImage(fileId) {
-        var requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
-        var xhttp = new XMLHttpRequest();
-        console.log("showSiteLogo imageId ==" + fileId);
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
-                var blob = this.response;
-                var src = window.URL.createObjectURL(blob);
-                console.log("showSiteLogo imageId response src=" + src);
-                $("#mini-program-image").attr("src", src);
-            }
-        };
-        xhttp.open("GET", requestUrl, true);
-        xhttp.responseType = "blob";
-        // xhttp.setRequestHeader('Cache-Control', "max-age=2592000, public");
-        xhttp.send();
-    }
-
-
-    $(document).on("click", '.mini-program-usage', function () {
-
-        // PluginUsageIndex = 1;
-        // PluginUsageLogin = 2;
-        //
-        // PluginUsageU2Message = 3;
-        // PluginUsageTmpMessage = 4;
-        // PluginUsageGroupMessage = 5;
-        var language = getLanguage();
-
-        $.actions({
-            title: "",
-            onClose: function () {
-                console.log("close");
-            },
-            actions: [{
-                text: language == 0 ? "Home Mini Program" : "首页小程序",
-                className: "color-primary weui-dialog__btn",
-                onClick: function () {
-                    $("#mini-program-usage-text").html(language == 0 ? "Home Page" : "首页小程序");
-                    $(".mini-program-usage").attr("data", "1");
-                }
-            }, {
-                text: language == 0 ? "U2 Chat Mini Program" : "二人聊天小程序",
-                className: "color-primary weui-dialog__btn",
-                onClick: function () {
-                    $("#mini-program-usage-text").html(language == 0 ? "U2 Chat Mini Program" : "二人聊天小程序");
-                    $(".mini-program-usage").attr("data", "3");
-                }
-            }, {
-                text: language == 0 ? "Tmp Chat Mini Program" : "临时会话小程序",
-                className: "color-primary weui-dialog__btn",
-                onClick: function () {
-
-                    $("#mini-program-usage-text").html(language == 0 ? "Tmp Chat Mini Program" : "临时会话小程序");
-                    $(".mini-program-usage").attr("data", "4");
-                }
-            }, {
-                text: language == 0 ? "Chat Page Bottom" : "聊天界面底部",
-                className: "color-primary weui-dialog__btn",
-                onClick: function () {
-                    $("#mini-program-usage-text").html(language == 0 ? "Chat Page Bottom" : "聊天界面底部");
-                    $(".mini-program-usage").attr("data", "5");
-                }
-            }, {
-                text: language == 0 ? "Login Mini Program" : "登陆小程序",
-                className: "color-warning weui-dialog__btn",
-                onClick: function () {
-                    $("#mini-program-usage-text").html(language == 0 ? "Login Mini Program" : "登陆小程序");
-                    $(".mini-program-usage").attr("data", "2");
-                }
-            }]
-        });
-    });
-
-    $(document).on("click", '.mini-program-display', function () {
-
-        var language = getLanguage();
-        // PluginLoadingNewPage = 0;
-        // PluginLoadingFloat   = 1;
-        // PluginLoadingMask    = 2;
-        // PluginLoadingChatbox = 3;
-        // PluginLoadingFullScreen = 4;
-        $.actions({
-            title: "",
-            onClose: function () {
-                console.log("close");
-            },
-            actions: [{
-                text: language == 0 ? "New Page" : "新页面打开",
-                className: "color-primary weui-dialog__btn ",
-                onClick: function () {
-                    $("#mini-program-display-text").html(language == 0 ? "New Page" : "新页面打开");
-                    $(".mini-program-display").attr("data", "0");
-                }
-            }, {
-                text: language == 0 ? "Float Page" : "悬浮打开",
-                className: "color-primary weui-dialog__btn",
-                onClick: function () {
-                    $("#mini-program-display-text").html(language == 0 ? "Float Page" : "悬浮打开打开");
-                    $(".mini-program-display").attr("data", "1");
-                }
-            }, {
-                text: language == 0 ? "Mask Page" : "Mask打开",
-                className: "color-primary weui-dialog__btn",
-                onClick: function () {
-                    $("#mini-program-display-text").html(language == 0 ? "Mask Page" : "Mask打开");
-                    $(".mini-program-display").attr("data", "2");
-                }
-            }, {
-                text: language == 0 ? "Chatbox Page" : "新页面打开",
-                className: "color-primary weui-dialog__btn",
-                onClick: function () {
-                    $("#mini-program-display-text").html(language == 0 ? "Chatbox Page" : "新页面打开");
-                    $(".mini-program-display").attr("data", "3");
-                }
-            }, {
-                text: language == 0 ? "FullScreen" : "全屏打开",
-                className: "color-primary weui-dialog__btn",
-                onClick: function () {
-                    $("#mini-program-display-text").html(language == 0 ? "FullScreen" : "全屏打开");
-                    $(".mini-program-display").attr("data", "4");
-                }
-            }]
-        });
-    });
-
-
-    $("#addMiniProgramButton").click(function () {
-        var miniProgramName = $("#mini-program-name-id").val();
-
-        var imageFileId = $("#mini-program-fileid").attr("fileId");
-
-        var landingPageUrl = $("#mini-program-landing-id").val();
-        var miniProgramProxySwitch = $("#openProxySwitch-id").is(':checked');
-
-        var miniProgramUsage = $(".mini-program-usage").attr('data');
-        var miniProgramOrder = $("#mini-program-order-input").val();
-        var miniProgramDisplay = $("#mini-program-display").attr('data');
-        var miniProgramSecretKey = $("#mini-program-secret-key-switch").is(':checked');
-
-        if (miniProgramName == null || miniProgramName == "") {
-            alert(getLanguage() == 1 ? "请输入小程序名称" : "please input mini program name");
-            alert("mini program name must not be null");
-            return;
-        }
-
-        if (landingPageUrl == null || landingPageUrl == "") {
-            alert(getLanguage() == 1 ? "请输入小程序落地页" : "mini program landing url is empty");
-            return;
-        }
-
-        // if (imageFileId == null || imageFileId == "") {
-        //     alert(getLanguage() == 1 ? "请重新选择小程序图标" : "mini program icon is empty");
-        //     return;
-        // }
-
-        var data = {
-            // name: miniProgramName
-        };
-        data['name'] = miniProgramName;
-        data['logo'] = imageFileId;
-        data['landingPageUrl'] = landingPageUrl;
-        if (miniProgramProxySwitch) {
-            data['withProxy'] = 1;
-        } else {
-            data['withProxy'] = 0;
-        }
-        data['usageType'] = miniProgramUsage;
-        data['order'] = miniProgramOrder;
-        data['loadingType'] = miniProgramDisplay;
-        data['permissionType'] = 1;//all
-        if (miniProgramSecretKey) {
-            data['secretKey'] = 1;
-        } else {
-            data['secretKey'] = 0;
+            return 0;
         }
 
 
-        var url = "./index.php?action=manage.miniProgram.add&type=save&lang=" + getLanguage();
-        zalyjsCommonAjaxPostJson(url, data, addMiniProgramResponse);
+        function zalyjsAjaxPostJSON(url, body, callback) {
+            zalyjsAjaxPost(url, jsonToQueryString(body), function (data) {
+                var json = JSON.parse(data)
+                callback(json)
+            })
+        }
 
-    });
 
-    function addMiniProgramResponse(url, data, result) {
-        if (result) {
-            var resJson = JSON.parse(result);
+        function zalyjsNavOpenPage(url) {
+            var messageBody = {}
+            messageBody["url"] = url
+            messageBody = JSON.stringify(messageBody)
 
-            var errCode = resJson['errCode'];
-
-            if ("success" == errCode) {
-                alert("save mini program success");
-                window.location.reload();
+            if (isAndroid()) {
+                window.Android.zalyjsNavOpenPage(messageBody)
             } else {
-                var errInfo = resJson['errInfo'];
-                alert("error:" + errInfo);
+                window.webkit.messageHandlers.zalyjsNavOpenPage.postMessage(messageBody)
             }
-        } else {
-            alert("error");
         }
-    }
 
-</script>
+        function zalyjsCommonAjaxGet(url, callBack) {
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function (result) {
+
+                    callBack(url, result);
+
+                },
+                error: function (err) {
+                    alert("error");
+                }
+            });
+
+        }
+
+
+        function zalyjsCommonAjaxPost(url, value, callBack) {
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: value,
+                success: function (result) {
+                    callBack(url, value, result);
+                },
+                error: function (err) {
+                    alert("error");
+                }
+            });
+
+        }
+
+        function zalyjsCommonAjaxPostJson(url, jsonBody, callBack) {
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: jsonBody,
+                success: function (result) {
+
+                    callBack(url, jsonBody, result);
+
+                },
+                error: function (err) {
+                    alert("error");
+                }
+            });
+
+        }
+
+        /**
+         * _blank    在新窗口中打开被链接文档。
+         * _self    默认。在相同的框架中打开被链接文档。
+         * _parent    在父框架集中打开被链接文档。
+         * _top    在整个窗口中打开被链接文档。
+         * framename    在指定的框架中打开被链接文档。
+         *
+         * @param url
+         * @param target
+         */
+        function zalyjsCommonOpenPage(url, target = "_blank") {
+            location.href = url;
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        function uploadMiniProgramIcon(obj) {
+            $("#" + obj).val("");
+            $("#" + obj).click();
+        }
+
+        downloadFileUrl = "./index.php?action=http.file.downloadFile";
+
+
+        function uploadImageFile(obj) {
+            if (obj) {
+                if (obj.files) {
+                    var formData = new FormData();
+
+                    formData.append("file", obj.files.item(0));
+                    formData.append("fileType", "FileImage");
+                    formData.append("isMessageAttachment", false);
+
+                    var src = window.URL.createObjectURL(obj.files.item(0));
+
+                    uploadFileToServer(formData, src);
+
+                    $("#mini-program-image").attr("src", src);
+                }
+                return obj.value;
+            }
+        }
+
+        function uploadFileToServer(formData, src) {
+
+            var url = "./index.php?action=http.file.uploadWeb";
+
+            if (isMobile()) {
+                url = "/_api_file_upload_/?fileType=1";  //fileType=1,表示文件
+            }
+
+            $.ajax({
+                url: url,
+                type: "post",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (imageFileIdResult) {
+                    if (imageFileIdResult) {
+                        var fileId = imageFileIdResult;
+                        if (isMobile()) {
+                            var res = JSON.parse(imageFileIdResult);
+                            fileId = res.fileId;
+                        }
+                        updateServerImage(fileId);
+                    } else {
+                        alert(getLanguage() == 1 ? "上传返回结果空 " : "empty response");
+                    }
+                },
+                error: function (err) {
+                    alert("update image error");
+                    return false;
+                }
+            });
+        }
+
+        function showLocalImage(fileId) {
+            var requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
+            var xhttp = new XMLHttpRequest();
+            console.log("showSiteLogo imageId ==" + fileId);
+
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
+                    var blob = this.response;
+                    var src = window.URL.createObjectURL(blob);
+                    console.log("showSiteLogo imageId response src=" + src);
+                    $("#mini-program-image").attr("src", src);
+                }
+            };
+            xhttp.open("GET", requestUrl, true);
+            xhttp.responseType = "blob";
+            // xhttp.setRequestHeader('Cache-Control', "max-age=2592000, public");
+            xhttp.send();
+        }
+
+
+        $(document).on("click", '.mini-program-usage', function () {
+
+            // PluginUsageIndex = 1;
+            // PluginUsageLogin = 2;
+            //
+            // PluginUsageU2Message = 3;
+            // PluginUsageTmpMessage = 4;
+            // PluginUsageGroupMessage = 5;
+            var language = getLanguage();
+
+            $.actions({
+                title: "",
+                onClose: function () {
+                    console.log("close");
+                },
+                actions: [{
+                    text: language == 0 ? "Home Mini Program" : "首页小程序",
+                    className: "color-primary weui-dialog__btn",
+                    onClick: function () {
+                        $("#mini-program-usage-text").html(language == 0 ? "Home Page" : "首页小程序");
+                        $(".mini-program-usage").attr("data", "1");
+                    }
+                }, {
+                    text: language == 0 ? "U2 Chat Mini Program" : "二人聊天小程序",
+                    className: "color-primary weui-dialog__btn",
+                    onClick: function () {
+                        $("#mini-program-usage-text").html(language == 0 ? "U2 Chat Mini Program" : "二人聊天小程序");
+                        $(".mini-program-usage").attr("data", "3");
+                    }
+                }, {
+                    text: language == 0 ? "Tmp Chat Mini Program" : "临时会话小程序",
+                    className: "color-primary weui-dialog__btn",
+                    onClick: function () {
+
+                        $("#mini-program-usage-text").html(language == 0 ? "Tmp Chat Mini Program" : "临时会话小程序");
+                        $(".mini-program-usage").attr("data", "4");
+                    }
+                }, {
+                    text: language == 0 ? "Chat Page Bottom" : "聊天界面底部",
+                    className: "color-primary weui-dialog__btn",
+                    onClick: function () {
+                        $("#mini-program-usage-text").html(language == 0 ? "Chat Page Bottom" : "聊天界面底部");
+                        $(".mini-program-usage").attr("data", "5");
+                    }
+                }, {
+                    text: language == 0 ? "Login Mini Program" : "登陆小程序",
+                    className: "color-warning weui-dialog__btn",
+                    onClick: function () {
+                        $("#mini-program-usage-text").html(language == 0 ? "Login Mini Program" : "登陆小程序");
+                        $(".mini-program-usage").attr("data", "2");
+                    }
+                }]
+            });
+        });
+
+        $(document).on("click", '.mini-program-display', function () {
+
+            var language = getLanguage();
+            // PluginLoadingNewPage = 0;
+            // PluginLoadingFloat   = 1;
+            // PluginLoadingMask    = 2;
+            // PluginLoadingChatbox = 3;
+            // PluginLoadingFullScreen = 4;
+            $.actions({
+                title: "",
+                onClose: function () {
+                    console.log("close");
+                },
+                actions: [{
+                    text: language == 0 ? "New Page" : "新页面打开",
+                    className: "color-primary weui-dialog__btn ",
+                    onClick: function () {
+                        $("#mini-program-display-text").html(language == 0 ? "New Page" : "新页面打开");
+                        $(".mini-program-display").attr("data", "0");
+                    }
+                }, {
+                    text: language == 0 ? "Float Page" : "悬浮打开",
+                    className: "color-primary weui-dialog__btn",
+                    onClick: function () {
+                        $("#mini-program-display-text").html(language == 0 ? "Float Page" : "悬浮打开打开");
+                        $(".mini-program-display").attr("data", "1");
+                    }
+                }, {
+                    text: language == 0 ? "Mask Page" : "Mask打开",
+                    className: "color-primary weui-dialog__btn",
+                    onClick: function () {
+                        $("#mini-program-display-text").html(language == 0 ? "Mask Page" : "Mask打开");
+                        $(".mini-program-display").attr("data", "2");
+                    }
+                }, {
+                    text: language == 0 ? "Chatbox Page" : "新页面打开",
+                    className: "color-primary weui-dialog__btn",
+                    onClick: function () {
+                        $("#mini-program-display-text").html(language == 0 ? "Chatbox Page" : "新页面打开");
+                        $(".mini-program-display").attr("data", "3");
+                    }
+                }, {
+                    text: language == 0 ? "FullScreen" : "全屏打开",
+                    className: "color-primary weui-dialog__btn",
+                    onClick: function () {
+                        $("#mini-program-display-text").html(language == 0 ? "FullScreen" : "全屏打开");
+                        $(".mini-program-display").attr("data", "4");
+                    }
+                }]
+            });
+        });
+
+
+        $("#addMiniProgramButton").click(function () {
+            var miniProgramName = $("#mini-program-name-id").val();
+
+            var imageFileId = $("#mini-program-fileid").attr("fileId");
+
+            var landingPageUrl = $("#mini-program-landing-id").val();
+            var miniProgramProxySwitch = $("#openProxySwitch-id").is(':checked');
+
+            var miniProgramUsage = $(".mini-program-usage").attr('data');
+            var miniProgramOrder = $("#mini-program-order-input").val();
+            var miniProgramDisplay = $("#mini-program-display").attr('data');
+            var miniProgramSecretKey = $("#mini-program-secret-key-switch").is(':checked');
+
+            if (miniProgramName == null || miniProgramName == "") {
+                alert(getLanguage() == 1 ? "请输入小程序名称" : "please input mini program name");
+                alert("mini program name must not be null");
+                return;
+            }
+
+            if (landingPageUrl == null || landingPageUrl == "") {
+                alert(getLanguage() == 1 ? "请输入小程序落地页" : "mini program landing url is empty");
+                return;
+            }
+
+            // if (imageFileId == null || imageFileId == "") {
+            //     alert(getLanguage() == 1 ? "请重新选择小程序图标" : "mini program icon is empty");
+            //     return;
+            // }
+
+            var data = {
+                // name: miniProgramName
+            };
+            data['name'] = miniProgramName;
+            data['logo'] = imageFileId;
+            data['landingPageUrl'] = landingPageUrl;
+            if (miniProgramProxySwitch) {
+                data['withProxy'] = 1;
+            } else {
+                data['withProxy'] = 0;
+            }
+            data['usageType'] = miniProgramUsage;
+            data['order'] = miniProgramOrder;
+            data['loadingType'] = miniProgramDisplay;
+            data['permissionType'] = 1;//all
+            if (miniProgramSecretKey) {
+                data['secretKey'] = 1;
+            } else {
+                data['secretKey'] = 0;
+            }
+
+
+            var url = "./index.php?action=manage.miniProgram.add&type=save&lang=" + getLanguage();
+            zalyjsCommonAjaxPostJson(url, data, addMiniProgramResponse);
+
+        });
+
+        function addMiniProgramResponse(url, data, result) {
+            if (result) {
+                var resJson = JSON.parse(result);
+
+                var errCode = resJson['errCode'];
+
+                if ("success" == errCode) {
+                    alert("save mini program success");
+                    window.location.reload();
+                } else {
+                    var errInfo = resJson['errInfo'];
+                    alert("error:" + errInfo);
+                }
+            } else {
+                alert("error");
+            }
+        }
+
+    </script>
 
 </body>
 </html>

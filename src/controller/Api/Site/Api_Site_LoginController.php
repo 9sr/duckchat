@@ -31,7 +31,7 @@ class Api_Site_LoginController extends \BaseController
             $loginName = $request->getLoginName();
             $userExists = $this->checkUserExists($loginName);
             $isRegister = $request->getIsRegister();
-            $this->ctx->Wpf_Logger->info("api.site.login", " =========userExists=" . $userExists);
+//            $this->ctx->Wpf_Logger->info("api.site.login", "userExists=" . $userExists);
 
             if (!$userExists && $isRegister == false) {
                 $errorCode = $this->zalyError->errorUserNeedRegister;
@@ -58,7 +58,8 @@ class Api_Site_LoginController extends \BaseController
             }
 
             //get user profile from platform clientSiteType=1:mobile client
-            $userProfile = $this->ctx->Site_Login->checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem, 1);
+            $clientType = Zaly\Proto\Core\UserClientType::UserClientMobileApp;
+            $userProfile = $this->ctx->Site_Login->checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem, $clientType);
 
             $realSessionId = $userProfile['sessionId'];
 
@@ -74,7 +75,7 @@ class Api_Site_LoginController extends \BaseController
         } catch (Exception $ex) {
             $errorCode = $this->zalyError->errorSiteLogin;
             $errorInfo = $this->zalyError->getErrorInfo($errorCode);
-            $this->ctx->Wpf_Logger->error($tag, "=========error=" . $ex->getMessage());
+            $this->ctx->Wpf_Logger->error($tag, "error=" . $ex);
             $this->setRpcError($errorCode, $errorInfo);
             $this->rpcReturn($transportData->getAction(), new $this->classNameForResponse());
         }

@@ -116,35 +116,39 @@ function handleImSendRequest(action, reqData, callback)
 
 function handleReceivedImMessage(resp, callback)
 {
-    var result = JSON.parse(resp);
-    if(result.action == ZalyAction.im_stc_news) {
-        syncMsgForRoom();
-        return;
-    }
-
-    if(result.header != undefined && result.header.hasOwnProperty(HeaderErrorCode)) {
-        if(result.header[HeaderErrorCode] != "success") {
-            if(result.header[HeaderErrorCode] == ErrorSessionCode ) {
-                if(wsImObj != "" && wsImObj != undefined) {
-                    wsImObj.close();
-                }
-                localStorage.clear();
-                window.location.href = "./index.php?action=page.logout";
-                return;
-            }
-            alert(result.header[HeaderErrorInfo]);
+    try{
+        var result = JSON.parse(resp);
+        if(result.action == ZalyAction.im_stc_news) {
+            syncMsgForRoom();
             return;
         }
-    }
 
-    if(result.action == ZalyAction.im_stc_message_key) {
-        handleSyncMsgForRoom(result.body);
-        return;
-    }
+        if(result.header != undefined && result.header.hasOwnProperty(HeaderErrorCode)) {
+            if(result.header[HeaderErrorCode] != "success") {
+                if(result.header[HeaderErrorCode] == ErrorSessionCode ) {
+                    if(wsImObj != "" && wsImObj != undefined) {
+                        wsImObj.close();
+                    }
+                    localStorage.clear();
+                    window.location.href = "./index.php?action=page.logout";
+                    return;
+                }
+                alert(result.header[HeaderErrorInfo]);
+                return;
+            }
+        }
 
-    if(callback instanceof Function && callback != undefined) {
-        callback(result.body);
-        return;
+        if(result.action == ZalyAction.im_stc_message_key) {
+            handleSyncMsgForRoom(result.body);
+            return;
+        }
+
+        if(callback instanceof Function && callback != undefined) {
+            callback(result.body);
+            return;
+        }
+    }catch (error) {
+        console.log(error.message);
     }
 
 }

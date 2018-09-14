@@ -123,8 +123,8 @@
         .list-item-center {
             width: 100%;
             /*height: 11rem;*/
-            background: rgba(245, 245, 245, 1);
-            padding-top: 20px;
+            /*background: rgba(245, 245, 245, 1);*/
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -332,7 +332,8 @@
             </div>
 
             <?php foreach ($miniProgramList as $key => $value) { ?>
-                <div class="item-row miniProgram-profile" pluginId="<?php echo($value["pluginId"]) ?>">
+                <div class="item-row miniProgram-profile"
+                     onclick="showMiniprogramProfile('<?php echo($value["pluginId"]) ?>')">
                     <div class="item-body">
                         <div class="item-body-display">
 
@@ -480,14 +481,13 @@
 
 <script type="text/javascript">
 
-    $(document).on("click", ".miniProgram-profile", function () {
 
-        var pluginId = $(this).attr("pluginId");
-
+    function showMiniprogramProfile(pluginId) {
         var url = "index.php?action=manage.miniProgram.profile&lang=" + getLanguage() + "&pluginId=" + pluginId;
 
         zalyjsCommonOpenPage(url);
-    });
+    }
+
 
 </script>
 

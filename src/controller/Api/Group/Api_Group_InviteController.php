@@ -70,16 +70,16 @@ class Api_Group_InviteController extends Api_Group_BaseController
                 $siteConfig = $this->ctx->SiteConfigTable->selectSiteConfig($siteConfigObj::SITE_MAX_GROUP_MEMBERS);
                 $siteMaxGroupMembers = $siteConfig[$siteConfigObj::SITE_MAX_GROUP_MEMBERS];
             }
-            if ($siteMaxGroupMembers <= $groupUserCount) {
+
+            $newGroupUserCount = $groupUserCount+count($userIds);
+            if ($siteMaxGroupMembers <= $groupUserCount || $siteMaxGroupMembers < $newGroupUserCount) {
                 $errorCode = $this->zalyError->errorGroupMemberCount;
                 $errorInfo = $this->zalyError->getErrorInfo($errorCode);
                 $this->setRpcError($errorCode, $errorInfo);
                 throw new Exception($errorInfo);
             }
 
-
             /// 公开的直接进入
-            // TODO 用户怎么处理
             $this->addMemberToGroup($userList, $groupId);
 
             $this->setRpcError($this->defaultErrorCode, "");

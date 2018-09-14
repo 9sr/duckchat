@@ -21,8 +21,6 @@
             background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
-            overflow-y: hidden;
-
         }
 
         /* mask and new window */
@@ -51,7 +49,7 @@
         .layout-all-row {
             width: 100%;
             /*background: white;*/
-            background: rgba(245, 245, 245, 1);;
+            background: rgba(245, 245, 245, 1);
             display: flex;
             /*align-items: stretch;*/
             overflow: hidden;
@@ -117,7 +115,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -455,9 +453,7 @@
                         </div>
 
                         <div class="" style="margin-right: 10px">
-                            <!--                            <button id="uic-manage" type="button" class="create_button" url-value=""-->
-                            <!--                                    style="margin-top: 7px;font-size: 14px">管理-->
-                            <!--                            </button>-->
+                            <?php echo $totalUserCount ?>
                         </div>
 
                     </div>
@@ -466,11 +462,11 @@
 
             <?php foreach ($userList as $key => $profile) { ?>
 
-                <div class="item-row" id="user-list-id" userId="<?php echo($profile["userId"]) ?>">
-                    <div class="item-body">
+                <div class="item-row">
+                    <div class="item-body" onclick="showUserProfile('<?php echo($profile["userId"]) ?>')"
+                         id="user-list-id" userId="<?php echo($profile["userId"]) ?>">
                         <div class="item-body-display">
                             <div class="item-body-desc">
-
                                 <?php
                                 if ($profile["nickname"]) {
                                     echo $profile["nickname"];
@@ -481,7 +477,6 @@
                                 }
 
                                 ?>
-
                             </div>
 
                             <div class="item-body-tail">
@@ -512,13 +507,10 @@
 
 <script type="text/javascript">
 
-    $(document).on("click", "#user-list-id", function () {
-        var userId = $(this).attr("userId");
-
+    function showUserProfile(userId) {
         var url = "./index.php?action=manage.user.profile&lang=" + getLanguage() + "&userId=" + userId;
-
         zalyjsCommonOpenPage(url);
-    });
+    }
 
 </script>
 

@@ -155,7 +155,7 @@ function appendOrInsertRoomList(msg, isInsert)
                     $(".room-chatsession-mute-num_"+msg.chatSessionId)[0].style.display = "none";
                 }
             }
-            if(msgContent != undefined && msgContent.length>1) {
+            if(msgContent != undefined && msgContent.length>0) {
                 $(childrens[2]).html(msgContent);
             }
 
@@ -403,13 +403,12 @@ function handleMsgStatusResult(msgId, msgStatus)
 {
     var msgIdInChatSession = msgIdInChatSessionKey + msgId;
     var chatSessionId = sessionStorage.getItem(msgIdInChatSession);
-
     if(msgStatus == MessageStatus.MessageStatusFailed) {
         $(".msg_status_failed_"+msgId)[0].style.display = "flex";
         $(".msg_status_loading_"+msgId)[0].style.display = "none";
         $(".msg_status_loading_"+msgId).attr("is-display", "none");
         updateMsgStatus(msgId, chatSessionId, MessageStatus.MessageStatusFailed);
-    } else if(msgStatus == MessageStatus.MessageStatusServer) {
+    } else {
         $(".msg_status_loading_"+msgId)[0].style.display = "none";
         $(".msg_status_loading_"+msgId).attr("is-display", "none");
     }
@@ -661,16 +660,13 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
     var msgIdInChatSession = msgIdInChatSessionKey + msgId;
     sessionStorage.setItem(msgIdInChatSession, chatSessionId);
 
-    handleImSendRequest(action, reqData, handleMsgSendStatus);
+    handleImSendRequest(action, reqData, "");
     message['chatSessionId'] = chatSessionId;
     appendOrInsertRoomList(message, true);
     handleMsgForMsgRoom(chatSessionId, message);
     addMsgToChatDialog(chatSessionId, message);
 };
 
-function handleMsgSendStatus(results) {
-    console.log("results ===" + JSON.parse(results));
-}
 
 function addMsgToChatDialog(chatSessionId, msg)
 {
@@ -679,18 +675,22 @@ function addMsgToChatDialog(chatSessionId, msg)
 
     var node = $(".chat_dession_id_"+chatSessionId);
     sortRoomList(node);
+
     setTimeout(function () {
         var msgLoadings = $("[is-display='yes']");
         var length = msgLoadings.length;
         var i;
         for(i=0;i<length;i++) {
             var msgLoading = msgLoadings[i];
-            $(msgLoading)[0].style.display = "none";
             var msgId = $(msgLoading).attr("msgId");
-            $(".msg_status_failed_"+msgId)[0].style.display = "flex";
-            handleMsgStatusResult(msgId, MessageStatus.MessageStatusFailed);
+            var sendTime = $(msgLoading).attr("sendTime");
+            var nowTime = Date.now();
+            if(nowTime - sendTime >= 10000) {
+                handleMsgStatusResult(msgId, MessageStatus.MessageStatusFailed);
+            }
         }
     }, 10000);///10秒执行
+
 
     msgBoxScrollToBottom();
 }
@@ -740,7 +740,8 @@ function appendMsgHtml(msg)
                     msgStatus:msgStatus,
                     avatar:userAvatar,
                     userAvatarSrc:userAvatarSrc,
-                    userId:token
+                    userId:token,
+                    timeServer:msg.timeServer
                 });
                 break;
             case MessageType.MessageImage :
@@ -755,7 +756,8 @@ function appendMsgHtml(msg)
                     width:imgObject.width,
                     height:imgObject.height,
                     userAvatarSrc:userAvatarSrc,
-                    userId:token
+                    userId:token,
+                    timeServer:msg.timeServer
                 });
                 break;
             case MessageType.MessageWebNotice:
@@ -773,13 +775,15 @@ function appendMsgHtml(msg)
                     avatar:userAvatar,
                     hrefURL:hrefUrl,
                     userAvatarSrc:userAvatarSrc,
-                    userId:token
+                    userId:token,
+                    timeServer:msg.timeServer
                 });
                 break;
             case MessageType.MessageNotice:
                 var msgContent = msg["notice"].body;
                 html = template("tpl-receive-msg-notice", {
                     msgContent:msgContent,
+                    timeServer:msg.timeServer
                 });
                 break;
         }

@@ -25,6 +25,10 @@ class Manage_MiniProgram_UpdateController extends Manage_CommonController
                 throw new Exception("error parameters");
             }
 
+            if ($pluginId == 100) {
+                throw new Exception("no permission");
+            }
+
             if ($name == "pluginId") {
                 return;
             }

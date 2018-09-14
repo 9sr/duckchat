@@ -95,7 +95,7 @@ class MiniProgram_Passport_AccountController extends MiniProgramController
         $authKey = $pluginProfile['authKey'];
         $data = $this->ctx->ZalyAes->encrypt($data, $authKey);
 
-        $result = $this->ctx->ZalyCurl->request("post", $url, $data);
+        $result = $this->ctx->ZalyCurl->request( $url, "POST", $data);
         $authKey = $pluginProfile['authKey'];
         $result = $this->ctx->ZalyAes->decrypt($result, $authKey);
         $result = base64_decode($result);

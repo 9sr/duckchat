@@ -107,7 +107,7 @@ class SiteUicTable extends BaseTable
 
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":userId", $userId);
-            $prepare->bindValue(":status", 0);
+            $prepare->bindValue(":status", 0, PDO::PARAM_INT);
             $prepare->bindValue(":useTime", $startTime);
             $prepare->bindValue(":code", $code);
 
@@ -120,8 +120,8 @@ class SiteUicTable extends BaseTable
             }
 
             return fase;
-        }catch (Exception $e){
-            $this->ctx->Wpf_Logger->error($tag,$e);
+        } catch (Exception $e) {
+            $this->ctx->Wpf_Logger->error($tag, $e);
         } finally {
             $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, [$code, $userId], $startTime);
         }
@@ -148,10 +148,10 @@ class SiteUicTable extends BaseTable
                 where status=0 limit :offset,:pageSize;";
 
         try {
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
-            $prepare->bindValue(":offset", $offset);
-            $prepare->bindValue(":pageSize", $pageSize);
+            $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $prepare->bindValue(":pageSize", $pageSize, PDO::PARAM_INT);
             $prepare->execute();
 
             return $prepare->fetchAll(\PDO::FETCH_ASSOC);
@@ -172,10 +172,10 @@ class SiteUicTable extends BaseTable
         $sql = "select $this->queryColumns from $this->tableName where status>=1 limit :offset,:pageSize;";
 
         try {
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
-            $prepare->bindValue(":offset", $offset);
-            $prepare->bindValue(":pageSize", $pageSize);
+            $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $prepare->bindValue(":pageSize", $pageSize, PDO::PARAM_INT);
             $prepare->execute();
 
             return $prepare->fetchAll(\PDO::FETCH_ASSOC);
@@ -193,7 +193,7 @@ class SiteUicTable extends BaseTable
         $sql = "select $this->queryColumns from $this->tableName where code=:code;";
 
         try {
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":code", $code);
             $prepare->execute();

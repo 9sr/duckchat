@@ -28,33 +28,34 @@ class Api_Friend_AcceptController extends BaseController
         $applyUserId = $request->getApplyUserId();
         $isAgree = $request->getAgree();
 
-        $result = false;
-
-        $this->ctx->Wpf_Logger->info("---------------",
-            "userId=" . $userId . " applyUserId=" . $applyUserId . " isAgree=" . $isAgree);
-
-        if ($isAgree) {
-            $result = $this->agreeFriendApply($userId, $applyUserId);
-
-            if ($result) {
-                $this->removeFriendApply($applyUserId, $userId);
-                $this->removeFriendApply($userId, $applyUserId);
+        try {
+            $result = false;
+            if ($userId == $applyUserId) {
+                throw new Exception("unable add yourself as friend");
             }
+            if ($isAgree) {
+                $result = $this->agreeFriendApply($userId, $applyUserId);
 
-        } else {
-            $this->ctx->Wpf_Logger->info("---------------", "do remove friend apply");
-            $result = $this->removeFriendApply($applyUserId, $userId);
+                if ($result) {
+                    $this->removeFriendApply($applyUserId, $userId);
+                    $this->removeFriendApply($userId, $applyUserId);
+                }
+
+            } else {
+                $result = $this->removeFriendApply($applyUserId, $userId);
+            }
+            if ($result) {
+                $this->setRpcError("success", "");
+            } else {
+                $this->setRpcError("error.alert", "");
+            }
+            $this->setRpcError($this->defaultErrorCode, "");
+        } catch (Exception $e) {
+            $this->setRpcError("error.alert", $e->getMessage());
+            $this->logger->error($this->action, $e);
         }
-
-
-        if ($result) {
-            $this->setRpcError("success", "");
-        } else {
-            $this->setRpcError("error.alert", "");
-        }
-
-        $this->setRpcError($this->defaultErrorCode, "");
         $this->rpcReturn($this->action, new $this->classNameForResponse());
+        return;
     }
 
     protected function agreeFriendApply($userId, $applyUserId)

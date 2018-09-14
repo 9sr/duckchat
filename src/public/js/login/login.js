@@ -46,6 +46,7 @@ refererUrl = document.referrer;
 secondNum  = 120;
 isSending  = false;
 refererUrlKey = "documentReferer";
+updateInvitationCodeType = "update_invitation_code";
 
 if(refererUrl.length>0) {
     localStorage.setItem(refererUrlKey, refererUrl);
@@ -83,11 +84,28 @@ function handleRedirect()
         } else {
             refererUrl = refererUrl+"?preSessionId="+preSessionId+"&isRegister="+isRegister;
         }
-        localStorage.clear();
-        window.location.href = refererUrl;
+        // window.location.href = refererUrl;
+        refererUrl = refererUrl + " &fail_callback=failedCallBack&&success_callback=successCallBack";
+        addJsByDynamic(refererUrl);
     }
 }
 
+function failedCallBack(result) {
+    zalyjsAlert(result);
+    $(".register_button").attr("is_type", updateInvitationCodeType);
+    apiPassportPasswordLogin(failedApiPassportPasswordLogin);
+}
+
+function failedApiPassportPasswordLogin(results) {
+    isRegister = false;
+    preSessionId = results.preSessionId;
+}
+
+function successCallBack(result) {
+    console.log(result);
+    localStorage.clear();
+    window.location.href = result;
+}
 
 function loginFailed()
 {
@@ -286,6 +304,8 @@ function checkRegisterInfo()
         zalyjsAlert($.i18n.map["emailJsTip"]);
         return false;
     }
+    loginName = registerLoginName;
+    loginPassword = registerPassword;
     return true;
 }
 
@@ -333,17 +353,28 @@ function loginNameNotExist()
 }
 
 $(document).on("click", ".register_button", function () {
+    var isType = $(this).attr("is_type");
     invitationCode = $(".register_input_code").val();
-    var flag = checkRegisterInfo();
-    if(flag == false) {
-        return false;
+
+    if(isType == updateInvitationCodeType) {
+        updatePassportPassword();
+    } else {
+        var flag = checkRegisterInfo();
+        if(flag == false) {
+            return false;
+        }
+        var jsUrl = "./index.php?action=page.js&loginName="+registerLoginName+"&success_callback=loginNameExist&fail_callback=loginNameNotExist";
+        addJsByDynamic(jsUrl);
     }
-    var jsUrl = "./index.php?action=page.js&loginName="+registerLoginName+"&success_callback=loginNameExist&fail_callback=loginNameNotExist";
-    addJsByDynamic(jsUrl);
 });
 
 $(document).on("click", ".update_code_btn", function () {
     invitationCode = $(".update_input_code").val();
+    updatePassportPassword();
+});
+
+function updatePassportPassword()
+{
     var action = "api.passport.passwordUpdateInvitationCode";
     var reqData = {
         sitePubkPem:sitePubkPem,
@@ -351,7 +382,7 @@ $(document).on("click", ".update_code_btn", function () {
         preSessionId:preSessionId,
     }
     handleClientSendRequest(action, reqData, handlePassportPasswordUpdateInvationCode);
-});
+}
 
 function handlePassportPasswordUpdateInvationCode(results)
 {
@@ -383,7 +414,6 @@ function validateEmail(email)
 
 
 $(document).on("click", ".login_button", function () {
-
     loginName = $(".login_input_loginName").val();
     loginPassword  = $(".login_input_pwd").val();
     var isFocus = false;
@@ -411,14 +441,20 @@ $(document).on("click", ".login_button", function () {
         zalyjsAlert("站点公钥获取失败");
         return false;
     }
+    apiPassportPasswordLogin(handleApiPassportPasswordLogin);
+});
+
+
+function apiPassportPasswordLogin(callback)
+{
     var action = "api.passport.passwordLogin";
     var reqData = {
         loginName:loginName,
         password:loginPassword,
         sitePubkPem:sitePubkPem,
     };
-    handleClientSendRequest(action, reqData, handleApiPassportPasswordLogin);
-});
+    handleClientSendRequest(action, reqData, callback);
+}
 
 function handleApiPassportPasswordLogin(results)
 {

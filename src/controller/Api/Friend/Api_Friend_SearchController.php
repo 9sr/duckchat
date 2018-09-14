@@ -36,7 +36,7 @@ class Api_Friend_SearchController extends BaseController
         try {
 
             if (empty($keyWords)) {
-                throw new Exception();
+                throw new Exception("search keywords is empty");
             }
 
             $friendProfile = new Zaly\Proto\Core\FriendUserProfile();
@@ -50,6 +50,15 @@ class Api_Friend_SearchController extends BaseController
             }
 
             if (!empty($publicProfile) && !empty($publicProfile->getUserId())) {
+
+                if ($this->userId == $publicProfile->getUserId()) {
+                    if ($this->language == Zaly\Proto\Core\UserClientLangType::UserClientLangEN) {
+                        throw new Exception("unable to add yourself");
+                    } else {
+                        throw new Exception("不允许添加自己");
+                    }
+                }
+
                 $friendProfile->setProfile($publicProfile);
 
                 $friendInfo = $this->getUserFriendInfo($userId, $publicProfile->getUserId());
@@ -72,6 +81,7 @@ class Api_Friend_SearchController extends BaseController
         }
 
         $this->rpcReturn($this->action, $response);
+        return;
     }
 
     private function getUserProfileByPhoneId($phoneId)

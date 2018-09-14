@@ -101,9 +101,16 @@ class Api_Group_RemoveMemberController extends Api_Group_BaseController
 
     private function removeMemberFromGroup($userList, $ownerUserId, $groupId)
     {
-        ////把自己剔除， 自己不能移除自己,  不能移除群主
-        $exceptUserId = $this->userId == $ownerUserId ? [$this->userId] : [$this->userId, $ownerUserId];
+        ////把自己剔除， 自己不能移除自己,  不能移除群主,管理员不能剔除管理员
+        ///
+        $adminType = \Zaly\Proto\Core\GroupMemberType::GroupMemberAdmin;
+        $adminIds = $this->ctx->SiteGroupUserTable->getGroupUserByMemberType($groupId, $adminType, ["userId"]);
+        if(!empty($adminIds)) {
+            $adminIds = array_column($adminIds, "userId");
+        }
+        $exceptUserId = $this->userId == $ownerUserId ? [$this->userId] : array_merge([$this->userId, $ownerUserId],$adminIds);
         $userIds = array_diff($userList, $exceptUserId);
+
         if (!count($userIds)) {
             $errorCode = $this->zalyError->errorGroupRemoveMemberType;
             $errorInfo = $this->zalyError->getErrorInfo($errorCode);

@@ -31,14 +31,13 @@ class Api_Session_VerifyController extends BaseController
         $tag = __CLASS__ . "-" . __FUNCTION__;
         try {
             $preSessionId = $request->getPreSessionId();
+            $preSessionId = trim($preSessionId);
             $errorCode = $this->zalyError->errorPreSessionId;
             $errorInfo = $this->zalyError->getErrorInfo($errorCode);
             if (!$preSessionId) {
                 $this->setRpcError($errorCode, $errorInfo);
                 throw new Exception("401 ");
             }
-            ////TODO 临时存储，切换到redis
-
             $userInfo = $this->ctx->PassportPasswordPreSessionTable->getInfoByPreSessionId($preSessionId);
 
             if (!$userInfo || !$userInfo['userId']) {
@@ -49,6 +48,7 @@ class Api_Session_VerifyController extends BaseController
             $response = $this->buildApiSessionVerifyResponse($userInfo);
 
             $this->ctx->PassportPasswordPreSessionTable->delInfoByPreSessionId($preSessionId);
+
             $this->setRpcError($this->defaultErrorCode, "");
             $this->rpcReturn($transportData->getAction(), $response);
         } catch (Exception $ex) {

@@ -12,45 +12,13 @@ class ZalyCurl
     protected $_bodyContent = '';
     protected $timeOut = 3;///单位秒
     protected $wpf_Logger;
+    protected $_delHeaders = array("host", "content-length", "connection" ,"accept-encoding", "content-encoding");
+    protected $contentEncoding = "content-encoding";
+    protected $acceptEncoding = "accept-encoding";
 
     public function __construct()
     {
         $this->wpf_Logger = new Wpf_Logger();
-    }
-
-    public function requestPBDataByAction($action, $transportData, $url, $method = "post")
-    {
-        $this->requestDataByAction($action, $transportData->serializeToString(), $url, $method);
-    }
-
-
-    public function requestPBJsonDataByAction($action, $transportData, $url, $method = "POST")
-    {
-        $this->requestDataByAction($action, $transportData->serializeToJsonString(), $url, $method);
-    }
-
-    public function requestDataByAction($action, $params, $url, $method)
-    {
-        $tag = __CLASS__ . '-' . __FUNCTION__;
-        try {
-            $this->_curlObj = curl_init();
-            $this->_getRequestParams($params);
-//            $this->_setHeader($headers);
-            $this->setRequestMethod($method);
-            curl_setopt($this->_curlObj, CURLOPT_URL, $url);
-            curl_setopt($this->_curlObj, CURLOPT_TIMEOUT, $this->timeOut);
-
-            if (($resp = curl_exec($this->_curlObj)) === false) {
-                $this->wpf_Logger->error('when run Router, unexpected error :', curl_error($this->_curlObj));
-                throw new Exception(curl_error($this->_curlObj));
-            }
-            curl_close($this->_curlObj);
-            return $resp;
-        } catch (\Exception $e) {
-            $message = sprintf("msg:%s file:%s:%d", $e->getMessage(), $e->getFile(), $e->getLine());
-            $this->wpf_Logger->error($tag, 'when run Router, unexpected error :', $message);
-            throw new Exception($e->getMessage());
-        }
     }
 
     /**
@@ -61,10 +29,12 @@ class ZalyCurl
      * @return mixed
      * @throws Exception
      */
-    public function requestWithActionByPb($action, $requestBody, $url, $method)
+    public function requestWithActionByPb($action, $requestBody, $url, $method, $isBase64Pb = false, $timeOut=3)
     {
         $tag = __CLASS__ . '-' . __FUNCTION__;
         try {
+            $this->timeOut = $timeOut;
+
             $anyBody = new \Google\Protobuf\Any();
             $anyBody->pack($requestBody);
 
@@ -72,19 +42,10 @@ class ZalyCurl
             $transportData->setAction($action);
             $transportData->setBody($anyBody);
             $params = $transportData->serializeToString();
-
-            $this->_curlObj = curl_init();
-            $this->_getRequestParams($params);
-//            $this->_setHeader($headers);
-            $this->setRequestMethod($method);
-            curl_setopt($this->_curlObj, CURLOPT_URL, $url);
-            curl_setopt($this->_curlObj, CURLOPT_TIMEOUT, $this->timeOut);
-
-            if (($resp = curl_exec($this->_curlObj)) === false) {
-                $this->wpf_Logger->error('when run Router, unexpected error :', curl_error($this->_curlObj));
-                throw new Exception(curl_error($this->_curlObj));
+            if($isBase64Pb == true) {
+                $params = base64_encode($params);
             }
-            curl_close($this->_curlObj);
+            $resp = $this->_curl($url, $method, $params, []);
             return $resp;
         } catch (\Exception $e) {
             $message = sprintf("msg:%s file:%s:%d", $e->getMessage(), $e->getFile(), $e->getLine());
@@ -106,20 +67,12 @@ class ZalyCurl
      * @return bool|mix
      * @throws Exception
      */
-    public function request($method, $url, $params = [], $headers = [])
+    public function request($url, $method, $params = [], $headers = [], $timeOut = 3)
     {
         $tag = __CLASS__ . '-' . __FUNCTION__;
         try {
-            $this->_curlObj = curl_init();
-            $this->_getRequestParams($params);
-            $this->_setHeader($headers);
-            $this->setRequestMethod($method);
-            curl_setopt($this->_curlObj, CURLOPT_URL, $url);
-
-            if (($resp = curl_exec($this->_curlObj)) === false) {
-                $this->wpf_Logger->error($tag, 'when run Router, unexpected error :' . curl_error($this->_curlObj));
-                throw new Exception(curl_error($this->_curlObj));
-            }
+            $this->timeOut = $timeOut;
+            $resp = $this->_curl($url, $method, $params, $headers);
             curl_close($this->_curlObj);
             return $resp;
         } catch (\Exception $e) {
@@ -129,7 +82,7 @@ class ZalyCurl
         }
     }
 
-    public function requestAndReturnHeaders($method, $url, $params = [], $headers = [])
+    public function requestAndReturnHeaders($url, $method, $params = [], $headers = [])
     {
         try {
             $urlParams = parse_url($url);
@@ -159,30 +112,20 @@ class ZalyCurl
                         $params = $transportData->serializeToString();
                         break;
                     case 'base64pb':
+                        trigger_error("TO DO", E_USER_ERROR);
                         break;
                 }
             }
 
-            $this->_curlObj = curl_init();
-            $this->_getRequestParams($params);
-            $this->_setHeader($headers);
-            $this->setRequestMethod($method);
-            curl_setopt($this->_curlObj, CURLOPT_ENCODING, "gzip");
-            curl_setopt($this->_curlObj, CURLOPT_URL, $url);
-            curl_setopt($this->_curlObj, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($this->_curlObj, CURLOPT_MAXREDIRS, 6);
-            curl_setopt($this->_curlObj, CURLOPT_HEADER, true);
-
-            if (($resp = curl_exec($this->_curlObj)) === false) {
-                $this->wpf_Logger->error('when run Router, unexpected error :', curl_error($this->_curlObj));
-                throw new Exception(curl_error($this->_curlObj));
-            }
+            $resp = $this->_curl($url, $method, $params, $headers, true);
 
             $curl_info = curl_getinfo($this->_curlObj);
-            $httpCode = curl_getinfo($this->_curlObj, CURLINFO_HTTP_CODE);
+            $httpCode  = curl_getinfo($this->_curlObj, CURLINFO_HTTP_CODE);
+
             curl_close($this->_curlObj);
 
             $header_size = $curl_info['header_size'];
+
             $header = substr($resp, 0, $header_size);
             $body = substr($resp, $header_size);
 
@@ -213,6 +156,70 @@ class ZalyCurl
         }
     }
 
+    private function _curl($url, $method, $params, $headers, $isReturnHeader = false)
+    {
+        $tag = __CLASS__. "-".__FUNCTION__;
+
+        $this->_curlObj = curl_init();
+
+        if (!empty($params)) {
+            $this->_bodyContent = $params;
+            if (is_array($params)) {
+                $this->_bodyContent = http_build_query($params, '', '&');
+            }
+        }
+        $newHeaders = array();
+
+        $acceptEncoding = '';
+        if(!empty($headers) ) {
+            foreach ($headers as $key => $value) {
+                $delKey = strtolower($key);
+                if($delKey == $this->acceptEncoding) {
+                    $acceptEncoding = $value;
+                }
+                if(in_array($delKey, $this->_delHeaders)) {
+                    continue;
+                }
+                $newHeaders[] = $key . ': ' . $value;
+
+            }
+            curl_setopt($this->_curlObj, CURLOPT_HTTPHEADER, $newHeaders);
+        }
+
+        curl_setopt($this->_curlObj, CURLOPT_URL, $url);
+        curl_setopt($this->_curlObj, CURLOPT_TIMEOUT, $this->timeOut);
+        if($acceptEncoding != "") {
+            curl_setopt($this->_curlObj, CURLOPT_ENCODING, $acceptEncoding);
+        }
+        curl_setopt($this->_curlObj, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($this->_curlObj, CURLOPT_MAXREDIRS, 6);
+        curl_setopt($this->_curlObj, CURLOPT_RETURNTRANSFER, true);
+
+        switch (strtoupper($method)) {
+            case 'HEAD':
+                curl_setopt($this->_curlObj, CURLOPT_NOBODY, true);
+                break;
+            case 'POST':
+                curl_setopt($this->_curlObj, CURLOPT_POSTFIELDS, $this->_bodyContent);
+                curl_setopt($this->_curlObj, CURLOPT_NOBODY, false);
+                curl_setopt($this->_curlObj, CURLOPT_POST, true);
+                break;
+            default:
+                ////GET
+                curl_setopt($this->_curlObj, CURLOPT_HTTPGET, true);
+        }
+
+        if($isReturnHeader == true) {
+            curl_setopt($this->_curlObj, CURLOPT_HEADER, true);
+        }
+
+        if (($resp = curl_exec($this->_curlObj)) === false) {
+                $this->wpf_Logger->error($tag, 'when run Router, unexpected error :' . curl_error($this->_curlObj));
+                throw new Exception(curl_error($this->_curlObj));
+        }
+        return $resp;
+    }
+
     public function convertUrlQuery($query)
     {
         if (empty($query)) {
@@ -226,58 +233,5 @@ class ZalyCurl
             $params[$item[0]] = $item[1];
         }
         return $params;
-    }
-
-    protected function setRequestMethod($method)
-    {
-        curl_setopt($this->_curlObj, CURLOPT_TIMEOUT, $this->timeOut);
-        switch (strtoupper($method)) {
-            case 'HEAD':
-                curl_setopt($this->_curlObj, CURLOPT_NOBODY, true);
-                break;
-            case 'GET':
-
-                //TRUE to reset the HTTP request method to GET. Since GET is the default, this is only necessary if the request method has been changed.
-                curl_setopt($this->_curlObj, CURLOPT_HTTPGET, true);
-                //TRUE to return the transfer as a string of the return value of curl_exec() instead of outputting it directly.
-                curl_setopt($this->_curlObj, CURLOPT_RETURNTRANSFER, true);
-                break;
-            case 'POST':
-                curl_setopt($this->_curlObj, CURLOPT_NOBODY, false);
-                curl_setopt($this->_curlObj, CURLOPT_POST, true);
-                curl_setopt($this->_curlObj, CURLOPT_POSTFIELDS, $this->_bodyContent);
-                curl_setopt($this->_curlObj, CURLOPT_RETURNTRANSFER, true);
-                break;
-            default:
-                curl_setopt($this->_curlObj, CURLOPT_HTTPGET, true);
-                curl_setopt($this->_curlObj, CURLOPT_RETURNTRANSFER, true);
-        }
-    }
-
-    protected function _getRequestParams($params)
-    {
-        if (empty($params)) {
-            return '';
-        }
-        $this->_bodyContent = $params;
-        if (is_array($params)) {
-            $this->_bodyContent = http_build_query($params, '', '&');
-        }
-    }
-
-    protected function _setHeader($baseHeaders)
-    {
-        $headers = array();
-        if (!$baseHeaders) {
-            return false;
-        }
-        $delHeaders = array("host");
-        foreach ($baseHeaders as $key => $value) {
-            if(in_array(strtolower($key), $delHeaders)) {
-                continue;
-            }
-            $headers[] = $key . ': ' . $value;
-        }
-        curl_setopt($this->_curlObj, CURLOPT_HTTPHEADER, $headers);
     }
 }

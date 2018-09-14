@@ -31,6 +31,8 @@ class Push_Client
         $pushRequest = new \Zaly\Proto\Platform\ApiPushNotificationRequest();
         try {
 
+//            $this->ctx->Wpf_Logger->info("api.push.notification", "pushText=" . $pushText);
+
             $siteConfig = $this->getSiteConfig();
 
             $pushType = $siteConfig[SiteConfig::SITE_SUPPORT_PUSH_TYPE];
@@ -78,15 +80,16 @@ class Push_Client
             $pushBody->setToDevicePubkPemIds($deviceIds);
             $pushRequest->setPushBody($pushBody);
 
-            $this->ctx->Wpf_Logger->info("api.push.notification", "request=" . $pushRequest->serializeToJsonString());
+//            $this->ctx->Wpf_Logger->info("api.push.notification", "request=" . $pushRequest->serializeToJsonString());
 
         } catch (Exception $e) {
-            $this->ctx->Wpf_Logger->error("api.push.notification.build.payload", $e);
+            $this->ctx->Wpf_Logger->error("api.push.notification.payload", $e);
+            return;
         }
 
         try {
             $pushURL = "http://open.akaxin.com:5208/?action=" . $this->pushAction . "&body_format=pb";
-            $this->ctx->ZalyCurl->requestWithActionByPb($this->pushAction, $pushRequest, $pushURL, 'post');
+            $this->ctx->ZalyCurl->requestWithActionByPb($this->pushAction, $pushRequest, $pushURL, 'POST');
             $this->ctx->Wpf_Logger->info("api.push.notification.response", "roomType=" . $pushRequest->serializeToJsonString());
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error("api.push.notification.error", $e);
@@ -129,15 +132,9 @@ class Push_Client
         $deviceIdList = [];
 
         if (\Zaly\Proto\Core\MessageRoomType::MessageRoomU2 == $roomType) {
-
-            $this->ctx->Wpf_Logger->info("api.push.notification", "userId=" . $toId);
-            // u2
-            $pushDeviceId = $this->getUserDeviceId($toId);
-
-            $this->ctx->Wpf_Logger->info("api.push.notification", "u2 deviceId=" . $pushDeviceId);
-
-            if (isset($pushDeviceId)) {
-                $deviceIdList[] = $pushDeviceId;
+            //get user deviceIds without muted
+            if (!$this->isUserFriendMute($toId, $fromUserId)) {
+                $deviceIdList = $this->getUserDeviceIds($toId);
             }
 
         } else {
@@ -154,13 +151,19 @@ class Push_Client
                             continue;
                         }
 
-                        $pushDeviceId = $this->getUserDeviceId($toUserId);
+                        if ($this->isUserGroupMute($toId, $toUserId)) {
+                            continue;
+                        }
 
-                        if (!empty($pushDeviceId)) {
-                            $deviceIdList[] = $pushDeviceId;
+                        $pushDeviceIds = $this->getUserDeviceIds($toUserId);
+
+                        if (!empty($pushDeviceIds)) {
+                            $deviceIdList = array_merge($deviceIdList, $pushDeviceIds);
                         }
                     }
                 }
+
+//                $this->ctx->Wpf_Logger->info("api.push.notification", "group DeviceIds=" . json_encode($deviceIdList));
             } catch (Exception $e) {
                 $this->ctx->Wpf_Logger->error($tag, $e);
             }
@@ -174,27 +177,46 @@ class Push_Client
      * @param $userId
      * @return null|\Zaly\Proto\Platform\PushTo
      */
-    private function getUserDeviceId($userId)
+    private function getUserDeviceIds($userId)
     {
         $tag = __CLASS__ . "->" . __FUNCTION__;
         try {
-            return $this->ctx->SiteSessionTable->getUserLatestDeviceId($userId);
+            $deviceIds = $this->ctx->SiteSessionTable->getUserLatestDeviceId($userId, 2);
+
+            if (!empty($deviceIds)) {
+                $deviceList = [];
+                foreach ($deviceIds as $deviceId) {
+                    $deviceList[] = $deviceId['deviceId'];
+                }
+                return $deviceList;
+            }
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error($tag, $e);
         }
         return null;
     }
 
-    private function curl($url, $body)
+    private function isUserFriendMute($userId, $friendUserId)
     {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        $mute = $this->ctx->SiteUserFriendTable->queryUserFriendMute($userId, $friendUserId);
 
-        $ret = curl_exec($ch);
-        curl_close($ch);
-        return $ret;
+        if (isset($mute) && $mute == 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private function isUserGroupMute($groupId, $userId)
+    {
+        $isMute = $this->ctx->SiteGroupUserTable->getGroupUserMute($groupId, $userId);
+
+        if (isset($isMute) && $isMute == 1) {
+            return true;
+        }
+
+        return false;
     }
 
 }

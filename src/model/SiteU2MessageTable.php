@@ -50,9 +50,9 @@ class siteU2MessageTable extends BaseTable
             $prepare = $this->db->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
 
-            $prepare->bindValue(":offset", $offset);
             $prepare->bindValue(":userId", $userId);
-            $prepare->bindValue(":limitCount", $limitCount);
+            $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $prepare->bindValue(":limitCount", $limitCount, PDO::PARAM_INT);
 
             $prepare->execute();
             return $prepare->fetchAll(\PDO::FETCH_ASSOC);

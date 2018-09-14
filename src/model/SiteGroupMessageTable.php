@@ -52,8 +52,8 @@ class SiteGroupMessageTable extends BaseTable
             $this->handlePrepareError($tag, $prepare);
 
             $prepare->bindValue(":groupId", $groupId);
-            $prepare->bindValue(":offset", $offset);
-            $prepare->bindValue(":limitCount", $limitCount);
+            $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $prepare->bindValue(":limitCount", $limitCount, PDO::PARAM_INT);
             $prepare->execute();
             return $prepare->fetchAll(\PDO::FETCH_ASSOC);
         } finally {

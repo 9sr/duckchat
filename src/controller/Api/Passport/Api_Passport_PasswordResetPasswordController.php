@@ -10,7 +10,7 @@ class Api_Passport_PasswordResetPasswordController extends BaseController
 {
     private $classNameForRequest = '\Zaly\Proto\Site\ApiPassportPasswordResetPasswordRequest';
     private $classNameForResponse = '\Zaly\Proto\Site\ApiPassportPasswordResetPasswordResponse';
-    private $tokenExipreTime = 10*60*1000;///10分钟
+    private $tokenExipreTime = 600000;///10分钟
 
     public function rpcRequestClassName()
     {

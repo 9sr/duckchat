@@ -116,7 +116,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -353,7 +353,6 @@
             </div>
             <div class="division-line"></div>
 
-            <!--      part1: site logo      -->
             <div class="item-row">
                 <div class="item-body">
                     <div class="item-body-display">
@@ -367,7 +366,7 @@
 
                         <div class="item-body-tail">
                             <div class="item-body-value" id="site-logo-fileid" fileId="<?php echo $logo ?>">
-                                <img class="site-logo-image" onclick="uploadFile('upload-site-logo')" src="">
+                                <img class="site-logo-image" onclick="uploadFile('upload-site-logo')" src="../../public/img/manage/site_default.png">
 
                                 <input id="upload-site-logo" type="file" onchange="uploadImageFile(this)"
                                        accept="image/gif,image/jpeg,image/jpg,image/png,image/svg"
@@ -733,7 +732,7 @@
                             <?php if ($lang == "1") { ?>
                                 <div class="item-body-desc">是否开启Web挂件功能</div>
                             <?php } else { ?>
-                                <div class="item-body-desc">enable Web-Widget</div>
+                                <div class="item-body-desc">Enable Web-Widget</div>
                             <?php } ?>
 
                             <div class="item-body-tail">
@@ -1477,9 +1476,7 @@
 
             var res = JSON.parse(result);
             if (res.errCode) {
-                alert("update success");
-                //判断当前开关
-
+                
                 var openWebIsChecked = $("#openWebEditionSwitch").is(':checked');
 
                 if (openWebIsChecked) {

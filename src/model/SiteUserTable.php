@@ -44,7 +44,7 @@ class SiteUserTable extends BaseTable
         $startTime = microtime(true);
         try {
             $sql = "select $this->selectColumns from $this->table where userId=:userId";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":userId", $userId);
             $prepare->execute();
@@ -63,7 +63,7 @@ class SiteUserTable extends BaseTable
         $startTime = microtime(true);
         try {
             $sql = "select $this->selectColumns from $this->table where loginName=:loginName";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":loginName", $loginName);
             $prepare->execute();
@@ -82,7 +82,7 @@ class SiteUserTable extends BaseTable
         $startTime = microtime(true);
         try {
             $sql = "select $this->selectColumns from $this->table where loginNameLowercase=:loginNameLowercase;";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":loginNameLowercase", $loginNameLowercase);
             $prepare->execute();
@@ -101,7 +101,7 @@ class SiteUserTable extends BaseTable
         $startTime = microtime(true);
         try {
             $sql = "select $this->selectColumns from $this->table where phoneId=:phoneId;";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":phoneId", $phoneId);
             $prepare->execute();
@@ -120,7 +120,7 @@ class SiteUserTable extends BaseTable
         $startTime = microtime(true);
         try {
             $sql = "select nickname from $this->table where userId=:userId";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
 
             $prepare->bindValue(":userId", $userId);
@@ -151,7 +151,7 @@ class SiteUserTable extends BaseTable
                 WHERE 
                   a.userId=:friendId;";
 
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
 
             $prepare->bindValue(":userId", $userId);
@@ -176,11 +176,11 @@ class SiteUserTable extends BaseTable
                         siteUser 
                     order by id DESC limit :offset, :length";
         try {
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
 
-            $prepare->bindValue(":offset", $offset);
-            $prepare->bindValue(":length", $length);
+            $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $prepare->bindValue(":length", $length, PDO::PARAM_INT);
             $prepare->execute();
             $result = $prepare->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -215,11 +215,11 @@ class SiteUserTable extends BaseTable
                         timeReg DESC 
                     limit 
                         :offset, :pageSize";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":groupId", $groupId);
-            $prepare->bindValue(":offset", $offset);
-            $prepare->bindValue(":pageSize", $pageSize);
+            $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $prepare->bindValue(":pageSize", $pageSize, PDO::PARAM_INT);
             $prepare->execute();
             $result = $prepare->fetchAll(\PDO::FETCH_ASSOC);
             $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $groupId, $startTime);
@@ -237,13 +237,36 @@ class SiteUserTable extends BaseTable
             $tag = __CLASS__ . "-" . __FUNCTION__;
             ////TODO 待优化
             $sql = "select count(userId) as `count` from siteUser where userId not in (select userId from siteGroupUser where groupId=:groupId);";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
 
             $prepare->bindValue(":groupId", $groupId);
             $prepare->execute();
             $result = $prepare->fetchColumn();
             $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $groupId, $startTime);
+            return $result;
+        } catch (Exception $ex) {
+            $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * get site total user count
+     * @return bool|mixed
+     */
+    public function getSiteUserCount()
+    {
+        try {
+            $startTime = microtime(true);
+            $tag = __CLASS__ . "-" . __FUNCTION__;
+            $sql = "select count(userId) as `count` from siteUser;";
+            $prepare = $this->dbSlave->prepare($sql);
+            $this->handlePrepareError($tag, $prepare);
+
+            $prepare->execute();
+            $result = $prepare->fetchColumn(); // 0
+            $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, [], $startTime);
             return $result;
         } catch (Exception $ex) {
             $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex->getMessage());
@@ -258,7 +281,7 @@ class SiteUserTable extends BaseTable
         try {
             $userIdStr = implode("','", $userIds);
             $sql = "select $this->selectColumns from $this->table where userId in ('$userIdStr')";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->execute();
             $results = $prepare->fetchAll(\PDO::FETCH_ASSOC);
@@ -277,7 +300,7 @@ class SiteUserTable extends BaseTable
         $startTime = microtime(true);
         $sql = "select friendVersion from $this->table where userId=:userId;";
         try {
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":userId", $userId);
             $prepare->execute();

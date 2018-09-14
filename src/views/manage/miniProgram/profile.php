@@ -117,7 +117,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -218,7 +218,7 @@
             /*margin-left: 10rem;*/
             padding: 0.5rem;
             width: 200px;
-            height: 5px;
+            height: 20px;
             overflow: hidden;
             text-align: right;
         }
@@ -462,11 +462,7 @@
                 <div class="item-body">
                     <div class="item-body-display">
 
-                        <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">小程序ID</div>
-                        <?php } else { ?>
-                            <div class="item-body-desc">Mini Program Id</div>
-                        <?php } ?>
+                        <div class="item-body-desc">ID</div>
 
                         <div class="item-body-tail" style="margin-right: 20px">
                             <?php echo $pluginId ?>
@@ -484,13 +480,13 @@
                     <div class="item-body-display">
 
                         <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">小程序名称</div>
+                            <div class="item-body-desc">名称</div>
                             <div class="item-body-tail">
                                 <input id="mini-program-name-text" type="text" class="plugin-add-input"
                                        placeholder="请输入小程序名称" value="<?php echo $name ?>">
                             </div>
                         <?php } else { ?>
-                            <div class="item-body-desc">Mini Program Name</div>
+                            <div class="item-body-desc">Name</div>
                             <div class="item-body-tail">
                                 <input id="mini-program-name-text" type="text" class="plugin-add-input"
                                        placeholder="input mini program name" value="<?php echo $name ?>">
@@ -509,9 +505,9 @@
                     <div class="item-body-display">
 
                         <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">小程序图标</div>
+                            <div class="item-body-desc">图标</div>
                         <?php } else { ?>
-                            <div class="item-body-desc">Mini Program Icon</div>
+                            <div class="item-body-desc">Icon</div>
                         <?php } ?>
 
 
@@ -519,7 +515,7 @@
                             <div class="item-body-value" id="mini-program-img-id" fileId="<?php echo $logo ?>">
                                 <img id="mini-program-img" class="site-image"
                                      onclick="uploadFile('mini-program-img-input')"
-                                     src="">
+                                     src="../../public/img/manage/plugin_default.png">
 
                                 <input id="mini-program-img-input" type="file" onchange="uploadImageFile(this)"
                                        accept="image/gif,image/jpeg,image/jpg,image/png,image/svg"
@@ -557,10 +553,9 @@
                             <div class="item-body-desc">Home Page Url</div>
                             <div class="item-body-tail">
                                 <input id="mini-program-landing-text" type="text" class="plugin-add-input"
-                                       placeholder="纯网页小程序请填写页面完整URL" value="<?php echo $landingPageUrl ?>">
+                                       placeholder="http or proxy url" value="<?php echo $landingPageUrl ?>">
                             </div>
                         <?php } ?>
-
 
                     </div>
 
@@ -633,9 +628,9 @@
                 <div class="item-body">
                     <div class="item-body-display mini-program-order">
                         <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">小程序顺序</div>
+                            <div class="item-body-desc">排序</div>
                         <?php } else { ?>
-                            <div class="item-body-desc">Mini Program Order</div>
+                            <div class="item-body-desc">Order</div>
                         <?php } ?>
 
                         <div class="item-body-tail">
@@ -693,12 +688,12 @@
                         <div class="item-body-tail">
 
                             <div id="mini-program-permission-text" style="margin-right: 4px">
-                                <?php if ($loadingType == "0") { ?>
-                                    <?php if ($lang == "1") { ?> 管理员可用<?php } else { ?> Managers Available<?php } ?>
-                                <?php } else if ($loadingType == "1") { ?>
+                                <?php if ($permissionType == "0") { ?>
+                                    <?php if ($lang == "1") { ?> 站点管理员可用<?php } else { ?>Site Managers Available<?php } ?>
+                                <?php } else if ($permissionType == "1") { ?>
                                     <?php if ($lang == "1") { ?> 所有人可用<?php } else { ?> All Users Available<?php } ?>
-                                <?php } else if ($loadingType == "2") { ?>
-                                    <?php if ($lang == "1") { ?> 群管理可用<?php } else { ?> Group Master Available<?php } ?>
+                                <?php } else if ($permissionType == "2") { ?>
+                                    <?php if ($lang == "1") { ?> 群管理员可用<?php } else { ?> Group Managers Available<?php } ?>
                                 <?php } ?>
                             </div>
 

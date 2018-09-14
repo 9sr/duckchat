@@ -54,7 +54,7 @@ class Api_Plugin_ProxyController extends \BaseController
 
             $body = $request->getBody();
 
-            $httpProxyResponse = $this->ctx->ZalyCurl->requestAndReturnHeaders($method, $requestUrl, $body, $headers);
+            $httpProxyResponse = $this->ctx->ZalyCurl->requestAndReturnHeaders($requestUrl, $method,  $body, $headers);
             $response = $this->buildApiPluginProxyResponse($httpProxyResponse["body"], $httpProxyResponse["httpCode"], $httpProxyResponse["header"]);
             $this->setRpcError($this->defaultErrorCode, "");
             $this->rpcReturn($transportData->getAction(), $response);
@@ -75,7 +75,14 @@ class Api_Plugin_ProxyController extends \BaseController
      */
     private function getPluginRequestUrl($reqUrl, $pluginId)
     {
-        $defaultScheme = $_SERVER['REQUEST_SCHEME'];
+        $defaultScheme = "http";
+
+        if ( (! empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') ||
+            (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ||
+            (! empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ) {
+            $defaultScheme = 'https';
+        }
+
         $defaultHost = $_SERVER['HTTP_HOST'];
 
         $reqUrlStruct = parse_url($reqUrl);

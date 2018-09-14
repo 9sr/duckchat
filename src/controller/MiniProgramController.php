@@ -157,8 +157,7 @@ abstract class MiniProgramController extends \Wpf_Controller
 
         $this->ctx->Wpf_Logger->error($action, "fihttp request url =" . $requestUrl);
 
-        $encryptedHttpTransportResponse = $this->ctx->ZalyCurl->requestDataByAction($action, $encryptedTransportData, $requestUrl, 'POST');
-
+        $encryptedHttpTransportResponse = $this->ctx->ZalyCurl->request( $requestUrl,"POST", $encryptedTransportData);
         //解密结果
         $httpResponse = $this->ctx->ZalyAes->decrypt($encryptedHttpTransportResponse, $authKey);
 

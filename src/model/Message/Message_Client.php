@@ -46,9 +46,12 @@ class Message_Client
             case \Zaly\Proto\Core\MessageType::MessageText:
                 $text = $message->getText();
                 $textBody = $text->getBody();
-                //# TODO limit body length 2KB = 2048 Byte
                 $textBody = substr($textBody, 0, 2048);
-                $text->setBody($textBody);
+                $trimBody = trim($textBody);
+                if (empty($trimBody)) {
+                    return false;
+                }
+                $text->setBody($trimBody);
                 $result = $this->saveU2Message($msgId, $userId, $fromUserId, $toUserId, $msgType, $text, $roomType);
                 break;
             case \Zaly\Proto\Core\MessageType::MessageImage:
@@ -113,9 +116,12 @@ class Message_Client
             case \Zaly\Proto\Core\MessageType::MessageText:
                 $text = $message->getText();
                 $textBody = $text->getBody();
-                //# TODO limit body length 2KB = 2048 Byte
                 $textBody = substr($textBody, 0, 2048);
-                $text->setBody(trim($textBody));
+                $trimBody = trim($textBody);
+                if (empty($trimBody)) {
+                    return false;
+                }
+                $text->setBody($trimBody);
                 $result = $this->saveGroupMessage($msgId, $fromUserId, $groupId, $msgType, $text);
                 break;
             case \Zaly\Proto\Core\MessageType::MessageImage:

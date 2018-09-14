@@ -30,11 +30,8 @@ class Page_JsController extends  HttpBaseController
 
         if($isReqType == "proxy") {
             if($userInfo) {
-                error_log("page-js isReqType ==success");
                 echo "success";
             } else {
-                error_log("page-js isReqType ==fail");
-
                 echo "fail";
             }
         } else {

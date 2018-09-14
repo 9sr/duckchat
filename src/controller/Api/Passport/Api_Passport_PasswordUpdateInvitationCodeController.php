@@ -10,7 +10,6 @@ class Api_Passport_PasswordUpdateInvitationCodeController extends BaseController
 {
     private $classNameForRequest = '\Zaly\Proto\Site\ApiPassportPasswordUpdateInvitationCodeRequest';
     private $classNameForResponse = '\Zaly\Proto\Site\ApiPassportPasswordUpdateInvitationCodeResponse';
-    private $tokenExipreTime = 10*60*1000;///10分钟
 
     public function rpcRequestClassName()
     {
