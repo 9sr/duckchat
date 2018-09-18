@@ -160,6 +160,7 @@ class Api_Site_ConfigController extends \BaseController
 
     /**
      * 生成 transData 数据
+     * @param $scheme
      * @param $host
      * @param $port
      * @param $configData
@@ -173,6 +174,10 @@ class Api_Site_ConfigController extends \BaseController
     {
         if (empty($scheme)) {
             $scheme = "http";
+        }
+
+        if (empty($port)) {
+            $port = 80;
         }
 
         ////ApiSiteConfigResponse 对象

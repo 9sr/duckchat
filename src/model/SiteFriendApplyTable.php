@@ -9,7 +9,7 @@
 
 class SiteFriendApplyTable extends BaseTable
 {
-    private $table = "SiteFriendApply";
+    private $table = "siteFriendApply";
     private $columns = [
         "id",
         "userId",

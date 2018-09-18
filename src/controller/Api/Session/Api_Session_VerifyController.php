@@ -53,6 +53,7 @@ class Api_Session_VerifyController extends BaseController
             $this->rpcReturn($transportData->getAction(), $response);
         } catch (Exception $ex) {
             $this->ctx->Wpf_Logger->info($tag, " error_msg=" . $ex->getMessage());
+            $this->setRpcError("error.alert", $ex->getMessage());
             $this->rpcReturn($transportData->getAction(), new $this->classNameForResponse());
         }
     }

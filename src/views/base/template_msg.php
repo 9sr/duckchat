@@ -316,8 +316,8 @@
     <div id="selfInfoDiv" class="selfInfoDiv" style="position: absolute;width: 100%;">
         <div id="selfAvatarUploadDiv" class="d-flex flex-row justify-content-center" style="margin-top: 3rem; text-align: center;position: relative" >
             <img id="user-image-upload" class="user-image-upload info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" style="width: 5rem; height: 5rem;" onclick="uploadFile('file2')" />
-            <img id="user-img-carmera" class="user-img-carmera" src="../../public/img/camera.png" style="width: 2rem; height: 2rem; position: absolute;  margin-top: 1.5rem;
-                     margin-left: -3.5rem;" onclick="uploadFile('file2')" />
+            <img id="user-img-carmera" class="user-img-carmera" src="../../public/img/camera.png" style="width: 5rem; height: 5rem; position: absolute;
+                     margin-left: -5rem;" onclick="uploadFile('file2')" />
             <input type="file" id="file2" style="display:none" onchange="uploadUserImgFromInput(this)" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
         </div>
         <div class="d-flex flex-row justify-content-center selfNickNameDiv"  >
@@ -334,19 +334,20 @@
 
         <div style="text-align: center;margin:0 auto;width: 34rem; height:1px;background:rgba(223,223,223,1);" ></div>
         <div class="d-flex flex-row justify-content-center">
-<!--            <div class="self-qrcode" id="self-qrcode" style="margin-top: 1rem;" >-->
-<!--                <span data-local-value="friendQrcodeTip">Self Qrcode</span>-->
-<!--            </div>-->
+            <div class="self-qrcode" id="self-qrcode" style="margin-top: 1rem;" >
+                <span data-local-value="friendQrcodeTip">Self Qrcode</span>
+            </div>
             <div class="self-qrcode" id="logout" >
                 <span class="logout-span" id="logout-span" data-local-value="logoutTip" onclick="logout()">Logout</span>
             </div>
         </div>
     </div>
-<!--    <div id="selfQrcodeDiv" class="selfQrcodeDiv"  style="position: absolute;display: none;">-->
-<!--        <div id="selfQrcodeCanvas">-->
-<!--            kkkkkkkk-->
-<!--        </div>-->
-<!--    </div>-->
+    <div id="selfQrcodeDiv" class="selfQrcodeDiv"  style="position: absolute;display: none;">
+        <div id="selfQrcodeCanvas">
+            kkkkkkkk
+        </div>
+    </div>
+
 </div>
 
 </script>

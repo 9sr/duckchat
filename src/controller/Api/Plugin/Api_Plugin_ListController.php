@@ -102,6 +102,8 @@ class Api_Plugin_ListController extends \BaseController
             $pluginProfile->setId($plugin['pluginId']);
             $pluginProfile->setName($plugin['name']);
             $pluginProfile->setLogo($plugin['logo']);
+
+            $pluginProfile->setUsageTypes([$plugin['usageType']]);
             if ($plugin['sort']) {
                 $pluginProfile->setOrder($plugin['sort']);
             } else {

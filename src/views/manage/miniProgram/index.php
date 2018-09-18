@@ -6,8 +6,6 @@
     <title><?php if ($lang == "1") { ?>小程序管理<?php } else { ?>Mini Program Management<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!--    <link href="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.css" rel="stylesheet">-->
-
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
 
     <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.css"/>

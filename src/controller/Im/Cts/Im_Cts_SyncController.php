@@ -57,6 +57,9 @@ class Im_Cts_SyncController extends Im_BaseController
         $limitU2Count = isset($u2Count) ? $u2Count : $this->syncMaxSize;
         // sync u2 message
         $u2MessageList = $this->syncU2Message($userId, $deviceId, $limitU2Count);
+
+        $this->syncLog("sync u2 msg count=" . count($u2MessageList));
+
         //return u2 message
         $u2List = $this->returnImStcMessage(false, $u2MessageList);
 
@@ -68,6 +71,9 @@ class Im_Cts_SyncController extends Im_BaseController
         $limitGroupCount = isset($groupCount) ? $groupCount : $this->syncMaxSize;
         //sync group message details
         $groupMessageList = $this->syncGroupMessage($userId, $deviceId, $limitGroupCount);
+
+        $this->syncLog("sync group msg count=" . count($u2MessageList));
+
         //return group message
         $groupList = $this->returnImStcMessage(true, $groupMessageList);
 
@@ -108,6 +114,8 @@ class Im_Cts_SyncController extends Im_BaseController
             $currentPointer = 0;
         }
 
+        $this->syncLog("sync u2 message pointer=" . $currentPointer);
+
         $u2MessageList = $this->ctx->SiteU2MessageTable->queryMessage($userId, $currentPointer, $limitCount);
 
         if ($isFirst) {
@@ -141,6 +149,8 @@ class Im_Cts_SyncController extends Im_BaseController
                 if ($currentPointer == 0) {
                     $currentPointer = $this->ctx->SiteGroupMessageTable->queryMaxPointerByUser($groupId, $userId);
                     $this->ctx->Wpf_Logger->info("GroupPointer", "get user max group pointer=" . $currentPointer);
+
+                    $this->ctx->SiteGroupMessageTable->updatePointer($groupId, $userId, $deviceId, $currentPointer);
                 }
 
                 $groupMaxId = $this->ctx->SiteGroupMessageTable->queryMaxIdByGroup($groupId);
@@ -218,15 +228,12 @@ class Im_Cts_SyncController extends Im_BaseController
                 } else {
                     //if u2 message ,maybe contains group message
                     $u2RoomType = $u2OrGroupMessage['roomType'];
-                    $this->ctx->Wpf_Logger->info("u2-message-roomType", "-----------" . $u2RoomType);
                     if ($u2RoomType == Zaly\Proto\Core\MessageRoomType::MessageRoomGroup) {
                         $message->setToGroupId($u2OrGroupMessage["toUserId"]);
                         $message->setRoomType(Zaly\Proto\Core\MessageRoomType::MessageRoomGroup);
-                        $this->ctx->Wpf_Logger->info("u2-message-roomType", "-----------group");
                     } else {
                         $message->setToUserId($u2OrGroupMessage["toUserId"]);
                         $message->setRoomType(Zaly\Proto\Core\MessageRoomType::MessageRoomU2);
-                        $this->ctx->Wpf_Logger->info("u2-message-roomType", "-----------u2");
                     }
                 }
 
@@ -279,5 +286,14 @@ class Im_Cts_SyncController extends Im_BaseController
         return $list;
     }
 
+    private function syncLog($content)
+    {
+        try {
+            $this->logger->info($this->action . ".log",
+                "userId=" . $this->userId . " deviceId=" . $this->deviceId . " " . $content);
+        } catch (Exception $e) {
+            $this->logger->error("im.cts.sync.log", $e);
+        }
+    }
 }
 

@@ -325,6 +325,9 @@
             margin-right: 5px;
         }
 
+        .select-color-primary {
+            color: #4C3BB1;
+        }
     </style>
 
 
@@ -458,7 +461,7 @@
             <div class="list-item-center">
                 <div class="item-row">
                     <div class="item-body">
-                        <div class="item-body-display mini-program-usage" data="1">
+                        <div class="item-body-display mini-program-usage" data="1" onclick="selectMiniProgramUsage()">
                             <?php if ($lang == "1") { ?>
                                 <div class="item-body-desc">小程序使用类别</div>
                             <?php } else { ?>
@@ -499,7 +502,8 @@
 
                 <div class="item-row">
                     <div class="item-body">
-                        <div class="item-body-display mini-program-display" data="0">
+                        <div class="item-body-display mini-program-display" data="0"
+                             onclick="selectMiniProgramDisplay()">
                             <?php if ($lang == "1") { ?>
                                 <div class="item-body-desc">展示方式</div>
                             <?php } else { ?>
@@ -783,8 +787,7 @@
         }
 
 
-        $(document).on("click", '.mini-program-usage', function () {
-
+        function selectMiniProgramUsage() {
             // PluginUsageIndex = 1;
             // PluginUsageLogin = 2;
             //
@@ -794,52 +797,60 @@
             var language = getLanguage();
 
             $.actions({
-                title: "",
+                title: language == 0 ? "select mini program type" : "请选择小程序类别",
                 onClose: function () {
                     console.log("close");
                 },
                 actions: [{
                     text: language == 0 ? "Home Mini Program" : "首页小程序",
-                    className: "color-primary weui-dialog__btn",
+                    className: "select-color-primary",
                     onClick: function () {
                         $("#mini-program-usage-text").html(language == 0 ? "Home Page" : "首页小程序");
                         $(".mini-program-usage").attr("data", "1");
                     }
                 }, {
+                    text: language == 0 ? "Login Mini Program" : "登陆小程序",
+                    // className: "color-warning weui-dialog__btn",
+                    className: "select-color-primary",
+                    onClick: function () {
+                        $("#mini-program-usage-text").html(language == 0 ? "Login Mini Program" : "登陆小程序");
+                        $(".mini-program-usage").attr("data", "2");
+                    }
+                }, {
                     text: language == 0 ? "U2 Chat Mini Program" : "二人聊天小程序",
-                    className: "color-primary weui-dialog__btn",
+                    className: "select-color-primary",
                     onClick: function () {
                         $("#mini-program-usage-text").html(language == 0 ? "U2 Chat Mini Program" : "二人聊天小程序");
                         $(".mini-program-usage").attr("data", "3");
                     }
                 }, {
                     text: language == 0 ? "Tmp Chat Mini Program" : "临时会话小程序",
-                    className: "color-primary weui-dialog__btn",
+                    className: "select-color-primary",
                     onClick: function () {
 
                         $("#mini-program-usage-text").html(language == 0 ? "Tmp Chat Mini Program" : "临时会话小程序");
                         $(".mini-program-usage").attr("data", "4");
                     }
                 }, {
-                    text: language == 0 ? "Chat Page Bottom" : "聊天界面底部",
-                    className: "color-primary weui-dialog__btn",
+                    text: language == 0 ? "Group Chat Mini Program" : "群组聊天小程序",
+                    className: "select-color-primary",
                     onClick: function () {
-                        $("#mini-program-usage-text").html(language == 0 ? "Chat Page Bottom" : "聊天界面底部");
+                        $("#mini-program-usage-text").html(language == 0 ? "Group Chat Mini Program" : "群组聊天小程序");
                         $(".mini-program-usage").attr("data", "5");
                     }
                 }, {
-                    text: language == 0 ? "Login Mini Program" : "登陆小程序",
-                    className: "color-warning weui-dialog__btn",
+                    text: language == 0 ? "Invalid Mini Program" : "无效小程序",
+                    className: "select-color-primary",
                     onClick: function () {
-                        $("#mini-program-usage-text").html(language == 0 ? "Login Mini Program" : "登陆小程序");
-                        $(".mini-program-usage").attr("data", "2");
+                        $("#mini-program-usage-text").html(language == 0 ? "Invalid Mini Program" : "无效小程序");
+                        $(".mini-program-usage").attr("data", "0");
+                        updateMiniProgramProfile("usageType", "0");
                     }
                 }]
             });
-        });
+        }
 
-        $(document).on("click", '.mini-program-display', function () {
-
+        function selectMiniProgramDisplay() {
             var language = getLanguage();
             // PluginLoadingNewPage = 0;
             // PluginLoadingFloat   = 1;
@@ -847,48 +858,48 @@
             // PluginLoadingChatbox = 3;
             // PluginLoadingFullScreen = 4;
             $.actions({
-                title: "",
+                title: language == 0 ? "select mini program open way" : "选择小程序打开方式",
                 onClose: function () {
                     console.log("close");
                 },
                 actions: [{
                     text: language == 0 ? "New Page" : "新页面打开",
-                    className: "color-primary weui-dialog__btn ",
+                    className: "select-color-primary",
                     onClick: function () {
                         $("#mini-program-display-text").html(language == 0 ? "New Page" : "新页面打开");
                         $(".mini-program-display").attr("data", "0");
                     }
                 }, {
                     text: language == 0 ? "Float Page" : "悬浮打开",
-                    className: "color-primary weui-dialog__btn",
+                    className: "select-color-primary",
                     onClick: function () {
                         $("#mini-program-display-text").html(language == 0 ? "Float Page" : "悬浮打开打开");
                         $(".mini-program-display").attr("data", "1");
                     }
                 }, {
                     text: language == 0 ? "Mask Page" : "Mask打开",
-                    className: "color-primary weui-dialog__btn",
+                    className: "select-color-primary",
                     onClick: function () {
                         $("#mini-program-display-text").html(language == 0 ? "Mask Page" : "Mask打开");
                         $(".mini-program-display").attr("data", "2");
                     }
                 }, {
                     text: language == 0 ? "Chatbox Page" : "新页面打开",
-                    className: "color-primary weui-dialog__btn",
+                    className: "select-color-primary",
                     onClick: function () {
                         $("#mini-program-display-text").html(language == 0 ? "Chatbox Page" : "新页面打开");
                         $(".mini-program-display").attr("data", "3");
                     }
                 }, {
                     text: language == 0 ? "FullScreen" : "全屏打开",
-                    className: "color-primary weui-dialog__btn",
+                    className: "select-color-primary",
                     onClick: function () {
                         $("#mini-program-display-text").html(language == 0 ? "FullScreen" : "全屏打开");
                         $(".mini-program-display").attr("data", "4");
                     }
                 }]
             });
-        });
+        }
 
 
         $("#addMiniProgramButton").click(function () {

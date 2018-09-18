@@ -318,8 +318,6 @@
 
 <body>
 
-<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
-
 <div class="wrapper" id="wrapper">
 
     <!--    <div style="width: 100%"><input type="search" style="width: 100%"></div>-->

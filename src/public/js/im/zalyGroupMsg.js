@@ -1574,7 +1574,8 @@ $(document).mouseup(function(e){
         document.getElementById("emojies").style.display = "none";
     }
     if(targetId != "selfAvatarUploadDiv" && targetId != "selfNickname" && targetId != "logout" && targetId != "logout-span"
-        && targetId != "self-qrcode" && targetId != "user-image-upload" && targetId != "user-img-carmera" &&targetClassName != "nickNameDiv") {
+        && targetId != "self-qrcode" && targetId != "user-image-upload" && targetId != "user-img-carmera"
+        &&targetClassName != "nickNameDiv" && targetId !="selfQrcodeDiv" && targetId !="selfQrcodeCanvas" && targetId != "selfQrcode") {
         $("#selfInfo").remove();
     }
 });
@@ -2121,6 +2122,7 @@ $(document).on("click", ".share-group", function () {
         siteConfig = JSON.parse(siteConfigJsonStr);
         siteName = siteConfig.name;
     }
+
     var html = template("tpl-share-group-div", {
         siteName:siteName,
         groupName:groupName,
@@ -2138,7 +2140,7 @@ $(document).on("click", ".share-group", function () {
     var height = getRemPx()*23;
     var canvasWidth = getRemPx()*22;
     var canvasHeight = getRemPx()*22;
-    var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, chatSessionId);
+    var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, chatSessionId, "g");
 
     $("#share_group").attr("urlLink", urlLink);
     console.log(urlLink);
@@ -2172,12 +2174,22 @@ $(document).on("click",".copy-share-group", function(){
 });
 
 $(document).on("click", ".save-share-group", function () {
-    var canvas = document.getElementById("groupQrcode");
-    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); //Convert image to 'octet-stream' (Just a download, really)
-    window.location.href = image;
+    downloadImgFormQrcode("groupQrcode");
 });
 
-function changeZalySchemeToDuckChat(serverAddress, chatSessionId)
+$(document).on("click", "#selfQrcode", function () {
+    downloadImgFormQrcode("selfQrcode");
+});
+
+function downloadImgFormQrcode(idName)
+{
+    var canvas = document.getElementById(idName);
+    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); //Convert image to 'octet-stream' (Just a download, really)
+    window.location.href = image;
+}
+
+
+function changeZalySchemeToDuckChat(serverAddress, chatSessionId, type)
 {
     var parser = document.createElement('a');
     parser.href = serverAddress;
@@ -2189,7 +2201,7 @@ function changeZalySchemeToDuckChat(serverAddress, chatSessionId)
         domain =  protocol+"//"+hostname+pathname;
     }
 
-    var urlLink = domain.indexOf("?") > -1 ? domain+"&x=g-"+chatSessionId : domain+"/?x=g-"+chatSessionId;
+    var urlLink = domain.indexOf("?") > -1 ? domain+"&x="+type+"-"+chatSessionId : domain+"/?x="+type+"-"+chatSessionId;
     urlLink = urlLink.indexOf("?") > -1 ? jumpPage+"&jumpUrl="+encodeURI(urlLink) :jumpPage+"?jumpUrl="+encodeURI(urlLink);
     return encodeURI(urlLink);
 }
@@ -2199,20 +2211,40 @@ $(document).on("click", "#self-qrcode", function () {
     $("#selfQrcodeDiv")[0].style.display = 'block';
     $("#selfInfoDiv")[0].style.display = 'none';
 
+    var siteConfigJsonStr = localStorage.getItem(siteConfigKey);
+    var siteName = "";
+    if(siteConfigJsonStr ) {
+        siteConfig = JSON.parse(siteConfigJsonStr);
+        siteName = siteConfig.name;
+    }
+
     $("#selfQrcodeCanvas").html("");
-    var src = $(".group_avatar").attr("src");
-    var width = getRemPx()*21;
-    var height = getRemPx()*21;
+    var src = $(".selfInfo").attr("src");
+
+    var width  = getRemPx()*15;
+    var height = getRemPx()*15;
+    var canvasWidth = getRemPx()*15;
+    var canvasHeight = getRemPx()*15;
+    var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, token, "u");
+
+    $("#selfQrcodeCanvas").attr("urlLink", urlLink);
 
     $('#selfQrcodeCanvas').qrcode({
-        render    : "canvas",
-        text    : "http://sorryu.cn",
+        idName:"selfQrcode",
+        render : "canvas",
+        text    :urlLink,
+        className : "selfCanvas",
+        canvasWidth:canvasWidth,
+        canvasHeight:canvasHeight,
         width : width,               //二维码的宽度
         height : height,              //二维码的高度
         background : "#ffffff",       //二维码的后景色
         foreground : "#000000",        //二维码的前景色
-        src: src,            //二维码中间的图片
+        src: src, //二维码中间的图片
     });
+
+
+
 });
 
 
@@ -2366,6 +2398,5 @@ $(document).on("click", ".search-add-friend-btn", function () {
 
 function closeMaskDiv(str)
 {
-    console.log(str)
     removeWindow($(str));
 }
