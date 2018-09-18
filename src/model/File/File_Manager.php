@@ -9,15 +9,17 @@ class File_Manager
         "image/jpeg" => "jpeg",
         "image/jpg" => "jpg",
         "image/gif" => "gif",
-//        "image/bmp" => "bmp",
-//        "audio/mp4" => "mp4",
-//        "video/mp4" => "mp4",
+//        "image/bmp" => "bmp", //文件太大，不支持此格式
+        "audio/mp4" => "mp4",
+        "video/mp4" => "mp4",
     );
 
     private $defaultImgType = [
         "image/jpeg",
         "image/jpg",
         "image/png",
+        "audio/mp4",
+        "video/mp4",
     ];
 
     public function __construct()
