@@ -27,7 +27,7 @@ class ZalyConfig
         if(isset(self::$config[$key])) {
             return self::$config[$key];
         }
-        return self::$config;
+        return false;
     }
 
     public static function getSessionVerifyUrl($pluginId)
