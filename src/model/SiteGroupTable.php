@@ -83,7 +83,7 @@ class SiteGroupTable extends BaseTable
         $tag = __CLASS__ . "-" . __FUNCTION__;
         $startTime = microtime(true);
         $sql = "select $this->selectColumns from $this->table where groupId=:groupId";
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":groupId", $groupId);
         $prepare->execute();
@@ -104,7 +104,7 @@ class SiteGroupTable extends BaseTable
         $groupIdStr = implode("','", $groupIdList);
         $sql = "select $this->selectColumns from $this->table where groupId in ('$groupIdStr')";
         try {
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->execute();
             $result = $prepare->fetchAll(\PDO::FETCH_ASSOC);
@@ -123,7 +123,7 @@ class SiteGroupTable extends BaseTable
         $startTime = microtime(true);
         $sql = "select name from $this->table where groupId=:groupId";
         try {
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":groupId", $groupId);
             $flag = $prepare->execute();
@@ -162,7 +162,7 @@ class SiteGroupTable extends BaseTable
                 and 
                     siteGroup.status>0
                 ;";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
 
             $prepare->bindValue(":userId", $userId);
@@ -221,7 +221,7 @@ class SiteGroupTable extends BaseTable
                  ;
                 ";
 
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
 
         $prepare->bindValue(":userId", $userId);
@@ -238,7 +238,7 @@ class SiteGroupTable extends BaseTable
 
         $sql = "select $this->selectColumns from $this->table ORDER BY id ASC limit $offset,$pageSize;";
 
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
 
         $prepare->execute();
@@ -288,7 +288,7 @@ class SiteGroupTable extends BaseTable
                 limit 1
                 ";
 
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":groupId", $groupId);
         $prepare->bindValue(":userId", $userId);
@@ -336,7 +336,7 @@ class SiteGroupTable extends BaseTable
                     siteGroupUser.userId = :userId
                 limit 1
                 ";
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":userId", $userId);
         $prepare->bindValue(":groupId", $groupId);
@@ -373,7 +373,7 @@ class SiteGroupTable extends BaseTable
                     siteGroup.groupId=:groupId
                 limit 1
                 ";
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $prepare->bindValue(":groupId", $groupId);
 
         $this->handlePrepareError($tag, $prepare);

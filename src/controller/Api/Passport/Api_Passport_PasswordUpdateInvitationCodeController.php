@@ -10,7 +10,6 @@ class Api_Passport_PasswordUpdateInvitationCodeController extends BaseController
 {
     private $classNameForRequest = '\Zaly\Proto\Site\ApiPassportPasswordUpdateInvitationCodeRequest';
     private $classNameForResponse = '\Zaly\Proto\Site\ApiPassportPasswordUpdateInvitationCodeResponse';
-    private $tokenExipreTime = 10*60*1000;///10分钟
 
     public function rpcRequestClassName()
     {
@@ -64,18 +63,23 @@ class Api_Passport_PasswordUpdateInvitationCodeController extends BaseController
         try{
             $userInfo = $this->ctx->PassportPasswordPreSessionTable->getInfoByPreSessionId($preSessionId);
 
-            $this->ctx->BaseTable->db->beginTransaction();
-
             if($userInfo == false) {
                 throw new Exception("preSessionId for update is null");
             }
             $userId = $userInfo['userId'];
-            $updateData = [
-                "invitationCode" => $invitationCode,
-            ];
-            $where = ["userId" => $userId];
 
-            $this->ctx->PassportPasswordTable->updateUserData($where, $updateData);
+            $userInfo = $this->ctx->PassportPasswordTable->getUserByUserId($userId);
+
+            $this->ctx->BaseTable->db->beginTransaction();
+
+            if($userInfo['invitationCode'] != $invitationCode) {
+                $updateData = [
+                    "invitationCode" => $invitationCode,
+                ];
+                $where = ["userId" => $userId];
+
+                $this->ctx->PassportPasswordTable->updateUserData($where, $updateData);
+            }
 
             $newPreSessionId = ZalyHelper::generateStrId();
 

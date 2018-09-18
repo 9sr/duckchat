@@ -38,6 +38,8 @@ class Api_Site_ConfigController extends \BaseController
             if (empty($url)) {
                 throw new Exception("api.site.config with no requestUrl in header");
             }
+
+            $scheme = $url['scheme'];
             $host = isset($url['host']) ? $url['host'] : "";
             $port = isset($url['port']) ? $url['port'] : "";
             if (empty($host)) {
@@ -65,7 +67,7 @@ class Api_Site_ConfigController extends \BaseController
 
             $loginPluginProfile = $this->getPluginProfileFromDB($configData[SiteConfig::SITE_LOGIN_PLUGIN_ID]);
 
-            $response = $this->buildSiteConfigResponse($host, $port, $configData, $isValid, $randomBase64, $loginPluginProfile);
+            $response = $this->buildSiteConfigResponse($scheme, $host, $port, $configData, $isValid, $randomBase64, $loginPluginProfile);
 
             $this->setRpcError($this->defaultErrorCode, "");
             $this->rpcReturn($transportData->getAction(), $response);
@@ -158,6 +160,7 @@ class Api_Site_ConfigController extends \BaseController
 
     /**
      * 生成 transData 数据
+     * @param $scheme
      * @param $host
      * @param $port
      * @param $configData
@@ -167,8 +170,16 @@ class Api_Site_ConfigController extends \BaseController
      * @return ApiSiteConfigResponse
      * @throws Exception
      */
-    private function buildSiteConfigResponse($host, $port, $configData, $isValid, $randomBase64, $pluginProfile)
+    private function buildSiteConfigResponse($scheme, $host, $port, $configData, $isValid, $randomBase64, $pluginProfile)
     {
+        if (empty($scheme)) {
+            $scheme = "http";
+        }
+
+        if (empty($port)) {
+            $port = 80;
+        }
+
         ////ApiSiteConfigResponse 对象
         $response = new ApiSiteConfigResponse();
 
@@ -188,18 +199,18 @@ class Api_Site_ConfigController extends \BaseController
 
             $addressForAPi = "";
             $addressForIM = "";
-            if ($zalyPort && $zalyPort > 0 && $zalyPort < 65535) {
+            if (isset($zalyPort) && $zalyPort > 0 && $zalyPort < 65535) {
                 //support zaly protocol
                 $addressForAPi = "zaly://" . "$host" . ":" . $zalyPort;
                 $addressForIM = "zaly://" . "$host" . ":" . $zalyPort;
-            } else if ($wsPort && $wsPort > 0 && $wsPort < 65535) {
+            } else if (isset($wsPort) && $wsPort > 0 && $wsPort < 65535) {
                 //support ws protocol
-                $addressForAPi = "http://" . "$host" . ":" . $port;
+                $addressForAPi = $scheme . "://" . "$host" . ":" . $port;
                 $addressForIM = "ws://" . "$host" . ":" . "$wsPort";
             } else {
                 //support http protocol
-                $addressForAPi = "http://" . "$host" . ":" . $port;
-                $addressForIM = "http://" . "$host" . ":" . $port;
+                $addressForAPi = $scheme . "://" . "$host" . ":" . $port;
+                $addressForIM = $scheme . "://" . "$host" . ":" . $port;
             }
 
             $this->ctx->Wpf_Logger->info("api.site.config", "addressForAPi=" . $addressForAPi);

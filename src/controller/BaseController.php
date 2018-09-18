@@ -283,6 +283,8 @@ abstract class BaseController extends \Wpf_Controller
             $this->rpcReturn($this->action, null);
             die();
         }
+        //expire time
+        $sessionCreatedTime = $sessionInfo['timeWhenCreated'];
         $timeActive = $sessionInfo['timeActive'];
         $nowTime = $this->ctx->ZalyHelper->getMsectime();
 
@@ -307,11 +309,14 @@ abstract class BaseController extends \Wpf_Controller
             $this->rpcReturn($this->action, null);
             die();
         }
+
+        //update session
+        $this->ctx->SiteSessionTable->updateSessionActive($this->sessionId);
     }
 
     public function getPublicUserProfile($userInfo)
     {
-        try{
+        try {
             $publicUserProfile = new \Zaly\Proto\Core\PublicUserProfile();
             $avatar = isset($userInfo['avatar']) ? $userInfo['avatar'] : "";
             $publicUserProfile->setAvatar($avatar);
@@ -326,7 +331,7 @@ abstract class BaseController extends \Wpf_Controller
                 $publicUserProfile->setAvailableType(\Zaly\Proto\Core\UserAvailableType::UserAvailableNormal);
             }
             return $publicUserProfile;
-        }catch (Exception $ex) {
+        } catch (Exception $ex) {
             $this->ctx->Wpf_Logger->error("get public user profile", $ex);
             $publicUserProfile = new \Zaly\Proto\Core\PublicUserProfile();
             return $publicUserProfile;
@@ -336,7 +341,7 @@ abstract class BaseController extends \Wpf_Controller
     public function getGroupMemberUserProfile($user)
     {
         $tag = __CLASS__ . "-" . __FUNCTION__;
-        $this->ctx->Wpf_Logger->error($tag, "user userMemberType  = " . $user['memberType']);
+        $this->ctx->Wpf_Logger->info($tag, "user userMemberType  = " . $user['memberType']);
 
         $publicUserProfile = $this->getPublicUserProfile($user);
 

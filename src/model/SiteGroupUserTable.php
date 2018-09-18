@@ -72,7 +72,7 @@ class SiteGroupUserTable extends BaseTable
         if ($memberType !== false) {
             $sql .= " and memberType=:memberType";
         }
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
 
         $prepare->bindValue(":groupId", $groupId);
@@ -124,7 +124,7 @@ class SiteGroupUserTable extends BaseTable
         if ($memberType !== false) {
             $sql .= " and memberType=:memberType";
         }
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":groupId", $groupId);
         if ($memberType !== false) {
@@ -176,12 +176,12 @@ class SiteGroupUserTable extends BaseTable
 
         $sql .= " order by siteGroupUser.timeJoin ASC limit :offset, :pageSize;";
 
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
 
         $prepare->bindValue(":groupId", $groupId);
-        $prepare->bindValue(":offset", $offset);
-        $prepare->bindValue(":pageSize", $pageSize);
+        $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $prepare->bindValue(":pageSize", $pageSize, PDO::PARAM_INT);
 
         if ($memberType) {
             $prepare->bindValue(":memberType", $memberType);
@@ -189,8 +189,6 @@ class SiteGroupUserTable extends BaseTable
 
         $prepare->execute();
         $results = $prepare->fetchAll(\PDO::FETCH_ASSOC);
-
-//        $this->ctx->Wpf_Logger->info("============", "result=" . json_encode($results));
 
         $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, [$groupId, $offset, $pageSize, $memberType], $startTime);
         return $results;
@@ -212,13 +210,13 @@ class SiteGroupUserTable extends BaseTable
         $startTime = microtime(true);
         $sql = "select $this->selectColumns from $this->table where groupId=:groupId and userId=:userId";
         $sql .= " and (memberType=:adminType or memberType=:ownerType)";
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
 
         $prepare->bindValue(":groupId", $groupId);
         $prepare->bindValue(":userId", $userId);
-        $prepare->bindValue(":adminType", $adminType);
-        $prepare->bindValue(":ownerType", $ownerType);
+        $prepare->bindValue(":adminType", $adminType, PDO::PARAM_INT);
+        $prepare->bindValue(":ownerType", $ownerType, PDO::PARAM_INT);
         $prepare->execute();
         $results = $prepare->fetch(\PDO::FETCH_ASSOC);
         $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $groupId, $startTime);
@@ -259,12 +257,12 @@ class SiteGroupUserTable extends BaseTable
                     (memberType=:adminType or memberType=:ownerType)";
 
 
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
 
         $prepare->bindValue(":groupId", $groupId);
-        $prepare->bindValue(":adminType", $adminType);
-        $prepare->bindValue(":ownerType", $ownerType);
+        $prepare->bindValue(":adminType", $adminType, PDO::PARAM_INT);
+        $prepare->bindValue(":ownerType", $ownerType, PDO::PARAM_INT);
         $prepare->execute();
         $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $groupId, $startTime);
         return $prepare->fetchAll(\PDO::FETCH_ASSOC);
@@ -278,16 +276,20 @@ class SiteGroupUserTable extends BaseTable
      * @return array
      * @throws Exception
      */
-    public function getGroupUserByMemberType($groupId, $memberType = false)
+    public function getGroupUserByMemberType($groupId, $memberType = false , $columns=[])
     {
         $tag = __CLASS__ . '-' . __FUNCTION__;
         $startTime = microtime(true);
-
-        $sql = "select $this->selectColumns from $this->table where groupId=:groupId and memberType=:memberType";
-        $prepare = $this->db->prepare($sql);
+        if(!$columns) {
+            $columns = $this->selectColumns;
+        } else {
+            $columns = implode(",", $columns);
+        }
+        $sql = "select $columns from $this->table where groupId=:groupId and memberType=:memberType";
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":groupId", $groupId);
-        $prepare->bindValue(":memberType", $memberType);
+        $prepare->bindValue(":memberType", $memberType, PDO::PARAM_INT);
         $prepare->execute();
         $results = $prepare->fetchAll(\PDO::FETCH_ASSOC);
         $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $groupId, $startTime);
@@ -306,7 +308,7 @@ class SiteGroupUserTable extends BaseTable
         $startTime = microtime(true);
 
         $sql = "select $this->selectColumns from $this->table where groupId=:groupId";
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
 
         $prepare->bindValue(":groupId", $groupId);
@@ -328,7 +330,7 @@ class SiteGroupUserTable extends BaseTable
         $tag = __CLASS__ . "." . __FUNCTION__;
         try {
             $sql = "select userId from $this->table where groupId=:groupId";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
 
             $prepare->bindValue(":groupId", $groupId);
@@ -344,6 +346,7 @@ class SiteGroupUserTable extends BaseTable
      * 得到群的总成员数目
      * @param $groupId
      * @return mixed
+     * @throws Exception
      */
 
     public function getGroupUserCount($groupId)
@@ -351,7 +354,7 @@ class SiteGroupUserTable extends BaseTable
         $startTime = microtime(true);
         $tag = __CLASS__ . "." . __FUNCTION__;
         $sql = "select count(id) as `count` from $this->table where groupId=:groupId";
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":groupId", $groupId);
         $prepare->execute();
@@ -360,6 +363,20 @@ class SiteGroupUserTable extends BaseTable
         return $result;
     }
 
+    public function getGroupUserMute($groupId, $userId)
+    {
+        $startTime = microtime(true);
+        $tag = __CLASS__ . "." . __FUNCTION__;
+        $sql = "select isMute from $this->table where groupId=:groupId and userId=:userId;";
+        $prepare = $this->dbSlave->prepare($sql);
+        $this->handlePrepareError($tag, $prepare);
+        $prepare->bindValue(":groupId", $groupId);
+        $prepare->bindValue(":userId", $userId);
+        $prepare->execute();
+        $result = $prepare->fetchColumn(0);
+        $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $groupId, $startTime);
+        return $result;
+    }
 
     public function getUserGroups($userId)
     {
@@ -367,7 +384,7 @@ class SiteGroupUserTable extends BaseTable
         $tag = __CLASS__ . "->" . __FUNCTION__;
         try {
             $sql = "select groupId from $this->table where userId=:userId;";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":userId", $userId);
             $prepare->execute();
@@ -385,6 +402,7 @@ class SiteGroupUserTable extends BaseTable
      * @param $userIds
      * @param $groupId
      * @return array|bool
+     * @throws Exception
      */
 
     public function getUserIdExistInGroup($userIds, $groupId)
@@ -394,7 +412,7 @@ class SiteGroupUserTable extends BaseTable
 
         $userIdStr = implode("','", $userIds);
         $sql = "select userId from $this->table where groupId=:groupId and userId in ('$userIdStr');";
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":groupId", $groupId);
         $prepare->execute();
@@ -412,7 +430,7 @@ class SiteGroupUserTable extends BaseTable
      * @param $userIds
      * @param $groupId
      * @return bool
-     *
+     * @throws Exception
      */
     public function removeMemberFromGroup($userIds, $groupId)
     {
@@ -473,14 +491,14 @@ class SiteGroupUserTable extends BaseTable
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":memberType", $nomalMemberType);
         $prepare->bindValue(":groupId", $groupId);
-        $prepare->bindValue(":ownerMemberType", $ownerMemberType);
+        $prepare->bindValue(":ownerMemberType", $ownerMemberType, PDO::PARAM_INT);
         $flag = $prepare->execute();
         $params = " groupId =$groupId  memberType =$nomalMemberType  ownerMemberType = $ownerMemberType ";
         $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $params, $startTime);
         if ($flag) {
             return true;
         }
-        return false;
+        throw new Exception("updateAllMemberRoleToNomal operation failed");
     }
 
     private function updateRole($userIds, $groupId, $memberType)
@@ -501,6 +519,6 @@ class SiteGroupUserTable extends BaseTable
         if ($flag) {
             return true;
         }
-        return false;
+        throw new Exception("updateRole operation failed");
     }
 }

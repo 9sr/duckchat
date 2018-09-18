@@ -16,8 +16,6 @@ class Manage_MiniProgram_ProfileController extends Manage_CommonController
         $miniProgramProfile = $this->getPluginProfile($pluginId);
         $miniProgramProfile['lang'] = $this->language;
 
-        $this->ctx->Wpf_Logger->info("===============", json_encode($miniProgramProfile));
-
         echo $this->display("manage_miniProgram_profile", $miniProgramProfile);
         return;
     }

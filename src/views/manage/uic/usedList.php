@@ -123,8 +123,8 @@
         .list-item-center {
             width: 100%;
             /*height: 11rem;*/
-            background: rgba(245, 245, 245, 1);
-            padding-top: 20px;
+            /*background: rgba(245, 245, 245, 1);*/
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }

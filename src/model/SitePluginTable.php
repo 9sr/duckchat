@@ -8,6 +8,10 @@
 
 class SitePluginTable extends BaseTable
 {
+    /**
+     * @var Wpf_Logger
+     */
+    private $logger;
     private $tableName = "sitePlugin";
     private $columns = [
         "id",
@@ -28,6 +32,7 @@ class SitePluginTable extends BaseTable
 
     public function init()
     {
+        $this->logger = $this->ctx->getLogger();
         $this->queryColumns = implode(",", $this->columns);
     }
 
@@ -65,15 +70,15 @@ class SitePluginTable extends BaseTable
         try {
             $prepare = $this->db->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
-            $prepare->bindValue(":pluginId", $miniProgramProfile["pluginId"]);
+            $prepare->bindValue(":pluginId", $miniProgramProfile["pluginId"], PDO::PARAM_INT);
             $prepare->bindValue(":name", $miniProgramProfile["name"]);
             $prepare->bindValue(":logo", $miniProgramProfile["logo"]);
-            $prepare->bindValue(":sort", $miniProgramProfile["sort"]);
+            $prepare->bindValue(":sort", $miniProgramProfile["sort"], PDO::PARAM_INT);
             $prepare->bindValue(":landingPageUrl", $miniProgramProfile["landingPageUrl"]);
-            $prepare->bindValue(":landingPageWithProxy", $miniProgramProfile["landingPageWithProxy"]);
-            $prepare->bindValue(":usageType", $miniProgramProfile["usageType"]);
-            $prepare->bindValue(":loadingType", $miniProgramProfile["loadingType"]);
-            $prepare->bindValue(":permissionType", $miniProgramProfile["permissionType"]);
+            $prepare->bindValue(":landingPageWithProxy", $miniProgramProfile["landingPageWithProxy"], PDO::PARAM_INT);
+            $prepare->bindValue(":usageType", $miniProgramProfile["usageType"], PDO::PARAM_INT);
+            $prepare->bindValue(":loadingType", $miniProgramProfile["loadingType"], PDO::PARAM_INT);
+            $prepare->bindValue(":permissionType", $miniProgramProfile["permissionType"], PDO::PARAM_INT);
             $prepare->bindValue(":authKey", $miniProgramProfile["authKey"]);
             $prepare->bindValue(":addTime", $miniProgramProfile["addTime"]);
             $flag = $prepare->execute();
@@ -90,6 +95,28 @@ class SitePluginTable extends BaseTable
         return false;
     }
 
+    public function deletePlugin($pluginId)
+    {
+        $starTime = $this->getCurrentTimeMills();
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+        $sql = "delete from $this->tableName where pluginId=:pluginId;";
+
+        try {
+            $prepare = $this->db->prepare($sql);
+            $this->handlePrepareError($tag, $prepare);
+            $prepare->bindValue(":pluginId", $pluginId);
+
+            $flag = $prepare->execute();
+            $result = $prepare->rowCount();
+            if ($flag && $result > 0) {
+                return true;
+            }
+        } finally {
+            $this->logger->writeSqlLog($tag, $sql, [$pluginId], $starTime);
+        }
+
+        return false;
+    }
 
     public function updateProfile($data, $where)
     {
@@ -102,7 +129,7 @@ class SitePluginTable extends BaseTable
         $sql = "select max(pluginId) as pluginId from $this->tableName";
 
         try {
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $flag = $prepare->execute();
             $result = $prepare->fetch(\PDO::FETCH_ASSOC);
 
@@ -127,7 +154,7 @@ class SitePluginTable extends BaseTable
         try {
             $startTime = microtime(true);
             $sql = "select $this->queryColumns from $this->tableName where pluginId=:pluginId;";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":pluginId", $pluginId);
             $prepare->execute();
@@ -165,9 +192,9 @@ class SitePluginTable extends BaseTable
                         order by sort ASC, id DESC";
             }
 
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
-            $prepare->bindValue(":usageType", $usageType);
+            $prepare->bindValue(":usageType", $usageType, PDO::PARAM_INT);
             $prepare->execute();
             $results = $prepare->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -186,9 +213,9 @@ class SitePluginTable extends BaseTable
         $tag = __CLASS__ . "_" . __FUNCTION__;
         $startTime = microtime(true);
         try {
-            $sql = "select distinct pluginId,name,logo from $this->tableName order by id ASC;";
+            $sql = "select distinct a.pluginId as pluginId,a.name as `name`,a.logo as logo from (select pluginId,name,logo from sitePlugin order by id ASC) as a;";
 
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->execute();
             $results = $prepare->fetchAll(\PDO::FETCH_ASSOC);

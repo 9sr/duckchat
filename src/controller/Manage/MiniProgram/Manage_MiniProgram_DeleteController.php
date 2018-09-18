@@ -8,25 +8,38 @@
 
 class Manage_MiniProgram_DeleteController extends Manage_CommonController
 {
+    private $innerPluginIds = [100, 101, 102, 104, 105];
 
-    protected function doRequest()
+    public function doRequest()
     {
-        $params = [];
-        $params['lang'] = $this->language;
+        $result = [
+            'errCode' => "error.alert",
+            'errInfo' => "",
+        ];
 
+        $pluginId = $_POST['pluginId'];
 
-        $pluginId = $_GET['pluginId'];
+        try {
 
+            if (in_array($pluginId, $this->innerPluginIds)) {
+                throw new Exception("forbidden operation");
+            }
 
-        $this->ctx->Wpf_Logger->info("===============", json_encode($params));
+            if ($this->deleteMiniProgram($pluginId)) {
+                $result['errCode'] = "success";
+            }
+        } catch (Throwable $e) {
+            $this->logger->error("manage.miniprogram.delete", $e);
+            $result["errInfo"] = $e->getMessage();
+        }
 
-        echo $this->display("manage_miniProgram_profile", $params);
+        echo json_encode($result);
         return;
     }
 
 
-    private function getPluginProfile($pluginId)
+    private function deleteMiniProgram($pluginId)
     {
-
+        return $this->ctx->SitePluginTable->deletePlugin($pluginId);
     }
 }

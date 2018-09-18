@@ -24,7 +24,7 @@ class SiteUserFriendTable extends BaseTable
 
     private $selectColumns;
 
-    private $userTable = "SiteUser";
+    private $userTable = "siteUser";
 
     public function init()
     {
@@ -37,8 +37,8 @@ class SiteUserFriendTable extends BaseTable
         $data = [
             "userId" => $userId,
             "friendId" => $friendUserId,
-            "relation" => $relation,
-            "mute" => false, //false : 0
+            "relation" => (int)$relation,
+            "mute" => 0, //false : 0
             "addTime" => $this->getCurrentTimeMills()
         ];
         return $this->insertData($this->table, $data, $this->columns);
@@ -62,13 +62,13 @@ class SiteUserFriendTable extends BaseTable
                 limit :offset, :limitCount;";
         try {
 
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
 
             $prepare->bindValue(":userId", $userId);
-            $prepare->bindValue(":relation", $relation);
-            $prepare->bindValue(":offset", $offset);
-            $prepare->bindValue(":limitCount", $count);
+            $prepare->bindValue(":relation", $relation, PDO::PARAM_INT);
+            $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $prepare->bindValue(":limitCount", $count, PDO::PARAM_INT);
             $prepare->execute();
 
             $result = $prepare->fetchAll(\PDO::FETCH_ASSOC);
@@ -91,7 +91,7 @@ class SiteUserFriendTable extends BaseTable
 
         try {
             $sql = "SELECT $this->selectColumns FROM $this->table WHERE userId=:userId and friendId=:friendId;";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $prepare->bindValue(":userId", $userId);
             $prepare->bindValue(":friendId", $friendUserId);
             $prepare->execute();
@@ -105,6 +105,25 @@ class SiteUserFriendTable extends BaseTable
 
     }
 
+    public function queryUserFriendMute($userId, $friendUserId)
+    {
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+        $startTime = $this->getCurrentTimeMills();
+
+        try {
+            $sql = "SELECT mute FROM $this->table WHERE userId=:userId and friendId=:friendId;";
+            $prepare = $this->dbSlave->prepare($sql);
+            $prepare->bindValue(":userId", $userId);
+            $prepare->bindValue(":friendId", $friendUserId);
+            $prepare->execute();
+
+            $result = $prepare->fetchColumn(0);
+            return $result;
+        } finally {
+            $this->ctx->Wpf_Logger->dbLog($tag, $sql, [$userId, $friendUserId], $startTime, $result);
+        }
+    }
+
     public function queryUserFriendCount($userId)
     {
         $tag = __CLASS__ . "->" . __FUNCTION__;
@@ -113,7 +132,7 @@ class SiteUserFriendTable extends BaseTable
 
         try {
             $sql = "SELECT COUNT(id) as num FROM $this->table WHERE userId=:userId;";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $prepare->bindValue(":userId", $userId);
             $prepare->execute();
             $result = $prepare->fetch(\PDO::FETCH_ASSOC);
@@ -142,7 +161,7 @@ class SiteUserFriendTable extends BaseTable
 
         try {
             $sql = "SELECT COUNT(id) as `count` FROM $this->table WHERE userId=:userId and friendId=:friendId and relation=1;";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $prepare->bindValue(":userId", $userId);
             $prepare->bindValue(":friendId", $friendUserId);
             $prepare->execute();
@@ -180,7 +199,7 @@ class SiteUserFriendTable extends BaseTable
         $result = false;
         try {
             $sql = "SELECT $this->selectColumns as `count` FROM $this->table WHERE userId=:userId and friendId=:friendId;";
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $prepare->bindValue(":userId", $userId);
             $prepare->bindValue(":friendId", $friendUserId);
             $prepare->execute();
@@ -190,40 +209,6 @@ class SiteUserFriendTable extends BaseTable
         }
         return $result;
     }
-
-
-//    public function queryUserFriend($userId)
-//    {
-//        $tag = __CLASS__ . "->" . __FUNCTION__;
-//        $startTime = $this->getCurrentTimeMills();
-//        $friends = [];
-//
-//        $sql = "SELECT
-//                    a.userId,b.aliasName,b.aliasNameInLatin,a.loginName,a.nickname,a.nicknameInLatin,a.avatar
-//                FROM
-//                    $this->userTable AS a LEFT JOIN $this->table AS b ON b.friendId = a.userId
-//                WHERE
-//                  b.userId=:userId
-//                limit :offset, :limitCount;";
-//        try {
-//
-//            $prepare = $this->db->prepare($sql);
-//            $this->handlePrepareError($tag, $prepare);
-//
-//            $prepare->bindValue(":userId", $userId);
-//            $prepare->execute();
-//
-//            $result = $prepare->fetchAll(\PDO::FETCH_ASSOC);
-//
-//            if (!empty($result)) {
-//                $friends = $result;
-//            }
-//
-//        } finally {
-//        }
-//
-//        return $friends;
-//    }
 
     public function updateData($where, $data)
     {
@@ -276,12 +261,12 @@ class SiteUserFriendTable extends BaseTable
                         siteGroupUser 
                       where groupId=:groupId) limit :offset, :pageSize;";
 
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":userId", $userId);
             $prepare->bindValue(":groupId", $groupId);
-            $prepare->bindValue(":offset", $offset);
-            $prepare->bindValue(":pageSize", $pageSize);
+            $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $prepare->bindValue(":pageSize", $pageSize, PDO::PARAM_INT);
             $prepare->execute();
             $result = $prepare->fetchAll(\PDO::FETCH_ASSOC);
             $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, [$userId, $groupId, $offset, $pageSize], $startTime);

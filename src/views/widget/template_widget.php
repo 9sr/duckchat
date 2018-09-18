@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     {{ if msgStatus == "MessageStatusSending"}}
-                    <div class="showbox  msg_status_loading msg_status_loading_{{msgId}}"  msgId="{{msgId}}"  is-display="yes">
+                    <div class="showbox  msg_status_loading msg_status_loading_{{msgId}}" sendTime="{{timeServer}}" msgId="{{msgId}}"  is-display="yes">
                         <div class="loader">
                             <svg class="circular" viewBox="25 25 50 50">
                                 <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
@@ -44,7 +44,7 @@
                         <div class="text-align-left msgContent">{{msgContent}}</div>
                     </div>
                     {{ if msgStatus == "MessageStatusSending"}}
-                    <div class="showbox msg_status_loading msg_status_loading_{{msgId}}"  msgId="{{msgId}}"   is-display="yes">
+                    <div class="showbox msg_status_loading msg_status_loading_{{msgId}}"  sendTime="{{timeServer}}" msgId="{{msgId}}"   is-display="yes">
                         <div class="loader">
                             <svg class="circular" viewBox="25 25 50 50">
                                 <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
@@ -85,7 +85,7 @@
                     {{/if}}
 
                     {{ if msgStatus == "MessageStatusSending"}}
-                    <div class="showbox msg_status_loading msg_status_loading_{{msgId}}"  msgId="{{msgId}}"   is-display="yes">
+                    <div class="showbox msg_status_loading msg_status_loading_{{msgId}}"  sendTime="{{timeServer}}" msgId="{{msgId}}"   is-display="yes">
                         <div class="loader">
                             <svg class="circular" viewBox="25 25 50 50">
                                 <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>

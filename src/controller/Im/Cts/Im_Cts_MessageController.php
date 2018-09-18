@@ -99,10 +99,12 @@ class Im_Cts_MessageController extends Im_BaseController
         //send friend news
         $this->ctx->Message_News->tellClientNews($this->isGroupRoom, $this->toId);
 
-        //send push to friend
-        $pushText = $this->getPushText($msgType, $message);
+        if ($result) {
+            //send push to friend
+            $pushText = $this->getPushText($msgType, $message);
 
-        $this->ctx->Push_Client->sendNotification($msgRoomType, $msgType, $fromUserId, $this->toId, $pushText);
+            $this->ctx->Push_Client->sendNotification($msgRoomType, $msgType, $fromUserId, $this->toId, $pushText);
+        }
     }
 
     private function returnU2MessageIfNotFriend($msgId, $msgRoomType, $fromUserId, $toUserId)
@@ -111,19 +113,17 @@ class Im_Cts_MessageController extends Im_BaseController
 
         $this->finish_request();
 
-        //get
+        //get user name
         $toUserName = $this->ctx->SiteUserTable->getUserNickName($toUserId);
 
         $title = '[notice]';
-        $noticeText = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="background: #DFDFDF;margin:0;padding:0"><div style="text-align: center;font-size: 14px"> <font color=#FFFFFF>"{}" is not your friend, add friend to chat </font><font color=#4C3BB1><br/>send a friend apply</font></div></body></html>';
-        $code = str_replace("{}", $toUserName, $noticeText);
+        $code = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="background: #DFDFDF;margin:0;padding:0"><div style="text-align: center;font-size: 14px"> <font color=#FFFFFF>' . $toUserName . ' is not your friend, add friend to chat </font><font color=#4C3BB1><br/>send a friend apply</font></div></body></html>';
 
         $hrefUrl = 'zaly://0.0.0.0/goto?page=friend_apply&userId=' . $toUserId;
         $height = '135';
+
         //代发一个web消息给from
         $this->ctx->Message_Client->proxyU2WebNoticeMessage($fromUserId, $toUserId, $fromUserId, $title, $code, $hrefUrl, $height);
-
-
         $this->ctx->Message_News->tellClientNews(false, $fromUserId);
     }
 
@@ -164,6 +164,10 @@ class Im_Cts_MessageController extends Im_BaseController
     // check u2-message if lawful
     private function getIsFriendRelation($userId, $friendUserId)
     {
+        if ($userId == $friendUserId) {
+            return false;
+        }
+
         $tag = __CLASS__ . "->" . __FUNCTION__;
         try {
             $isFriend = $this->ctx->SiteUserFriendTable->isFriend($userId, $friendUserId);
@@ -172,7 +176,7 @@ class Im_Cts_MessageController extends Im_BaseController
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error($tag, $e);
         }
-        return true;
+        return false;
     }
 
     /**

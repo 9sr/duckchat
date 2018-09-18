@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     {{ if msgStatus == "MessageStatusSending"}}
-                        <div class="showbox  msg_status_loading msg_status_loading_{{msgId}}"  msgId="{{msgId}}"  is-display="yes">
+                        <div class="showbox  msg_status_loading msg_status_loading_{{msgId}}" sendTime="{{timeServer}}"  msgId="{{msgId}}"  is-display="yes">
                             <div class="loader">
                                 <svg class="circular" viewBox="25 25 50 50">
                                     <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
@@ -38,7 +38,7 @@
 </script>
 
 <script id="tpl-send-msg-text" type="text/html">
-    <div class="msg-row msg-right msg-text" > <div class="msg-avatar"> {{if userAvatarSrc}}<img class="user-info-avatar info-avatar-{{userId}}"  src="{{userAvatarSrc}}" />{{else}}<img class="user-info-avatar info-avatar-{{userId}}"  src="../../public/img/msg/default_user.png" />{{/if}} </div> <div class="right-msg-body  text-align-right" > <div class="msg_status" style="margin-top: 1rem;"> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> <div class="text-align-left msgContent">{{msgContent}}</div> </div> {{ if msgStatus == "MessageStatusSending"}} <div class="showbox msg_status_loading msg_status_loading_{{msgId}}"  msgId="{{msgId}}"   is-display="yes"> <div class="loader"> <svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg> </div> </div> <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}" > <img src="../../public/img/msg/msg_failed.png"> </div> {{ else if msgStatus == "MessageStatusFailed"}} <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}"  style="display: flex;"> <img src="../../public/img/msg/msg_failed.png"> </div> {{/if}} </div> </div> </div>
+    <div class="msg-row msg-right msg-text" > <div class="msg-avatar"> {{if userAvatarSrc}}<img class="user-info-avatar info-avatar-{{userId}}"  src="{{userAvatarSrc}}" />{{else}}<img class="user-info-avatar info-avatar-{{userId}}"  src="../../public/img/msg/default_user.png" />{{/if}} </div> <div class="right-msg-body  text-align-right" > <div class="msg_status" style="margin-top: 1rem;"> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> <div class="text-align-left msgContent">{{msgContent}}</div> </div> {{ if msgStatus == "MessageStatusSending"}} <div class="showbox msg_status_loading msg_status_loading_{{msgId}}" sendTime="{{timeServer}}"  msgId="{{msgId}}"   is-display="yes"> <div class="loader"> <svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg> </div> </div> <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}" > <img src="../../public/img/msg/msg_failed.png"> </div> {{ else if msgStatus == "MessageStatusFailed"}} <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}"  style="display: flex;"> <img src="../../public/img/msg/msg_failed.png"> </div> {{/if}} </div> </div> </div>
 </script>
 
 <script id="tpl-send-msg-web" type="text/html">
@@ -67,7 +67,7 @@
                 {{/if}}
 
                 {{ if msgStatus == "MessageStatusSending"}}
-                <div class="showbox msg_status_loading msg_status_loading_{{msgId}}"  msgId="{{msgId}}"   is-display="yes">
+                <div class="showbox msg_status_loading msg_status_loading_{{msgId}}" sendTime="{{timeServer}}"   msgId="{{msgId}}"   is-display="yes">
                     <div class="loader">
                         <svg class="circular" viewBox="25 25 50 50">
                             <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
@@ -316,8 +316,8 @@
     <div id="selfInfoDiv" class="selfInfoDiv" style="position: absolute;width: 100%;">
         <div id="selfAvatarUploadDiv" class="d-flex flex-row justify-content-center" style="margin-top: 3rem; text-align: center;position: relative" >
             <img id="user-image-upload" class="user-image-upload info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" style="width: 5rem; height: 5rem;" onclick="uploadFile('file2')" />
-            <img id="user-img-carmera" class="user-img-carmera" src="../../public/img/camera.png" style="width: 2rem; height: 2rem; position: absolute;  margin-top: 1.5rem;
-                     margin-left: -3.5rem;" onclick="uploadFile('file2')" />
+            <img id="user-img-carmera" class="user-img-carmera" src="../../public/img/camera.png" style="width: 5rem; height: 5rem; position: absolute;
+                     margin-left: -5rem;" onclick="uploadFile('file2')" />
             <input type="file" id="file2" style="display:none" onchange="uploadUserImgFromInput(this)" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
         </div>
         <div class="d-flex flex-row justify-content-center selfNickNameDiv"  >
@@ -334,19 +334,20 @@
 
         <div style="text-align: center;margin:0 auto;width: 34rem; height:1px;background:rgba(223,223,223,1);" ></div>
         <div class="d-flex flex-row justify-content-center">
-<!--            <div class="self-qrcode" id="self-qrcode" style="margin-top: 1rem;" >-->
-<!--                <span data-local-value="friendQrcodeTip">Self Qrcode</span>-->
-<!--            </div>-->
+            <div class="self-qrcode" id="self-qrcode" style="margin-top: 1rem;" >
+                <span data-local-value="friendQrcodeTip">Self Qrcode</span>
+            </div>
             <div class="self-qrcode" id="logout" >
                 <span class="logout-span" id="logout-span" data-local-value="logoutTip" onclick="logout()">Logout</span>
             </div>
         </div>
     </div>
-<!--    <div id="selfQrcodeDiv" class="selfQrcodeDiv"  style="position: absolute;display: none;">-->
-<!--        <div id="selfQrcodeCanvas">-->
-<!--            kkkkkkkk-->
-<!--        </div>-->
-<!--    </div>-->
+    <div id="selfQrcodeDiv" class="selfQrcodeDiv"  style="position: absolute;display: none;">
+        <div id="selfQrcodeCanvas">
+            kkkkkkkk
+        </div>
+    </div>
+
 </div>
 
 </script>
@@ -442,7 +443,7 @@
         </div>
 
         <div class="d-flex flex-row justify-content-center add-friend-div-img"  >
-            <img  class="user-image-for-add" src="../../public/img/msg/default_user.png" style="width: 8rem; height: 8rem;" />
+            <img  class="user-image-for-add info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" style="width: 8rem; height: 8rem;" />
         </div>
         <div class="d-flex flex-row justify-content-center user-nickname-for-add">
             {{nickname}}

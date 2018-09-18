@@ -6,9 +6,9 @@
  * Time: 6:12 PM
  */
 
-class Api_Friend_ApplyListController extends  BaseController
+class Api_Friend_ApplyListController extends BaseController
 {
-    private $classNameForRequest  = '\Zaly\Proto\Site\ApiFriendApplyListRequest';
+    private $classNameForRequest = '\Zaly\Proto\Site\ApiFriendApplyListRequest';
     private $classNameForResponse = '\Zaly\Proto\Site\ApiFriendApplyListResponse';
 
     public function rpcRequestClassName()
@@ -23,24 +23,25 @@ class Api_Friend_ApplyListController extends  BaseController
     public function rpc(\Google\Protobuf\Internal\Message $request, \Google\Protobuf\Internal\Message $transportData)
     {
         ///处理request，
-        $tag = __CLASS__ .'-'.__FUNCTION__;
-        try{
+        $tag = __CLASS__ . '-' . __FUNCTION__;
+        try {
             $offset = $request->getOffset() ? $request->getOffset() : 0;
-            $count  = $request->getCount() && $request->getCount()< $this->defaultPageSize ? $request->getCount() : $this->defaultPageSize;
+            $count = $request->getCount() && $request->getCount() < $this->defaultPageSize ? $request->getCount() : $this->defaultPageSize;
             $list = $this->getApplyList($offset, $count);
             $totalCount = $this->getApplyListCount();
             $response = $this->getApiFriendApplyListResponse($list, $totalCount);
             $this->setRpcError($this->defaultErrorCode, "");
             $this->rpcReturn($transportData->getAction(), $response);
-        }catch (Exception $ex) {
-            $this->ctx->Wpf_Logger->error($tag, "error_msg=".$ex->getMessage());
+        } catch (Exception $ex) {
+            $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex->getMessage());
+            $this->setRpcError("error.alert", $ex->getMessage());
             $this->rpcReturn($transportData->getAction(), new $this->classNameForResponse());
         }
     }
 
     private function getApplyList($offset, $count)
     {
-        $list = $this->ctx->SiteFriendApplyTable->getApplyList( $this->userId, $offset, $count);
+        $list = $this->ctx->SiteFriendApplyTable->getApplyList($this->userId, $offset, $count);
         return $list;
     }
 
@@ -55,7 +56,7 @@ class Api_Friend_ApplyListController extends  BaseController
         $response = new \Zaly\Proto\Site\ApiFriendApplyListResponse();
         $applyUserProfileList = [];
 
-        if($list) {
+        if ($list) {
             foreach ($list as $user) {
                 $publicUser = $this->getPublicUserProfile($user);
                 $applyUserProfile = new \Zaly\Proto\Core\ApplyUserProfile();

@@ -47,7 +47,7 @@ class ZalyErrorEn extends  ZalyErrorBase
         "error.exist.email"  => "The mailbox already exists",
         "error.exist.loginName" => "LoginName already exists",
         "error.site.pubkPem" => "sitePubkPem is not available",
-
+        "error.invalid.loginName" => "Invalid loginName",
         "error.match.login"  => "Account password does not match",
         "error.exist.user"   => "Account does not exist",
         "error.preSessionId" => "Login failed",
@@ -62,6 +62,8 @@ class ZalyErrorEn extends  ZalyErrorBase
         "error.session.clear" => "clear failed",
 
         "error.updatePassword.loginName" => "LoginName unavailable",
+
+        "error.invitation.code" => "Invitation code is error ",
 
     ];
 

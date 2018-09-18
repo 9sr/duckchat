@@ -12,6 +12,7 @@ class Site_Login
     private $zalyError;
     private $sessionVerifyAction = "api.session.verify";
     private $pinyin;
+    private $timeOut = 10;
 
     public function __construct(BaseCtx $ctx)
     {
@@ -34,7 +35,7 @@ class Site_Login
      * @return array
      * @throws Exception
      */
-    public function checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem = "", $clientSideType = 1)
+    public function checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem = "", $clientSideType = Zaly\Proto\Core\UserClientType::UserClientMobileApp)
     {
 
         try {
@@ -56,7 +57,7 @@ class Site_Login
         } catch (Exception $ex) {
             $tag = __CLASS__ . "-" . __FUNCTION__;
             $this->ctx->Wpf_Logger->error($tag, " errorMsg = " . $ex->getMessage());
-            throw new Exception($ex);
+            throw new Exception($ex->getMessage());
         }
     }
 
@@ -83,39 +84,12 @@ class Site_Login
             $sessionVerifyRequest = new \Zaly\Proto\Platform\ApiSessionVerifyRequest();
             $sessionVerifyRequest->setPreSessionId($preSessionId);
 
-            $anyBody = new \Google\Protobuf\Any();
-            $anyBody->pack($sessionVerifyRequest);
-
-            $transportData = new \Zaly\Proto\Core\TransportData();
-            $transportData->setBody($anyBody);
-            $transportData->setAction($this->sessionVerifyAction);
-            $data = $transportData->serializeToString();
-            $data = base64_encode($data);
-
             $pluginIds = $this->ctx->SiteConfigTable->selectSiteConfig(SiteConfig::SITE_LOGIN_PLUGIN_ID);
             $pluginId = $pluginIds[SiteConfig::SITE_LOGIN_PLUGIN_ID];
             $sessionVerifyUrl = ZalyConfig::getSessionVerifyUrl($pluginId);
             $sessionVerifyUrl = ZalyHelper::getFullReqUrl($sessionVerifyUrl);
 
-            $result = $this->ctx->ZalyCurl->request("post", $sessionVerifyUrl, $data);
-            $result = base64_decode($result);
-
-            //解析数据
-            $transportData = new \Zaly\Proto\Core\TransportData();
-            $transportData->mergeFromString($result);
-            $response = $transportData->getBody()->unpack();
-
-            $header = $transportData->getHeader();
-
-            foreach ($header as $key => $val) {
-                if ($key == "_1" && $val != "success") {
-                    throw new Exception("get user info failed");
-                }
-            }
-
-            if (isset($header[\Zaly\Proto\Core\TransportDataHeaderKey::HeaderErrorCode]) && $header[\Zaly\Proto\Core\TransportDataHeaderKey::HeaderErrorCode] != $this->defaultErrorCode) {
-                throw new Exception($header[\Zaly\Proto\Core\TransportDataHeaderKey::HeaderErrorInfo]);
-            }
+            $response = $this->ctx->ZalyCurl->httpRequestByAction('POST', $sessionVerifyUrl, $sessionVerifyRequest, $this->timeOut);
 
             ///获取数据
             $key = $response->getKey();
@@ -125,7 +99,6 @@ class Site_Login
 
             //获取LoginUserProfile
             $loginUserProfile = unserialize($serialize);
-
 
             return $loginUserProfile;
         } catch (Exception $ex) {
@@ -230,7 +203,9 @@ class Site_Login
         if ($config[SiteConfig::SITE_ENABLE_INVITATION_CODE]) {
 
             if (empty($uicInfo) || $uicInfo['status'] == 0 || $uicInfo['userId']) {
-                throw new Exception("invitation code is error");
+                $errorCode = $this->zalyError->errorInvitationCode;
+                $errorInfo = $this->zalyError->getErrorInfo($errorCode);
+                throw new Exception($errorInfo);
             }
 
             //update uic used
@@ -285,8 +260,8 @@ class Site_Login
                 "ipWhenCreated" => "",
                 "timeActive" => $this->ctx->ZalyHelper->getMsectime(),
                 "ipActive" => "",
-                "userAgent" => "",
-                "userAgentType" => "",
+//                "userAgent" => "",
+//                "userAgentType" => "",
                 "clientSideType" => $clientSideType,
             ];
             $this->ctx->SiteSessionTable->insertSessionInfo($sessionInfo);
@@ -296,8 +271,9 @@ class Site_Login
                 "sessionId" => $sessionId,
                 "timeActive" => $this->ctx->ZalyHelper->getMsectime(),
                 "ipActive" => "",
-                "userAgent" => "",
-                "userAgentType" => "",
+//                "userAgent" => "",
+//                "userAgentType" => "",
+                "clientSideType" => $clientSideType,
             ];
             $where = [
                 "userId" => $userId,

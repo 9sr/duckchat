@@ -109,23 +109,27 @@ function shiftWsQueue()
 
 function handleClientReceivedMessage(resp, callback)
 {
-    var result = JSON.parse(resp);
-    if(result.header != undefined && result.header.hasOwnProperty(HeaderErrorCode)) {
-        if(result.header[HeaderErrorCode] != "success") {
-            if(result.header[HeaderErrorCode] == ErrorSessionCode ) {
-                localStorage.clear();
-                window.location.href = "./index.php?action=page.logout";
-                return ;
-            }
-            if(result.action == "api.friend.profile") {
-                callback(result.body);
-            } else {
-                alert(result.header[HeaderErrorInfo]);
-                return;
+    try{
+        var result = JSON.parse(resp);
+        if(result.header != undefined && result.header.hasOwnProperty(HeaderErrorCode)) {
+            if(result.header[HeaderErrorCode] != "success") {
+                if(result.header[HeaderErrorCode] == ErrorSessionCode ) {
+                    localStorage.clear();
+                    window.location.href = "./index.php?action=page.logout";
+                    return ;
+                }
+                if(result.action == "api.friend.profile") {
+                    callback(result.body);
+                } else {
+                    alert(result.header[HeaderErrorInfo]);
+                    return;
+                }
             }
         }
-    }
-    if(callback instanceof Function && callback != undefined) {
-        callback(result.body);
+        if(callback instanceof Function && callback != undefined) {
+            callback(result.body);
+        }
+    }catch (error) {
+        console.log(error.message);
     }
 }

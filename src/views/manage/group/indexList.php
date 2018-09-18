@@ -21,8 +21,6 @@
             background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
-            /*overflow-y: hidden;*/
-
         }
 
         /* mask and new window */
@@ -117,7 +115,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -344,8 +342,8 @@
 
             <?php foreach ($groupList as $key => $profile) { ?>
 
-                <div class="item-row group-list" groupId="<?php echo($profile["groupId"]) ?>">
-                    <div class="item-body">
+                <div class="item-row group-list">
+                    <div class="item-body" onclick="showGroupProfile('<?php echo($profile["groupId"]) ?>');">
                         <div class="item-body-display">
                             <div class="item-body-desc">
                                 <?php echo $profile["name"]; ?>
@@ -492,11 +490,10 @@
 
 <script type="text/javascript">
 
-    $(document).on("click", ".group-list", function () {
-        var groupId = $(this).attr("groupId");
+    function showGroupProfile(groupId) {
         var url = "index.php?action=manage.group.profile&lang=" + getLanguage() + "&groupId=" + groupId;
         zalyjsCommonOpenPage(url);
-    });
+    }
 
 </script>
 

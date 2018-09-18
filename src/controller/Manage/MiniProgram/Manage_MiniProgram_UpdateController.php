@@ -16,13 +16,17 @@ class Manage_MiniProgram_UpdateController extends Manage_CommonController
             'errCode' => "error",
         ];
         try {
-//            $name = $_POST['name'];
+
             $pluginId = $_POST['pluginId'];
             $name = $_POST['name'];
             $value = $_POST['value'];
 
             if (empty($pluginId) || empty($name)) {
                 throw new Exception("error parameters");
+            }
+
+            if ($pluginId == 100) {
+                throw new Exception("forbidden operation");
             }
 
             if ($name == "pluginId") {
@@ -32,7 +36,7 @@ class Manage_MiniProgram_UpdateController extends Manage_CommonController
             $isOk = $this->updateMiniProgramProfile($pluginId, $name, $value);
 
             if ($isOk) {
-                $result[] = "success";
+                $result['errCode'] = "success";
             } else {
                 $result["errInfo"] = "update error";
             }
@@ -40,11 +44,10 @@ class Manage_MiniProgram_UpdateController extends Manage_CommonController
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error($tag, $e);
             $result["errInfo"] = $e->getMessage();
-
         }
-        echo $result;
-        return;
 
+        echo json_encode($result);
+        return;
     }
 
     private function updateMiniProgramProfile($pluginId, $name, $value)

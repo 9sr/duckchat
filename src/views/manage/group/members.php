@@ -21,8 +21,6 @@
             background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
-            overflow-y: hidden;
-
         }
 
         /* mask and new window */
@@ -117,7 +115,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -320,8 +318,6 @@
 
 <body>
 
-<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
-
 <div class="wrapper" id="wrapper">
 
     <div class="layout-all-row">
@@ -463,35 +459,6 @@
     </div>
 </div>
 
-
-<div class="popup-template" style="visibility:hidden;">
-
-    <div class="config-hidden" id="popup-group">
-
-        <div class="flex-container">
-            <div class="header_tip_font popup-group-title" data-local-value="createGroupTip">创建群组</div>
-        </div>
-
-        <div class="" style="text-align: center">
-            <input type="text" class="popup-group-input"
-                   data-local-placeholder="enterGroupNamePlaceholder" placeholder="please input">
-        </div>
-
-        <div class="line"></div>
-
-        <div class="" style="text-align:center;">
-            <?php if ($lang == "1") { ?>
-                <button type="button" class="create_button" url-value="">保存</button>
-            <?php } else { ?>
-                <button type="button" class="create_button" url-value="">Save</button>
-            <?php } ?>
-        </div>
-
-    </div>
-
-</div>
-
-
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
 <script src="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.js"></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>
@@ -615,9 +582,7 @@
 
     $(document).on("click", ".group-members", function () {
         var userId = $(this).attr("userId");
-        alert("userId=" + userId);
         var url = "index.php?action=manage.user.profile&lang=" + getLanguage() + "&userId=" + userId;
-
         zalyjsCommonOpenPage(url);
     });
 

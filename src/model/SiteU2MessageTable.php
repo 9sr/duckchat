@@ -9,6 +9,10 @@
 
 class siteU2MessageTable extends BaseTable
 {
+    /**
+     * @var Wpf_Logger
+     */
+    private $logger;
     private $table = "siteU2Message";
     private $columns = ["id", "msgId", "userId", "fromUserId", "toUserId", "roomType", "msgType", "content", "msgTime"];
 
@@ -18,6 +22,7 @@ class siteU2MessageTable extends BaseTable
 
     function init()
     {
+        $this->logger = $this->ctx->getLogger();
     }
 
     /**
@@ -50,9 +55,9 @@ class siteU2MessageTable extends BaseTable
             $prepare = $this->db->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
 
-            $prepare->bindValue(":offset", $offset);
             $prepare->bindValue(":userId", $userId);
-            $prepare->bindValue(":limitCount", $limitCount);
+            $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+            $prepare->bindValue(":limitCount", $limitCount, PDO::PARAM_INT);
 
             $prepare->execute();
             return $prepare->fetchAll(\PDO::FETCH_ASSOC);
@@ -120,12 +125,16 @@ class siteU2MessageTable extends BaseTable
      */
     public function updatePointer($userId, $deviceId, $clientSideType, $pointer)
     {
-        $result = $this->updateU2Pointer($userId, $deviceId, $clientSideType, $pointer);
+        $tag = __CLASS__ . "->" . __FUNCTION__;
 
-        if (!$result) {
-            $this->saveU2Pointer($userId, $deviceId, $clientSideType, $pointer);
+        try {
+            $result = $this->updateU2Pointer($userId, $deviceId, $clientSideType, $pointer);
+            if (!$result) {
+                $this->saveU2Pointer($userId, $deviceId, $clientSideType, $pointer);
+            }
+        } catch (Exception $e) {
+            $this->logger->error($tag, $e);
         }
-
         return false;
     }
 
@@ -195,8 +204,8 @@ class siteU2MessageTable extends BaseTable
         $data = [
             "userId" => $userId,
             "deviceId" => $deviceId,
-            "clientSideType" => $clientSideType,
-            "pointer" => $pointer
+            "clientSideType" => (int)$clientSideType,
+            "pointer" => (int)$pointer,
         ];
         return $this->insertData($this->pointerTable, $data, $this->pointerColumns);
     }

@@ -6,8 +6,6 @@
     <title><?php if ($lang == "1") { ?>小程序管理<?php } else { ?>Mini Program Management<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!--    <link href="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.css" rel="stylesheet">-->
-
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
 
     <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.css"/>
@@ -127,7 +125,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -389,7 +387,7 @@
     <div class="layout-all-row">
 
         <div class="list-item-center">
-            <div class="item-row" id="miniProgram-add-id">
+            <div class="item-row" id="miniProgram-add-id" onclick="gotoMiniProgramAdd()">
                 <div class="item-body">
                     <div class="item-body-display">
 
@@ -409,7 +407,7 @@
             </div>
             <div class="division-line"></div>
 
-            <div class="item-row" id="miniProgram-list-id">
+            <div class="item-row" id="miniProgram-list-id" onclick="gotoMiniprogramList()">
                 <div class="item-body">
                     <div class="item-body-display">
                         <?php if ($lang == "1") { ?>
@@ -559,18 +557,18 @@
 
 <script type="text/javascript">
 
-    $(document).on("click", "#miniProgram-add-id", function () {
+    function gotoMiniProgramAdd() {
         var url = "index.php?action=manage.miniProgram.add&lang=" + getLanguage();
 
         zalyjsCommonOpenPage(url);
-    });
+    }
 
 
-    $(document).on("click", "#miniProgram-list-id", function () {
+    function gotoMiniprogramList() {
         var url = "index.php?action=manage.miniProgram.list&type=page&lang=" + getLanguage();
         // alert("url=" + url);
         zalyjsCommonOpenPage(url);
-    });
+    }
 
 
     function createNewKey() {

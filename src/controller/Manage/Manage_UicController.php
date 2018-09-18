@@ -14,8 +14,6 @@ class Manage_UicController extends Manage_CommonController
         $page = $_GET['page'];
         $params = ["lang" => $this->language];
 
-        $this->ctx->Wpf_Logger->info("--------------", "page=" . $page);
-
         switch ($page) {
             case "index":
                 $this->toPageIndex($params);
@@ -26,8 +24,6 @@ class Manage_UicController extends Manage_CommonController
             default:
                 $this->toPageIndex($params);
         }
-
-        $this->ctx->Wpf_Logger->info("--------------", json_encode($params));
 
         return;
     }

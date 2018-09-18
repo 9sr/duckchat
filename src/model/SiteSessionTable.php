@@ -87,6 +87,17 @@ class SiteSessionTable extends BaseTable
         return $this->updateInfo($this->table, $where, $sessionInfo, $this->columns);
     }
 
+    public function updateSessionActive($sessionId)
+    {
+        $where = [
+            'sessionId' => $sessionId
+        ];
+        $data = [
+            "timeActive" => $this->getCurrentTimeMills(),
+        ];
+        return $this->updateInfo($this->table, $where, $data, $this->columns);
+    }
+
     public function deleteSession($userId, $sessionId)
     {
         $tag = __CLASS__ . "->" . __FUNCTION__;
@@ -108,21 +119,22 @@ class SiteSessionTable extends BaseTable
     }
 
 
-    public function getUserLatestDeviceId($userId)
+    public function getUserLatestDeviceId($userId, $limit = 1)
     {
         $tag = __CLASS__ . '-' . __FUNCTION__;
         $startTime = microtime(true);
-        $sql = "select deviceId from $this->table where userId=:userId order by timeActive DESC limit 1;";
+        $sql = "select deviceId from $this->table where userId=:userId order by timeActive DESC limit :limit;";
 
         try {
             $prepare = $this->db->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":userId", $userId);
+            $prepare->bindValue(":limit", $limit, PDO::PARAM_INT);
             $flag = $prepare->execute();
-            $userTokenInfo = $prepare->fetch(\PDO::FETCH_ASSOC);
+            $userTokenInfo = $prepare->fetchAll(\PDO::FETCH_ASSOC);
 
-            if ($flag && $userTokenInfo) {
-                return $userTokenInfo['deviceId'];
+            if ($flag) {
+                return $userTokenInfo;
             }
 
         } catch (Exception $e) {

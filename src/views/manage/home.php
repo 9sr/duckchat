@@ -81,7 +81,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -166,7 +166,7 @@
                             <?php if ($lang == "1") { ?>
                                 小程序管理
                             <?php } else { ?>
-                                Mini Program Management
+                                Mini Program
                             <?php } ?>
                         </div>
 

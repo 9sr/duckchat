@@ -74,7 +74,7 @@ class SiteConfigTable extends BaseTable
                 $configKeyStr = implode("','", $configKey);
                 $sql = "select $this->columns from $this->table where configKey in ('$configKeyStr');";
             }
-            $prepare = $this->db->prepare($sql);
+            $prepare = $this->dbSlave->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             if ($configKey !== false && is_string($configKey)) {
                 $prepare->bindValue("configKey", $configKey);

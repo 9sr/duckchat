@@ -21,8 +21,6 @@
             background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
-            overflow-y: hidden;
-
         }
 
         /* mask and new window */
@@ -117,7 +115,7 @@
             width: 100%;
             /*height: 11rem;*/
             /*background: rgba(255, 255, 255, 1);*/
-            padding-top: 20px;
+            padding-bottom: 11px;
             /*padding-left: 1rem;*/
 
         }
@@ -319,8 +317,6 @@
 </head>
 
 <body>
-
-<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
 
 <div class="wrapper" id="wrapper">
 

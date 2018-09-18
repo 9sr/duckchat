@@ -15,19 +15,18 @@ class Manage_MiniProgram_ListController extends Manage_CommonController
 
         $type = $_GET['type'];
 
+        $method = $_SERVER['REQUEST_METHOD'];
+        if ($method == 'POST') {
+            echo "no data";
 
-        if ($type == "page") {
+        } else {
             $miniProgramList = $this->getMiniProgramList(0, 100);
 
             $params["miniProgramList"] = $miniProgramList;
 
-            $this->ctx->Wpf_Logger->info("===============", json_encode($params));
+            $this->ctx->Wpf_Logger->info("manage.miniprogram.list", "list=" . json_encode($params));
 
             echo $this->display("manage_miniProgram_list", $params);
-        } else {
-            //for list data
-
-            echo "no data";
         }
 
         return;

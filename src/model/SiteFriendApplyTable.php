@@ -9,7 +9,7 @@
 
 class SiteFriendApplyTable extends BaseTable
 {
-    private $table = "SiteFriendApply";
+    private $table = "siteFriendApply";
     private $columns = [
         "id",
         "userId",
@@ -77,7 +77,7 @@ class SiteFriendApplyTable extends BaseTable
         }
         $whereStr = trim($whereStr, "and");
         $sql = "select $this->selectColumns from $this->table where $whereStr limit :limit, :offset";
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         foreach ($where as $key => $val) {
             $prepare->bindValue(":$key", $val);
@@ -107,7 +107,7 @@ class SiteFriendApplyTable extends BaseTable
                 where 
                     userId=:userId and friendId=:friendId order by applyTime desc limit 1;";
 
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
 
         $prepare->bindValue(":userId", $userId);
@@ -144,13 +144,12 @@ class SiteFriendApplyTable extends BaseTable
             order BY
                 siteFriendApply.applyTime DESC 
             limit 
-                :offset, :limit;
-        ";
-        $prepare = $this->db->prepare($sql);
+                :offset, :limit;";
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":friendId", $friendId);
-        $prepare->bindValue(":offset", $offset);
-        $prepare->bindValue(":limit", $limit);
+        $prepare->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $prepare->bindValue(":limit", $limit, PDO::PARAM_INT);
         $prepare->execute();
         $results = $prepare->fetchAll(\PDO::FETCH_ASSOC);
         $this->ctx->Wpf_Logger->dbLog($tag, $sql, [$friendId, $offset, $limit], "", "");
@@ -174,7 +173,7 @@ class SiteFriendApplyTable extends BaseTable
             where 
                 siteFriendApply.friendId = :friendId
         ";
-        $prepare = $this->db->prepare($sql);
+        $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":friendId", $friendId);
         $prepare->execute();

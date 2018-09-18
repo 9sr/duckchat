@@ -98,7 +98,6 @@ class ZalyHelper
 
     }
 
-
     public static function quickSortMsg($arr)
     {
         $len = count($arr);
@@ -150,7 +149,7 @@ class ZalyHelper
 
     public static function getFullReqUrl($reqUrl)
     {
-        try{
+        try {
             $reqUrlStruct = parse_url($reqUrl);
 
             if (!empty($reqUrlStruct["scheme"])) {
@@ -158,33 +157,48 @@ class ZalyHelper
                 $reqUrl = $reqUrlStruct["path"] . $query;
             }
 
-            $urlInfo = parse_url($reqUrl);
-            $defaultScheme = $_SERVER['REQUEST_SCHEME'];
+            $defaultScheme = "http";
+            if ((!empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') ||
+                (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ||
+                (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) {
+                $defaultScheme = 'https';
+            }
+
             $defaultHost = $_SERVER['HTTP_HOST'];
             $schema = "";
             $host = "";
             // 必须用scheme，防止用户多输//
-            if (empty($urlInfo["scheme"]) && empty($urlInfo['host'])) {
+            if (empty($reqUrlStruct["scheme"]) && empty($reqUrlStruct['host'])) {
                 $schema = $defaultScheme;
                 $host = $defaultHost;
             } else {
-                $schema = $urlInfo["scheme"];
-                $host = $urlInfo["host"];
-                $port = empty($urlInfo["port"]) ? "" : ":{$urlInfo["port"]}";
+                $schema = $reqUrlStruct["scheme"];
+                $host = $reqUrlStruct["host"];
+                $port = empty($reqUrlStruct["port"]) ? "" : ":{$reqUrlStruct["port"]}";
                 $host = $host . $port;
             }
-            if(strpos($reqUrl, "/") == 0) {
+
+            if (strpos($reqUrl, "/") == 0) {
                 $fullUrl = "{$schema}://{$host}{$reqUrl}";
-            } elseif(strpos($reqUrl, "./") == 0){
+            } elseif (strpos($reqUrl, "./") == 0) {
                 $reqUrl = str_replace("./", "/", $reqUrl);
                 $fullUrl = "{$schema}://{$host}{$reqUrl}";
             } else {
                 $fullUrl = "{$schema}://{$host}/{$reqUrl}";
             }
-
             return $fullUrl;
-        }catch (Exception $ex) {
+        } catch (Exception $ex) {
             return $reqUrl;
         }
+    }
+
+    public static function isUicNumber($str)
+    {
+        return preg_match("/^[0-9]{6,20}$/", $str);
+    }
+
+    public static function isLoginName($str)
+    {
+        return preg_match("/^[A-Za-z0-9_]+$/", $str);
     }
 }
