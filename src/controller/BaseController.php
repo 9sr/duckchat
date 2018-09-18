@@ -134,7 +134,7 @@ abstract class BaseController extends \Wpf_Controller
         if (!$this->checkDBIsExist()) {
             $this->action = $_GET['action'];
             $this->requestTransportData = new \Zaly\Proto\Core\TransportData();
-            $this->setRpcError($this->errorSiteInit, ZalyConfig::getApiPageSiteInit());
+            $this->setRpcError($this->errorSiteInit, ZalyConfig::getConfig("apiPageSiteInit"));
             $this->bodyFormatType = isset($_GET['body_format']) ? $_GET['body_format'] : "";
             $this->bodyFormatType = strtolower($this->bodyFormatType);
             if (!in_array($this->bodyFormatType, $this->bodyFormatArr)) {

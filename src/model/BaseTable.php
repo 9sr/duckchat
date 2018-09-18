@@ -150,7 +150,7 @@ class BaseTable
         $prepare = $this->db->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         foreach ($data as $key => $val) {
-            if (!in_array($updateField, $defaultColumns)) {
+            if (!in_array($key, $defaultColumns)) {
                 continue;
             }
             $prepare->bindValue(":" . $key, $val);
