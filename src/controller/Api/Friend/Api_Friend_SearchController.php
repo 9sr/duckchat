@@ -29,7 +29,7 @@ class Api_Friend_SearchController extends BaseController
         $offset = $request->getOffset();
         $count = $request->getCount(); // default 20
 
-        $this->ctx->Wpf_Logger->info("api.friend.search", "=================" . $request->serializeToJsonString());
+        $this->ctx->Wpf_Logger->info("api.friend.search", "request=" . $request->serializeToJsonString());
 
         $response = new \Zaly\Proto\Site\ApiFriendSearchResponse();
 

@@ -48,7 +48,7 @@ class Message_Client
                 $textBody = $text->getBody();
                 $textBody = substr($textBody, 0, 2048);
                 $trimBody = trim($textBody);
-                if (empty($trimBody)) {
+                if (empty($trimBody) && ($trimBody != '0' || $trimBody != 0)) {
                     return false;
                 }
                 $text->setBody($trimBody);
@@ -118,7 +118,8 @@ class Message_Client
                 $textBody = $text->getBody();
                 $textBody = substr($textBody, 0, 2048);
                 $trimBody = trim($textBody);
-                if (empty($trimBody)) {
+
+                if (empty($trimBody) && ($trimBody != '0' || $trimBody != 0)) {
                     return false;
                 }
                 $text->setBody($trimBody);
@@ -179,8 +180,8 @@ class Message_Client
                 "userId" => $userId,
                 "fromUserId" => $fromUserId,
                 "toUserId" => $toUserId,
-                "roomType" => $roomType,
-                "msgType" => $msgType,
+                "roomType" => (int)$roomType,
+                "msgType" => (int)$msgType,
                 "content" => empty($content) ? "" : $content->serializeToJsonString(),
                 "msgTime" => $this->ctx->ZalyHelper->getMsectime()
             ];

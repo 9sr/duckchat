@@ -86,7 +86,7 @@ class  Api_Friend_ApplyController extends BaseController
             $errorCode = $this->zalyError->errorFriendApplyFriendExists;
             $errorInfo = $this->zalyError->getErrorInfo($errorCode);
             $this->setRpcError($errorCode, $errorInfo);
-            throw new Exception("no user id");
+            throw new Exception($errorInfo);
         }
     }
 
@@ -98,11 +98,17 @@ class  Api_Friend_ApplyController extends BaseController
      */
     private function addApplyData($toUserId, $greetings)
     {
+        if (empty($greetings)) {
+            $greetings = "";
+        } else {
+            $greetings = trim($greetings);
+        }
+
         try {
             $data = [
                 "userId" => $this->userId,
                 "friendId" => $toUserId,
-                "greetings" => trim($greetings),
+                "greetings" => $greetings,
                 "applyTime" => ZalyHelper::getMsectime(),
             ];
             $this->ctx->SiteFriendApplyTable->insertApplyData($data);
@@ -112,9 +118,12 @@ class  Api_Friend_ApplyController extends BaseController
                 "friendId" => $toUserId,
             ];
             $data = [
-                "greetings" => trim($greetings),
                 "applyTime" => ZalyHelper::getMsectime(),
             ];
+
+            if (isset($greetings)) {
+                $data['greetings'] = $greetings;
+            }
             $this->ctx->SiteFriendApplyTable->updateApplyData($where, $data);
         }
     }

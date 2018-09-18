@@ -9,6 +9,10 @@
 
 class SiteGroupMessageTable extends BaseTable
 {
+    /**
+     * @var Wpf_Logger
+     */
+    private $logger;
     private $table = "siteGroupMessage";
     private $groupTable = "siteGroup";
     private $columns = ["id", "msgId", "groupId", "fromUserId", "msgType", "content", "msgTime"];
@@ -18,6 +22,7 @@ class SiteGroupMessageTable extends BaseTable
 
     function init()
     {
+        $this->logger = $this->ctx->getLogger();
     }
 
     /**
@@ -112,12 +117,15 @@ class SiteGroupMessageTable extends BaseTable
 
     public function updatePointer($groupId, $userId, $deviceId, $pointer)
     {
-        $result = $this->updateGroupPointer($groupId, $userId, $deviceId, $pointer);
-
-        if (!$result) {
-            $this->saveGroupPointer($groupId, $userId, $deviceId, $pointer);
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+        try {
+            $result = $this->updateGroupPointer($groupId, $userId, $deviceId, $pointer);
+            if (!$result) {
+                return $this->saveGroupPointer($groupId, $userId, $deviceId, $pointer);
+            }
+        } catch (Exception $e) {
+            $this->logger->error($tag, $e);
         }
-
         return false;
     }
 

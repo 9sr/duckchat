@@ -166,7 +166,7 @@
                             <?php if ($lang == "1") { ?>
                                 小程序管理
                             <?php } else { ?>
-                                Mini Program Management
+                                Mini Program
                             <?php } ?>
                         </div>
 

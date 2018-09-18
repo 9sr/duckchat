@@ -22,22 +22,6 @@
 
         }
 
-        /* mask and new window */
-        .wrapper-mask {
-            background: rgba(0, 0, 0, 0.8);
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            position: fixed;
-            z-index: 9999;
-            overflow: hidden;
-            visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .wrapper {
             width: 100%;
             height: 100%;
@@ -79,33 +63,9 @@
             height: 25px;
         }
 
-        .item-header {
-            width: 50px;
-            height: 50px;
-        }
-
-        .site-manage-image {
-            width: 40px;
-            height: 40px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            margin-left: 16px;
-            /*border-radius: 50%;*/
-        }
-
-        .site-logo-image {
-            width: 30px;
-            height: 30px;
-            /*margin-top: 5px;*/
-            margin-bottom: 7px;
-            /*border-radius: 50%;*/
-        }
-
         .item-body {
             width: 100%;
             height: 44px;
-            /*margin-left: 1rem;*/
-            margin-top: 1rem;
             flex-direction: row;
         }
 
@@ -127,27 +87,12 @@
             /*line-height: 3rem;*/
         }
 
-        .item-body-tail {
-            text-align: center;
-            margin-right: 10px;
-            font-size: 16px;
-            height: 3rem;
-            /*color: rgba(76, 59, 177, 1);*/
-            line-height: 3rem;
-        }
-
         .item-body-desc {
-            height: 3rem;
+            height: 44px;
             font-size: 16px;
             /*color: rgba(76, 59, 177, 1);*/
             margin-left: 10px;
-            line-height: 3rem;
-        }
-
-        .more-img {
-            width: 8px;
-            height: 13px;
-            /*border-radius: 50%;*/
+            line-height: 44px;
         }
 
         .line {
@@ -167,67 +112,8 @@
             overflow: hidden;
         }
 
-        #popup-group {
-            width: 50rem;
-            height: 30rem;
-            background: rgba(255, 255, 255, 1);
-            border-radius: 0.94rem;
-        }
-
-        .header_tip_font {
-            justify-content: center;
-            text-align: center;
-            margin-top: 5rem;
-            height: 3.75rem;
-            font-size: 2.63rem;
-            color: rgba(76, 59, 177, 1);
-            line-height: 3.75rem;
-        }
-
-        .popup-group-input {
-            background-color: #ffffff;
-            border-style: none;
-            outline: none;
-            height: 1.88rem;
-            font-size: 1.88rem;
-            font-family: PingFangSC-Regular;
-            /*color: rgba(205, 205, 205, 1);*/
-            line-height: 1.88rem;
-            /*margin-left: 10rem;*/
-            margin-top: 5rem;
-            padding: 0.5rem;
-            width: 55%;
-            overflow: hidden;
-        }
-
-        .data_tip {
-            height: 1.69rem;
-            font-size: 1.31rem;
-            font-family: PingFangSC-Regular;
-            color: rgba(153, 153, 153, 1);
-            line-height: 1.69rem;
-            margin-left: 23rem;
-            width: 29rem;
-            word-break: break-all;
-            padding: 0.5rem;
-        }
-
-        .create_button,
-        .create_button:hover,
-        .create_button:focus,
-        .create_button:active {
-            margin-top: 4rem;
-            width: 28.14rem;
-            height: 4.69rem;
-            background: rgba(76, 59, 177, 1);
-            border-radius: 0.94rem;
-            font-size: 1.67rem;
-            color: rgba(255, 255, 255, 1);
-            line-height: 1.67rem;
-        }
-
         .site-pubk-pem {
-            height: 200px;
+            height: 230px;
             background: rgba(245, 245, 245, 1);
             margin: 5px 15px 5px 15px;
         }
@@ -287,9 +173,6 @@
             </div>
             <div class="division-line"></div>
 
-            <div class="item-bottom">
-
-            </div>
         </div>
 
     </div>

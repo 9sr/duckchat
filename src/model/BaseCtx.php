@@ -82,11 +82,12 @@ class BaseCtx extends Wpf_Ctx
                     $dbUserName = $mysqlConfig['dbUserName'];
                     $dbPwssword = $mysqlConfig['dbPassword'];
                     $dbDsn = "mysql:host=$dbHost;port=$dbPort;dbname=$dbName;";
+
                     $options = array(
                         PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
                         PDO::ATTR_PERSISTENT => true,
                     );
-                    try{
+                    try {
                         $this->db = new \PDO($dbDsn, $dbUserName, $dbPwssword, $options);//创建一个pdo对象
                     } catch (Exception $ex) {
                         throw new Exception($ex->getMessage());

@@ -19,6 +19,8 @@ class InstallDBController
     private $sampleConfigName = "config.sample.php";
     private $defaultUic = "000000";
     private $uic;
+
+    private $lang = Zaly\Proto\Core\UserClientLangType::UserClientLangZH;
     /**
      * @var \PDO
      */
@@ -33,8 +35,6 @@ class InstallDBController
     {
         $this->logger = $content->getLogger();
         $this->helper = new ZalyHelper();
-
-        $this->logger->info("---------------------", "iniiiiiiiii");
     }
 
     public function doIndex()
@@ -63,6 +63,8 @@ class InstallDBController
             }
         }
 
+        $this->lang = $_GET['lang'];
+
         $method = $_SERVER['REQUEST_METHOD'];
         if ($method == 'POST') {
             //install site
@@ -70,11 +72,11 @@ class InstallDBController
                 $serverHost = $_SERVER['HTTP_HOST'];
                 $port = $_SERVER['SERVER_PORT'];
                 $dbType = $_POST['dbType'];
-                $this->uic = isset($_POST['uic']) && $_POST['uic'] !=""? $_POST['uic'] : $this->defaultUic;
+                $this->uic = isset($_POST['uic']) && $_POST['uic'] != "" ? $_POST['uic'] : $this->defaultUic;
 
                 $isUic = ZalyHelper::isUicNumber($this->uic);
-                if(!$isUic) {
-                    echo "邀请码格式不正确，长度6-20位的数字";
+                if (!$isUic) {
+                    echo $this->lang == 1 ? "邀请码格式不正确，长度6-20位的数字" : "invitation code error";
                     return;
                 }
 
@@ -89,23 +91,20 @@ class InstallDBController
                     $config['dbType'] = "mysql";
                     if (isset($_POST['dbName'])) {
                         $config['mysql']['dbName'] = $_POST['dbName'];
-//                        $config['mysqlSlave']['slave_0']['dbName'] = $_POST['dbName'];
                     }
                     if (isset($_POST['dbHost'])) {
                         $config['mysql']['dbHost'] = $_POST['dbHost'];
-//                        $config['mysqlSlave']['slave_0']['dbHost'] = $_POST['dbHost'];;
                     }
                     if (isset($_POST['dbPort'])) {
                         $config['mysql']['dbPort'] = $_POST['dbPort'];
-//                        $config['mysqlSlave']['slave_0']['dbPort'] = $_POST['dbPort'];
+                    } else {
+                        $config['mysql']['dbPort'] = 3306;
                     }
                     if (isset($_POST['dbUserName'])) {
                         $config['mysql']['dbUserName'] = $_POST['dbUserName'];
-//                        $config['mysqlSlave']['slave_0']['dbUserName'] = $_POST['dbUserName'];
                     }
                     if (isset($_POST['dbPassword'])) {
                         $config['mysql']['dbPassword'] = $_POST['dbPassword'];
-//                        $config['mysqlSlave']['slave_0']['dbPassword'] = $_POST['dbPassword'];
                     }
 
                 } else {
@@ -114,7 +113,7 @@ class InstallDBController
                     $dbNameKey = ZalyHelper::generateStrKey(8);
                     $sqliteName = "db." . md5($dbNameKey) . ".sqlite3";
 
-                    if (isset($_POST['sqliteDbFile']) && $_POST['sqliteDbFile']!="") {
+                    if (isset($_POST['sqliteDbFile']) && $_POST['sqliteDbFile'] != "") {
                         $dbFileInfos = pathinfo($_POST['sqliteDbFile']);
                         $dbFileDir = $dbFileInfos['dirname'];
                         $dbFileName = $dbFileInfos['basename'];
@@ -318,7 +317,6 @@ class InstallDBController
         $this->_insertSiteOwnerUic($ownerUic);
 
         $this->initPluginMiniProgram();
-
         return;
     }
 
@@ -352,11 +350,15 @@ class InstallDBController
 
     private function _insertSiteOwnerUic($code = "000000")
     {
-        $timeStamp = $this->helper->getMsectime();
-        $sql = "insert into siteUic(code,status,createTime) values('$code',100,$timeStamp)";
-        $prepare = $this->db->prepare($sql);
-        $this->handelPrepareError($prepare);
-        $prepare->execute();
+        try {
+            $timeStamp = $this->helper->getMsectime();
+            $sql = "insert into siteUic(code,status,createTime) values('$code',100,$timeStamp)";
+            $prepare = $this->db->prepare($sql);
+            $this->handelPrepareError($prepare);
+            $prepare->execute();
+        } catch (Exception $e) {
+            $this->logger->error("init.add.uic", $e);
+        }
     }
 
 
@@ -368,7 +370,7 @@ class InstallDBController
         $miniPrograms = [
             [
                 'pluginId' => 100,
-                'name' => "管理后台小程序",
+                'name' => "管理后台",
                 'logo' => "",
                 'sort' => 10,
                 'landingPageUrl' => "index.php?action=manage.index",
@@ -414,33 +416,33 @@ class InstallDBController
                 'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
                 'authKey' => "",
             ],
-            [
-                'pluginId' => 104,
-                'name' => "gif小程序",
-                'logo' => "",
-                'sort' => 2, //order = 2
-                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
-                'landingPageWithProxy' => 1, //1 表示走site代理
-                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageU2Message,
-                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
-                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
-                'authKey' => "",
-            ],
-            [
-                'pluginId' => 104,
-                'name' => "gif小程序",
-                'logo' => "",
-                'sort' => 2, //order = 2
-                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
-                'landingPageWithProxy' => 1, //1 表示走site代理
-                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageGroupMessage,
-                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
-                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
-                'authKey' => "",
-            ],
+//            [
+//                'pluginId' => 104,
+//                'name' => "gif小程序",
+//                'logo' => "",
+//                'sort' => 2, //order = 2
+//                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
+//                'landingPageWithProxy' => 1, //1 表示走site代理
+//                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageU2Message,
+//                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
+//                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+//                'authKey' => "",
+//            ],
+//            [
+//                'pluginId' => 104,
+//                'name' => "gif小程序",
+//                'logo' => "",
+//                'sort' => 2, //order = 2
+//                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
+//                'landingPageWithProxy' => 1, //1 表示走site代理
+//                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageGroupMessage,
+//                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
+//                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+//                'authKey' => "",
+//            ],
             [
                 'pluginId' => 105,
-                'name' => "账户安全",
+                'name' => "账户密码管理小程序",
                 'logo' => "",
                 'sort' => 104, //order = 2
                 'landingPageUrl' => "index.php?action=miniProgram.passport.account",

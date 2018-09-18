@@ -24,7 +24,7 @@ class SiteUserFriendTable extends BaseTable
 
     private $selectColumns;
 
-    private $userTable = "SiteUser";
+    private $userTable = "siteUser";
 
     public function init()
     {

@@ -99,10 +99,12 @@ class Im_Cts_MessageController extends Im_BaseController
         //send friend news
         $this->ctx->Message_News->tellClientNews($this->isGroupRoom, $this->toId);
 
-        //send push to friend
-        $pushText = $this->getPushText($msgType, $message);
+        if ($result) {
+            //send push to friend
+            $pushText = $this->getPushText($msgType, $message);
 
-        $this->ctx->Push_Client->sendNotification($msgRoomType, $msgType, $fromUserId, $this->toId, $pushText);
+            $this->ctx->Push_Client->sendNotification($msgRoomType, $msgType, $fromUserId, $this->toId, $pushText);
+        }
     }
 
     private function returnU2MessageIfNotFriend($msgId, $msgRoomType, $fromUserId, $toUserId)
@@ -162,6 +164,10 @@ class Im_Cts_MessageController extends Im_BaseController
     // check u2-message if lawful
     private function getIsFriendRelation($userId, $friendUserId)
     {
+        if ($userId == $friendUserId) {
+            return false;
+        }
+
         $tag = __CLASS__ . "->" . __FUNCTION__;
         try {
             $isFriend = $this->ctx->SiteUserFriendTable->isFriend($userId, $friendUserId);
@@ -170,7 +176,7 @@ class Im_Cts_MessageController extends Im_BaseController
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error($tag, $e);
         }
-        return true;
+        return false;
     }
 
     /**

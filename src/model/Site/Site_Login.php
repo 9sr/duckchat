@@ -89,24 +89,7 @@ class Site_Login
             $sessionVerifyUrl = ZalyConfig::getSessionVerifyUrl($pluginId);
             $sessionVerifyUrl = ZalyHelper::getFullReqUrl($sessionVerifyUrl);
 
-            $result = $this->ctx->ZalyCurl->requestWithActionByPb($this->sessionVerifyAction, $sessionVerifyRequest, $sessionVerifyUrl, "POST", true, $this->timeOut);
-            $result = base64_decode($result);
-            //解析数据
-            $transportData = new \Zaly\Proto\Core\TransportData();
-            $transportData->mergeFromString($result);
-            $response = $transportData->getBody()->unpack();
-
-            $header = $transportData->getHeader();
-
-            foreach ($header as $key => $val) {
-                if ($key == "_1" && $val != "success") {
-                    throw new Exception("get user info failed");
-                }
-            }
-
-            if (isset($header[\Zaly\Proto\Core\TransportDataHeaderKey::HeaderErrorCode]) && $header[\Zaly\Proto\Core\TransportDataHeaderKey::HeaderErrorCode] != $this->defaultErrorCode) {
-                throw new Exception($header[\Zaly\Proto\Core\TransportDataHeaderKey::HeaderErrorInfo]);
-            }
+            $response = $this->ctx->ZalyCurl->httpRequestByAction('POST', $sessionVerifyUrl, $sessionVerifyRequest, $this->timeOut);
 
             ///获取数据
             $key = $response->getKey();
@@ -116,7 +99,6 @@ class Site_Login
 
             //获取LoginUserProfile
             $loginUserProfile = unserialize($serialize);
-
 
             return $loginUserProfile;
         } catch (Exception $ex) {
