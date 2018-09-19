@@ -1,0 +1,7 @@
+duckchat_private/
+src/config.php
+src/attachment/
+*.sqlite3
+.idea/
+logs/
+
