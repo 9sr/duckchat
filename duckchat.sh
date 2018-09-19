@@ -35,7 +35,8 @@ dockerContainerIdExists=false
 
 # check permission
 if [ "$sysOS" = "Linux"  ];then
-	if [ $UID -ne 0 ]; then
+    uid=`id -u`
+	if [ $uid -ne 0 ]; then
     	echo "[DuckChat] 需要 root 权限，请使用: " sudo sh $0
     	exit 1
 	fi
@@ -203,6 +204,8 @@ case $operation in
 				exit
 			fi
 			
+			echo "[DuckChat] 请稍后片刻"
+			sleep 5
 			chmod -R 777 $originDirName/src
 			echo "[DuckChat] 启动duckchat镜像成功"
 		fi
