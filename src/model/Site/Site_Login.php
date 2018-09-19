@@ -166,8 +166,9 @@ class Site_Login
         }
 
         //这里
-        $sessionId = $this->insertOrUpdateUserSession($userProfile, $devicePubkPem, $clientSideType);
-        $userProfile['sessionId'] = $sessionId;
+        $sessionInfo = $this->insertOrUpdateUserSession($userProfile, $devicePubkPem, $clientSideType);
+        $userProfile['sessionId'] = $sessionInfo['sessionId'];
+        $userProfile['deviceId'] = $sessionInfo['deviceId'];
         return $userProfile;
     }
 
@@ -281,7 +282,10 @@ class Site_Login
             ];
             $this->ctx->SiteSessionTable->updateSessionInfo($where, $sessionInfo);
         }
-        return $sessionId;
+
+        $sessionInfo['sessionId'] = $sessionId;
+        $sessionInfo['deviceId'] = $deviceId;
+        return $sessionInfo;
     }
 
     /**

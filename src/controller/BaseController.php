@@ -39,7 +39,7 @@ abstract class BaseController extends \Wpf_Controller
         "api.passport.passwordModifyPassword",
         "api.plugin.proxy",
     ];
-    protected $sessionIdTimeOut = 36000000; //10个小时的毫秒
+    protected $sessionIdTimeOut = 3600000; //一个小时
     protected $userId;
     protected $sessionId;
     protected $deviceId;
@@ -48,6 +48,8 @@ abstract class BaseController extends \Wpf_Controller
     public $defaultPageSize = 200;
     public $defaultPage = 1;
     public $errorSiteInit = "error.site.init";
+
+    protected $siteConfig;
 
     protected $language = Zaly\Proto\Core\UserClientLangType::UserClientLangEN;
 
@@ -256,62 +258,53 @@ abstract class BaseController extends \Wpf_Controller
 
     public function checkSessionId($action)
     {
+        $this->siteConfig = $this->ctx->Site_Config->getAllConfig();
+
+        if (empty($this->siteConfig)) {
+            $this->returnErrorSession("site config is empty");
+        }
+
         $tag = __CLASS__ . "-" . __FUNCTION__;
-        // $this->ctx->Wpf_Logger->error($tag, "check session id ");
         $requestTransportData = $this->requestTransportData;
         $headers = $requestTransportData->getHeader();
         if (in_array($action, $this->whiteAction)) {
             return;
         }
-//        // $headers[TransportDataHeaderKey::HeaderSessionid] = "6a578fd6-fb5e-4a98-a903-ce1ffa7da1d2";
+
         if (!isset($headers[TransportDataHeaderKey::HeaderSessionid])) {
-            $this->ctx->Wpf_Logger->error($tag, "session is null ");
-            $errorCode = $this->zalyError->errorSession;
-            $errorInfo = $this->zalyError->getErrorInfo($errorCode);
-            $this->setRpcError($errorCode, $errorInfo);
-            $this->rpcReturn($this->action, null);
-            die();
+            $this->returnErrorSession();
         }
+
         $this->sessionId = $headers[TransportDataHeaderKey::HeaderSessionid];
 
+        //check session by sessionId
         $sessionInfo = $this->ctx->SiteSessionTable->getSessionInfoBySessionId($this->sessionId);
-        if (!$sessionInfo) {
-//            $this->ctx->Wpf_Logger->error($tag, "session  info is null , session id = " . $this->sessionId);
-            $errorCode = $this->zalyError->errorSession;
-            $errorInfo = $this->zalyError->getErrorInfo($errorCode);
-            $this->setRpcError($errorCode, $errorInfo);
-            $this->rpcReturn($this->action, null);
-            die();
-        }
-        //expire time
-        $sessionCreatedTime = $sessionInfo['timeWhenCreated'];
-        $timeActive = $sessionInfo['timeActive'];
-        $nowTime = $this->ctx->ZalyHelper->getMsectime();
 
-        ///TODO 临时屏蔽 sessionId 时间过
-//        if (($nowTime - $timeActive) > $this->sessionIdTimeOut) {
-//            $this->ctx->Wpf_Logger->error($tag, "session  time out  , session id = " . $sessionId);
-//
-//            $errorCode = $this->zalyError->errorSession;
-//            $errorInfo = $this->zalyError->getErrorInfo($errorCode);
-//            $this->setRpcError($errorCode, $errorInfo);
-//            $this->rpcReturn($this->action, null);
-//            die();
-//        }
+        if (empty($sessionInfo) || !$this->checkSessionByTime($sessionInfo)) {
+            $this->returnErrorSession();
+        }
+
         $this->userId = $sessionInfo['userId'];
         $this->deviceId = $sessionInfo['deviceId'];
         $this->userInfo = $this->ctx->SiteUserTable->getUserByUserId($this->userId);
-        if (!$this->userInfo) {
-            $this->ctx->Wpf_Logger->error($tag, "user is null  , session id = " . $this->sessionId);
-            $errorCode = $this->zalyError->errorSession;
-            $errorInfo = $this->zalyError->getErrorInfo($errorCode);
-            $this->setRpcError($errorCode, $errorInfo);
-            $this->rpcReturn($this->action, null);
-            die();
+        if (empty($this->userInfo)) {
+            $this->returnErrorSession();
         }
 
         //update session
         $this->ctx->SiteSessionTable->updateSessionActive($this->sessionId);
+    }
+
+    private function checkSessionByTime($sessionInfo)
+    {
+        //check session by session time
+        $currentTime = $this->ctx->ZalyHelper->getMsectime();
+        $timeActive = $sessionInfo['timeActive'];
+
+        if (($currentTime - $timeActive) < $this->sessionIdTimeOut * 24 * 365) {
+            return true;
+        }
+        return false;
     }
 
     public function getPublicUserProfile($userInfo)
@@ -381,5 +374,16 @@ abstract class BaseController extends \Wpf_Controller
             $this->zalyError = $this->ctx->ZalyErrorEn;
         }
 
+    }
+
+    private function returnErrorSession($errorInfo = false)
+    {
+        $errorCode = $this->zalyError->errorSession;
+        if (empty($errorInfo)) {
+            $errorInfo = $this->zalyError->getErrorInfo($errorCode);
+        }
+        $this->setRpcError($errorCode, $errorInfo);
+        $this->rpcReturn($this->action, null);
+        die();
     }
 }

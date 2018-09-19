@@ -31,7 +31,6 @@ class Api_Site_LoginController extends \BaseController
             $loginName = $request->getLoginName();
             $userExists = $this->checkUserExists($loginName);
             $isRegister = $request->getIsRegister();
-//            $this->ctx->Wpf_Logger->info("api.site.login", "userExists=" . $userExists);
 
             if (!$userExists && $isRegister == false) {
                 $errorCode = $this->zalyError->errorUserNeedRegister;
@@ -62,13 +61,12 @@ class Api_Site_LoginController extends \BaseController
             $userProfile = $this->ctx->Site_Login->checkPreSessionIdFromPlatform($preSessionId, $devicePubkPem, $clientType);
 
             $realSessionId = $userProfile['sessionId'];
-
-            $this->ctx->Wpf_Logger->info("api.site.login", "get platform sessionid=" . $realSessionId);
-
             $response = $this->buildApiSiteLoginResponse($userProfile, $realSessionId);
 
             $this->ctx->Wpf_Logger->info("api.site.login", "response=" . $response->serializeToJsonString());
 
+            //clearLimitSession
+            $this->clearLimitSession($userProfile['userId'], $userProfile['deviceId']);
             //back to request
             $this->setRpcError($this->defaultErrorCode, "");
             $this->rpcReturn($transportData->getAction(), $response);
@@ -123,5 +121,44 @@ class Api_Site_LoginController extends \BaseController
             return false;
         }
     }
+
+    private function clearLimitSession($userId, $deviceId)
+    {
+        $this->logger->error("================", "userId=" . $userId . " deviceId=" . $deviceId);
+        //limit mobile
+        $limitMobileNum = $this->siteConfig[SiteConfig::SITE_MOBILE_NUM];
+
+        $sessionInfos = $this->ctx->SiteSessionTable->getUserSessionsByUserId($userId);
+
+        $this->logger->error("================", "sessionInfo count=" . count($sessionInfos));
+
+        if (count($sessionInfos) > $limitMobileNum) {
+            $deleteDeviceIds = [];
+            $num = 1;
+            foreach ($sessionInfos as $sessionInfo) {
+                $delDeviceId = $sessionInfo['deviceId'];
+                if ($num >= $limitMobileNum) {
+                    //需要删除的
+
+                    if ($delDeviceId != $deviceId) {
+                        $deleteDeviceIds[] = $delDeviceId;
+                    }
+                } else {
+                    //不需要删除
+                    if ($delDeviceId != $deviceId) {
+                        $num++;
+                    }
+                }
+            }
+
+            $this->logger->error("================", "delete deviceIds=" . json_encode($deleteDeviceIds));
+
+            $result = $this->ctx->SiteSessionTable->removeLimitSession($userId, $deleteDeviceIds);
+            $this->logger->error("================", "clear session result=" . $result);
+        }
+
+
+    }
+
 }
 

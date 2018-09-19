@@ -8,7 +8,10 @@
 
 class SiteSessionTable extends BaseTable
 {
-
+    /**
+     * @var Wpf_Logger
+     */
+    private $logger;
     private $table = "siteSession";
     private $columns = [
         "id",
@@ -31,6 +34,7 @@ class SiteSessionTable extends BaseTable
     public function init()
     {
         $this->selectColumns = implode(",", $this->columns);
+        $this->logger = $this->ctx->getLogger();
     }
 
     public function getSessionInfoByUserId($userId)
@@ -47,11 +51,32 @@ class SiteSessionTable extends BaseTable
         return $sessionInfo;
     }
 
+
+    public function getUserSessionsByUserId($userId, $clientType = Zaly\Proto\Core\UserClientType::UserClientMobileApp)
+    {
+        $startTime = microtime(true);
+        $tag = __CLASS__ . '-' . __FUNCTION__;
+
+        $sql = "select 
+                  $this->selectColumns from $this->table 
+                where userId=:userId and clientSideType=:clientSideType order by timeActive DESC;";
+        $prepare = $this->db->prepare($sql);
+        $this->handlePrepareError($tag, $prepare);
+
+        $prepare->bindValue(":userId", $userId);
+        $prepare->bindValue(":clientSideType", $clientType, PDO::PARAM_STR);
+        $prepare->execute();
+
+        $sessionInfo = $prepare->fetchAll(\PDO::FETCH_ASSOC);
+        $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $userId, $startTime);
+        return $sessionInfo;
+    }
+
     public function getAllSessionInfoByUserId($userId)
     {
         $startTime = microtime(true);
         $tag = __CLASS__ . '-' . __FUNCTION__;
-        $sql = "select $this->selectColumns from $this->table where userId=:userId order by timeActive DESC limit 4";
+        $sql = "select $this->selectColumns from $this->table where userId=:userId";
         $prepare = $this->db->prepare($sql);
         $this->handlePrepareError($tag, $prepare);
         $prepare->bindValue(":userId", $userId);
@@ -182,6 +207,83 @@ class SiteSessionTable extends BaseTable
             $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $userId, $startTime);
         } finally {
 
+        }
+        return false;
+    }
+
+    //禁止使用
+    public function deleteLimitSession($userId, $limitCount, $clientType = Zaly\Proto\Core\UserClientType::UserClientMobileApp)
+    {
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+        $startTime = microtime(true);
+
+        if (empty($limitCount)) {
+            $limitCount = 1;
+        }
+
+        try {
+            $sql = "delete from $this->table 
+                  where userId=:userId and clientSideType=:clientSideType
+                  and deviceId NOT IN (
+                    select s.deviceId from (
+                          select  deviceId from $this->table 
+                          where userId=:userId and clientSideType=:clientSideType order by timeActive DESC limit :limitNum) as s
+                  );";
+            $prepare = $this->db->prepare($sql);
+            $this->handlePrepareError($tag, $prepare);
+            $prepare->bindValue(":userId", $userId);
+            $prepare->bindValue(":limitNum", (int)$limitCount, PDO::PARAM_INT);
+            $prepare->bindValue(":clientSideType", $clientType, PDO::PARAM_INT);
+            $result = $prepare->execute();
+
+            return $result;
+        } catch (Exception $e) {
+            $this->logger->error($tag, $e);
+        } finally {
+            $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $userId, $startTime);
+        }
+        return false;
+    }
+
+    //使用此方法替代上面方法
+
+    /**
+     * @param string $userId
+     * @param $deviceIds
+     * @param int $clientType
+     * @return bool
+     */
+    public function removeLimitSession($userId, $deviceIds, $clientType = Zaly\Proto\Core\UserClientType::UserClientMobileApp)
+    {
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+        $startTime = microtime(true);
+
+        try {
+            if (empty($deviceIds)) {
+                return true;
+            }
+
+            $deviceIdStr = implode("','", $deviceIds);
+
+            $sql = "delete from $this->table 
+                  where userId=:userId and clientSideType=:clientSideType
+                  and deviceId IN ('{$deviceIdStr}');";
+
+            $this->logger->error("=============", "sql-=" . $sql);
+
+            $prepare = $this->db->prepare($sql);
+            $this->handlePrepareError($tag, $prepare);
+            $prepare->bindValue(":userId", $userId);
+            $prepare->bindValue(":clientSideType", $clientType, PDO::PARAM_INT);
+            $result = $prepare->execute();
+
+            $this->logger->error("=============", "result-=" . var_export($prepare->errorInfo(), true));
+
+            return $result;
+        } catch (Exception $e) {
+            $this->logger->error($tag, $e);
+        } finally {
+            $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $userId, $startTime);
         }
         return false;
     }
