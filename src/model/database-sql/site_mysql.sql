@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS siteConfig(
                   id INTEGER PRIMARY KEY AUTO_INCREMENT,
                   configKey VARCHAR(100) NOT NULL,
                   configValue TEXT ,
-                  UNIQUE (configKey));
+                  UNIQUE (configKey))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE  IF NOT EXISTS siteUser (
                    id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -18,7 +18,7 @@ CREATE TABLE  IF NOT EXISTS siteUser (
                    countryCode VARCHAR(10),
                    phoneId VARCHAR(11),
                    friendVersion INTEGER,
-                   timeReg BIGINT);
+                   timeReg BIGINT)DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE if not EXISTS siteFriendApply(
               id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -26,7 +26,7 @@ CREATE TABLE if not EXISTS siteFriendApply(
               friendId VARCHAR(100) NOT NULL,
               greetings VARCHAR(100),
               applyTime BIGINT,
-              UNIQUE(userId, friendId));
+              UNIQUE(userId, friendId))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS siteUserFriend(
                     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS siteUserFriend(
                     mute BOOLEAN,/*1互为好友 2我删除了对方 3临时会话 */
                     version INTEGER,
                     addTime BIGINT,/*是否静音 1表示静音，0表示没有静音*/
-                    UNIQUE(userId, friendId));
+                    UNIQUE(userId, friendId))DEFAULT CHARSET=utf8mb4;
 
 
 create table IF NOT EXISTS siteSession(
@@ -57,7 +57,7 @@ create table IF NOT EXISTS siteSession(
                 gatewayURL VARCHAR(100),
                 gatewaySocketId VARCHAR(100),
                 UNIQUE(sessionId,userId),
-                UNIQUE(userId,deviceId));
+                UNIQUE(userId,deviceId))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE  IF NOT EXISTS siteGroup (
                id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -75,8 +75,7 @@ CREATE TABLE  IF NOT EXISTS siteGroup (
                 status INTEGER default 1,/*表示群的状态， 1表示正常*/
                 isWidget INTEGER default 0, /*表示1是挂件，0不是挂件*/
                timeCreate BIGINT,
-               UNIQUE(groupId)
-        );
+               UNIQUE(groupId))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS siteGroupUser(
                 id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -85,8 +84,7 @@ CREATE TABLE IF NOT EXISTS siteGroupUser(
                memberType INTEGER,
                isMute BOOLEAN default 0 ,/*是否静音 1表示静音，0表示没有静音*/
                timeJoin BIGINT,
-               UNIQUE(groupId, userId)
-        );
+               UNIQUE(groupId, userId))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS siteU2Message(
             id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -98,7 +96,13 @@ CREATE TABLE IF NOT EXISTS siteU2Message(
             msgType INTEGER,
             content TEXT,   -- 可能是一个json，可能是一个proto toString
             msgTime BIGINT,
-            INDEX(userId));
+            INDEX(userId))DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE siteU2Message CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+ALTER TABLE siteU2Message MODIFY COLUMN content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+
 
 CREATE TABLE IF NOT EXISTS siteU2MessagePointer(
             id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -106,8 +110,7 @@ CREATE TABLE IF NOT EXISTS siteU2MessagePointer(
             deviceId VARCHAR(100),
             clientSideType INTEGER,     -- 0:无效，1:手机客户端  2:web客户端
             pointer INTEGER,
-            UNIQUE(userId,deviceId)
-            );
+            UNIQUE(userId,deviceId))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS siteGroupMessage(
             id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -117,7 +120,11 @@ CREATE TABLE IF NOT EXISTS siteGroupMessage(
             msgType INTEGER,
             content TEXT,
             msgTime BIGINT,
-            INDEX(groupId));
+            INDEX(groupId))DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE siteGroupMessage CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+ALTER TABLE siteGroupMessage MODIFY COLUMN content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS passportPassword(
                 id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -130,23 +137,21 @@ CREATE TABLE IF NOT EXISTS passportPassword(
                 timeReg BIGINT,
                 unique(userId),
                 unique(email),
-                unique(loginName));
+                unique(loginName))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS passportPasswordPreSession(
                 id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 userId VARCHAR(100) NOT NULL,
                 preSessionId VARCHAR(100) NOT NULL,
                 sitePubkPem TEXT,
-                unique(userId)
-            );
+                unique(userId))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS passportPasswordToken(
                 id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 loginName VARCHAR(100) NOT NULL,
                 token VARCHAR(100) NOT NULL,
                 timeReg BIGINT,
-                UNIQUE(loginName)
-            );
+                UNIQUE(loginName))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS siteGroupMessagePointer(
             id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -155,7 +160,7 @@ CREATE TABLE IF NOT EXISTS siteGroupMessagePointer(
             deviceId VARCHAR(100),
             clientSideType INTEGER, -- 0:无效，1:手机客户端  2:web客户端
             pointer INTEGER,
-            UNIQUE(groupId,userId,deviceId));
+            UNIQUE(groupId,userId,deviceId))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE sitePlugin(
               id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -170,8 +175,7 @@ CREATE TABLE sitePlugin(
               permissionType INTEGER ,    /*使用权限*/
               authKey VARCHAR(32) NOT NULL,
               addTime BIGINT,
-              UNIQUE(pluginId,usageType));
-
+              UNIQUE(pluginId,usageType))DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS siteUic(
             id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -180,4 +184,4 @@ CREATE TABLE IF NOT EXISTS siteUic(
             status INTEGER, -- 0：无效，1：所有人可用 2：会员可用等
             createTime BIGINT,
             useTime BIGINT,
-            INDEX(userId));
+            INDEX(userId))DEFAULT CHARSET=utf8mb4;

@@ -652,22 +652,20 @@
 
         <div class="list-item-center">
 
-            <!--      part1: site name      -->
             <div class="item-row">
                 <div class="item-body">
                     <div class="item-body-display">
                         <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">开启SSL功能</div>
+                            <div class="item-body-desc">手机端登陆最大数</div>
                         <?php } else { ?>
-                            <div class="item-body-desc">Open SSL</div>
+                            <div class="item-body-desc">Max Mobile Num</div>
                         <?php } ?>
 
                         <div class="item-body-tail">
-                            <?php if ($lang == "1") { ?>
-                                暂不支持此功能
-                            <?php } else { ?>
-                                nonsupport
-                            <?php } ?>
+                            <div class="item-body-value"><?php echo $maxMobileNum ?></div>
+                            <div class="item-body-value"><img class="more-img"
+                                                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+                            </div>
                         </div>
                     </div>
 
@@ -694,15 +692,10 @@
                     </div>
                 </div>
             </div>
-
-
-            <?php if ($openWebEdition == 1) { ?>
             <div class="division-line"></div>
-            <div class="item-row" id="web-ws-port">
-                <?php }else{ ?>
-                <div class="division-line"></div>
-                <div class="item-row" style="display: none;" id="web-ws-port">
-                    <?php } ?>
+
+            <div class="web-condition" style='<?php echo $openWebEdition == 1 ? '' : 'display: none;'; ?>'>
+                <div class="item-row" id="web-ws-port">
                     <div class="item-body">
                         <div class="item-body-display">
                             <?php if ($lang == "1") { ?>
@@ -734,907 +727,928 @@
                 </div>
                 <div class="division-line"></div>
 
-
-                <div class="item-row">
+                <div class="item-row" id="max-web-num">
                     <div class="item-body">
                         <div class="item-body-display">
                             <?php if ($lang == "1") { ?>
-                                <div class="item-body-desc">是否开启Web挂件功能</div>
+                                <div class="item-body-desc">Web端最大登陆数</div>
                             <?php } else { ?>
-                                <div class="item-body-desc">Enable Web-Widget</div>
+                                <div class="item-body-desc">Max Web Num</div>
                             <?php } ?>
 
                             <div class="item-body-tail">
-                                <?php if ($enableWebWidget == 1) { ?>
-                                    <input id="enableWebWidgetSwitch" class="weui_switch" type="checkbox" checked>
-                                <?php } else { ?>
-                                    <input id="enableWebWidgetSwitch" class="weui_switch" type="checkbox">
-                                <?php } ?>
+                                <div class="item-body-value"><?php echo $maxWebNum; ?></div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="division-line"></div>
-            </div>
-        </div>
-
-
-        <!--  part 6  -->
-        <div class="layout-all-row">
-
-            <div class="list-item-center">
-
-                <div class="item-row" id="site-managers">
-                    <div class="item-body">
-                        <div class="item-body-display">
-                            <?php if ($lang == "1") { ?>
-                                <div class="item-body-desc">站点管理员</div>
-                            <?php } else { ?>
-                                <div class="item-body-desc">Site Managers</div>
-                            <?php } ?>
-
-                            <div class="item-body-tail">
                                 <div class="item-body-value"><img class="more-img"
                                                                   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
                 <div class="division-line"></div>
 
-                <div class="item-row" id="site-default-friends">
-                    <div class="item-body">
-                        <div class="item-body-display">
-                            <?php if ($lang == "1") { ?>
-                                <div class="item-body-desc">站点默认好友</div>
-                            <?php } else { ?>
-                                <div class="item-body-desc">Site Default Friends</div>
-                            <?php } ?>
-
-                            <div class="item-body-tail">
-                                <div class="item-body-value"><img class="more-img"
-                                                                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="division-line"></div>
-
-                <div class="item-row" id="site-default-groups">
-                    <div class="item-body">
-                        <div class="item-body-display">
-
-                            <?php if ($lang == "1") { ?>
-                                <div class="item-body-desc">站点默认群组</div>
-                            <?php } else { ?>
-                                <div class="item-body-desc">Site Default Groups</div>
-                            <?php } ?>
-
-                            <div class="item-body-tail">
-                                <div class="item-body-value"><img class="more-img"
-                                                                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="division-line"></div>
-            </div>
-        </div>
-
-        <!--   part 7  -->
-        <div class="layout-all-row">
-
-            <div class="list-item-center">
-
-                <div class="item-row" id="site-rsa-pubk-pem">
-                    <div class="item-body">
-                        <div class="item-body-display">
-
-                            <?php if ($lang == "1") { ?>
-                                <div class="item-body-desc">站点公钥</div>
-                            <?php } else { ?>
-                                <div class="item-body-desc">Site Public Key</div>
-                            <?php } ?>
-
-                            <div class="item-body-tail">
-                                <div class="item-body-value"><img class="more-img"
-                                                                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="division-line"></div>
-
-                <div class="item-row" id="site-owner" siteOwner="<?php echo $owner ?>">
-                    <div class="item-body">
-                        <div class="item-body-display">
-                            <?php if ($lang == "1") { ?>
-                                <div class="item-body-desc">站长</div>
-                            <?php } else { ?>
-                                <div class="item-body-desc">Site Administrator</div>
-                            <?php } ?>
-
-                            <div class="item-body-tail">
-                                <div class="item-body-value"><img class="more-img"
-                                                                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="division-line"></div>
-
-                <div class="item-bottom">
-
-                </div>
             </div>
 
+            <!--            <div class="item-row">-->
+            <!--                <div class="item-body">-->
+            <!--                    <div class="item-body-display">-->
+            <!--                        --><?php //if ($lang == "1") { ?>
+            <!--                            <div class="item-body-desc">是否开启Web挂件功能</div>-->
+            <!--                        --><?php //} else { ?>
+            <!--                            <div class="item-body-desc">Enable Web-Widget</div>-->
+            <!--                        --><?php //} ?>
+            <!---->
+            <!--                        <div class="item-body-tail">-->
+            <!--                            --><?php //if ($enableWebWidget == 1) { ?>
+            <!--                                <input id="enableWebWidgetSwitch" class="weui_switch" type="checkbox" checked>-->
+            <!--                            --><?php //} else { ?>
+            <!--                                <input id="enableWebWidgetSwitch" class="weui_switch" type="checkbox">-->
+            <!--                            --><?php //} ?>
+            <!---->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--            <div class="division-line"></div>-->
         </div>
     </div>
 
 
-    <div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
+    <!--  part 6  -->
+    <div class="layout-all-row">
 
-    <div class="popup-template" style="display:none;">
+        <div class="list-item-center">
 
-        <div class="config-hidden" id="popup-group">
+            <div class="item-row" id="site-managers">
+                <div class="item-body">
+                    <div class="item-body-display">
+                        <?php if ($lang == "1") { ?>
+                            <div class="item-body-desc">站点管理员</div>
+                        <?php } else { ?>
+                            <div class="item-body-desc">Site Managers</div>
+                        <?php } ?>
 
-            <div class="flex-container">
-                <div class="header_tip_font popup-group-title">创建群组</div>
+                        <div class="item-body-tail">
+                            <div class="item-body-value"><img class="more-img"
+                                                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+            <div class="division-line"></div>
 
-            <div class="" style="text-align: center">
-                <input type="text" class="popup-group-input"
-                       data-local-placeholder="enterGroupNamePlaceholder" placeholder="please input">
+            <div class="item-row" id="site-default-friends">
+                <div class="item-body">
+                    <div class="item-body-display">
+                        <?php if ($lang == "1") { ?>
+                            <div class="item-body-desc">站点默认好友</div>
+                        <?php } else { ?>
+                            <div class="item-body-desc">Site Default Friends</div>
+                        <?php } ?>
+
+                        <div class="item-body-tail">
+                            <div class="item-body-value"><img class="more-img"
+                                                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+            <div class="division-line"></div>
 
-            <div class="line"></div>
+            <div class="item-row" id="site-default-groups">
+                <div class="item-body">
+                    <div class="item-body-display">
 
-            <div class="" style="text-align:center;">
-                <?php if ($lang == "1") { ?>
-                    <button id="updatePopupButton" type="button" class="create_button" key-value=""
-                            onclick="updateDataValue();">确认
-                    </button>
-                <?php } else { ?>
-                    <button id="updatePopupButton" type="button" class="create_button" key-value=""
-                            onclick="updateDataValue();">Confirm
-                    </button>
-                <?php } ?>
+                        <?php if ($lang == "1") { ?>
+                            <div class="item-body-desc">站点默认群组</div>
+                        <?php } else { ?>
+                            <div class="item-body-desc">Site Default Groups</div>
+                        <?php } ?>
+
+                        <div class="item-body-tail">
+                            <div class="item-body-value"><img class="more-img"
+                                                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+            <div class="division-line"></div>
+        </div>
+    </div>
+
+    <!--   part 7  -->
+    <div class="layout-all-row">
+
+        <div class="list-item-center">
+
+            <div class="item-row" id="site-rsa-pubk-pem">
+                <div class="item-body">
+                    <div class="item-body-display">
+
+                        <?php if ($lang == "1") { ?>
+                            <div class="item-body-desc">站点公钥</div>
+                        <?php } else { ?>
+                            <div class="item-body-desc">Site Public Key</div>
+                        <?php } ?>
+
+                        <div class="item-body-tail">
+                            <div class="item-body-value"><img class="more-img"
+                                                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="division-line"></div>
+
+            <div class="item-row" id="site-owner" siteOwner="<?php echo $owner ?>">
+                <div class="item-body">
+                    <div class="item-body-display">
+                        <?php if ($lang == "1") { ?>
+                            <div class="item-body-desc">站长</div>
+                        <?php } else { ?>
+                            <div class="item-body-desc">Site Administrator</div>
+                        <?php } ?>
+
+                        <div class="item-body-tail">
+                            <div class="item-body-value">
+                                <img class="more-img"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="division-line"></div>
 
         </div>
 
     </div>
+</div>
 
 
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
-    <script type="text/javascript" src="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>
+<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
 
-    <script type="text/javascript">
+<div class="popup-template" style="display:none;">
 
-        function isAndroid() {
+    <div class="config-hidden" id="popup-group">
 
-            var userAgent = window.navigator.userAgent.toLowerCase();
-            if (userAgent.indexOf("android") != -1) {
-                return true;
+        <div class="flex-container">
+            <div class="header_tip_font popup-group-title">创建群组</div>
+        </div>
+
+        <div class="" style="text-align: center">
+            <input type="text" class="popup-group-input"
+                   data-local-placeholder="enterGroupNamePlaceholder" placeholder="please input">
+        </div>
+
+        <div class="line"></div>
+
+        <div class="" style="text-align:center;">
+            <?php if ($lang == "1") { ?>
+                <button id="updatePopupButton" type="button" class="create_button" key-value=""
+                        onclick="updateDataValue();">确认
+                </button>
+            <?php } else { ?>
+                <button id="updatePopupButton" type="button" class="create_button" key-value=""
+                        onclick="updateDataValue();">Confirm
+                </button>
+            <?php } ?>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>
+
+<script type="text/javascript">
+
+    function isAndroid() {
+
+        var userAgent = window.navigator.userAgent.toLowerCase();
+        if (userAgent.indexOf("android") != -1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function isMobile() {
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            return true;
+        }
+        return false;
+    }
+
+    function getLanguage() {
+        var nl = navigator.language;
+        if ("zh-cn" == nl || "zh-CN" == nl) {
+            return 1;
+        }
+        return 0;
+    }
+
+
+    function zalyjsAjaxPostJSON(url, body, callback) {
+        zalyjsAjaxPost(url, jsonToQueryString(body), function (data) {
+            var json = JSON.parse(data)
+            callback(json)
+        })
+    }
+
+
+    function zalyjsNavOpenPage(url) {
+        var messageBody = {}
+        messageBody["url"] = url
+        messageBody = JSON.stringify(messageBody)
+
+        if (isAndroid()) {
+            window.Android.zalyjsNavOpenPage(messageBody)
+        } else {
+            window.webkit.messageHandlers.zalyjsNavOpenPage.postMessage(messageBody)
+        }
+    }
+
+    function zalyjsCommonAjaxGet(url, callBack) {
+        $.ajax({
+            url: url,
+            method: "GET",
+            success: function (result) {
+
+                callBack(url, result);
+
+            },
+            error: function (err) {
+                alert("error");
+            }
+        });
+
+    }
+
+
+    function zalyjsCommonAjaxPost(url, value, callBack) {
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: value,
+            success: function (result) {
+                callBack(url, value, result);
+            },
+            error: function (err) {
+                alert("error");
+            }
+        });
+
+    }
+
+    function zalyjsCommonAjaxPostJson(url, jsonBody, callBack) {
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: jsonBody,
+            success: function (result) {
+
+                callBack(url, jsonBody, result);
+
+            },
+            error: function (err) {
+                alert("error");
+            }
+        });
+
+    }
+
+    /**
+     * _blank    在新窗口中打开被链接文档。
+     * _self    默认。在相同的框架中打开被链接文档。
+     * _parent    在父框架集中打开被链接文档。
+     * _top    在整个窗口中打开被链接文档。
+     * framename    在指定的框架中打开被链接文档。
+     *
+     * @param url
+     * @param target
+     */
+    function zalyjsCommonOpenPage(url, target = "_blank") {
+        // window.open(url, target);
+        location.href = url;
+    }
+
+</script>
+
+<script type="text/javascript">
+
+    function uploadFile(obj) {
+        $("#" + obj).val("");
+        $("#" + obj).click();
+    }
+
+
+    function uploadImageFile(obj) {
+
+        if (obj) {
+            if (obj.files) {
+                var formData = new FormData();
+
+                formData.append("file", obj.files.item(0));
+                formData.append("fileType", "FileImage");
+                formData.append("isMessageAttachment", false);
+
+                var src = window.URL.createObjectURL(obj.files.item(0));
+
+                uploadFileToServer(formData, src);
+
+                //上传以后本地展示的
+                $(".site-logo-image").attr("src", src);
+            }
+            return obj.value;
+        }
+
+    }
+
+    function uploadFileToServer(formData, src) {
+
+        var url = "./index.php?action=http.file.uploadWeb";
+
+        if (isMobile()) {
+            url = "/_api_file_upload_/?fileType=1";  //fileType=1,表示文件
+        }
+
+        $.ajax({
+            url: url,
+            type: "post",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (imageFileIdResult) {
+
+                if (imageFileIdResult) {
+                    var fileId = imageFileIdResult;
+                    if (isMobile()) {
+                        var res = JSON.parse(imageFileIdResult);
+                        fileId = res.fileId;
+                    }
+                    updateSiteLogo(fileId);
+                } else {
+                    alert(getLanguage() == 1 ? "上传返回结果空 " : "empty response");
+                }
+
+            },
+            error: function (err) {
+                alert("update image error");
+                return false;
+            }
+        });
+    }
+
+    function updateSiteLogo(imageFileId) {
+        var url = "index.php?action=manage.config.update";
+        var data = {
+            'key': 'logo',
+            'value': imageFileId,
+        };
+        zalyjsCommonAjaxPostJson(url, data, updateLogoResponse);
+    }
+
+    function updateLogoResponse(url, data, result) {
+        var res = JSON.parse(result);
+
+        if (res.errCode) {
+
+            var fileId = data.value;
+            console.log("updateLogoResponse imageId fileId==" + fileId);
+
+            showSiteLogo(fileId);
+        } else {
+            alert("errorInfo:" + res.errInfo);
+        }
+    }
+
+    downloadFileUrl = "./index.php?action=http.file.downloadFile";
+
+
+    function showSiteLogo(fileId) {
+
+        var requestUrl = "./_api_file_download_/test?fileId=" + fileId;
+
+
+        if (!isMobile()) {
+            requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
+        }
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
+                var blob = this.response;
+                var src = window.URL.createObjectURL(blob);
+                console.log("showSiteLogo imageId response src=" + src);
+                $(".site-logo-image").attr("src", src);
+            }
+        };
+        xhttp.open("GET", requestUrl, true);
+        xhttp.responseType = "blob";
+        // xhttp.setRequestHeader('Cache-Control', "max-age=2592000, public");
+        xhttp.send();
+    }
+
+    function showWindow(jqElement) {
+        jqElement.css("visibility", "visible");
+        $(".wrapper-mask").css("visibility", "visible").append(jqElement);
+    }
+
+
+    function removeWindow(jqElement) {
+        jqElement.remove();
+        $(".popup-template").append(jqElement);
+        $(".wrapper-mask").css("visibility", "hidden");
+    }
+
+
+    $(document).mouseup(function (e) {
+        var targetId = e.target.id;
+        var targetClassName = e.target.className;
+
+        if (targetId == "wrapper-mask") {
+            var wrapperMask = document.getElementById("wrapper-mask");
+            var length = wrapperMask.children.length;
+            var i;
+            for (i = 0; i < length; i++) {
+                var node = wrapperMask.children[i];
+                node.remove();
+                // addTemplate(node);
+                $(".popup-template").append(node);
+                $(".popup-template").hide();
+            }
+            $(".popup-group-input").val("");
+            $("#updatePopupButton").attr("data", "");
+            wrapperMask.style.visibility = "hidden";
+        }
+    });
+
+
+    $(function () {
+        var fileId = $("#site-logo-fileid").attr("fileId");
+        showSiteLogo(fileId)
+    });
+
+    function updateDataValue() {
+
+        var key = $("#updatePopupButton").attr("key-value");
+
+        var url = "index.php?action=manage.config.update&key=" + key;
+
+        var value = $.trim($(".popup-group-input").val());
+
+        var data = {
+            'key': key,
+            'value': value,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, updateConfigResponse);
+
+        // close
+        removeWindow($(".config-hidden"));
+    }
+
+    function updateConfigResponse(url, data, result) {
+        var res = JSON.parse(result);
+        if ("success" == res.errCode) {
+            window.location.reload();
+        } else {
+            alert("error:" + result.errInfo);
+        }
+    }
+
+    $(document).on("click", "#site-name", function () {
+        var title = $(this).find(".item-body-desc").html();
+        var inputBody = $(this).find(".item-body-value").html();
+
+        showWindow($(".config-hidden"));
+
+        $(".popup-group-title").html(title);
+        $(".popup-group-input").val(inputBody);
+        $("#updatePopupButton").attr("key-value", "name");
+    });
+
+    $(document).on("click", "#group-max-members", function () {
+        var title = $(this).find(".item-body-desc").html();
+        var inputBody = $(this).find(".item-body-value").html();
+
+        showWindow($(".config-hidden"));
+
+        $(".popup-group-title").html(title);
+        $(".popup-group-input").val(inputBody);
+        $("#updatePopupButton").attr("key-value", "maxGroupMembers");
+    });
+
+
+    $(document).on("click", "#web-ws-port", function () {
+        var title = $(this).find(".item-body-desc").html();
+        var inputBody = $(this).find(".item-body-value").html();
+
+        showWindow($(".config-hidden"));
+
+        $(".popup-group-title").html(title);
+        $(".popup-group-input").val(inputBody);
+        $("#updatePopupButton").attr("key-value", "wsPort");
+    });
+
+    //enable realName
+    $("#enableRealNameSwitch").change(function () {
+        var isChecked = $(this).is(':checked');
+        var url = "index.php?action=manage.config.update&key=enableRealName";
+
+        var data = {
+            'key': 'enableRealName',
+            'value': isChecked ? 1 : 0,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, enableRealNameResponse);
+
+    });
+
+    function enableRealNameResponse(url, data, result) {
+        if (result) {
+
+            var res = JSON.parse(result);
+
+            if (!"success" == res.errCode) {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
             }
 
-            return false;
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
         }
+    }
 
-        function isMobile() {
-            if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
-                return true;
+
+    //update uic
+    $("#enableUicSwitch").change(function () {
+        var isChecked = $(this).is(':checked');
+        var url = "index.php?action=manage.config.update&key=enableInvitationCode";
+
+        var data = {
+            'key': 'enableInvitationCode',
+            'value': isChecked ? 1 : 0,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, enableUicResponse);
+
+    });
+
+    function enableUicResponse(url, data, result) {
+        if (result) {
+
+            var res = JSON.parse(result);
+
+            if (!"success" == res.errCode) {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
             }
-            return false;
-        }
 
-        function getLanguage() {
-            var nl = navigator.language;
-            if ("zh-cn" == nl || "zh-CN" == nl) {
-                return 1;
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
+        }
+    }
+
+
+    //enable add friend
+    $("#enableAddFriendSwitch").change(function () {
+        var isChecked = $(this).is(':checked');
+        var url = "index.php?action=manage.config.update&key=enableAddFriend";
+
+        var data = {
+            'key': 'enableAddFriend',
+            'value': isChecked ? 1 : 0,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, enableAddFriendResponse);
+    });
+
+    function enableAddFriendResponse(url, data, result) {
+        if (result) {
+
+            var res = JSON.parse(result);
+
+            if (!"success" == res.errCode) {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
             }
-            return 0;
+
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
         }
+    }
 
+    //enable tmp chat
+    $("#enableTmpChatSwitch").change(function () {
+        var isChecked = $(this).is(':checked');
+        var url = "index.php?action=manage.config.update&key=enableTmpChat";
 
-        function zalyjsAjaxPostJSON(url, body, callback) {
-            zalyjsAjaxPost(url, jsonToQueryString(body), function (data) {
-                var json = JSON.parse(data)
-                callback(json)
-            })
+        var data = {
+            'key': 'enableTmpChat',
+            'value': isChecked ? 1 : 0,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, enableTmpChatResponse);
+    });
+
+    function enableTmpChatResponse(url, data, result) {
+        if (result) {
+
+            var res = JSON.parse(result);
+
+            if (!"success" == res.errCode) {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
+
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
         }
+    }
+
+    //enable create group
+    $("#enableCreateGroupSwitch").change(function () {
+        var isChecked = $(this).is(':checked');
+        var url = "index.php?action=manage.config.update&key=enableCreateGroup";
+
+        var data = {
+            'key': 'enableCreateGroup',
+            'value': isChecked ? 1 : 0,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, enableCreateGroupResponse);
+    });
+
+    function enableCreateGroupResponse(url, data, result) {
+        if (result) {
+
+            var res = JSON.parse(result);
+
+            if (!"success" == res.errCode) {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
+
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
+        }
+    }
+
+    //enable share group chat
+    $("#enableShareGroupSwitch").change(function () {
+        var isChecked = $(this).is(':checked');
+        var url = "index.php?action=manage.config.update&key=enableShareGroup";
+
+        var data = {
+            'key': 'enableShareGroup',
+            'value': isChecked ? 1 : 0,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, enableShareGroupResponse);
+    });
+
+    function enableShareGroupResponse(url, data, result) {
+        if (result) {
+
+            var res = JSON.parse(result);
+
+            if (!"success" == res.errCode) {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
+
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
+        }
+    }
+
+    //enable share user
+    $("#enableShareUserSwitch").change(function () {
+        var isChecked = $(this).is(':checked');
+        var url = "index.php?action=manage.config.update&key=enableShareUser";
+
+        var data = {
+            'key': 'enableShareUser',
+            'value': isChecked ? 1 : 0,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, enableShareUserResponse);
+    });
+
+    function enableShareUserResponse(url, data, result) {
+        if (result) {
+
+            var res = JSON.parse(result);
+
+            if (!"success" == res.errCode) {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
+
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
+        }
+    }
+
+    $("#enableAddFriendSwitch").change(function () {
+        var isChecked = $(this).is(':checked')
+        var url = "index.php?action=manage.config.update&key=enableAddFriend";
+
+        var data = {
+            'key': 'enableAddFriend',
+            'value': isChecked ? 1 : 0,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, enableAddFriendResponse);
+    });
+
+    function enableAddFriendResponse(url, data, result) {
+        if (result) {
+
+            var res = JSON.parse(result);
+
+            if (!"success" == res.errCode) {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
+
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
+        }
+    }
 
 
-        function zalyjsNavOpenPage(url) {
-            var messageBody = {}
-            messageBody["url"] = url
-            messageBody = JSON.stringify(messageBody)
+    //open web edition
+    $("#openWebEditionSwitch").change(function () {
+        var isChecked = $(this).is(':checked');
+        var url = "index.php?action=manage.config.update&key=openWebEdition";
 
-            if (isAndroid()) {
-                window.Android.zalyjsNavOpenPage(messageBody)
+        var data = {
+            'key': 'openWebEdition',
+            'value': isChecked ? 1 : 0,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, updateOpenWebResponse);
+
+    });
+
+    function updateOpenWebResponse(url, data, result) {
+
+        var res = JSON.parse(result);
+        if (res.errCode) {
+
+            var openWebIsChecked = $("#openWebEditionSwitch").is(':checked');
+
+            if (openWebIsChecked) {
+                $(".web-condition").show();
             } else {
-                window.webkit.messageHandlers.zalyjsNavOpenPage.postMessage(messageBody)
+                $(".web-condition").hide();
             }
+
+        } else {
+            alert("update error");
+            // window.location.reload();
         }
 
-        function zalyjsCommonAjaxGet(url, callBack) {
-            $.ajax({
-                url: url,
-                method: "GET",
-                success: function (result) {
+    }
 
-                    callBack(url, result);
+    //open web widgit
+    $("#enableWebWidgetSwitch").change(function () {
+        var isChecked = $(this).is(':checked')
+        var url = "index.php?action=manage.config.update&key=enableWebWidget";
 
-                },
-                error: function (err) {
-                    alert("error");
-                }
-            });
+        var data = {
+            'key': 'enableWebWidget',
+            'value': isChecked ? 1 : 0,
+        };
 
+        zalyjsCommonAjaxPostJson(url, data, enableWebWidgetResponse);
+    });
+
+    function enableWebWidgetResponse(url, data, result) {
+        if (result) {
+            var res = JSON.parse(result);
+
+            if (!"success" == res.errCode) {
+                alert(getLanguage() == 1 ? "操作失败" : "update error");
+            }
+
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
         }
+    }
+
+    //site managers
+    $("#site-managers").click(function () {
+        var url = "index.php?action=manage.config.siteManagers&lang=" + getLanguage();
+        zalyjsCommonOpenPage(url);
+    });
+
+    //site default friend
+    $("#site-default-friends").click(function () {
+        var url = "index.php?action=manage.config.defaultFriends&lang=" + getLanguage();
+        zalyjsCommonOpenPage(url);
+    });
+
+    //site default groups
+    $("#site-default-groups").click(function () {
+        var url = "index.php?action=manage.config.defaultGroups&lang=" + getLanguage();
+        zalyjsCommonOpenPage(url);
+    });
+
+    //site RSAPublicKeyPem
+    $("#site-rsa-pubk-pem").click(function () {
+        var url = "index.php?action=manage.config.pubk&lang=" + getLanguage();
+        zalyjsCommonOpenPage(url);
+    });
+
+    //site owner
+    $("#site-owner").click(function () {
+        var userId = $(this).attr("siteOwner");
+        var url = "index.php?action=manage.user.profile&lang=" + getLanguage() + "&userId=" + userId;
+        zalyjsCommonOpenPage(url);
+    });
 
 
-        function zalyjsCommonAjaxPost(url, value, callBack) {
-            $.ajax({
-                url: url,
-                method: "POST",
-                data: value,
-                success: function (result) {
-                    callBack(url, value, result);
-                },
-                error: function (err) {
-                    alert("error");
-                }
-            });
-
-        }
-
-        function zalyjsCommonAjaxPostJson(url, jsonBody, callBack) {
-            $.ajax({
-                url: url,
-                method: "POST",
-                data: jsonBody,
-                success: function (result) {
-
-                    callBack(url, jsonBody, result);
-
-                },
-                error: function (err) {
-                    alert("error");
-                }
-            });
-
-        }
+    //push 推送 类型
+    $(document).on("click", '#push-notice-type', function () {
+        var language = getLanguage();
 
         /**
-         * _blank    在新窗口中打开被链接文档。
-         * _self    默认。在相同的框架中打开被链接文档。
-         * _parent    在父框架集中打开被链接文档。
-         * _top    在整个窗口中打开被链接文档。
-         * framename    在指定的框架中打开被链接文档。
-         *
-         * @param url
-         * @param target
+         * 0:禁止推送
+         * 1:只推送通知
+         * 2:推送文本
          */
-        function zalyjsCommonOpenPage(url, target = "_blank") {
-            // window.open(url, target);
-            location.href = url;
-        }
-
-    </script>
-
-    <script type="text/javascript">
-
-        function uploadFile(obj) {
-            $("#" + obj).val("");
-            $("#" + obj).click();
-        }
-
-
-        function uploadImageFile(obj) {
-
-            if (obj) {
-                if (obj.files) {
-                    var formData = new FormData();
-
-                    formData.append("file", obj.files.item(0));
-                    formData.append("fileType", "FileImage");
-                    formData.append("isMessageAttachment", false);
-
-                    var src = window.URL.createObjectURL(obj.files.item(0));
-
-                    uploadFileToServer(formData, src);
-
-                    //上传以后本地展示的
-                    $(".site-logo-image").attr("src", src);
+        $.actions({
+            title: "",
+            onClose: function () {
+                console.log("close");
+            },
+            actions: [{
+                text: language == 0 ? "Show Content" : "显示文本内容",
+                className: "color-primary weui-dialog__btn",
+                onClick: function () {
+                    $("#push-notice-type-text").html(language == 0 ? "Show Content" : "显示文本内容");
+                    $("#push-notice-type").attr("data", "2");
+                    updatePushNoticeType(2);
                 }
-                return obj.value;
-            }
-
-        }
-
-        function uploadFileToServer(formData, src) {
-
-            var url = "./index.php?action=http.file.uploadWeb";
-
-            if (isMobile()) {
-                url = "/_api_file_upload_/?fileType=1";  //fileType=1,表示文件
-            }
-
-            $.ajax({
-                url: url,
-                type: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (imageFileIdResult) {
-
-                    if (imageFileIdResult) {
-                        var fileId = imageFileIdResult;
-                        if (isMobile()) {
-                            var res = JSON.parse(imageFileIdResult);
-                            fileId = res.fileId;
-                        }
-                        updateSiteLogo(fileId);
-                    } else {
-                        alert(getLanguage() == 1 ? "上传返回结果空 " : "empty response");
-                    }
-
-                },
-                error: function (err) {
-                    alert("update image error");
-                    return false;
+            }, {
+                text: language == 0 ? "Hide Content" : "不显示文本内容",
+                className: "color-primary weui-dialog__btn",
+                onClick: function () {
+                    $("#push-notice-type-text").html(language == 0 ? "Hide Content" : "不显示文本内容");
+                    $("#push-notice-type").attr("data", "1");
+                    updatePushNoticeType(1);
                 }
-            });
-        }
+            }, {
+                text: language == 0 ? "Push Disable" : "禁止推送通知",
+                className: "color-primary weui-dialog__btn",
+                onClick: function () {
+                    $("#push-notice-type-text").html(language == 0 ? "Push Disable" : "禁止推送通知");
+                    $("#push-notice-type").attr("data", "0");
 
-        function updateSiteLogo(imageFileId) {
-            var url = "index.php?action=manage.config.update";
-            var data = {
-                'key': 'logo',
-                'value': imageFileId,
-            };
-            zalyjsCommonAjaxPostJson(url, data, updateLogoResponse);
-        }
+                    updatePushNoticeType(0);
+                }
+            }]
+        });
+    });
 
-        function updateLogoResponse(url, data, result) {
+    //update push notice type
+    function updatePushNoticeType(pushTypeValue) {
+        var url = "index.php?action=manage.config.update";
+
+        var data = {
+            'key': 'pushType',
+            'value': pushTypeValue,
+        };
+
+        zalyjsCommonAjaxPostJson(url, data, updatePushTypeResponse);
+    }
+
+
+    function updatePushTypeResponse(url, data, result) {
+        if (result) {
+
             var res = JSON.parse(result);
 
-            if (res.errCode) {
-
-                var fileId = data.value;
-                console.log("updateLogoResponse imageId fileId==" + fileId);
-
-                showSiteLogo(fileId);
-            } else {
-                alert("errorInfo:" + res.errInfo);
-            }
-        }
-
-        downloadFileUrl = "./index.php?action=http.file.downloadFile";
-
-
-        function showSiteLogo(fileId) {
-
-            var requestUrl = "./_api_file_download_/test?fileId=" + fileId;
-
-
-            if (!isMobile()) {
-                requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
-            }
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
-                    var blob = this.response;
-                    var src = window.URL.createObjectURL(blob);
-                    console.log("showSiteLogo imageId response src=" + src);
-                    $(".site-logo-image").attr("src", src);
-                }
-            };
-            xhttp.open("GET", requestUrl, true);
-            xhttp.responseType = "blob";
-            // xhttp.setRequestHeader('Cache-Control', "max-age=2592000, public");
-            xhttp.send();
-        }
-
-        function showWindow(jqElement) {
-            jqElement.css("visibility", "visible");
-            $(".wrapper-mask").css("visibility", "visible").append(jqElement);
-        }
-
-
-        function removeWindow(jqElement) {
-            jqElement.remove();
-            $(".popup-template").append(jqElement);
-            $(".wrapper-mask").css("visibility", "hidden");
-        }
-
-
-        $(document).mouseup(function (e) {
-            var targetId = e.target.id;
-            var targetClassName = e.target.className;
-
-            if (targetId == "wrapper-mask") {
-                var wrapperMask = document.getElementById("wrapper-mask");
-                var length = wrapperMask.children.length;
-                var i;
-                for (i = 0; i < length; i++) {
-                    var node = wrapperMask.children[i];
-                    node.remove();
-                    // addTemplate(node);
-                    $(".popup-template").append(node);
-                    $(".popup-template").hide();
-                }
-                $(".popup-group-input").val("");
-                $("#updatePopupButton").attr("data", "");
-                wrapperMask.style.visibility = "hidden";
-            }
-        });
-
-
-        $(function () {
-            var fileId = $("#site-logo-fileid").attr("fileId");
-            showSiteLogo(fileId)
-        });
-
-        function updateDataValue() {
-
-            var key = $("#updatePopupButton").attr("key-value");
-
-            var url = "index.php?action=manage.config.update&key=" + key;
-
-            var value = $.trim($(".popup-group-input").val());
-
-            var data = {
-                'key': key,
-                'value': value,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, updateConfigResponse);
-
-            // close
-            removeWindow($(".config-hidden"));
-        }
-
-        function updateConfigResponse(url, data, result) {
-            var res = JSON.parse(result);
-            if ("success" == res.errCode) {
-                window.location.reload();
-            } else {
-                alert("error:" + result.errInfo);
-            }
-        }
-
-        $(document).on("click", "#site-name", function () {
-            var title = $(this).find(".item-body-desc").html();
-            var inputBody = $(this).find(".item-body-value").html();
-
-            showWindow($(".config-hidden"));
-
-            $(".popup-group-title").html(title);
-            $(".popup-group-input").val(inputBody);
-            $("#updatePopupButton").attr("key-value", "name");
-        });
-
-        $(document).on("click", "#group-max-members", function () {
-            var title = $(this).find(".item-body-desc").html();
-            var inputBody = $(this).find(".item-body-value").html();
-
-            showWindow($(".config-hidden"));
-
-            $(".popup-group-title").html(title);
-            $(".popup-group-input").val(inputBody);
-            $("#updatePopupButton").attr("key-value", "maxGroupMembers");
-        });
-
-
-        $(document).on("click", "#web-ws-port", function () {
-            var title = $(this).find(".item-body-desc").html();
-            var inputBody = $(this).find(".item-body-value").html();
-
-            showWindow($(".config-hidden"));
-
-            $(".popup-group-title").html(title);
-            $(".popup-group-input").val(inputBody);
-            $("#updatePopupButton").attr("key-value", "wsPort");
-        });
-
-        //enable realName
-        $("#enableRealNameSwitch").change(function () {
-            var isChecked = $(this).is(':checked');
-            var url = "index.php?action=manage.config.update&key=enableRealName";
-
-            var data = {
-                'key': 'enableRealName',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, enableRealNameResponse);
-
-        });
-
-        function enableRealNameResponse(url, data, result) {
-            if (result) {
-
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
+            if (!"success" == res.errCode) {
                 alert(getLanguage() == 1 ? "操作失败" : "update error");
             }
+
+        } else {
+            alert(getLanguage() == 1 ? "操作失败" : "update error");
         }
+    }
 
-
-        //update uic
-        $("#enableUicSwitch").change(function () {
-            var isChecked = $(this).is(':checked');
-            var url = "index.php?action=manage.config.update&key=enableInvitationCode";
-
-            var data = {
-                'key': 'enableInvitationCode',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, enableUicResponse);
-
-        });
-
-        function enableUicResponse(url, data, result) {
-            if (result) {
-
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
-                alert(getLanguage() == 1 ? "操作失败" : "update error");
-            }
-        }
-
-
-        //enable add friend
-        $("#enableAddFriendSwitch").change(function () {
-            var isChecked = $(this).is(':checked');
-            var url = "index.php?action=manage.config.update&key=enableAddFriend";
-
-            var data = {
-                'key': 'enableAddFriend',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, enableAddFriendResponse);
-        });
-
-        function enableAddFriendResponse(url, data, result) {
-            if (result) {
-
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
-                alert(getLanguage() == 1 ? "操作失败" : "update error");
-            }
-        }
-
-        //enable tmp chat
-        $("#enableTmpChatSwitch").change(function () {
-            var isChecked = $(this).is(':checked');
-            var url = "index.php?action=manage.config.update&key=enableTmpChat";
-
-            var data = {
-                'key': 'enableTmpChat',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, enableTmpChatResponse);
-        });
-
-        function enableTmpChatResponse(url, data, result) {
-            if (result) {
-
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
-                alert(getLanguage() == 1 ? "操作失败" : "update error");
-            }
-        }
-
-        //enable create group
-        $("#enableCreateGroupSwitch").change(function () {
-            var isChecked = $(this).is(':checked');
-            var url = "index.php?action=manage.config.update&key=enableCreateGroup";
-
-            var data = {
-                'key': 'enableCreateGroup',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, enableCreateGroupResponse);
-        });
-
-        function enableCreateGroupResponse(url, data, result) {
-            if (result) {
-
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
-                alert(getLanguage() == 1 ? "操作失败" : "update error");
-            }
-        }
-
-        //enable share group chat
-        $("#enableShareGroupSwitch").change(function () {
-            var isChecked = $(this).is(':checked');
-            var url = "index.php?action=manage.config.update&key=enableShareGroup";
-
-            var data = {
-                'key': 'enableShareGroup',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, enableShareGroupResponse);
-        });
-
-        function enableShareGroupResponse(url, data, result) {
-            if (result) {
-
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
-                alert(getLanguage() == 1 ? "操作失败" : "update error");
-            }
-        }
-
-        //enable share user
-        $("#enableShareUserSwitch").change(function () {
-            var isChecked = $(this).is(':checked');
-            var url = "index.php?action=manage.config.update&key=enableShareUser";
-
-            var data = {
-                'key': 'enableShareUser',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, enableShareUserResponse);
-        });
-
-        function enableShareUserResponse(url, data, result) {
-            if (result) {
-
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
-                alert(getLanguage() == 1 ? "操作失败" : "update error");
-            }
-        }
-
-        $("#enableAddFriendSwitch").change(function () {
-            var isChecked = $(this).is(':checked')
-            var url = "index.php?action=manage.config.update&key=enableAddFriend";
-
-            var data = {
-                'key': 'enableAddFriend',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, enableAddFriendResponse);
-        });
-
-        function enableAddFriendResponse(url, data, result) {
-            if (result) {
-
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
-                alert(getLanguage() == 1 ? "操作失败" : "update error");
-            }
-        }
-
-
-        //open web edition
-        $("#openWebEditionSwitch").change(function () {
-            var isChecked = $(this).is(':checked');
-            var url = "index.php?action=manage.config.update&key=openWebEdition";
-
-            var data = {
-                'key': 'openWebEdition',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, updateOpenWebResponse);
-
-        });
-
-        function updateOpenWebResponse(url, data, result) {
-
-            var res = JSON.parse(result);
-            if (res.errCode) {
-
-                var openWebIsChecked = $("#openWebEditionSwitch").is(':checked');
-
-                if (openWebIsChecked) {
-                    $("#web-ws-port").show();
-                } else {
-                    $("#web-ws-port").hide();
-                }
-
-            } else {
-                alert("update error");
-                // window.location.reload();
-            }
-
-        }
-
-        //open web widgit
-        $("#enableWebWidgetSwitch").change(function () {
-            var isChecked = $(this).is(':checked')
-            var url = "index.php?action=manage.config.update&key=enableWebWidget";
-
-            var data = {
-                'key': 'enableWebWidget',
-                'value': isChecked ? 1 : 0,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, enableWebWidgetResponse);
-        });
-
-        function enableWebWidgetResponse(url, data, result) {
-            if (result) {
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
-                alert(getLanguage() == 1 ? "操作失败" : "update error");
-            }
-        }
-
-        //site managers
-        $("#site-managers").click(function () {
-            var url = "index.php?action=manage.config.siteManagers&lang=" + getLanguage();
-            zalyjsCommonOpenPage(url);
-        });
-
-        //site default friend
-        $("#site-default-friends").click(function () {
-            var url = "index.php?action=manage.config.defaultFriends&lang=" + getLanguage();
-            zalyjsCommonOpenPage(url);
-        });
-
-        //site default groups
-        $("#site-default-groups").click(function () {
-            var url = "index.php?action=manage.config.defaultGroups&lang=" + getLanguage();
-            zalyjsCommonOpenPage(url);
-        });
-
-        //site RSAPublicKeyPem
-        $("#site-rsa-pubk-pem").click(function () {
-            var url = "index.php?action=manage.config.pubk&lang=" + getLanguage();
-            zalyjsCommonOpenPage(url);
-        });
-
-        //site owner
-        $("#site-owner").click(function () {
-            var userId = $(this).attr("siteOwner");
-            var url = "index.php?action=manage.user.profile&lang=" + getLanguage() + "&userId=" + userId;
-            zalyjsCommonOpenPage(url);
-        });
-
-
-        //push 推送 类型
-        $(document).on("click", '#push-notice-type', function () {
-            var language = getLanguage();
-
-            /**
-             * 0:禁止推送
-             * 1:只推送通知
-             * 2:推送文本
-             */
-            $.actions({
-                title: "",
-                onClose: function () {
-                    console.log("close");
-                },
-                actions: [{
-                    text: language == 0 ? "Show Content" : "显示文本内容",
-                    className: "color-primary weui-dialog__btn",
-                    onClick: function () {
-                        $("#push-notice-type-text").html(language == 0 ? "Show Content" : "显示文本内容");
-                        $("#push-notice-type").attr("data", "2");
-                        updatePushNoticeType(2);
-                    }
-                }, {
-                    text: language == 0 ? "Hide Content" : "不显示文本内容",
-                    className: "color-primary weui-dialog__btn",
-                    onClick: function () {
-                        $("#push-notice-type-text").html(language == 0 ? "Hide Content" : "不显示文本内容");
-                        $("#push-notice-type").attr("data", "1");
-                        updatePushNoticeType(1);
-                    }
-                }, {
-                    text: language == 0 ? "Push Disable" : "禁止推送通知",
-                    className: "color-primary weui-dialog__btn",
-                    onClick: function () {
-                        $("#push-notice-type-text").html(language == 0 ? "Push Disable" : "禁止推送通知");
-                        $("#push-notice-type").attr("data", "0");
-
-                        updatePushNoticeType(0);
-                    }
-                }]
-            });
-        });
-
-        //update push notice type
-        function updatePushNoticeType(pushTypeValue) {
-            var url = "index.php?action=manage.config.update";
-
-            var data = {
-                'key': 'pushType',
-                'value': pushTypeValue,
-            };
-
-            zalyjsCommonAjaxPostJson(url, data, updatePushTypeResponse);
-        }
-
-
-        function updatePushTypeResponse(url, data, result) {
-            if (result) {
-
-                var res = JSON.parse(result);
-
-                if (!"success" == res.errCode) {
-                    alert(getLanguage() == 1 ? "操作失败" : "update error");
-                }
-
-            } else {
-                alert(getLanguage() == 1 ? "操作失败" : "update error");
-            }
-        }
-
-    </script>
+</script>
 
 
 </body>
