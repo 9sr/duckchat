@@ -2,11 +2,6 @@
 LANG="en_US.UTF-8" 
 LANG="zh_CN.UTF-8"
 
-if [ $UID -ne 0 ]; then
-    echo "[DuckChat] 需要 root 权限，请使用: " sudo sh $0
-    exit 1
-fi
-
 echo "\
 +-------------------------------------------+
 | Duckchat - 一个安全的私有聊天软件         |
@@ -35,6 +30,16 @@ stopDockerName=""
 duckchatName="duckchat"
 isExit=false
 dockerContainerIdExists=false
+
+
+
+# check permission
+if [ "$sysOS" = "Linux"  ];then
+	if [ $UID -ne 0 ]; then
+    	echo "[DuckChat] 需要 root 权限，请使用: " sudo sh $0
+    	exit 1
+	fi
+fi
 
 checkDockerImageExist () {
 
