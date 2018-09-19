@@ -171,7 +171,7 @@ case $operation in
 			docker -v
 			 
 			if [ $? != 0 ];then
-				echo "[DuckChat] 请安装docker环境: https://docs.docker-cn.com"
+				echo "[DuckChat] 请根据文档安装Docker服务器集成环境: https://duckchat.akaxin.com/wiki/server/docker.md"
 				echo
 				exit
 			fi
