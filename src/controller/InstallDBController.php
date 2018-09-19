@@ -260,6 +260,9 @@ class InstallDBController
     {
         $tag = __CLASS__ . "->" . __FUNCTION__;
         $mysqlScriptPath = dirname(__DIR__) . "/model/database-sql/site_mysql.sql";
+
+        $this->logger->error("site.install.db", "mysql script=" . $mysqlScriptPath);
+
         $_sqlContent = file_get_contents($mysqlScriptPath);//写自己的.sql文件
         $_sqlArr = explode(';', $_sqlContent);
 
@@ -269,7 +272,7 @@ class InstallDBController
                 $this->db->exec($sql);
             }
             $this->db->commit();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->db->rollBack();
             $this->logger->error($tag, $e);
             throw $e;
@@ -356,8 +359,8 @@ class InstallDBController
             $prepare = $this->db->prepare($sql);
             $this->handelPrepareError($prepare);
             $prepare->execute();
-        } catch (Exception $e) {
-            $this->logger->error("init.add.uic", $e);
+        } catch (Throwable $e) {
+            $this->logger->error("site.install.db", "init.add.uic e=" . $e);
         }
     }
 
@@ -462,14 +465,14 @@ class InstallDBController
     private function _insertSitePlugin($miniPrograms)
     {
         $tag = __CLASS__ . "->" . __FUNCTION__;
-        $this->db->beginTransaction();
+//        $this->db->beginTransaction();
         try {
             foreach ($miniPrograms as $miniProgram) {
                 $this->insertData("sitePlugin", $miniProgram);
             }
-            $this->db->commit();
-        } catch (Exception $e) {
-            $this->db->rollBack();
+//            $this->db->commit();
+        } catch (Throwable $e) {
+//            $this->db->rollBack();
             $this->logger->error($tag, $e);
         }
 
