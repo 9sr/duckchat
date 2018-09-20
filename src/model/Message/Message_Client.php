@@ -482,11 +482,11 @@ class Message_Client
             $message->setType($msgType);
             $message->setTimeServer($this->getCurrentTimeMills());
 
-            $this->ctx->Wpf_Logger->info("friendApplyEvent =======>", "message=" . $message->serializeToString());
+//            $this->ctx->Wpf_Logger->info("friendApplyEvent =======>", "message=" . $message->serializeToString());
 
             $result = $this->sendU2Message($msgId, $userId, $fromUserId, $toUserId, $msgType, $message);
 
-            $this->ctx->Wpf_Logger->info("friendApplyEvent =======>", "result=" . $result);
+//            $this->ctx->Wpf_Logger->info("friendApplyEvent =======>", "result=" . $result);
 
             $this->ctx->Message_News->tellClientNews(false, $toUserId);
 

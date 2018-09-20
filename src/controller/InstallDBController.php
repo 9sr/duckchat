@@ -236,7 +236,10 @@ class InstallDBController
         $dbUserName = $config['mysql']['dbUserName'];
         $dbPwssword = $config['mysql']['dbPassword'];
 
-        $dbDsn = "mysql:host=$dbHost;port=$dbPort;dbname=$dbName;";
+
+        //check mysql args
+
+        $dbDsn = "mysql:host=$dbHost;port=$dbPort;";//;dbname=$dbName
         $options = array(
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
         );
@@ -246,11 +249,17 @@ class InstallDBController
         if (!$this->db) {
             throw new Exception("connect mysql error");
         }
-        //init table by sql script
+
+        $this->_createMysqlDatabaase($dbName);
         $this->_executeMysqlScript();
         $this->_checkConfigDefaultValue($siteName, $siteHost, $sitePort);
     }
 
+    private function _createMysqlDatabaase($dbName)
+    {
+        $sql = "CREATE DATABASE IF NOT EXISTS $dbName CHARACTER SET utf8mb4; USE $dbName";
+        $result = $this->db->exec($sql);
+    }
 
     private function _executeMysqlScript()
     {
