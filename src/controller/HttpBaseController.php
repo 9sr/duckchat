@@ -13,6 +13,7 @@ use Google\Protobuf\Internal\Message;
 
 abstract class HttpBaseController extends \Wpf_Controller
 {
+    protected $logger;
     protected $userId;
     protected $userInfo;
     protected $sessionId;
@@ -35,15 +36,18 @@ abstract class HttpBaseController extends \Wpf_Controller
     private $jumpRelation = "";
     public $siteCookieName = "zaly_site_user";
 
+    protected $ctx;
+
     public function __construct(BaseCtx $context)
     {
-
 
         if (!$this->checkDBIsExist()) {
             $initUrl = ZalyConfig::getConfig("apiPageSiteInit");
             header("Location:" . $initUrl);
             exit();
         }
+
+        $this->logger = $context->getLogger();
         $this->ctx = $context;
 
         $flag = $this->ctx->Site_Config->getConfigValue(SiteConfig::SITE_OPEN_WEB_EDITION);

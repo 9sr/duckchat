@@ -304,20 +304,17 @@ class SiteGroupMessageTable extends BaseTable
         $startTime = microtime(true);
         $tag = __CLASS__ . "." . __FUNCTION__;
         $sql = "select 
-                    SiteGroupUser.userId,
+                    siteGroupUser.userId,
                     siteGroupMessage.groupId,
                     siteGroupMessage.content
                 from 
-                    siteGroupMessage 
+                    siteGroupMessage
                 inner join 
-                    SiteGroupUser 
+                    siteGroupUser 
                 on
-                    siteGroupMessage.groupId = SiteGroupUser.groupId
+                    siteGroupMessage.groupId = siteGroupUser.groupId
                 where 
-                    siteGroupMessage.msgId = :msgId
-                and 
-                    SiteGroupUser.userId = :userId;
-                ";
+                    siteGroupMessage.msgId = :msgId and siteGroupUser.userId = :userId;";
 
         $prepare = $this->db->prepare($sql);
         $this->handlePrepareError($tag, $prepare);

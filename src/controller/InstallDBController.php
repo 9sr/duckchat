@@ -257,7 +257,7 @@ class InstallDBController
 
     private function _createMysqlDatabaase($dbName)
     {
-        $sql = "CREATE DATABASE IF NOT EXISTS $dbName CHARACTER SET utf8mb4; USE $dbName";
+        $sql = "CREATE DATABASE IF NOT EXISTS $dbName CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; USE $dbName";
         $result = $this->db->exec($sql);
     }
 
