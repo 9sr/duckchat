@@ -106,6 +106,8 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
         $authKey = $this->pluginMiniProgramProfile['authKey'];
 
         $requestData = $this->ctx->ZalyAes->decrypt($secretReqData, $authKey);
+        $requestData = json_decode($requestData, true);
+        $requestData = isset($requestData["body"]) ? $requestData["body"] : "";
 
         // 将数据转为TransportData
         $this->requestTransportData = new \Zaly\Proto\Core\TransportData();

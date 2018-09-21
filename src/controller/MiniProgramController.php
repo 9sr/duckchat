@@ -148,9 +148,14 @@ abstract class MiniProgramController extends \Wpf_Controller
         $authKey = $miniProgramProfile['authKey'];
 
         $requestTransportDataString = $this->buildTransportData($action, $requestProtoData);
+        $requestBodyJson = array(
+            "body" => $requestTransportDataString,
+            "time" => time(),
+        );
+        $requestBodyJson = json_encode($requestBodyJson);
 
         //加密发送
-        $encryptedTransportData = $this->ctx->ZalyAes->encrypt($requestTransportDataString, $authKey);
+        $encryptedTransportData = $this->ctx->ZalyAes->encrypt($requestBodyJson, $authKey);
 
         $requestUrl = "/?action=" . $action . "&body_format=pb&miniProgramId=" . $miniProgramId;
         $requestUrl = ZalyHelper::getFullReqUrl($requestUrl);
