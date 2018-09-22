@@ -55,6 +55,13 @@ var ZalyAction = {
     getRequestUrl : function(action) {
         var actionUrl = ZalyAction["action_url"];
         actionUrl = actionUrl.replace("ActionName", action);
+        var serverAddressForApi = localStorage.getItem(apiUrl);
+        if(serverAddressForApi != null && serverAddressForApi != undefined && serverAddressForApi !=false ) {
+            if(actionUrl.indexOf("./") != -1) {
+                actionUrl = actionUrl.replace("./", "/");
+            }
+            actionUrl = serverAddressForApi+actionUrl;
+        }
         return actionUrl;
     }
 }

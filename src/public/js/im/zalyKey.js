@@ -109,6 +109,7 @@ ApiFriendUpdateType =  {
 KeepSocket  = "KeepSocket";
 websocketGW = "enable_websocket_gw";
 websocketGWUrl = "websocket_gw_url";
+apiUrl = "server_address_for_api";
 
 ErrorSessionCode = "error.session";
 PageLoginAction  = "page.index";

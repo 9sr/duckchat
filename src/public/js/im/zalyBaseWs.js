@@ -25,6 +25,8 @@ function ZalyIm(params)
     var config = params.config;
     DefaultTitle = config.name;
     document.title = config.name;
+    var serverAddressForApi = config.serverAddressForApi;
+    localStorage.setItem(apiUrl, serverAddressForApi);
     var loginPluginProfile = params.loginPluginProfile;
     var webSocketGwDomain = config[siteConfigKeys.serverAddressForIM];
     if(webSocketGwDomain == undefined || webSocketGwDomain == null || webSocketGwDomain.length<1 || webSocketGwDomain.indexOf("http://") > -1) {
@@ -46,7 +48,7 @@ function requestSiteConfig(callback)
 {
     var action  = "api.site.config";
     var reqData = {};
-    handleClientSendRequest(action, reqData, callback, true);
+    handleClientSendRequest(action, reqData, callback);
 }
 
 requestSiteConfig();
