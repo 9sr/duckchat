@@ -67,13 +67,16 @@ class BaseTable
      * @param $tableName
      * @param $data
      * @param $defaultColumns
+     * @param bool $tag
      * @return bool
      * @throws Exception
      */
-    public function insertData($tableName, $data, $defaultColumns)
+    public function insertData($tableName, $data, $defaultColumns, $tag = false)
     {
+        if (!$tag) {
+            $tag = __CLASS__ . "-" . __FUNCTION__;
+        }
         $startTime = microtime(true);
-        $tag = __CLASS__ . "-" . __FUNCTION__;
         $insertKeys = array_keys($data);
         $insertKeyStr = implode(",", $insertKeys);
         $placeholderStr = "";
@@ -85,7 +88,7 @@ class BaseTable
         }
         $placeholderStr = trim($placeholderStr, ",");
         if (!$placeholderStr) {
-            throw new Exception("update is fail");
+            throw new Exception($tag . " update is fail");
         }
         $sql = " insert into  $tableName({$insertKeyStr}) values ({$placeholderStr});";
         $prepare = $this->db->prepare($sql);
@@ -100,7 +103,7 @@ class BaseTable
         $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, $data, $startTime);
         $count = $prepare->rowCount();
         if (!$flag || !$count) {
-            throw new Exception("创建失败");
+            throw new Exception($tag . "insert data error=" . var_export($prepare->errorInfo(), true));
         }
         return true;
     }
@@ -111,12 +114,15 @@ class BaseTable
      * @param $where
      * @param $data
      * @param $defaultColumns
+     * @param $tag
      * @return bool
      * @throws Exception
      */
-    public function updateInfo($tableName, $where, $data, $defaultColumns)
+    public function updateInfo($tableName, $where, $data, $defaultColumns, $tag = false)
     {
-        $tag = __CLASS__ . "-" . __FUNCTION__;
+        if (!$tag) {
+            $tag = __CLASS__ . "-" . __FUNCTION__;
+        }
         $startTime = microtime(true);
         $updateStr = "";
         $updateKeys = array_keys($data);
@@ -142,7 +148,7 @@ class BaseTable
         $whereKeyStr = trim($whereKeyStr, "and");
 
         if (!$whereKeyStr) {
-            throw new Exception("update is fail");
+            throw new Exception($tag . " update is fail");
         }
 
         $sql = "update  $tableName set  $updateStr where  $whereKeyStr";
@@ -161,11 +167,11 @@ class BaseTable
         }
         $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, ["data" => $data, "where" => $where], $startTime);
         $flag = $prepare->execute();
-        $count = $prepare->rowCount();
-        if (!$flag || !$count) {
-            throw new Exception("update is fail");
-        }
-        return true;
+//        $count = $prepare->rowCount();
+//        if (!$flag || !$count) {
+//            throw new Exception($tag . " update is fail=" . var_export($prepare->errorInfo(), true));
+//        }
+        return $this->handlerResult($flag, $prepare, $tag);
     }
 
     public function handlePrepareError($tag, $prepare)
@@ -184,6 +190,27 @@ class BaseTable
     protected function getCurrentTimeMills()
     {
         return $this->ctx->ZalyHelper->getMsectime();
+    }
+
+    /**
+     * @param $tag
+     * @param $prepare
+     * @param $result
+     * @return bool
+     * @throws Exception
+     */
+    protected function handlerResult($result, $prepare, $tag)
+    {
+        if ($prepare) {
+            if ($result && $prepare->errorCode() == '00000') {
+                return true;
+            }
+
+            throw new Exception($tag . " execute prepare error="
+                . var_export($prepare->errorInfo(), true));
+        }
+
+        throw new Exception($tag . " execute prepare fail as prepare false");
     }
 
 }

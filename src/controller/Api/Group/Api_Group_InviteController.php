@@ -49,6 +49,7 @@ class Api_Group_InviteController extends Api_Group_BaseController
             }
             $this->ctx->Wpf_Logger->info($tag, "userIds ==" . json_encode($userList) . " groupId ==" . $groupId);
 
+            //获取群组资料信息
             $groupInfo = $this->getGroupInfo($groupId);
 
             //TODO 判断当前群组 进人规则.只能群主拉人，需要判断是不是群主
@@ -71,7 +72,7 @@ class Api_Group_InviteController extends Api_Group_BaseController
                 $siteMaxGroupMembers = $siteConfig[$siteConfigObj::SITE_MAX_GROUP_MEMBERS];
             }
 
-            $newGroupUserCount = $groupUserCount+count($userIds);
+            $newGroupUserCount = $groupUserCount + count($userIds);
             if ($siteMaxGroupMembers <= $groupUserCount || $siteMaxGroupMembers < $newGroupUserCount) {
                 $errorCode = $this->zalyError->errorGroupMemberCount;
                 $errorInfo = $this->zalyError->getErrorInfo($errorCode);
@@ -92,8 +93,12 @@ class Api_Group_InviteController extends Api_Group_BaseController
                 $this->updateGroupAvatar($groupId);
             }
 
-            //
+            //代码入群消息
             $this->proxyNewGroupMemberMessage($this->userId, $groupId, $userList);
+
+            //代发群组公告notice
+            //proxy send group-description notice to group
+            $this->proxyGroupDescriptionNotice($this->userId, $groupInfo, $userList);
         } catch (Exception $ex) {
             $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex->getMessage());
             $this->rpcReturn($transportData->getAction(), new $this->classNameForResponse());
@@ -147,6 +152,28 @@ class Api_Group_InviteController extends Api_Group_BaseController
             $this->setRpcError($errorCode, $errorInfo);
             throw new Exception("invite failed");
         }
+    }
+
+
+    //currentUserId ==proxy send to ==>userIds
+    //"description",
+    //"descriptionType",
+    private function proxyGroupDescriptionNotice($currentUserId, $groupInfo, $userIds)
+    {
+        $groupId = $groupInfo['groupId'];
+        $desc = $groupInfo['description'];
+        $descType = $groupInfo['descriptionType'];
+
+        if (empty($desc) || Zaly\Proto\Core\GroupDescriptionType::GroupDescriptionMarkdown == $descType) {
+            return false;
+        }
+
+        $desc = "[群介绍]" . $desc;
+
+        foreach ($userIds as $memberId) {
+            $this->ctx->Message_Client->proxyGroupAsU2NoticeMessage($memberId, $currentUserId, $groupId, $desc);
+        }
+
     }
 
     //proxy join group members Message

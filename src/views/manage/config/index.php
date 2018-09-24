@@ -662,7 +662,7 @@
                 <div class="item-body">
                     <div class="item-body-display" id="max-mobile-num" onclick="updateMaxMobileNum();">
                         <?php if ($lang == "1") { ?>
-                            <div class="item-body-desc">手机端登陆最大数</div>
+                            <div class="item-body-desc">手机端登陆设备数</div>
                         <?php } else { ?>
                             <div class="item-body-desc">Max Mobile Num</div>
                         <?php } ?>
@@ -737,7 +737,7 @@
                     <div class="item-body">
                         <div class="item-body-display">
                             <?php if ($lang == "1") { ?>
-                                <div class="item-body-desc">Web端最大登陆数</div>
+                                <div class="item-body-desc">Web端登陆设备数</div>
                             <?php } else { ?>
                                 <div class="item-body-desc">Max Web Num</div>
                             <?php } ?>
@@ -1226,6 +1226,7 @@
     }
 
     function updateConfigResponse(url, data, result) {
+        alert("result=" + result);
         var res = JSON.parse(result);
         if ("success" == res.errCode) {
             window.location.reload();

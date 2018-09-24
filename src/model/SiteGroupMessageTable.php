@@ -138,7 +138,7 @@ class SiteGroupMessageTable extends BaseTable
 
         try {
             $prepare = $this->db->prepare($sql);
-//            $this->handlePrepareError($tag, $prepare);
+            $this->handlePrepareError($tag, $prepare);
 
             $prepare->bindValue(":pointer", $pointer, PDO::PARAM_INT);
             $prepare->bindValue(":groupId", $groupId);
@@ -147,10 +147,14 @@ class SiteGroupMessageTable extends BaseTable
 
             $result = $prepare->execute();
 
-            if ($result) {
-                $count = $prepare->rowCount();
-                return $count > 0;
-            }
+//            if ($result) {
+//                $count = $prepare->rowCount();
+//                $this->logger->error('=============', $prepare->errorCode());
+//                $this->logger->error('=============', $prepare->errorInfo());
+//                return $count > 0;
+//            }
+
+            return $this->handlerResult($result, $prepare, $tag);
         } finally {
             $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, [$pointer, $groupId, $userId, $deviceId], $startTime);
         }

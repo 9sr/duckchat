@@ -11,6 +11,7 @@ class File_Manager
         "image/gif" => "gif",
 //        "image/bmp" => "bmp", //文件太大，不支持此格式
         "audio/mp4" => "mp4",
+        "audio/x-m4a" => "m4a",
         "video/mp4" => "mp4",
     );
 
@@ -19,6 +20,7 @@ class File_Manager
         "image/jpg",
         "image/png",
         "audio/mp4",
+        "audio/x-m4a",
         "video/mp4",
     ];
 
@@ -179,44 +181,43 @@ class File_Manager
 
         switch ($pic_count) {
             case 1://ok
-                $element = [
-                    "x" => intval($default_width / 4),
-                    "y" => intval($default_height / 4),
-                    "w" => intval($default_width / 2),
-                    "h" => intval($default_height / 2),
-                ];
-                $picElements[] = $element;
+                $start_x = 100;
+                $start_y = $start_x;
+                $pic_w = 300;//width
+                $pic_h = $pic_w;
+                $picElements = $this->buildImageElements(1, $start_x, $start_y, $pic_w, $pic_h, []);
                 break;
             case 2://ok
                 $pic_w = intval($default_width / 2) - 5;//width
-                $picElements = $this->buildImageElements(6, $start_x, $start_y, $pic_w, $default_height, [2]);
+                $pic_h = $pic_w;
+                $picElements = $this->buildImageElements(2, $start_x, $start_y, $pic_w, $pic_h, []);
+
+//                $element1 = [
+//                    "x" => 0,
+//                    "y" => 0,
+//                    "w" => intval($default_width / 2) - 5,
+//                    "h" => intval($default_width / 2) - 5,
+//                ];
+//                $picElements[] = $element1;
+//
+//                $element2 = [
+//                    "x" => 255,
+//                    "y" => 255,
+//                    "w" => intval($default_width / 2) - 5,
+//                    "h" => intval($default_width / 2) - 5,
+//                ];
+//
+//                $picElements[] = $element2;
                 break;
             case 3:
-                $pic_w = intval($default_width / 2) - 5; // 宽度
-                $pic_h = $default_height; // 高度
-
-                for ($i = 0; $i < 3; $i++) {
-                    $element = [
-                        "x" => $start_x,
-                        "y" => $start_y,
-                        "w" => $pic_w,
-                        "h" => $pic_h,
-                    ];
-                    $picElements[] = $element;
-
-                    if ($i == 0) {
-                        $pic_h = intval($pic_h / 2) - 5;
-                        $start_x = $start_x + $pic_w + $space_x;
-                    } else if ($i == 1) {
-                        $start_y = $start_y + $pic_h + $space_y;
-                    }
-                }
-
+                $pic_w = intval($default_width / 2) - 5;//width
+                $pic_h = $pic_w;
+                $picElements = $this->buildImageElements(3, $start_x, $start_y, $pic_w, $pic_h, [2]);
                 break;
             case 4: //OK
                 $pic_w = intval($default_width / 2) - 5; // 宽度
                 $pic_h = intval($default_height / 2) - 5; // 高度
-                $picElements = $this->buildImageElements(6, $start_x, $start_y, $pic_w, $pic_h, [2]);
+                $picElements = $this->buildImageElements(4, $start_x, $start_y, $pic_w, $pic_h, [2]);
                 break;
             case 5:
                 $pic_w = intval($default_width / 2) - 5;

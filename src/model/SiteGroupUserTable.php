@@ -50,14 +50,13 @@ class SiteGroupUserTable extends BaseTable
         $startTime = microtime(true);
 
         $sql = "select 
-                    siteUser.userId,
-                    siteUser.loginName,
-                    siteUser.nickname,
-                    siteUser.nicknameInLatin,
-                    siteUser.avatar,
-                    siteGroupUser.groupId,
-                    siteGroupUser.userId,
-                    siteGroupUser.memberType
+                    siteUser.userId as userId,
+                    siteUser.loginName as loginName,
+                    siteUser.nickname as nickname,
+                    siteUser.nicknameInLatin as nicknameInLatin,
+                    siteUser.avatar as avatar,
+                    siteGroupUser.groupId as groupId,
+                    siteGroupUser.memberType as memberType
                 from 
                     siteGroupUser
                 inner join 
@@ -276,11 +275,11 @@ class SiteGroupUserTable extends BaseTable
      * @return array
      * @throws Exception
      */
-    public function getGroupUserByMemberType($groupId, $memberType = false , $columns=[])
+    public function getGroupUserByMemberType($groupId, $memberType = false, $columns = [])
     {
         $tag = __CLASS__ . '-' . __FUNCTION__;
         $startTime = microtime(true);
-        if(!$columns) {
+        if (!$columns) {
             $columns = $this->selectColumns;
         } else {
             $columns = implode(",", $columns);

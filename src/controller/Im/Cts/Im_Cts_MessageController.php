@@ -103,7 +103,7 @@ class Im_Cts_MessageController extends Im_BaseController
             //send push to friend
             $pushText = $this->getPushText($msgType, $message);
 
-            $this->ctx->Push_Client->sendNotification($msgRoomType, $msgType, $fromUserId, $this->toId, $pushText);
+            $this->ctx->Push_Client->sendNotification($msgId, $msgRoomType, $msgType, $fromUserId, $this->toId, $pushText);
         }
     }
 
