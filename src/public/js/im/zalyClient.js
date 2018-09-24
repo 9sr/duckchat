@@ -1,35 +1,6 @@
 
-wsClientObj = "";
-wsUrl = localStorage.getItem(websocketGWUrl);
 
-var wsClientObjStore = [];
-
-function websocketClient(transportDataJson, callback)
-{
-    ////TODO gateway 地址需要传入
-
-    wsClientObj = new WebSocket(wsUrl);
-
-    wsClientObj.onopen = function(evt) {
-        //TODO auth
-        if(wsClientObj.readyState == WS_OPEN) {
-            wsClientObj.send(transportDataJson);
-        }
-    };
-
-    wsClientObj.onmessage = function(evt) {
-        var resp = evt.data;
-        handleClientReceivedMessage(resp, callback);
-        ////默认client都是短链接，用完就关掉，
-        wsClientObj.close();
-    };
-
-    wsClientObj.onclose = function(evt) {
-        shiftWsQueue();
-    };
-}
-
-function handleClientSendRequest(action, reqData, callback, isHttp)
+function handleClientSendRequest(action, reqData, callback)
 {
     try {
         var requestName = ZalyAction.getReqeustName(action);
@@ -60,51 +31,22 @@ function handleClientSendRequest(action, reqData, callback, isHttp)
         localStorage.setItem(PACKAGE_ID, (Number(packageId)+1));
 
         var transportDataJson = JSON.stringify(transportData);
-
-        var enableWebsocketGW = localStorage.getItem(websocketGW);
-        if(enableWebsocketGW == "true" && !isHttp  && wsUrl != null && wsUrl) {
-            putWsQueue(transportDataJson, callback);
-            if(wsClientObjStore.length == 1 && (wsClientObj.readyState == undefined || wsClientObj.readyState == WS_CLOSING || wsClientObj.readyState == WS_CLOSED)) {
-                shiftWsQueue();
-            }
-        } else {
-            $.ajax({
-                method: "POST",
-                url:requestUrl,
-                data: transportDataJson,
-                success:function (resp, status, request) {
-                    var debugInfo = request.getResponseHeader('duckchat-debugInfo');
-                    if(debugInfo != null) {
-                        console.log("debug-info ==" + debugInfo);
-                    }
-                    handleClientReceivedMessage(resp, callback);
+        $.ajax({
+            method: "POST",
+            url:requestUrl,
+            data: transportDataJson,
+            success:function (resp, status, request) {
+                var debugInfo = request.getResponseHeader('duckchat-debugInfo');
+                if(debugInfo != null) {
+                    console.log("debug-info ==" + debugInfo);
                 }
-            });
-        }
+                handleClientReceivedMessage(resp, callback);
+            }
+        });
     } catch(e) {
         console.log(e.message);
         return false;
     }
-}
-
-function putWsQueue(transportDataJson, callback)
-{
-    var queueData = {
-        transportDataJson:transportDataJson,
-        callback:callback
-    };
-    wsClientObjStore.push(queueData);
-}
-
-function shiftWsQueue()
-{
-    var queueData = wsClientObjStore.shift();
-    if(queueData == undefined) {
-        return ;
-    }
-    var transportDataJson = queueData.transportDataJson;
-    var callback = queueData.callback;
-    websocketClient(transportDataJson, callback);
 }
 
 function handleClientReceivedMessage(resp, callback)
