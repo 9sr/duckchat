@@ -154,7 +154,7 @@ class SiteGroupMessageTable extends BaseTable
 //                return $count > 0;
 //            }
 
-            return $this->handlerResult($result, $prepare, $tag);
+            return $this->handlerUpdateResult($result, $prepare, $tag);
         } finally {
             $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, [$pointer, $groupId, $userId, $deviceId], $startTime);
         }
