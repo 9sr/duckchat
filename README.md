@@ -9,7 +9,7 @@
 
 > **向我们提问、反馈问题**
 >
-> - QQ群 [`131465422`](https://jq.qq.com/?_wv=1027&k=5z7aEG7)
+> - QQ群 [`QQ5群：131465422`](https://jq.qq.com/?_wv=1027&k=5z7aEG7)
 > - 邮箱：hi@akaxin.com
 
 安装与使用教程：https://duckchat.akaxin.com/wiki/
