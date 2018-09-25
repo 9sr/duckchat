@@ -22,19 +22,9 @@ class ApiSiteLoginResponse extends \Google\Protobuf\Internal\Message
      */
     private $profile = null;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $sessionId
-     *     @type \Zaly\Proto\Core\AllUserProfile $profile
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiSiteLogin::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

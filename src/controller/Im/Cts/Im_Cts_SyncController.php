@@ -118,7 +118,7 @@ class Im_Cts_SyncController extends Im_BaseController
 
         $u2MessageList = $this->ctx->SiteU2MessageTable->queryMessage($userId, $currentPointer, $limitCount);
 
-        if ($isFirst) {
+        if ($isFirst && $currentPointer > 0) {
             //update pointer
             $this->ctx->SiteU2MessageTable->updatePointer($userId, $deviceId, "1", $currentPointer);
         }
@@ -150,7 +150,9 @@ class Im_Cts_SyncController extends Im_BaseController
                     $currentPointer = $this->ctx->SiteGroupMessageTable->queryMaxPointerByUser($groupId, $userId);
                     $this->ctx->Wpf_Logger->info("GroupPointer", "get user max group pointer=" . $currentPointer);
 
-                    $this->ctx->SiteGroupMessageTable->updatePointer($groupId, $userId, $deviceId, $currentPointer);
+                    if ($currentPointer > 0) {
+                        $this->ctx->SiteGroupMessageTable->updatePointer($groupId, $userId, $deviceId, $currentPointer);
+                    }
                 }
 
                 $groupMaxId = $this->ctx->SiteGroupMessageTable->queryMaxIdByGroup($groupId);
@@ -231,6 +233,7 @@ class Im_Cts_SyncController extends Im_BaseController
                     if ($u2RoomType == Zaly\Proto\Core\MessageRoomType::MessageRoomGroup) {
                         $message->setToGroupId($u2OrGroupMessage["toUserId"]);
                         $message->setRoomType(Zaly\Proto\Core\MessageRoomType::MessageRoomGroup);
+                        $message->setTreatPointerAsU2Pointer(true);
                     } else {
                         $message->setToUserId($u2OrGroupMessage["toUserId"]);
                         $message->setRoomType(Zaly\Proto\Core\MessageRoomType::MessageRoomU2);

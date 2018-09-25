@@ -138,7 +138,7 @@ class SiteGroupMessageTable extends BaseTable
 
         try {
             $prepare = $this->db->prepare($sql);
-//            $this->handlePrepareError($tag, $prepare);
+            $this->handlePrepareError($tag, $prepare);
 
             $prepare->bindValue(":pointer", $pointer, PDO::PARAM_INT);
             $prepare->bindValue(":groupId", $groupId);
@@ -147,10 +147,14 @@ class SiteGroupMessageTable extends BaseTable
 
             $result = $prepare->execute();
 
-            if ($result) {
-                $count = $prepare->rowCount();
-                return $count > 0;
-            }
+//            if ($result) {
+//                $count = $prepare->rowCount();
+//                $this->logger->error('=============', $prepare->errorCode());
+//                $this->logger->error('=============', $prepare->errorInfo());
+//                return $count > 0;
+//            }
+
+            return $this->handlerUpdateResult($result, $prepare, $tag);
         } finally {
             $this->ctx->Wpf_Logger->writeSqlLog($tag, $sql, [$pointer, $groupId, $userId, $deviceId], $startTime);
         }
@@ -304,20 +308,17 @@ class SiteGroupMessageTable extends BaseTable
         $startTime = microtime(true);
         $tag = __CLASS__ . "." . __FUNCTION__;
         $sql = "select 
-                    SiteGroupUser.userId,
+                    siteGroupUser.userId,
                     siteGroupMessage.groupId,
                     siteGroupMessage.content
                 from 
-                    siteGroupMessage 
+                    siteGroupMessage
                 inner join 
-                    SiteGroupUser 
+                    siteGroupUser 
                 on
-                    siteGroupMessage.groupId = SiteGroupUser.groupId
+                    siteGroupMessage.groupId = siteGroupUser.groupId
                 where 
-                    siteGroupMessage.msgId = :msgId
-                and 
-                    SiteGroupUser.userId = :userId;
-                ";
+                    siteGroupMessage.msgId = :msgId and siteGroupUser.userId = :userId;";
 
         $prepare = $this->db->prepare($sql);
         $this->handlePrepareError($tag, $prepare);

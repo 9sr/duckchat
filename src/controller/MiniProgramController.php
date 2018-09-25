@@ -148,6 +148,11 @@ abstract class MiniProgramController extends \Wpf_Controller
         $authKey = $miniProgramProfile['authKey'];
 
         $requestTransportDataString = $this->buildTransportData($action, $requestProtoData);
+//        $requestBodyJson = array(
+//            "body" => $requestTransportDataString,
+//            "time" => time(),
+//        );
+//        $requestBodyJson = json_encode($requestBodyJson);
 
         //加密发送
         $encryptedTransportData = $this->ctx->ZalyAes->encrypt($requestTransportDataString, $authKey);
@@ -157,7 +162,7 @@ abstract class MiniProgramController extends \Wpf_Controller
 
         $this->ctx->Wpf_Logger->error($action, "fihttp request url =" . $requestUrl);
 
-        $encryptedHttpTransportResponse = $this->ctx->ZalyCurl->request( $requestUrl,"POST", $encryptedTransportData);
+        $encryptedHttpTransportResponse = $this->ctx->ZalyCurl->request($requestUrl, "POST", $encryptedTransportData);
         //解密结果
         $httpResponse = $this->ctx->ZalyAes->decrypt($encryptedHttpTransportResponse, $authKey);
 
@@ -172,6 +177,7 @@ abstract class MiniProgramController extends \Wpf_Controller
         $transportData = new \Zaly\Proto\Core\TransportData();
         $transportData->setAction($action);
         $transportData->setBody($anyBody);
+        $transportData->setTimeMillis(ZalyHelper::getMsectime());
         return $transportData->serializeToString();
     }
 
@@ -273,6 +279,11 @@ abstract class MiniProgramController extends \Wpf_Controller
             $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangEN;
             $this->zalyError = $this->ctx->ZalyErrorEn;
         }
+    }
+
+    protected function getCurrentTimeMills()
+    {
+        return ZalyHelper::getMsectime();
     }
 
 }

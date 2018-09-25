@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf type <code>core.DataWriteType</code>
+ * Protobuf enum <code>Core\DataWriteType</code>
  */
 class DataWriteType
 {

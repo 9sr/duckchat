@@ -34,22 +34,9 @@ class WebMessage extends \Google\Protobuf\Internal\Message
      */
     private $title = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $code
-     *     @type int $width
-     *     @type int $height
-     *     @type string $hrefURL
-     *     @type string $title
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Core\Message::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

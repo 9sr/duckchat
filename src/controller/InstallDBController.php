@@ -226,7 +226,7 @@ class InstallDBController
      * @param $siteName
      * @param $siteHost
      * @param $sitePort
-     * @throws Exception
+     * @throws Throwable
      */
     private function initSiteWithMysql(array $config, $siteName, $siteHost, $sitePort)
     {
@@ -236,30 +236,38 @@ class InstallDBController
         $dbUserName = $config['mysql']['dbUserName'];
         $dbPwssword = $config['mysql']['dbPassword'];
 
-        $dbDsn = "mysql:host=$dbHost;port=$dbPort;dbname=$dbName;";
-        $options = array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-        );
 
-        $this->logger->error("site.install.db", $dbDsn);
-        $this->logger->error("site.install.db", $dbUserName);
-        $this->logger->error("site.install.db", $dbPwssword);
+        //check mysql args
+
+        $dbDsn = "mysql:host=$dbHost;port=$dbPort;";//;dbname=$dbName
+        $options = array(
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+        );
 
         $this->db = new PDO($dbDsn, $dbUserName, $dbPwssword, $options);//创建一个pdo对象
 
         if (!$this->db) {
             throw new Exception("connect mysql error");
         }
-        //init table by sql script
+
+        $this->_createMysqlDatabaase($dbName);
         $this->_executeMysqlScript();
         $this->_checkConfigDefaultValue($siteName, $siteHost, $sitePort);
     }
 
+    private function _createMysqlDatabaase($dbName)
+    {
+        $sql = "CREATE DATABASE IF NOT EXISTS $dbName CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; USE $dbName";
+        $result = $this->db->exec($sql);
+    }
 
     private function _executeMysqlScript()
     {
         $tag = __CLASS__ . "->" . __FUNCTION__;
         $mysqlScriptPath = dirname(__DIR__) . "/model/database-sql/site_mysql.sql";
+
+        $this->logger->error("site.install.db", "mysql script=" . $mysqlScriptPath);
+
         $_sqlContent = file_get_contents($mysqlScriptPath);//写自己的.sql文件
         $_sqlArr = explode(';', $_sqlContent);
 
@@ -269,7 +277,7 @@ class InstallDBController
                 $this->db->exec($sql);
             }
             $this->db->commit();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->db->rollBack();
             $this->logger->error($tag, $e);
             throw $e;
@@ -342,10 +350,10 @@ class InstallDBController
         }
         $sqlStr = trim($sqlStr, ",");
 
-        $this->logger->info("site.install.db", "config sql=" . $sqlStr);
-
         $sql = "insert into siteConfig(configKey, configValue) values $sqlStr;";
-        $this->db->exec($sql);
+        $count = $this->db->exec($sql);
+
+        $this->logger->error("site.install.db", "init config count=" . $count);
     }
 
     private function _insertSiteOwnerUic($code = "000000")
@@ -355,9 +363,11 @@ class InstallDBController
             $sql = "insert into siteUic(code,status,createTime) values('$code',100,$timeStamp)";
             $prepare = $this->db->prepare($sql);
             $this->handelPrepareError($prepare);
-            $prepare->execute();
-        } catch (Exception $e) {
-            $this->logger->error("init.add.uic", $e);
+            $flag = $prepare->execute();
+            $count = $prepare->rowCount();
+            $this->logger->error("site.install.db", "init uic result=" . $flag . " count=" . $count);
+        } catch (Throwable $e) {
+            $this->logger->error("site.install.db", $e);
         }
     }
 
@@ -462,18 +472,18 @@ class InstallDBController
     private function _insertSitePlugin($miniPrograms)
     {
         $tag = __CLASS__ . "->" . __FUNCTION__;
-        $this->db->beginTransaction();
-        try {
-            foreach ($miniPrograms as $miniProgram) {
-                $this->insertData("sitePlugin", $miniProgram);
+        $successParams = [];
+        foreach ($miniPrograms as $miniProgram) {
+            try {
+                $success = $this->insertData("sitePlugin", $miniProgram);
+                if ($success) {
+                    $successParams[] = $miniProgram['name'];
+                }
+            } catch (Throwable $e) {
+                $this->logger->error($tag, $e);
             }
-            $this->db->commit();
-        } catch (Exception $e) {
-            $this->db->rollBack();
-            $this->logger->error($tag, $e);
         }
-
-        $this->logger->info($tag, "init site miniProgram finish");
+        $this->logger->info("site.install.db", "init miniPrograms finish success=" . json_encode($successParams));
     }
 
     public function insertData($tableName, $data)
@@ -499,10 +509,17 @@ class InstallDBController
         $flag = $prepare->execute();
         $this->logger->writeSqlLog($tag, $sql, $data, $startTime);
         $count = $prepare->rowCount();
-        if (!$flag || !$count) {
-            throw new Exception("insert data fail");
+
+        $this->logger->error("site.install.db",
+            "miniProgram name=" . $data['name'] .
+            " count=" . $count .
+            " errCode=" . $prepare->errorCode() .
+            " errInfo=" . json_encode($prepare->errorInfo()));
+
+        if ($flag) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     function handelPrepareError($prepare)

@@ -13,12 +13,13 @@ use Google\Protobuf\Internal\Message;
 
 abstract class HttpBaseController extends \Wpf_Controller
 {
+    protected $logger;
     protected $userId;
     protected $userInfo;
     protected $sessionId;
     public $defaultErrorCode = "success";
     public $errorCode = "fail";
-    protected $sessionIdTimeOut = 36000000; //10个小时的毫秒
+    protected $sessionIdTimeOut = 3600000; //1个小时的毫秒
     public $defaultFilePath = "files";
     public $whiteAction = [
         "page.login",
@@ -35,19 +36,22 @@ abstract class HttpBaseController extends \Wpf_Controller
     private $jumpRelation = "";
     public $siteCookieName = "zaly_site_user";
 
+    protected $ctx;
+
     public function __construct(BaseCtx $context)
     {
-
 
         if (!$this->checkDBIsExist()) {
             $initUrl = ZalyConfig::getConfig("apiPageSiteInit");
             header("Location:" . $initUrl);
             exit();
         }
+
+        $this->logger = $context->getLogger();
         $this->ctx = $context;
 
         $flag = $this->ctx->Site_Config->getConfigValue(SiteConfig::SITE_OPEN_WEB_EDITION);
-        if($flag != 1) {
+        if ($flag != 1) {
             echo "该站点没有开起web版本";
             die();
         }
@@ -171,8 +175,8 @@ abstract class HttpBaseController extends \Wpf_Controller
 
         $nowTime = $this->ctx->ZalyHelper->getMsectime();
 
-        if (($nowTime - $timeActive) > $this->sessionIdTimeOut) {
-            throw new Exception("session is not ok");
+        if (($nowTime - $timeActive) > $this->sessionIdTimeOut * 24 * 365) {
+            throw new Exception("session expired");
         }
 
         $this->userInfo = $this->ctx->SiteUserTable->getUserByUserId($this->sessionInfo['userId']);

@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Site;
 
 /**
- * Protobuf type <code>site.ApiFriendUpdateType</code>
+ * Protobuf enum <code>Site\ApiFriendUpdateType</code>
  */
 class ApiFriendUpdateType
 {

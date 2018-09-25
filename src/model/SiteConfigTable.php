@@ -8,6 +8,10 @@
  */
 class SiteConfigTable extends BaseTable
 {
+    /**
+     * @var Wpf_Logger
+     */
+    private $logger;
     private $table = "siteConfig";
     private $columns = [
         "id",
@@ -17,6 +21,7 @@ class SiteConfigTable extends BaseTable
 
     public function init()
     {
+        $this->logger = $this->ctx->getLogger();
         $this->columns = implode(",", $this->columns);
     }
 
@@ -24,14 +29,20 @@ class SiteConfigTable extends BaseTable
     public function insertSiteConfig($configKey, $configValue)
     {
         $tag = __CLASS__ . "->" . __FUNCTION__;
-        $sqlStr = '(' . $configKey . ',' . $configValue . ')';
+        $sqlStr = "('" . $configKey . "'," . $configValue . ")";
         $sql = "insert into 
                         siteConfig(configKey, configValue) 
                     values 
                         $sqlStr;";
-        $prepare = $this->db->prepare($sql);
-        $result = $prepare->execute();
-        return $result;
+        try {
+            $prepare = $this->db->prepare($sql);
+            $this->handlePrepareError($tag, $prepare);
+            $result = $prepare->execute();
+
+            return $result;
+        } finally {
+            $this->logger->writeSqlLog($tag, $sql, [$configKey, $configValue], $this->getCurrentTimeMills());
+        }
     }
 
 

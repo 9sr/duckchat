@@ -35,6 +35,9 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
 
     protected $pluginMiniProgramId;
     protected $pluginMiniProgramProfile;
+
+    private $expiredTimeMills = 5 * 60 * 1000;//5 minutes
+
     /**
      * @var BaseCtx
      */
@@ -106,13 +109,15 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
         $authKey = $this->pluginMiniProgramProfile['authKey'];
 
         $requestData = $this->ctx->ZalyAes->decrypt($secretReqData, $authKey);
+//        $requestData = json_decode($requestData, true);
+//        $requestData = isset($requestData["body"]) ? $requestData["body"] : "";
 
         // 将数据转为TransportData
         $this->requestTransportData = new \Zaly\Proto\Core\TransportData();
         try {
             if ("json" == $this->bodyFormatType) {
-                if (empty($secretReqData)) {
-                    $secretReqData = "{}";
+                if (empty($requestData)) {
+                    $requestData = "{}";
                 }
                 $this->requestTransportData->mergeFromJsonString($requestData);
             } else if ("pb" == $this->bodyFormatType) {
@@ -129,6 +134,19 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
             $this->rpcReturn($this->action, null);
             die();
         }
+
+        //check transportData request time
+        $requestTimeMills = $this->requestTransportData->getTimeMillis();
+
+        if (ZalyHelper::getMsectime() - $requestTimeMills > $this->expiredTimeMills) {
+            $this->ctx->Wpf_Logger->error($tag, "data request time expired ");
+            // disabled the rpcReturn online.
+            $timeChecked = (ZalyHelper::getMsectime() - $requestTimeMills) / 1000;
+            $this->setRpcError("error.time.expired", "data request time expired =" . $timeChecked . " s");
+            $this->rpcReturn($this->action, null);
+            die();
+        }
+
         $requestMessage = $usefulForProtobufAnyParse;
         ////解析请求数据，
         ///

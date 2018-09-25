@@ -18,18 +18,9 @@ class DuckChatSessionProfileResponse extends \Google\Protobuf\Internal\Message
      */
     private $profile = null;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type \Zaly\Proto\Core\AllUserProfile $profile
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Plugin\DuckchatSessionProfile::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

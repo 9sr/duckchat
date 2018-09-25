@@ -31,21 +31,9 @@ class ApiGroupInvitableFriendsRequest extends \Google\Protobuf\Internal\Message
      */
     private $count = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $groupId
-     *     @type int $offset
-     *     @type int $count
-     *           default 200
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiGroupInvitableFriends::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

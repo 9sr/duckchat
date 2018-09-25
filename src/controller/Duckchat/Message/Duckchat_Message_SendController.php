@@ -82,7 +82,7 @@ class Duckchat_Message_SendController extends Duckchat_MiniProgramController
         //send push to friend
         $pushText = $this->getPushText($msgType, $message);
 
-        $this->ctx->Push_Client->sendNotification($msgRoomType, $msgType, $fromUserId, $this->toId, $pushText);
+        $this->ctx->Push_Client->sendNotification($msgId, $msgRoomType, $msgType, $fromUserId, $this->toId, $pushText);
     }
 
     //return if group is not lawful

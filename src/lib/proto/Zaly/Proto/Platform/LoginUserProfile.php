@@ -40,24 +40,9 @@ class LoginUserProfile extends \Google\Protobuf\Internal\Message
      */
     private $invitationCode = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $userId
-     *     @type string $loginName
-     *     @type string $nickName
-     *           for register
-     *     @type string $phoneCountryCode
-     *     @type string $phoneNumber
-     *     @type string $invitationCode
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Platform\Core::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

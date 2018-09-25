@@ -22,19 +22,9 @@ class ApiGroupMembersResponse extends \Google\Protobuf\Internal\Message
      */
     private $totalCount = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type \Zaly\Proto\Site\ApiGroupMembersUserProfile[]|\Google\Protobuf\Internal\RepeatedField $list
-     *     @type int $totalCount
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiGroupMembers::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

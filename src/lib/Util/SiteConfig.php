@@ -29,8 +29,10 @@ class SiteConfig
 
     const SITE_OPEN_SSL = "openSSL";
     const SITE_OPEN_WEB_EDITION = "openWebEdition";
-    const SITE_WS_PORT = "wsPort";
     const SITE_ENABLE_WEB_WIDGET = "enableWebWidget";
+    const SITE_WS_HOST = "wsHost";
+    const SITE_WS_PORT = "wsPort";
+    const SITE_ZALY_HOST = "zalyHost";
     const SITE_ZALY_PORT = "zalyPort";
 
 
@@ -52,6 +54,9 @@ class SiteConfig
 
     const SITE_PLUGIN_PLBLIC_KEY = "pluginPublicKey";
     const SITE_PASSPORT_ACCOUNT_SAFE_PLUGIN_ID = "passportAccountSafePluginId";
+
+    const SITE_MOBILE_NUM = "maxMobileNum";//默认1，可修改
+    const SITE_WEB_NUM = "maxWebNum";//默认永远1，不可修改
 
     public static function getPubkAndPrikPem()
     {
@@ -86,9 +91,9 @@ class SiteConfig
 
         self::SITE_OPEN_SSL,
         self::SITE_OPEN_WEB_EDITION,
+        self::SITE_ENABLE_WEB_WIDGET,
         self::SITE_WS_PORT,
         self::SITE_ZALY_PORT,
-        self::SITE_ENABLE_WEB_WIDGET,
 
         self::SITE_MANAGERS,
         self::SITE_DEFAULT_FRIENDS,
@@ -102,7 +107,10 @@ class SiteConfig
 
         self::SITE_OWNER,
 
-        self::SITE_PLUGIN_PLBLIC_KEY
+        self::SITE_PLUGIN_PLBLIC_KEY,
+
+        self::SITE_MOBILE_NUM,
+        self::SITE_WEB_NUM,
     ];
 
 
@@ -118,11 +126,13 @@ class SiteConfig
         self::SITE_ENABLE_INVITATION_CODE => 0,
         self::SITE_ENABLE_REAL_NAME => 0,
 
-        self::SITE_OPEN_WEB_EDITION => 1,
-        self::SITE_WS_PORT => 0,
-        self::SITE_ZALY_PORT => 0,
-        self::SITE_ENABLE_WEB_WIDGET => 0,
         self::SITE_OPEN_SSL => 0,
+        self::SITE_OPEN_WEB_EDITION => 1,
+        self::SITE_ENABLE_WEB_WIDGET => 0,
+        self::SITE_WS_HOST => "",
+        self::SITE_WS_PORT => 0,
+        self::SITE_ZALY_HOST => "",
+        self::SITE_ZALY_PORT => 0,
 
         self::SITE_ID_PUBK_PEM => "",
         self::SITE_ID_PRIK_PEM => "",
@@ -141,6 +151,9 @@ class SiteConfig
         self::SITE_PLUGIN_PLBLIC_KEY => "",
         self::SITE_OWNER => "",
         self::SITE_MANAGERS => "",
+
+        self::SITE_MOBILE_NUM => 1,
+        self::SITE_WEB_NUM => 1,
     ];
 
 }

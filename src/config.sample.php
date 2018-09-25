@@ -7,8 +7,8 @@
  */
 
 return array(
-    'siteVersionName' => 'site-beta-1',
-    'siteVersionCode' => '0.1.1',
+    'siteVersionName' => '1.0-beta-7',
+    'siteVersionCode' => '1.0.1.7',
     'apiPageIndex' => './index.php?action=page.index',
     'apiPageLogin' => './index.php?action=page.login',
     'apiPageLogout' => './index.php?action=page.logout',

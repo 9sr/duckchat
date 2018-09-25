@@ -8,8 +8,8 @@
 
 class Api_Group_MembersController extends Api_Group_BaseController
 {
-    private $classNameForRequest   = '\Zaly\Proto\Site\ApiGroupMembersRequest';
-    private $classNameForResponse  = '\Zaly\Proto\Site\ApiGroupMembersResponse';
+    private $classNameForRequest = '\Zaly\Proto\Site\ApiGroupMembersRequest';
+    private $classNameForResponse = '\Zaly\Proto\Site\ApiGroupMembersResponse';
     public $userId;
 
     public function rpcRequestClassName()
@@ -23,12 +23,12 @@ class Api_Group_MembersController extends Api_Group_BaseController
      */
     public function rpc(\Google\Protobuf\Internal\Message $request, \Google\Protobuf\Internal\Message $transportData)
     {
-        $tag = __CLASS__."-".__FUNCTION__;
+        $tag = __CLASS__ . "-" . __FUNCTION__;
 
-        try{
-            $offset   = $request->getOffset() ? $request->getOffset() : 0;
+        try {
+            $offset = $request->getOffset() ? $request->getOffset() : 0;
             $pageSize = $request->getCount() > $this->defaultPageSize || !$request->getCount() ? $this->defaultPageSize : $request->getCount();
-            $groupId  = $request->getGroupId();
+            $groupId = $request->getGroupId();
 
             if (!$groupId) {
                 $errorCode = $this->zalyError->errorGroupIdExists;
@@ -37,14 +37,26 @@ class Api_Group_MembersController extends Api_Group_BaseController
                 throw new Exception($errorInfo);
             }
 
+            //check permission , userId is groupMember
+
+            if (!$this->isMemberOfGroup($this->userId, $groupId)) {
+                $errInfo = "you're not a group member";
+                if (Zaly\Proto\Core\UserClientLangType::UserClientLangZH == $this->language) {
+                    $errInfo = "非群成员，无法查看";
+                }
+                throw new Exception($errInfo);
+            }
+
             $userMemberCount = $this->getGroupUserCount($groupId);
             $userMembers = $this->getGroupUserList($groupId, $offset, $pageSize);
             $response = $this->getApiGroupMemberResponse($userMembers, $userMemberCount);
-            $this->setRpcError($this->defaultErrorCode, "");
-            $this->rpcReturn($transportData->getAction(), $response);
-        }catch (Exception $e) {
-            $this->ctx->Wpf_Logger->error($tag, "error_msg = " .$e->getMessage());
-            $this->rpcReturn($transportData->getAction(), new $this->classNameForResponse());
+
+            $this->returnSuccessRPC($response);
+        } catch (Exception $e) {
+            //error.log
+            $this->ctx->Wpf_Logger->error($tag, $e);
+            //error.alert
+            $this->returnErrorRPC(new $this->classNameForResponse(), $e);
         }
     }
 
@@ -59,4 +71,16 @@ class Api_Group_MembersController extends Api_Group_BaseController
         $response->setList($list);
         return $response;
     }
+
+    private function isMemberOfGroup($userId, $groupId)
+    {
+        $groupMember = $this->ctx->SiteGroupUserTable->getGroupUser($groupId, $userId);
+
+        if ($groupMember && $groupMember['userId']) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

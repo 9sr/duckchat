@@ -14,24 +14,23 @@ class Push_Client
 
     public function __construct(BaseCtx $ctx)
     {
-        $this->logger = new Wpf_Logger();
         $this->ctx = $ctx;
+        $this->logger = $ctx->getLogger();
     }
 
 
     /**
+     * @param $msgId 为了站点可以通过msgId获取push发送情况
      * @param int $roomType
      * @param int $msgType
      * @param $fromUserId
      * @param string $toId toUserId/toGroupId
      * @param $pushText
      */
-    public function sendNotification($roomType, $msgType, $fromUserId, $toId, $pushText)
+    public function sendNotification($msgId, $roomType, $msgType, $fromUserId, $toId, $pushText)
     {
         $pushRequest = new \Zaly\Proto\Platform\ApiPushNotificationRequest();
         try {
-
-//            $this->ctx->Wpf_Logger->info("api.push.notification", "pushText=" . $pushText);
 
             $siteConfig = $this->getSiteConfig();
 
@@ -62,6 +61,7 @@ class Push_Client
 
             $pushRequest->setPushHeader($pushHeader);
             $pushBody = new \Zaly\Proto\Platform\PushBody();//body 1
+//            $pushBody->
             $pushBody->setRoomType($roomType);//body 2
             $pushBody->setMsgType($msgType);
             $pushBody->setFromUserId($fromUserId);
@@ -78,6 +78,7 @@ class Push_Client
             }
             $deviceIds = $this->getPushDeviceIdList($roomType, $fromUserId, $toId);
             $pushBody->setToDevicePubkPemIds($deviceIds);
+            $pushBody->setMsgId($msgId);
             $pushRequest->setPushBody($pushBody);
 
 //            $this->ctx->Wpf_Logger->info("api.push.notification", "request=" . $pushRequest->serializeToJsonString());

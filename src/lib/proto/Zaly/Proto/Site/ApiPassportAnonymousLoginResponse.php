@@ -18,18 +18,9 @@ class ApiPassportAnonymousLoginResponse extends \Google\Protobuf\Internal\Messag
      */
     private $preSessionId = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $preSessionId
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiPassportAnonymousLogin::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

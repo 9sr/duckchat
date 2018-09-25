@@ -33,21 +33,9 @@ class AllGroupProfile extends \Google\Protobuf\Internal\Message
      */
     private $speakers;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type \Zaly\Proto\Core\PublicGroupProfile $profile
-     *     @type \Zaly\Proto\Core\PublicUserProfile $owner
-     *     @type \Zaly\Proto\Core\PublicUserProfile[]|\Google\Protobuf\Internal\RepeatedField $admins
-     *     @type \Zaly\Proto\Core\PublicUserProfile[]|\Google\Protobuf\Internal\RepeatedField $speakers
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Core\Group::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

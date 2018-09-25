@@ -13,10 +13,21 @@ class Manage_ConfigController extends Manage_CommonController
      */
     public function doRequest()
     {
-
-        $config = $this->ctx->SiteConfigTable->selectSiteConfig();
+        $config = $this->ctx->Site_Config->getAllConfig();
         $config[SiteConfig::SITE_ID_PRIK_PEM] = "";
         $config['lang'] = $this->language;
+
+        $maxMobileNum = $config[SiteConfig::SITE_MOBILE_NUM];
+
+        if (empty($maxMobileNum)) {
+            $config[SiteConfig::SITE_MOBILE_NUM] = 1;
+        }
+
+        $maxWebNum = $config[SiteConfig::SITE_WEB_NUM];
+
+        if (empty($maxWebNum)) {
+            $config[SiteConfig::SITE_WEB_NUM] = 1;
+        }
 
         echo $this->display("manage_config_index", $config);
         return;

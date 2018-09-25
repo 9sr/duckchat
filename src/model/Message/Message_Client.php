@@ -482,11 +482,11 @@ class Message_Client
             $message->setType($msgType);
             $message->setTimeServer($this->getCurrentTimeMills());
 
-            $this->ctx->Wpf_Logger->info("friendApplyEvent =======>", "message=" . $message->serializeToString());
+//            $this->ctx->Wpf_Logger->info("friendApplyEvent =======>", "message=" . $message->serializeToString());
 
             $result = $this->sendU2Message($msgId, $userId, $fromUserId, $toUserId, $msgType, $message);
 
-            $this->ctx->Wpf_Logger->info("friendApplyEvent =======>", "result=" . $result);
+//            $this->ctx->Wpf_Logger->info("friendApplyEvent =======>", "result=" . $result);
 
             $this->ctx->Message_News->tellClientNews(false, $toUserId);
 
@@ -496,7 +496,7 @@ class Message_Client
                 $pushText = $fromNickName . " apply to you as a friend";
             }
             $msgRoomType = \Zaly\Proto\Core\MessageRoomType::MessageRoomU2;
-            $this->ctx->Push_Client->sendNotification($msgRoomType, $msgType, $fromUserId, $toUserId, $pushText);
+            $this->ctx->Push_Client->sendNotification($msgId, $msgRoomType, $msgType, $fromUserId, $toUserId, $pushText);
             return $result;
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error($tag, $e);
