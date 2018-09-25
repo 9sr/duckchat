@@ -132,6 +132,8 @@ function appendOrInsertRoomList(msg, isInsert)
             msgContent = "[" + msg["web"].title + "]";
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
             break;
+        default:
+            msgContent = "[暂不支持此类型消息]";
     }
 
     var nodes = $(".chat_session_id_" + msg.chatSessionId);
@@ -729,7 +731,6 @@ function appendMsgHtml(msg)
     var msgStatus = msg.status ? msg.status : "";
     var userAvatar = sendBySelf ? avatar : msg.userAvatar;
     var userAvatarSrc = sendBySelf ?  localStorage.getItem(selfInfoAvatar) : "";
-
     if(sendBySelf) {
         switch(msgType) {
             case MessageType.MessageText :
@@ -764,7 +765,19 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageAudio:
-                html = template("tpl-send-msg-audio", {});
+                var msgContent = "[你发了一条语音消息，下载客户端，收听语音消息吧！] ";
+                html = template("tpl-send-msg-audio", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    msgContent:msgContent,
+                    avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
+                    userId:token,
+                    timeServer:msg.timeServer
+                });
                 break;
             case MessageType.MessageWebNotice:
                 html =  msg['notice'].code;
@@ -789,6 +802,21 @@ function appendMsgHtml(msg)
                 var msgContent = msg["notice"].body;
                 html = template("tpl-receive-msg-notice", {
                     msgContent:msgContent,
+                    timeServer:msg.timeServer
+                });
+                break;
+            default:
+                var msgContent = "[暂不支持此类型消息] ";
+                html = template("tpl-send-msg-audio", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    msgContent:msgContent,
+                    avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
+                    userId:token,
                     timeServer:msg.timeServer
                 });
                 break;
@@ -823,7 +851,17 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageAudio:
-                html = template("tpl-receive-msg-audio", {});
+                var msgContent = "[你收到一条语音消息，下载客户端收听语音消息吧！]";
+                html = template("tpl-receive-msg-audio", {
+                    roomType: msg.roomType,
+                    nickname: msg.nickname,
+                    msgId : msgId,
+                    userId :msg.fromUserId,
+                    msgContent:msgContent,
+                    msgTime : msgTime,
+                    groupUserImg : groupUserImageClassName,
+                    avatar:msg.userAvatar,
+                });
                 break;
             case MessageType.MessageWebNotice :
                 // html =  msg['webNotice'].code;
@@ -857,6 +895,21 @@ function appendMsgHtml(msg)
                 var msgContent = msg["notice"].body;
                 html = template("tpl-receive-msg-notice", {
                     msgContent:msgContent,
+                });
+                break;
+            default:
+                var msgContent = "[暂不支持此类型消息] ";
+                html = template("tpl-receive-msg-audio", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    msgContent:msgContent,
+                    avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
+                    userId:token,
+                    timeServer:msg.timeServer
                 });
                 break;
         }

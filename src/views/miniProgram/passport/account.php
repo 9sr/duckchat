@@ -57,11 +57,10 @@
             </div>
 
             <div class="d-flex flex-row justify-content-center ">
-                <button type="button" class="btn reset_pwd_button"><span class="span_btn_tip" data-local-value="resetPwdTip">Reset Password</span></button>
+                <button type="button" class="btn reset_pwd_button"><span class="span_btn_tip" data-local-value="updatePwdTip">Update Password</span></button>
             </div>
         </div>
     </div>
-
 </div>
 <script src="../../public/js/im/zalyKey.js"></script>
 <script src="../../public/js/im/zalyAction.js"></script>
