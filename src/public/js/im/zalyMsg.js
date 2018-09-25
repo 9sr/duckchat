@@ -125,6 +125,9 @@ function appendOrInsertRoomList(msg, isInsert)
             msgContent = msg["notice"].body;
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
             break;
+        case MessageType.MessageAudio:
+            msgContent = "[语音消息]";
+            break;
         case MessageType.MessageWeb:
             msgContent = "[" + msg["web"].title + "]";
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
@@ -198,7 +201,6 @@ function appendOrInsertRoomList(msg, isInsert)
     }
 }
 
-
 function handleMsgInfo(msg)
 {
     var toGroupId = msg.toGroupId;
@@ -267,7 +269,6 @@ function handleSetItemError(error)
 }
 enableWebsocketGw = localStorage.getItem(websocketGW);
 
-
 if(enableWebsocketGw == "false" || enableWebsocketGw == null) {
     ///1秒 sync
    setInterval(function (args) {
@@ -331,7 +332,7 @@ function handleSyncMsgForRoom(results)
             var isNeewUpdatePointer = false;
             for(i=0; i<length; i++) {
                 var msg = list[i];
-                if(msg.hasOwnProperty("toGroupId") && msg.toGroupId.length>0) {
+                if(msg.hasOwnProperty("toGroupId") && msg.toGroupId.length>0 &&((msg.hasOwnProperty("treatPointerAsU2Pointer") && msg.treatPointerAsU2Pointer == false) || !msg.hasOwnProperty("treatPointerAsU2Pointer"))) {
                     isNeewUpdatePointer = true;
                     var groupId = msg.toGroupId;
                     if(groupUpdatePointer.hasOwnProperty(groupId)) {
@@ -344,8 +345,10 @@ function handleSyncMsgForRoom(results)
                     }
                 } else {
                     if(msg.pointer != undefined) {
-                        isNeewUpdatePointer = true
-                        u2UpdatePointer = msg.pointer;
+                        isNeewUpdatePointer = true;
+                        if(msg.pointer > u2UpdatePointer) {
+                            u2UpdatePointer = msg.pointer;
+                        }
                     }
                 }
                 handleSyncMsg(msg);
@@ -760,6 +763,9 @@ function appendMsgHtml(msg)
                     timeServer:msg.timeServer
                 });
                 break;
+            case MessageType.MessageAudio:
+                html = template("tpl-send-msg-audio", {});
+                break;
             case MessageType.MessageWebNotice:
                 html =  msg['notice'].code;
                 break;
@@ -816,6 +822,9 @@ function appendMsgHtml(msg)
                     height:imgObject.height,
                 });
                 break;
+            case MessageType.MessageAudio:
+                html = template("tpl-receive-msg-audio", {});
+                break;
             case MessageType.MessageWebNotice :
                 // html =  msg['webNotice'].code;
                 var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
@@ -852,6 +861,7 @@ function appendMsgHtml(msg)
                 break;
         }
     }
+
     if(msgType == MessageType.MessageText) {
         html = trimMsgContentBr(html);
     }
