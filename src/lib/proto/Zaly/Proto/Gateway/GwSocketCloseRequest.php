@@ -18,18 +18,9 @@ class GwSocketCloseRequest extends \Google\Protobuf\Internal\Message
      */
     private $socketIds;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $socketIds
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Gateway\GwSocketClose::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

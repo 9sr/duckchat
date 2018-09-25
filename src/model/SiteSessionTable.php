@@ -269,15 +269,11 @@ class SiteSessionTable extends BaseTable
                   where userId=:userId and clientSideType=:clientSideType
                   and deviceId IN ('{$deviceIdStr}');";
 
-            $this->logger->error("=============", "sql-=" . $sql);
-
             $prepare = $this->db->prepare($sql);
             $this->handlePrepareError($tag, $prepare);
             $prepare->bindValue(":userId", $userId);
             $prepare->bindValue(":clientSideType", $clientType, PDO::PARAM_INT);
             $result = $prepare->execute();
-
-            $this->logger->error("=============", "result-=" . var_export($prepare->errorInfo(), true));
 
             return $result;
         } catch (Exception $e) {

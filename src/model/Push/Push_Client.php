@@ -78,6 +78,7 @@ class Push_Client
             }
             $deviceIds = $this->getPushDeviceIdList($roomType, $fromUserId, $toId);
             $pushBody->setToDevicePubkPemIds($deviceIds);
+            $pushBody->setMsgId($msgId);
             $pushRequest->setPushBody($pushBody);
 
 //            $this->ctx->Wpf_Logger->info("api.push.notification", "request=" . $pushRequest->serializeToJsonString());

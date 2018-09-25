@@ -31,20 +31,9 @@ class ApiPassportPasswordModifyPasswordRequest extends \Google\Protobuf\Internal
      */
     private $newPassword = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $loginName
-     *     @type string $password
-     *     @type string $newPassword
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiPassportPasswordModifyPassword::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

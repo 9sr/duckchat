@@ -8,7 +8,7 @@ namespace Zaly\Proto\Core;
  * there are lots of mime.types here:
  * http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
  *
- * Protobuf type <code>core.FileType</code>
+ * Protobuf enum <code>Core\FileType</code>
  */
 class FileType
 {

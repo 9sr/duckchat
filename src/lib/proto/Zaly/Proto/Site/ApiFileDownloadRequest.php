@@ -36,21 +36,9 @@ class ApiFileDownloadRequest extends \Google\Protobuf\Internal\Message
      */
     private $isGroupMessage = false;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $fileId
-     *     @type bool $returnBase64
-     *     @type string $messageId
-     *     @type bool $isGroupMessage
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiFileDownload::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

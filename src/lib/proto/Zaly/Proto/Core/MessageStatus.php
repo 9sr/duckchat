@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf type <code>core.MessageStatus</code>
+ * Protobuf enum <code>Core\MessageStatus</code>
  */
 class MessageStatus
 {

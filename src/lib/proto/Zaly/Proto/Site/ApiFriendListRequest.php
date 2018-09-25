@@ -27,20 +27,9 @@ class ApiFriendListRequest extends \Google\Protobuf\Internal\Message
      */
     private $count = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type int $offset
-     *     @type int $count
-     *           default 1000
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiFriendList::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

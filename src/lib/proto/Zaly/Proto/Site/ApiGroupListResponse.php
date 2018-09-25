@@ -26,20 +26,9 @@ class ApiGroupListResponse extends \Google\Protobuf\Internal\Message
      */
     private $totalCount = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type \Zaly\Proto\Core\PublicGroupProfile[]|\Google\Protobuf\Internal\RepeatedField $list
-     *     @type array|\Google\Protobuf\Internal\MapField $listIsMute
-     *     @type int $totalCount
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiGroupList::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

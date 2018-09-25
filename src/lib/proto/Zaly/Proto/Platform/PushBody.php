@@ -73,6 +73,12 @@ class PushBody extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>repeated string toDevicePubkPemIds = 10;</code>
      */
     private $toDevicePubkPemIds;
+    /**
+     *push message id
+     *
+     * Generated from protobuf field <code>string msgId = 11;</code>
+     */
+    private $msgId = '';
 
     public function __construct() {
         \GPBMetadata\Platform\Common::initOnce();
@@ -331,6 +337,32 @@ class PushBody extends \Google\Protobuf\Internal\Message
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::STRING);
         $this->toDevicePubkPemIds = $arr;
+
+        return $this;
+    }
+
+    /**
+     *push message id
+     *
+     * Generated from protobuf field <code>string msgId = 11;</code>
+     * @return string
+     */
+    public function getMsgId()
+    {
+        return $this->msgId;
+    }
+
+    /**
+     *push message id
+     *
+     * Generated from protobuf field <code>string msgId = 11;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setMsgId($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->msgId = $var;
 
         return $this;
     }

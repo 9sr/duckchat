@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf type <code>core.GroupJoinPermissionType</code>
+ * Protobuf enum <code>Core\GroupJoinPermissionType</code>
  */
 class GroupJoinPermissionType
 {
