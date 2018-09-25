@@ -19,7 +19,7 @@ abstract class HttpBaseController extends \Wpf_Controller
     protected $sessionId;
     public $defaultErrorCode = "success";
     public $errorCode = "fail";
-    protected $sessionIdTimeOut = 3600000; //10个小时的毫秒
+    protected $sessionIdTimeOut = 3600000; //1个小时的毫秒
     public $defaultFilePath = "files";
     public $whiteAction = [
         "page.login",
