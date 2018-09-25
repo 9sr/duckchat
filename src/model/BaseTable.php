@@ -171,7 +171,7 @@ class BaseTable
 //        if (!$flag || !$count) {
 //            throw new Exception($tag . " update is fail=" . var_export($prepare->errorInfo(), true));
 //        }
-        return $this->handlerResult($flag, $prepare, $tag);
+        return $this->handlerUpdateResult($flag, $prepare, $tag);
     }
 
     public function handlePrepareError($tag, $prepare)
@@ -193,6 +193,7 @@ class BaseTable
     }
 
     /**
+     * 处理 增，删 情况
      * @param $tag
      * @param $prepare
      * @param $result
@@ -211,6 +212,24 @@ class BaseTable
         }
 
         throw new Exception($tag . " execute prepare fail as prepare false");
+    }
+
+    /**
+     * 单独处理 update 情况，必须rowCount>0 才算成功
+     * @param $result
+     * @param $prepare
+     * @param $tag
+     * @return bool
+     * @throws Exception
+     */
+    protected function handlerUpdateResult($result, $prepare, $tag)
+    {
+        $result = $this->handlerResult($result, $prepare, $tag);
+
+        if ($result) {
+            return $prepare->rowCount() > 0;
+        }
+        return false;
     }
 
 }
