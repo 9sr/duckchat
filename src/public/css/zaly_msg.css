@@ -1543,3 +1543,13 @@ button:active{
     justify-content: center;
     margin-top: 2rem;
 }
+
+#selfQrcodeCanvas {
+    height: 100%;
+    margin-top: 3rem;
+}
+
+#selfCanvas {
+    width: 17rem;
+    height:17rem;
+}

@@ -128,12 +128,14 @@ for (function(a) {
                          c.width = b.width,
                          c.height = b.height,
                          c.className = b.className,
-                         d = c.getContext("2d"),d.fillStyle="#ffffff", d.fillRect(0, 0,b.width, b.height), d.strokeStyle="#cccccc", d.strokeRect(0, 0, b.width, b.height),  b.src && (e = new Image(), e.src = getImgSrc(b.src), e.onload = function() {
-                    if(b.isCircle == true) {
-                                 circleImg(d, e, (b.width-60)/2, (b.width-60)/2, 30);
-                             } else {
-                                 squareImg(d, e, (b.width-80)/2, (b.width-80)/2 );
-                             }
+                         d = c.getContext("2d"), d.fillStyle="#ffffff", d.fillRect(0, 0,b.width, b.height), d.strokeRect(0,0,b.width,b.height), b.src && (e = new Image(), e.src = getImgSrc(b.src), e.onload = function() {
+                    // if(b.isCircle == true) {
+                    //              circleImg(d, e, (b.width-60)/2, (b.width-60)/2, 30);
+                    //          } else {
+                    //              // squareImg(d, e, (b.width-80)/2, (b.width-80)/2 );
+                    //          }
+                    circleImg(d, e, (b.width-60)/2, (b.width-60)/2, 30);
+
                 }), f = b.canvasWidth / a.getModuleCount(), g = b.canvasHeight / a.getModuleCount(), h =2 ; h < a.getModuleCount(); h++) {
                     for (i = 2; i < a.getModuleCount(); i++) {
                         d.fillStyle = a.isDark(h, i) ? b.foreground: b.background,

@@ -434,12 +434,15 @@ $(document).on("click", ".l-sb-item", function(){
 
 function generateQrcode(qrCodeObj, urlLink, src, isCircle, type)
 {
-
     var idName, className,width,height,canvasWidth,canvasHeight;
 
     if(type == "self") {
-         idName = "selfQrcodeCanvas";
+         idName = "selfCanvas";
          className = "selfCanvas";
+        width  = getRemPx()*17;
+        height = getRemPx()*17;
+        canvasWidth = getRemPx()*15;
+        canvasHeight = getRemPx()*15;
     } else if(type == 'group') {
          width  = getRemPx()*24;
          height = getRemPx()*24;
@@ -2320,7 +2323,8 @@ $(document).on("click", "#self-qrcode", function () {
     var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, token, "u");
     $("#selfQrcodeCanvas").attr("urlLink", urlLink);
 
-    generateQrcode($('#qrcodeCanvas'), urlLink, src, true , "self");
+    generateQrcode($('#selfQrcodeCanvas'), urlLink, src, true , "self");
+
 });
 
 function updateSelfNickName(event)
