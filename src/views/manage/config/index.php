@@ -1226,7 +1226,6 @@
     }
 
     function updateConfigResponse(url, data, result) {
-        alert("result=" + result);
         var res = JSON.parse(result);
         if ("success" == res.errCode) {
             window.location.reload();
