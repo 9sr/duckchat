@@ -31,7 +31,7 @@
 
             <div class="login_name_div margin-top2">
                 <image src="../../public/img/login/pwd.png" class="img"/>
-                <input type="password" class="input_login_site phone_num  login_input_pwd" autocapitalize="off"  data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password" >
+                <input type="password" class="input_login_site phone_num  login_input_pwd" autocapitalize="off"  data-local-placeholder="enterPasswordPlaceholder"  onkeydown="loginPassport()" onkeypress="loginPassport()" placeholder="Please Enter Password" >
                 <div class="pwd_div" onclick="changeImgByClickPwd()"><image src="../../public/img/login/hide_pwd.png" class="pwd" img_type="hide" /></div>
                 <img src="../../public/img/msg/msg_failed.png" class="img-failed login_input_pwd_failed">
             </div>

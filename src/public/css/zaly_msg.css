@@ -96,7 +96,7 @@ html, body{
 .right-body {
     background: green;
     flex-grow: 1;
-    height: 90%;
+    height: 93%;
     position: relative;
     display: flex;
     align-items: stretch;
@@ -111,7 +111,7 @@ html, body{
     border-bottom: 0.2rem solid rgba(0,0,0,0.1);
     height: 1;
     overflow: hidden;
-    padding: 2rem 0;
+    padding: 1rem 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -132,6 +132,7 @@ html, body{
     overflow-y: scroll;
     height: 1;
     overflow-x: hidden;
+    margin-bottom: 10rem;
 }
 .right-chatbox:focus{
     background-color: white;
@@ -461,8 +462,10 @@ html, body{
 .right-input {
     display: flex;
     flex-direction: column;
-    height: 10.98rem;
+    height: 10rem;
     flex-shrink: 0;
+    position: absolute;
+    bottom: 0rem;
     box-shadow:0rem -0.09rem 0.38rem 0rem rgba(223,223,223,1);
 }
 

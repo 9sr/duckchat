@@ -14,6 +14,14 @@ function uploadFile(obj)
     $("#"+obj).click();
 }
 
+
+function showWebNotification(msg)
+{
+    if(window.Notification && Notification.permission !== "denied"){
+        new Notification(msg, {tag: 'duckchat'});
+    }
+}
+
 token = $('.token').attr("data");
 nickname = $(".nickname").attr("data");
 loginName=$(".loginName").attr("data");
@@ -1154,6 +1162,38 @@ $(document).on("click", ".create-group-btn", function () {
 });
 
 $(document).on("click", ".create_group_button" , function(){
+    createGroup();
+});
+
+function createGroupByKeyPress(event)
+{
+
+    if(checkIsEnterBack(event) == false) {
+        return;
+    }
+    createGroup();
+}
+
+function checkIsEnterBack(event)
+{
+    var event = event || window.event;
+    var isIE = (document.all) ? true : false;
+    var key;
+
+    if(isIE) {
+        key = event.keyCode;
+    } else {
+        key = event.which;
+    }
+
+    if(key != 13) {
+        return false;
+    }
+    return true;
+}
+
+function createGroup()
+{
     var groupName = $(".group_name").val();
     if(groupName.length > 10 || groupName.length < 1) {
         ////TODO 换成 页面漂浮报错
@@ -1166,7 +1206,7 @@ $(document).on("click", ".create_group_button" , function(){
     };
     var action = "api.group.create";
     handleClientSendRequest(action, reqData, groupCreateSuccess);
-});
+}
 
 function groupCreateSuccess(results) {
     var groupProfile = results.profile["profile"];
@@ -1893,6 +1933,7 @@ $(function () {
         var ch  = pwLeft.clientHeight;
         var sh = pwLeft.scrollHeight;
         var st = $('.friend-right-body').scrollTop();
+
         ////文档的高度-视口的高度-滚动条的高度
         if((sh - ch - st) == 0){
             var action = "api.friend.applyList";
@@ -2242,22 +2283,12 @@ $(document).on("click", "#self-qrcode", function () {
         foreground : "#000000",        //二维码的前景色
         src: src, //二维码中间的图片
     });
-
-
-
 });
 
 
 function updateSelfNickName(event)
 {
-    var isIE = (document.all) ? true : false;
-    var key;
-    if(isIE) {
-        key = event.keyCode;
-    } else {
-        key = event.which;
-    }
-    if(key != 13) {
+    if(checkIsEnterBack() == false) {
         return;
     }
     var nickname = $(".nickname").val();
@@ -2303,14 +2334,7 @@ $(document).on("click", ".groupName",function () {
 
 function updateGroupNameName(event)
 {
-    var isIE = (document.all) ? true : false;
-    var key;
-    if(isIE) {
-        key = event.keyCode;
-    } else {
-        key = event.which;
-    }
-    if(key != 13) {
+    if(checkIsEnterBack(event) == false) {
         return;
     }
 
@@ -2338,21 +2362,19 @@ $(document).on("click", ".web-msg-click", function(){
     window.open(url);
 });
 
-function searchUser(event)
+function searchUserByKeyPress(event)
 {
-    var event = event || window.event;
-    var isIE = (document.all) ? true : false;
-    var key;
-
-    if(isIE) {
-        key = event.keyCode;
-    } else {
-        key = event.which;
-    }
-
-    if(key != 13) {
+    if(checkIsEnterBack(event) == false) {
         return;
     }
+    searchUser();
+}
+
+function searchUserByOnBlur(){
+    searchUser();
+}
+
+function searchUser() {
     var searchValue = $(".search-user-input").val();
     if(searchValue.length<1) {
         return;
@@ -2400,3 +2422,8 @@ function closeMaskDiv(str)
 {
     removeWindow($(str));
 }
+
+$(document).on("click", ".msg_img", function () {
+    var src = $(this).attr("src");
+    window.open(src);
+});

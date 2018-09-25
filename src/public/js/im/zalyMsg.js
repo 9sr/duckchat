@@ -100,7 +100,7 @@ function removeRoomFromRoomList(chatSessionId)
     return roomList;
 }
 
-function appendOrInsertRoomList(msg, isInsert)
+function appendOrInsertRoomList(msg, isInsert, isNotification)
 {
     if(msg != undefined && msg.hasOwnProperty("type") && msg.type == MessageStatus.MessageEventSyncEnd) {
         return ;
@@ -166,6 +166,10 @@ function appendOrInsertRoomList(msg, isInsert)
         if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
             $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
         }
+        console.log(JSON.stringify(msg));
+        if(msg.fromUserId != token) {
+            showWebNotification(msgContent);
+        }
         return ;
     }
 
@@ -195,6 +199,11 @@ function appendOrInsertRoomList(msg, isInsert)
 
     if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
         $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
+    }
+
+    console.log(JSON.stringify(msg));
+    if(msg.fromUserId != token) {
+        showWebNotification(msgContent);
     }
 }
 
@@ -273,7 +282,7 @@ if(enableWebsocketGw == "false" || enableWebsocketGw == null) {
    setInterval(function (args) {
        enableWebsocketGw = localStorage.getItem(websocketGW);
        if(enableWebsocketGw == "false")  {
-           syncMsgForRoom();
+           // syncMsgForRoom();
        }
    }, 1000);
 }
@@ -388,8 +397,11 @@ function handleSyncMsg(msg)
 
     ///是自己群的消息，并且是新消息
     if(msg.chatSessionId  == currentChatSessionId && isNewMsg) {
+        var isEndMsgDialog = isCheckEndMsgDialog();
         appendMsgHtml(msg);
-        msgBoxScrollToBottom();
+        if(isEndMsgDialog == true) {
+            msgBoxScrollToBottom();
+        }
     } else if(msg.chatSessionId != currentChatSessionId && isNewMsg) {
         if(msg.chatSessionId != token) {
             setRoomMsgUnreadNum(msg.chatSessionId);
@@ -662,7 +674,7 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
 
     handleImSendRequest(action, reqData, "");
     message['chatSessionId'] = chatSessionId;
-    appendOrInsertRoomList(message, true);
+    appendOrInsertRoomList(message, true, isNotification);
     handleMsgForMsgRoom(chatSessionId, message);
     addMsgToChatDialog(chatSessionId, message);
 };
@@ -671,6 +683,7 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
 function addMsgToChatDialog(chatSessionId, msg)
 {
     msg.status = MessageStatus.MessageStatusSending;
+
     appendMsgHtml(msg);
 
     var node = $(".chat_dession_id_"+chatSessionId);
@@ -690,9 +703,20 @@ function addMsgToChatDialog(chatSessionId, msg)
             }
         }
     }, 10000);///10秒执行
-
-
+    ///在上部分查看消息的时候不滚动
     msgBoxScrollToBottom();
+}
+
+function isCheckEndMsgDialog()
+{
+    var rightchatBox = $(".right-chatbox")[0];
+    var sh = rightchatBox.scrollHeight;
+    var ch = rightchatBox.clientHeight;
+    var st = $(".right-chatbox").scrollTop();
+    if(sh - ch - st == 0) {
+        return true
+    }
+    return false;
 }
 
 function appendMsgHtml(msg)
@@ -1110,5 +1134,3 @@ function updateUserAvatar(fileName)
     values.push(value);
     updateUserInfo(values);
 }
-
-

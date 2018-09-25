@@ -414,6 +414,11 @@ function validateEmail(email)
 
 
 $(document).on("click", ".login_button", function () {
+    loginPassport();
+});
+
+function loginPassport()
+{
     loginName = $(".login_input_loginName").val();
     loginPassword  = $(".login_input_pwd").val();
     var isFocus = false;
@@ -442,7 +447,7 @@ $(document).on("click", ".login_button", function () {
         return false;
     }
     apiPassportPasswordLogin(handleApiPassportPasswordLogin);
-});
+}
 
 
 function apiPassportPasswordLogin(callback)
