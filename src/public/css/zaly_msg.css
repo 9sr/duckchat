@@ -1036,8 +1036,7 @@ html, body{
     max-width:50rem;
     min-width: 3rem;
     display: inline-block;
-    height: 3rem;
-    line-height: 3rem;
+    min-height: 3rem;
     max-height: 20rem;
     background:rgba(223,223,223,1);
     border-radius:0.56rem;

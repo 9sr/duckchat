@@ -100,7 +100,7 @@ function removeRoomFromRoomList(chatSessionId)
     return roomList;
 }
 
-function appendOrInsertRoomList(msg, isInsert, isNotification)
+function appendOrInsertRoomList(msg, isInsert)
 {
     if(msg != undefined && msg.hasOwnProperty("type") && msg.type == MessageStatus.MessageEventSyncEnd) {
         return ;
@@ -202,6 +202,7 @@ function appendOrInsertRoomList(msg, isInsert, isNotification)
     }
 
     console.log(JSON.stringify(msg));
+
     if(msg.fromUserId != token) {
         showWebNotification(msgContent);
     }
@@ -282,7 +283,7 @@ if(enableWebsocketGw == "false" || enableWebsocketGw == null) {
    setInterval(function (args) {
        enableWebsocketGw = localStorage.getItem(websocketGW);
        if(enableWebsocketGw == "false")  {
-           // syncMsgForRoom();
+           syncMsgForRoom();
        }
    }, 1000);
 }
@@ -674,7 +675,7 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
 
     handleImSendRequest(action, reqData, "");
     message['chatSessionId'] = chatSessionId;
-    appendOrInsertRoomList(message, true, isNotification);
+    appendOrInsertRoomList(message, true);
     handleMsgForMsgRoom(chatSessionId, message);
     addMsgToChatDialog(chatSessionId, message);
 };
