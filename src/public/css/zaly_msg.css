@@ -1501,11 +1501,14 @@ button:active{
     cursor: pointer;
 }
 
-#selfQrcode{
-    padding: 1rem;
-    box-shadow: 0rem 0.19rem 0.75rem 0.09rem rgba(223,223,223,1);
-    border-radius: 0.56rem;
-    cursor: pointer;
+#selfQrcodeCanvas {
+    height: 100%;
+    margin-top: 3rem;
+}
+
+#selfQrcode {
+    width: 17rem;
+    height:17rem;
 }
 
 #download-app-div {
@@ -1542,14 +1545,4 @@ button:active{
     display: flex;
     justify-content: center;
     margin-top: 2rem;
-}
-
-#selfQrcodeCanvas {
-    height: 100%;
-    margin-top: 3rem;
-}
-
-#selfCanvas {
-    width: 17rem;
-    height:17rem;
 }

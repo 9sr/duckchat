@@ -437,7 +437,7 @@ function generateQrcode(qrCodeObj, urlLink, src, isCircle, type)
     var idName, className,width,height,canvasWidth,canvasHeight;
 
     if(type == "self") {
-         idName = "selfCanvas";
+         idName = "selfQrcode";
          className = "selfCanvas";
         width  = getRemPx()*17;
         height = getRemPx()*17;

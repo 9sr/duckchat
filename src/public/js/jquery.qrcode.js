@@ -122,22 +122,21 @@ for (function(a) {
                 b),
             c = function() {
                 var c, d, e, f, g, h, i, j, k,startX,startY, a = new QRCode(b.typeNumber, b.correctLevel);
-
                 for (a.addData(utf16to8(b.text)), a.make(), c = document.createElement("canvas"),
                          c.id=b.idName,
                          c.width = b.width,
                          c.height = b.height,
                          c.className = b.className,
                          d = c.getContext("2d"), d.fillStyle="#ffffff", d.fillRect(0, 0,b.width, b.height), d.strokeRect(0,0,b.width,b.height), b.src && (e = new Image(), e.src = getImgSrc(b.src), e.onload = function() {
-                    // if(b.isCircle == true) {
-                    //              circleImg(d, e, (b.width-60)/2, (b.width-60)/2, 30);
-                    //          } else {
-                    //              // squareImg(d, e, (b.width-80)/2, (b.width-80)/2 );
-                    //          }
-                    circleImg(d, e, (b.width-60)/2, (b.width-60)/2, 30);
+                    if(b.isCircle == true) {
+                                 circleImg(d, e, (b.width-60)/2, (b.width-60)/2, 30);
+                             } else {
+                                 // squareImg(d, e, (b.width-80)/2, (b.width-80)/2 );
+                             }
+                }), f = b.canvasWidth / a.getModuleCount(), g = b.canvasHeight / a.getModuleCount(), h = Math.floor(a.getModuleCount()/10) ; h < a.getModuleCount(); h++) {
+                    console.log("a.getModuleCount() =="+a.getModuleCount());
 
-                }), f = b.canvasWidth / a.getModuleCount(), g = b.canvasHeight / a.getModuleCount(), h =2 ; h < a.getModuleCount(); h++) {
-                    for (i = 2; i < a.getModuleCount(); i++) {
+                    for (i = Math.floor(a.getModuleCount()/10); i < a.getModuleCount(); i++) {
                         d.fillStyle = a.isDark(h, i) ? b.foreground: b.background,
                             j = Math.ceil((i + 1) * f) - Math.floor(i * f),
                             k = Math.ceil((h + 1) * f) - Math.floor(h * f),
