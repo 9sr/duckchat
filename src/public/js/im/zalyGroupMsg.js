@@ -15,11 +15,32 @@ function uploadFile(obj)
 }
 
 
-function showWebNotification(name, msgContent)
+function showWebNotification(msg, msgContent)
 {
+    var msgId = msg.msgId;
+    var nickname="";
+    var name='';
+    var notification;
+
+    if(msg.roomType == "MessageRoomGroup") {
+        name = msg.name;
+        nickname=msg.nickname;
+    } else {
+         name=msg.nickname;
+    }
+
+    if(name == undefined || name.length<1) {
+        name = "通知";
+    }
+
+    if(nickname == "") {
+         notification = "["+name+"] "+ msgContent;
+    } else {
+         notification = "["+name+"] "+nickname+":" + msgContent;
+    }
+
     if(window.Notification && Notification.permission !== "denied"){
-        var notification = "["+name+"] " + msgContent
-        new Notification(notification);
+        new Notification(notification, {"tag":msgId});
     }
 }
 

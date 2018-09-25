@@ -96,13 +96,17 @@ html, body{
 .right-body {
     background: green;
     flex-grow: 1;
-    height: 93%;
     position: relative;
     display: flex;
     align-items: stretch;
     flex-direction: row;
     overflow-y: hidden;
-
+    top: 7.1rem;
+    right: 1rem;
+    left: 1rem;
+    bottom: 0;
+    display: flex;
+    position: absolute;
 }
 
 .right-body-chat {
@@ -111,7 +115,6 @@ html, body{
     border-bottom: 0.2rem solid rgba(0,0,0,0.1);
     height: 1;
     overflow: hidden;
-    padding: 1rem 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -132,7 +135,6 @@ html, body{
     overflow-y: scroll;
     height: 1;
     overflow-x: hidden;
-    margin-bottom: 10rem;
 }
 .right-chatbox:focus{
     background-color: white;
@@ -318,6 +320,7 @@ html, body{
     background: #fff;
     border-bottom: 0.2rem solid rgba(0,0,0,0.1);
     position: relative;
+    box-shadow:0rem 0.09rem 0.09rem 0rem rgba(0,0,0,0.2);
 }
 .right-head .title {
     font-size:2.25rem;
@@ -462,10 +465,9 @@ html, body{
 .right-input {
     display: flex;
     flex-direction: column;
-    height: 10rem;
+    height: 9rem;
     flex-shrink: 0;
-    position: absolute;
-    bottom: 0rem;
+    margin-bottom: 1rem;
     box-shadow:0rem -0.09rem 0.38rem 0rem rgba(223,223,223,1);
 }
 
@@ -511,7 +513,7 @@ html, body{
 }
 .input-line {
     height:0.19rem;
-    color:rgba(153,153,153,1);
+    background:rgba(201,201,201,1);
     margin-left: 2rem;
     overflow: hidden;
     margin-right: 16rem;
@@ -998,7 +1000,7 @@ html, body{
     width:4.68rem;
     height:4.68rem;
 }
- .unread-num {
+.unread-num {
     top:1.5rem;
     right:1rem;
     width: 2rem;
@@ -1008,8 +1010,8 @@ html, body{
     position: absolute;
     border-radius: 50%;
     color: white;
-     text-align: center;
-     line-height: 2rem;
+    text-align: center;
+    line-height: 2rem;
 }
 
 .unread-num-mute {
@@ -1036,7 +1038,8 @@ html, body{
     max-width:50rem;
     min-width: 3rem;
     display: inline-block;
-    min-height: 3rem;
+    height: 3rem;
+    line-height: 3rem;
     max-height: 20rem;
     background:rgba(223,223,223,1);
     border-radius:0.56rem;
@@ -1079,7 +1082,7 @@ html, body{
 }
 
 /*.logout:hover {*/
-    /*background-color: #4C3BB1;*/
+/*background-color: #4C3BB1;*/
 /*}*/
 
 .permission-join, .can-guest-read-message, .quit-group,

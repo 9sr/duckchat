@@ -167,7 +167,7 @@ function appendOrInsertRoomList(msg, isInsert)
             $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
         }
         if(msg.fromUserId != token) {
-            showWebNotification(name, msgContent);
+            showWebNotification(msg, msgContent);
         }
         return ;
     }
@@ -187,7 +187,8 @@ function appendOrInsertRoomList(msg, isInsert)
         avatar:avatar,
         timeServer:msgTime,
         msgServerTime:msg.timeServer,
-    });
+    })
+
     if($(".chatsession-row").length > 0 ) {
         $(html).insertBefore($(".chatsession-row")[0]);
     } else {
@@ -199,12 +200,11 @@ function appendOrInsertRoomList(msg, isInsert)
     if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
         $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
     }
-
+    console.log(JSON.stringify(msg))
     if(msg.fromUserId != token) {
-        showWebNotification(name, msgContent);
+        showWebNotification(msg, msgContent);
     }
 }
-
 
 function handleMsgInfo(msg)
 {
