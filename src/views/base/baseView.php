@@ -3,7 +3,7 @@
 <div class="wrapper" id="wrapper" >
     <div class="layout-left" >
         <div class="left-sidebar" style="position: relative;">
-                <div>
+                <div style="position: relative;height: 100%;">
                     <div class="l-sb-item" style="border: none;" >
                         <img class="useravatar selfInfo info-avatar-<?php echo $user_id;?>"  src="../../public/img/msg/default_user.png" style="background-color: #c9c9c9;" />
                     </div>
@@ -34,12 +34,16 @@
                         <div class="l-sb-item"  data="search" >
                             <img src="../../public/img/msg/search_unselect.png" data="unselect" class="search-unselect item-img" />
                             <img src="../../public/img/msg/search.png" data="select" class="search-select item-img" style="display: none;"/>
+                        </div>s
+                    </div>
+
+                    <div class=" hint--right" style="width: 7.5rem;bottom: 1rem;position: absolute" aria-label="More" data-local="aria-label:moreTip">
+                        <div class="l-sb-item"  data="more" >
+                            <img src="../../public/img/msg/more_unselect.png" data="unselect" class="more-unselect item-img" />
+                            <img src="../../public/img/msg/more.png" data="select" class="more-select item-img" style="display: none;"/>
                         </div>
                     </div>
 
-                    <div class="appDownload" style="display: none;">
-                        <img class='app_download' src="../../public/img/dowload.png"/>
-                    </div>
                 </div>
         </div>
 
