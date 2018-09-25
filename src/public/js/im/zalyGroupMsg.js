@@ -15,10 +15,11 @@ function uploadFile(obj)
 }
 
 
-function showWebNotification(msg)
+function showWebNotification(name, msgContent)
 {
     if(window.Notification && Notification.permission !== "denied"){
-        new Notification(msg, {tag: 'duckchat'});
+        var notification = "["+name+"] " + msgContent
+        new Notification(notification);
     }
 }
 

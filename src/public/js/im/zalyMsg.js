@@ -166,9 +166,8 @@ function appendOrInsertRoomList(msg, isInsert)
         if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
             $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
         }
-        console.log(JSON.stringify(msg));
         if(msg.fromUserId != token) {
-            showWebNotification(msgContent);
+            showWebNotification(name, msgContent);
         }
         return ;
     }
@@ -201,10 +200,8 @@ function appendOrInsertRoomList(msg, isInsert)
         $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
     }
 
-    console.log(JSON.stringify(msg));
-
     if(msg.fromUserId != token) {
-        showWebNotification(msgContent);
+        showWebNotification(name, msgContent);
     }
 }
 
