@@ -25,19 +25,9 @@ class ApiGroupInviteRequest extends \Google\Protobuf\Internal\Message
      */
     private $userIds;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $groupId
-     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $userIds
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiGroupInvite::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

@@ -18,18 +18,9 @@ class ApiPluginListResponse extends \Google\Protobuf\Internal\Message
      */
     private $list;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type \Zaly\Proto\Core\PluginProfile[]|\Google\Protobuf\Internal\RepeatedField $list
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiPluginList::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

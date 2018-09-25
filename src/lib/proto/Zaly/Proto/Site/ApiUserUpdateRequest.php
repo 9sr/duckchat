@@ -21,18 +21,9 @@ class ApiUserUpdateRequest extends \Google\Protobuf\Internal\Message
      */
     private $values;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type \Zaly\Proto\Site\ApiUserUpdateValue[]|\Google\Protobuf\Internal\RepeatedField $values
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiUserUpdate::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf type <code>core.PushType</code>
+ * Protobuf enum <code>Core\PushType</code>
  */
 class PushType
 {

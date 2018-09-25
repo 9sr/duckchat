@@ -32,20 +32,9 @@ class ApiFileUploadRequest extends \Google\Protobuf\Internal\Message
      */
     private $isMessageAttachment = false;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $file
-     *     @type int $fileType
-     *     @type bool $isMessageAttachment
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiFileUpload::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

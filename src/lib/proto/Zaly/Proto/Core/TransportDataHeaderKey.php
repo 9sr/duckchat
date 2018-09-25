@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf type <code>core.TransportDataHeaderKey</code>
+ * Protobuf enum <code>Core\TransportDataHeaderKey</code>
  */
 class TransportDataHeaderKey
 {

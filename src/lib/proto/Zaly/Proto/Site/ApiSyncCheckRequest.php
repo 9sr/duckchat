@@ -25,19 +25,9 @@ class ApiSyncCheckRequest extends \Google\Protobuf\Internal\Message
      */
     private $localVersion = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type int $type
-     *     @type int $localVersion
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiSyncCheck::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**
