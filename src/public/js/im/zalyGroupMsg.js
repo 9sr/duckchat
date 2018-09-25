@@ -417,10 +417,59 @@ $(document).on("click", ".l-sb-item", function(){
             $("#search-user-div").html(html);
             showWindow($("#search-user-div"));
             break;
+        case "more":
+            var html = template("tpl-download-app-div", {});
+            $("#download-app-div").html(html);
 
+            urlLink = "http:;//";
+            src = "../../public/img/duckchat.png";
+
+            generateQrcode($('#qrcodeCanvas'), urlLink, src, false, "more");
+
+            showWindow($("#download-app-div"));
+            break;
     }
     displayRoomListMsgUnReadNum();
 });
+
+function generateQrcode(qrCodeObj, urlLink, src, isCircle, type)
+{
+
+    var idName, className,width,height,canvasWidth,canvasHeight;
+
+    if(type == "self") {
+         idName = "selfQrcodeCanvas";
+         className = "selfCanvas";
+    } else if(type == 'group') {
+         width  = getRemPx()*24;
+         height = getRemPx()*24;
+         canvasWidth = getRemPx()*22;
+         canvasHeight = getRemPx()*22;
+         className = "qrcodeCanvas";
+         idName = "groupQrcode";
+    } else {
+         width  = getRemPx()*24;
+         height = getRemPx()*24;
+         canvasWidth = getRemPx()*22;
+         canvasHeight = getRemPx()*22;
+         idName = "appDownload";
+         className = "appDownload";
+    }
+    qrCodeObj.qrcode({
+        idName:idName,
+        render : "canvas",
+        text    :urlLink,
+        className : className,
+        canvasWidth:canvasWidth,
+        canvasHeight:canvasHeight,
+        width : width,               //二维码的宽度
+        height : height,              //二维码的高度
+        background : "#ffffff",       //二维码的后景色
+        foreground : "#000000",        //二维码的前景色
+        src: src, //二维码中间的图片
+        isCircle:isCircle
+    });
+}
 
 function setDocumentTitle(type)
 {
@@ -817,7 +866,6 @@ function addActiveForRoomList(jqElement)
 
 function getGroupProfile(groupId)
 {
-
     var groupInfoKey = profileKey + groupId;
     var groupProfileStr = localStorage.getItem(groupInfoKey);
 
@@ -2191,6 +2239,7 @@ $(document).on("click", ".share-group", function () {
         groupName:groupName,
         groupId:chatSessionId
     });
+
     html = handleHtmlLanguage(html);
     $("#share_group").html(html);
     showWindow($("#share_group"));
@@ -2199,27 +2248,12 @@ $(document).on("click", ".share-group", function () {
 
     var src = $("#share_group").attr("src");
 
-    var width  = getRemPx()*23;
-    var height = getRemPx()*23;
-    var canvasWidth = getRemPx()*22;
-    var canvasHeight = getRemPx()*22;
+    if(src == "" || src == undefined) {
+        src="../../public/img/msg/group_default_avatar.png";
+    }
     var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, chatSessionId, "g");
-
     $("#share_group").attr("urlLink", urlLink);
-    console.log(urlLink);
-    $('#qrcodeCanvas').qrcode({
-        idName:"groupQrcode",
-        render : "canvas",
-        text    :urlLink,
-        className : "qrcodeCanvas",
-        canvasWidth:canvasWidth,
-        canvasHeight:canvasHeight,
-        width : width,               //二维码的宽度
-        height : height,              //二维码的高度
-        background : "#ffffff",       //二维码的后景色
-        foreground : "#000000",        //二维码的前景色
-        src: src, //二维码中间的图片
-    });
+    generateQrcode($('#qrcodeCanvas'),  urlLink, src, true, "group");
 });
 
 $(document).on("click",".copy-share-group", function(){
@@ -2283,30 +2317,11 @@ $(document).on("click", "#self-qrcode", function () {
 
     $("#selfQrcodeCanvas").html("");
     var src = $(".selfInfo").attr("src");
-
-    var width  = getRemPx()*15;
-    var height = getRemPx()*15;
-    var canvasWidth = getRemPx()*15;
-    var canvasHeight = getRemPx()*15;
     var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, token, "u");
-
     $("#selfQrcodeCanvas").attr("urlLink", urlLink);
 
-    $('#selfQrcodeCanvas').qrcode({
-        idName:"selfQrcode",
-        render : "canvas",
-        text    :urlLink,
-        className : "selfCanvas",
-        canvasWidth:canvasWidth,
-        canvasHeight:canvasHeight,
-        width : width,               //二维码的宽度
-        height : height,              //二维码的高度
-        background : "#ffffff",       //二维码的后景色
-        foreground : "#000000",        //二维码的前景色
-        src: src, //二维码中间的图片
-    });
+    generateQrcode($('#qrcodeCanvas'), urlLink, src, true , "self");
 });
-
 
 function updateSelfNickName(event)
 {

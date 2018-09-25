@@ -121,6 +121,10 @@ function appendOrInsertRoomList(msg, isInsert)
         case MessageType.MessageImage:
             msgContent = "[图片消息]";
             break;
+        case MessageType.MessageAudio:
+        case MessageTypeNum.MessageAudio:
+            msgContent = "[语音消息]";
+            break;
         case MessageType.MessageNotice:
             msgContent = msg["notice"].body;
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
@@ -200,7 +204,6 @@ function appendOrInsertRoomList(msg, isInsert)
     if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
         $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
     }
-    console.log(JSON.stringify(msg))
     if(msg.fromUserId != token) {
         showWebNotification(msg, msgContent);
     }
@@ -808,6 +811,9 @@ function appendMsgHtml(msg)
                     timeServer:msg.timeServer
                 });
                 break;
+            case MessageType.MessageAudio:
+                html = template("tpl-send-msg-audio", {});
+                break;
         }
     } else {
         switch(msgType) {
@@ -871,6 +877,9 @@ function appendMsgHtml(msg)
                 html = template("tpl-receive-msg-notice", {
                     msgContent:msgContent,
                 });
+                break;
+            case MessageType.MessageAudio:
+                html = template("tpl-receive-msg-audio", {});
                 break;
         }
     }
