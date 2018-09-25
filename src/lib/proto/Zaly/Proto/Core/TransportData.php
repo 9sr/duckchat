@@ -41,6 +41,12 @@ class TransportData extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>int64 packageId = 4;</code>
      */
     private $packageId = 0;
+    /**
+     * TransportData request time ms
+     *
+     * Generated from protobuf field <code>int64 timeMillis = 5;</code>
+     */
+    private $timeMillis = 0;
 
     public function __construct() {
         \GPBMetadata\Core\Net::initOnce();
@@ -155,6 +161,32 @@ class TransportData extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkInt64($var);
         $this->packageId = $var;
+
+        return $this;
+    }
+
+    /**
+     * TransportData request time ms
+     *
+     * Generated from protobuf field <code>int64 timeMillis = 5;</code>
+     * @return int|string
+     */
+    public function getTimeMillis()
+    {
+        return $this->timeMillis;
+    }
+
+    /**
+     * TransportData request time ms
+     *
+     * Generated from protobuf field <code>int64 timeMillis = 5;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setTimeMillis($var)
+    {
+        GPBUtil::checkInt64($var);
+        $this->timeMillis = $var;
 
         return $this;
     }

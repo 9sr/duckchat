@@ -37,7 +37,6 @@ class MiniProgram_Passport_AccountController extends MiniProgramController
             if($method == "post") {
 
                 $loginName = $_POST['loginName'];
-
                 $siteLoginName = $this->loginName;
                 if($siteLoginName != $loginName) {
                     $errorCode = $this->zalyError->errorUpdatePasswordLoginName;
@@ -87,6 +86,7 @@ class MiniProgram_Passport_AccountController extends MiniProgramController
         $transportData = new \Zaly\Proto\Core\TransportData();
         $transportData->setBody($anyBody);
         $transportData->setAction($action);
+        $transportData->setTimeMillis(ZalyHelper::getMsectime());
         $transportData->setHeader(["_".\Zaly\Proto\Core\TransportDataHeaderKey::HeaderUserClientLang => $this->language]);
         $data = $transportData->serializeToString();
         $data = base64_encode($data);

@@ -129,10 +129,15 @@ function appendOrInsertRoomList(msg, isInsert)
             msgContent = msg["notice"].body;
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
             break;
+        case MessageType.MessageAudio:
+            msgContent = "[语音消息]";
+            break;
         case MessageType.MessageWeb:
             msgContent = "[" + msg["web"].title + "]";
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
             break;
+        default:
+            msgContent = "[暂不支持此类型消息]";
     }
 
     var nodes = $(".chat_session_id_" + msg.chatSessionId);
@@ -277,7 +282,6 @@ function handleSetItemError(error)
 }
 enableWebsocketGw = localStorage.getItem(websocketGW);
 
-
 if(enableWebsocketGw == "false" || enableWebsocketGw == null) {
     ///1秒 sync
    setInterval(function (args) {
@@ -341,7 +345,7 @@ function handleSyncMsgForRoom(results)
             var isNeewUpdatePointer = false;
             for(i=0; i<length; i++) {
                 var msg = list[i];
-                if(msg.hasOwnProperty("toGroupId") && msg.toGroupId.length>0) {
+                if(msg.hasOwnProperty("toGroupId") && msg.toGroupId.length>0 &&((msg.hasOwnProperty("treatPointerAsU2Pointer") && msg.treatPointerAsU2Pointer == false) || !msg.hasOwnProperty("treatPointerAsU2Pointer"))) {
                     isNeewUpdatePointer = true;
                     var groupId = msg.toGroupId;
                     if(groupUpdatePointer.hasOwnProperty(groupId)) {
@@ -354,8 +358,10 @@ function handleSyncMsgForRoom(results)
                     }
                 } else {
                     if(msg.pointer != undefined) {
-                        isNeewUpdatePointer = true
-                        u2UpdatePointer = msg.pointer;
+                        isNeewUpdatePointer = true;
+                        if(msg.pointer > u2UpdatePointer) {
+                            u2UpdatePointer = msg.pointer;
+                        }
                     }
                 }
                 handleSyncMsg(msg);
@@ -751,7 +757,6 @@ function appendMsgHtml(msg)
     var msgStatus = msg.status ? msg.status : "";
     var userAvatar = sendBySelf ? avatar : msg.userAvatar;
     var userAvatarSrc = sendBySelf ?  localStorage.getItem(selfInfoAvatar) : "";
-
     if(sendBySelf) {
         switch(msgType) {
             case MessageType.MessageText :
@@ -785,6 +790,21 @@ function appendMsgHtml(msg)
                     timeServer:msg.timeServer
                 });
                 break;
+            case MessageType.MessageAudio:
+                var msgContent = "[你发了一条语音消息，下载客户端，收听语音消息吧！] ";
+                html = template("tpl-send-msg-audio", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    msgContent:msgContent,
+                    avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
+                    userId:token,
+                    timeServer:msg.timeServer
+                });
+                break;
             case MessageType.MessageWebNotice:
                 html =  msg['notice'].code;
                 break;
@@ -811,8 +831,20 @@ function appendMsgHtml(msg)
                     timeServer:msg.timeServer
                 });
                 break;
-            case MessageType.MessageAudio:
-                html = template("tpl-send-msg-audio", {});
+            default:
+                var msgContent = "[暂不支持此类型消息] ";
+                html = template("tpl-send-msg-audio", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    msgContent:msgContent,
+                    avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
+                    userId:token,
+                    timeServer:msg.timeServer
+                });
                 break;
         }
     } else {
@@ -842,6 +874,19 @@ function appendMsgHtml(msg)
                     avatar:msg.userAvatar,
                     width:imgObject.width,
                     height:imgObject.height,
+                });
+                break;
+            case MessageType.MessageAudio:
+                var msgContent = "[你收到一条语音消息，下载客户端收听语音消息吧！]";
+                html = template("tpl-receive-msg-audio", {
+                    roomType: msg.roomType,
+                    nickname: msg.nickname,
+                    msgId : msgId,
+                    userId :msg.fromUserId,
+                    msgContent:msgContent,
+                    msgTime : msgTime,
+                    groupUserImg : groupUserImageClassName,
+                    avatar:msg.userAvatar,
                 });
                 break;
             case MessageType.MessageWebNotice :
@@ -878,11 +923,24 @@ function appendMsgHtml(msg)
                     msgContent:msgContent,
                 });
                 break;
-            case MessageType.MessageAudio:
-                html = template("tpl-receive-msg-audio", {});
+            default:
+                var msgContent = "[暂不支持此类型消息] ";
+                html = template("tpl-receive-msg-audio", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    msgContent:msgContent,
+                    avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
+                    userId:token,
+                    timeServer:msg.timeServer
+                });
                 break;
         }
     }
+
     if(msgType == MessageType.MessageText) {
         html = trimMsgContentBr(html);
     }
