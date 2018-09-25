@@ -20,7 +20,7 @@ class Manage_Config_UpdateController extends Manage_CommonController
             $configKey = $_POST['key'];
             $configValue = $_POST['value'];
 
-            $this->ctx->Wpf_Logger->error("--------------", "ke=" . $configKey . " value=" . $configValue);
+            $this->ctx->Wpf_Logger->error("manage.config.update", "ke=" . $configKey . " value=" . $configValue);
 
             if (!in_array($configKey, SiteConfig::$configKeys)) {
                 throw new Exception("config key permission error");
@@ -54,8 +54,9 @@ class Manage_Config_UpdateController extends Manage_CommonController
 
         try {
             $result = $this->ctx->SiteConfigTable->updateSiteConfig($configKey, $configValue);
-            $this->ctx->Wpf_Logger->error("======manage.config.update", "key=" . $configKey
+            $this->ctx->Wpf_Logger->error("manage.config.update", "key=" . $configKey
                 . " configValue=" . $configValue . " result=" . $result);
+
             if (!$result) {
                 return $this->saveSiteConfig($configKey, $configValue);
             }
@@ -76,8 +77,9 @@ class Manage_Config_UpdateController extends Manage_CommonController
         try {
             $result = $this->ctx->SiteConfigTable->insertSiteConfig($configKey, $configValue);
 
-            $this->ctx->Wpf_Logger->error("======manage.config.save", "key=" . $configKey
+            $this->ctx->Wpf_Logger->error("manage.config.save", "key=" . $configKey
                 . " configValue=" . $configValue . " result=" . $result);
+
             return $result;
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error($tag, $e);

@@ -124,39 +124,36 @@ class Api_Site_LoginController extends \BaseController
 
     private function clearLimitSession($userId, $deviceId)
     {
-        $this->logger->error("================", "userId=" . $userId . " deviceId=" . $deviceId);
-        //limit mobile
-        $limitMobileNum = $this->siteConfig[SiteConfig::SITE_MOBILE_NUM];
 
-        $sessionInfos = $this->ctx->SiteSessionTable->getUserSessionsByUserId($userId);
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+        try {//limit mobile
+            $limitMobileNum = $this->siteConfig[SiteConfig::SITE_MOBILE_NUM];
+            $sessionInfos = $this->ctx->SiteSessionTable->getUserSessionsByUserId($userId);
+            if (count($sessionInfos) > $limitMobileNum) {
+                $deleteDeviceIds = [];
+                $num = 1;
+                foreach ($sessionInfos as $sessionInfo) {
+                    $delDeviceId = $sessionInfo['deviceId'];
+                    if ($num >= $limitMobileNum) {
+                        //需要删除的
 
-        $this->logger->error("================", "sessionInfo count=" . count($sessionInfos));
-
-        if (count($sessionInfos) > $limitMobileNum) {
-            $deleteDeviceIds = [];
-            $num = 1;
-            foreach ($sessionInfos as $sessionInfo) {
-                $delDeviceId = $sessionInfo['deviceId'];
-                if ($num >= $limitMobileNum) {
-                    //需要删除的
-
-                    if ($delDeviceId != $deviceId) {
-                        $deleteDeviceIds[] = $delDeviceId;
-                    }
-                } else {
-                    //不需要删除
-                    if ($delDeviceId != $deviceId) {
-                        $num++;
+                        if ($delDeviceId != $deviceId) {
+                            $deleteDeviceIds[] = $delDeviceId;
+                        }
+                    } else {
+                        //不需要删除
+                        if ($delDeviceId != $deviceId) {
+                            $num++;
+                        }
                     }
                 }
+
+                $result = $this->ctx->SiteSessionTable->removeLimitSession($userId, $deleteDeviceIds);
+                $this->logger->error($tag, "clear limit session result=" . $result);
             }
-
-            $this->logger->error("================", "delete deviceIds=" . json_encode($deleteDeviceIds));
-
-            $result = $this->ctx->SiteSessionTable->removeLimitSession($userId, $deleteDeviceIds);
-            $this->logger->error("================", "clear session result=" . $result);
+        } catch (Exception $e) {
+            $this->logger->error($tag, $e);
         }
-
 
     }
 
