@@ -233,6 +233,7 @@ class Im_Cts_SyncController extends Im_BaseController
                     if ($u2RoomType == Zaly\Proto\Core\MessageRoomType::MessageRoomGroup) {
                         $message->setToGroupId($u2OrGroupMessage["toUserId"]);
                         $message->setRoomType(Zaly\Proto\Core\MessageRoomType::MessageRoomGroup);
+                        $message->setTreatPointerAsU2Pointer(true);
                     } else {
                         $message->setToUserId($u2OrGroupMessage["toUserId"]);
                         $message->setRoomType(Zaly\Proto\Core\MessageRoomType::MessageRoomU2);
