@@ -417,6 +417,33 @@ $(document).on("click", ".login_button", function () {
     loginPassport();
 });
 
+function checkIsEnterBack(event)
+{
+    var event = event || window.event;
+    var isIE = (document.all) ? true : false;
+    var key;
+
+    if(isIE) {
+        key = event.keyCode;
+    } else {
+        key = event.which;
+    }
+
+    if(key != 13) {
+        return false;
+    }
+    return true;
+}
+
+function loginPassportByKeyPress(event) {
+    if(checkIsEnterBack(event) == false) {
+        return false;
+    }
+    loginPassport();
+}
+
+
+
 function loginPassport()
 {
     loginName = $(".login_input_loginName").val();
