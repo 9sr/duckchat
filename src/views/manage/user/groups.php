@@ -485,18 +485,11 @@
 
 <script type="text/javascript">
 
-    $(document).on("click", "#group-list-id", function () {
+    $("#group-list-id").click(function () {
         var groupId = $(this).attr("groupId");
         var url = "index.php?action=manage.group.profile&lang=" + getLanguage() + "&groupId=" + groupId;
         zalyjsCommonOpenPage(url);
     });
-
-
-    $(document).on("click", "#miniProgram-list-id", function () {
-        var url = "index.php?action=manage.miniProgram.list";
-        zalyjsCommonOpenPage(url);
-    });
-
 
 </script>
 

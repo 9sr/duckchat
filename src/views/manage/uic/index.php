@@ -258,6 +258,10 @@
             line-height: 2px;
         }
 
+        .select-color-primary {
+            color: #4C3BB1;
+        }
+
     </style>
 
 </head>
@@ -483,10 +487,8 @@
     });
 
 
-    $(document).on("click", '#uic-manage', function () {
-
+    $('#uic-manage').click(function () {
         var language = getLanguage();
-
         $.actions({
             title: "",
             onClose: function () {
@@ -494,7 +496,7 @@
             },
             actions: [{
                 text: language == 0 ? "Create New Invitation Code" : "生成新的邀请码",
-                className: "color-primary weui-dialog__btn ",
+                className: "select-color-primary",
                 onClick: function () {
                     //生成邀请码
                     var url = "index.php?action=manage.uic.create&lang=" + language;
@@ -503,7 +505,7 @@
                 }
             }, {
                 text: language == 0 ? "Delete All Unused Invitation Code" : "删除所有未使用的邀请码",
-                className: "color-primary weui-dialog__btn",
+                className: "select-color-primary",
                 onClick: function () {
                     //清除所有邀请码
                     var url = "index.php?action=manage.uic.delete&code=all&lang=" + language;
