@@ -112,17 +112,14 @@ function appendOrInsertRoomList(msg, isInsert)
     var msgContent;
 
     switch (msgType) {
-        case MessageTypeNum.MessageText:
         case MessageType.MessageText:
             msgContent = msg.hasOwnProperty("text") ? msg['text'].body: JSON.parse(msg['content']).body;
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
             break;
-        case MessageTypeNum.MessageImage:
         case MessageType.MessageImage:
             msgContent = "[图片消息]";
             break;
         case MessageType.MessageAudio:
-        case MessageTypeNum.MessageAudio:
             msgContent = "[语音消息]";
             break;
         case MessageType.MessageNotice:
@@ -131,6 +128,9 @@ function appendOrInsertRoomList(msg, isInsert)
             break;
         case MessageType.MessageAudio:
             msgContent = "[语音消息]";
+            break;
+        case MessageType.MessageDocument:
+            msgContent = "[文件消息]";
             break;
         case MessageType.MessageWeb:
             msgContent = "[" + msg["web"].title + "]";
@@ -637,7 +637,7 @@ function getRoomMsgTime(time)
     return date.getHours()+":"+minutes;
 }
 
-function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
+function sendMsg( chatSessionId, chatSessionType, msgContent, msgType, params)
 {
     var action = "im.cts.message";
     var msgId  = Date.now();
@@ -666,10 +666,14 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
             displayContent = msgContent;
             break;
         case MessageType.MessageImage:
-            console.log("MessageType.MessageImage msgImageSize==" + JSON.stringify(msgImageSize));
             message['type'] = MessageType.MessageImage;
             message['image'] = {url:msgContent, width:msgImageSize.width, height:msgImageSize.height};
             displayContent = "[图片消息]";
+            break;
+        case MessageType.MessageDocument:
+            message['type'] = MessageType.MessageDocument;
+            message['document'] = {url:msgContent, size:params.size, name:params.name};
+            displayContent = "[文件消息]";
             break;
     }
 
@@ -771,6 +775,21 @@ function appendMsgHtml(msg)
                     avatar:userAvatar,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
+                    timeServer:msg.timeServer
+                });
+                break;
+            case MessageType.MessageDocument:
+                html = template("tpl-send-msg-file", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
+                    userId:token,
+                    fileSize:"3.2M",
+                    fileName:"aaaaa",
                     timeServer:msg.timeServer
                 });
                 break;
@@ -883,6 +902,21 @@ function appendMsgHtml(msg)
                     msgTime : msgTime,
                     groupUserImg : groupUserImageClassName,
                     avatar:msg.userAvatar,
+                });
+                break;
+            case MessageType.MessageDocument:
+                html = template("tpl-receive-msg-file", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
+                    userId:token,
+                    fileSize:"3.2M",
+                    fileName:"aaaaa",
+                    timeServer:msg.timeServer
                 });
                 break;
             case MessageType.MessageWebNotice :
@@ -999,20 +1033,26 @@ function msgBoxScrollToBottom()
 
 }
 
-function uploadMsgImgFromInput(obj) {
-
-    console.log(" upload msg from " + obj.files.length)
+function uploadMsgFileFromInput(obj, fileType) {
 
     if (obj) {
         if (obj.files) {
             formData = new FormData();
-
             formData.append("file", obj.files.item(0));
-            formData.append("fileType", FileType.FileImage);
+            formData.append("fileType", fileType);
             formData.append("isMessageAttachment",true);
             var src = window.URL.createObjectURL(obj.files.item(0));
-            getMsgImageSize(src);
-            uploadMsgImgToServer(formData, src, uploadImgForMsg);
+            if(fileType == FileType.FileDocument) {
+                var params = {
+                    size:obj.files.item(0).size,
+                    name:obj.files.item(0).name
+                };
+                console.log("file info ==" + JSON.stringify(params));
+                uploadMsgFileToServer(formData, src, uploadFileForMsg, params);
+            } else if(fileType == FileType.FileImage) {
+                getMsgImageSize(src);
+                uploadMsgFileToServer(formData, src, uploadImgForMsg, "");
+            }
 
             return window.URL.createObjectURL(obj.files.item(0));
         }
@@ -1031,7 +1071,7 @@ function uploadMsgImgFromCopy(image)
     formData.append("isMessageAttachment",true);
     var src = window.URL.createObjectURL(blob);
     getMsgImageSize(src);
-    uploadMsgImgToServer(formData, src, uploadImgForMsg);
+    uploadMsgFileToServer(formData, src, uploadImgForMsg, "");
 }
 
 function getMsgImageSize(src)
@@ -1043,7 +1083,6 @@ function getMsgImageSize(src)
             width:image.width,
             height:image.height
         }
-        console.log("msgImageSize==" + JSON.stringify(msgImageSize));
     };
 }
 
@@ -1120,7 +1159,7 @@ function base64ToBlob(base64, mime)
 }
 
 
-function uploadMsgImgToServer(formData, src, type)
+function uploadMsgFileToServer(formData, src, type, params)
 {
     var chatSessionId = localStorage.getItem(chatSessionIdKey);
     var chatSessionType = localStorage.getItem(chatSessionId);
@@ -1144,12 +1183,13 @@ function uploadMsgImgToServer(formData, src, type)
                     // alert("上传成功！");
                     var imgKey = sendMsgImgUrlKey+fileName;
                     localStorage.setItem(imgKey, src);
-
-                    sendMsg(chatSessionId, chatSessionType, fileName, MessageType.MessageImage);
+                    sendMsg(chatSessionId, chatSessionType, fileName, MessageType.MessageImage, "");
                     $("#msgImage").html("");
                     $("#msgImage")[0].style.display = "none";
                 } else if(type == uploadImgForSelfAvatar) {
                     updateUserAvatar(fileName);
+                }else if(type == uploadFileForMsg) {
+                    sendMsg(chatSessionId, chatSessionType, fileName, MessageType.MessageDocument, params);
                 }
             } else {
                 alert("上传失败");
@@ -1175,7 +1215,7 @@ function uploadUserImgFromInput(obj) {
             var src = window.URL.createObjectURL(obj.files.item(0));
             getMsgImageSize(src);
 
-            uploadMsgImgToServer(formData, src, uploadImgForSelfAvatar);
+            uploadMsgFileToServer(formData, src, uploadImgForSelfAvatar, "");
 
             $(".user-image-upload").attr("src", src);
         }

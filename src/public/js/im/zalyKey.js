@@ -17,6 +17,8 @@ MessageType = {
     MessageAudio   : "MessageAudio",
     MessageWeb     : "MessageWeb",
     MessageWebNotice : "MessageWebNotice",
+    MessageDocument:"MessageDocument",
+    MessageVideo:"MessageVideo",
 
     // event message start
     MessageEventFriendRequest : "MessageEventFriendRequest",
@@ -27,21 +29,6 @@ MessageType = {
 
 UserClientLangZH = "1";
 UserClientLangEN = "0";
-
-MessageTypeNum = {
-    MessageInvalid : 0,
-    MessageNotice  : "1",
-    MessageText    : "2",
-    MessageImage   : "3",
-    MessageAudio   : "4",
-    MessageWeb     : "5",
-    MessageWebNotice : "6",
-
-    // event message start
-    MessageEventFriendRequest : "MessageEventFriendRequest",
-    MessageEventStatus  : "MessageEventStatus",   // -> StatusMessage
-    MessageEventSyncEnd :"MessageEventSyncEn",
-};
 
 FriendRelation = {
     FriendRelationInvalid : "FriendRelationInvalid",
@@ -65,9 +52,11 @@ DataWriteType = {
 }
 
 FileType =  {
-    FileInvalid : "FileInvalid",
-    FileImage : "FileImage", // the server should find the exactly extension, ex: http://php.net/manual/en/function.mime-content-type.php
-    FileAudio : "FileAudio", // the server should find the exactly extension, ex: http://php.net/manual/en/function.mime-content-type.php
+    FileInvalid : "0",
+    FileImage : "1", // the server should find the exactly extension, ex: http://php.net/manual/en/function.mime-content-type.php
+    FileAudio : "2", // the server should find the exactly extension, ex: http://php.net/manual/en/function.mime-content-type.php
+    FileDocument:"3",
+    FileVideo:"4",
 }
 
 ApiGroupUpdateType  = {
@@ -187,6 +176,7 @@ selfInfoAvatar="self_avatar";
 
 uploadImgForMsg  = "uploadImgForMsg";
 uploadImgForSelfAvatar = "uploadImgForSelfAvatar";
+uploadFileForMsg = "uploadFileForMsg";
 
 ProfileTimeout =  1000*60*60*24*30;////1个月
 reqTimeout = 1000*60*5;///5分钟

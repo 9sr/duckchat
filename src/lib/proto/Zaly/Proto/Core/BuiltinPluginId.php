@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\BuiltinPluginId</code>
+ * Protobuf type <code>core.BuiltinPluginId</code>
  */
 class BuiltinPluginId
 {

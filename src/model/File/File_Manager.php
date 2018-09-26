@@ -13,15 +13,27 @@ class File_Manager
         "audio/mp4" => "mp4",
         "audio/x-m4a" => "m4a",
         "video/mp4" => "mp4",
+        'application/pdf' => "pdf",
+        'application/x-rar-compressed' => "rar",
+        'application/zip'=> "zip",
+        'application/msword' => "word",
+        'application/xml' => "xml",
+        'application/vnd.ms-powerpoint' => "ppt"
     );
 
-    private $defaultImgType = [
+    private $defaultFileType = [
         "image/jpeg",
         "image/jpg",
         "image/png",
         "audio/mp4",
         "audio/x-m4a",
         "video/mp4",
+        'application/pdf',
+        'application/x-rar-compressed',
+        'application/zip',
+        'application/msword',
+        'application/xml',
+        'application/vnd.ms-powerpoint'
     ];
 
     public function __construct()
@@ -80,7 +92,7 @@ class File_Manager
 
         $mime = mime_content_type($path);
 
-        if (!in_array($mime, $this->defaultImgType)) {
+        if (!in_array($mime, $this->defaultFileType)) {
             throw new Exception("file type error");
         }
 

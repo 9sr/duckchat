@@ -37,6 +37,53 @@
     </div>
 </script>
 
+
+<script id="tpl-send-msg-file" type="text/html">
+    <div class="msg-row msg-right msg-text">
+        <div class="msg-avatar user-info-avatar">
+            {{if userAvatarSrc}}
+            <img class="user-info-avatar info-avatar-{{userId}}"  src="{{userAvatarSrc}}" />
+            {{else}}
+            <img class="user-info-avatar info-avatar-{{userId}}"  src="../../public/img/msg/default_user.png" />
+            {{/if}}
+        </div>
+        <div class="right-msg-body text-align-right">
+            <div class="msg_status" style="margin-top: 1rem;">
+                <div class="msg-content-img justify-content-end hint--bottom" aria-label="{{msgTime}}">
+                    <div class="text-align-left left_msg_file_div" >
+                        <div class="msg_file_info">
+                            <div class="msg_file_name">{{fileName}}</div>
+                            <div class="msg_file_size">{{fileSize}}</div>
+                        </div>
+                        <div class="file_img">
+                            <img src="../../public/img/msg/msg_file.png"/>
+                        </div>
+                    </div>
+                </div>
+                {{ if msgStatus == "MessageStatusSending"}}
+                <div class="showbox  msg_status_loading msg_status_loading_{{msgId}}" sendTime="{{timeServer}}"  msgId="{{msgId}}"  is-display="yes">
+                    <div class="loader">
+                        <svg class="circular" viewBox="25 25 50 50">
+                            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="msg_status_img msg_status_failed_{{msgId}}"  msgId="{{msgId}}" >
+                    <img src="../../public/img/msg/msg_failed.png">
+                </div>
+                {{ else if msgStatus == "MessageStatusFailed"}}
+                <div class="msg_status_img msg_status_failed_{{msgId}}"  msgId="{{msgId}}" style="display: flex;" >
+                    <img src="../../public/img/msg/msg_failed.png">
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
+
+
+
 <script id="tpl-send-msg-text" type="text/html">
     <div class="msg-row msg-right msg-text" > <div class="msg-avatar"> {{if userAvatarSrc}}<img class="user-info-avatar info-avatar-{{userId}}"  src="{{userAvatarSrc}}" />{{else}}<img class="user-info-avatar info-avatar-{{userId}}"  src="../../public/img/msg/default_user.png" />{{/if}} </div> <div class="right-msg-body  text-align-right" > <div class="msg_status" style="margin-top: 1rem;"> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> <div class="text-align-left msgContent">{{msgContent}}</div> </div> {{ if msgStatus == "MessageStatusSending"}} <div class="showbox msg_status_loading msg_status_loading_{{msgId}}" sendTime="{{timeServer}}"  msgId="{{msgId}}"   is-display="yes"> <div class="loader"> <svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg> </div> </div> <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}" > <img src="../../public/img/msg/msg_failed.png"> </div> {{ else if msgStatus == "MessageStatusFailed"}} <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}"  style="display: flex;"> <img src="../../public/img/msg/msg_failed.png"> </div> {{/if}} </div> </div> </div>
 </script>
@@ -115,6 +162,37 @@
             </div>
         </div>
     </div>
+</script>
+
+
+
+<script id="tpl-receive-msg-file" type="text/html">
+    <div class="msg-row msg-left msg-text">
+        <div class="msg-avatar">
+            <img class="{{groupUserImg}} user-info-avatar info-avatar-{{userId}}"  src="../../public/img/msg/default_user.png"  userId="{{userId}}" />
+        </div>
+        <div class="right-msg-body text-align-left">
+            {{if roomType == "MessageRoomGroup"}}
+            <div class="msg-nickname-time">
+                <div class="msg-nickname nickname_{{userId}}">{{nickname}}</div>
+            </div>
+            <div class="msg-content-img justify-content-end hint--bottom" aria-label="{{msgTime}}" >
+                {{else}}
+                <div class="msg-content-img justify-content-end hint--bottom" aria-label="{{msgTime}}" style="margin-top:1rem;" >
+                    {{/if}}
+                    <div class="text-align-right right_msg_file_div">
+                        <div class="file_img">
+                            <img src="../../public/img/msg/msg_file.png"/>
+                        </div>
+                        <div class="right_msg_file_info">
+                            <div class="msg_file_name">{{fileName}}</div>
+                            <div class="msg_file_size">{{fileSize}}</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
 </script>
 
 <script id="tpl-receive-msg-web" type="text/html">

@@ -32,9 +32,22 @@ class ApiSiteConfigResponse extends \Google\Protobuf\Internal\Message
      */
     private $loginPluginProfile = null;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Zaly\Proto\Core\PublicSiteConfig $config
+     *     @type string $randomSignBase64
+     *           randomSignBase64 = rsa(site.privk, request.random)
+     *     @type bool $isSessionValid
+     *     @type \Zaly\Proto\Core\PluginProfile $loginPluginProfile
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiSiteConfig::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

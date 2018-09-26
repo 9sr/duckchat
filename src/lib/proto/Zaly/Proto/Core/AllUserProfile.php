@@ -22,9 +22,19 @@ class AllUserProfile extends \Google\Protobuf\Internal\Message
      */
     private $timeReg = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Zaly\Proto\Core\PublicUserProfile $public
+     *     @type int|string $timeReg
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\User::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

@@ -28,9 +28,21 @@ class StatusMessage extends \Google\Protobuf\Internal\Message
      */
     private $isReq = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $msgId
+     *     @type int $status
+     *     @type bool $isReq
+     *           whether this is a request.
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Message::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

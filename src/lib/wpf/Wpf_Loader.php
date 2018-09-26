@@ -37,9 +37,8 @@ class Wpf_Autoloader {
 	}
 
 	public function load($className) {
-
         $classNamePath = "";
-	    if (isset($this->registedClasses[$className])) {
+        if (isset($this->registedClasses[$className])) {
             $classNamePath = WPF_LIB_DIR . "/../" . $this->registedClasses[$className];
         } else {
             $classNamePath = $this->classNameToPath($className);

@@ -20,9 +20,18 @@ class ApiGwOnDisconnectRequest extends \Google\Protobuf\Internal\Message
      */
     private $socketId = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $socketId
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGwOnDisconnect::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

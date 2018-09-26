@@ -22,17 +22,20 @@ class Http_File_UploadWebController extends \HttpBaseController
 
             $fileType = isset( $_POST['fileType']) ?  $_POST['fileType'] : \Zaly\Proto\Core\FileType::FileInvalid;
             if($fileType == "FileInvalid") {
-                throw new Exception( "上传失败");
+                throw new Exception( "文件类型不符合要求，上传失败");
             }
             $file = $_FILES['file'];
+            $this->ctx->Wpf_Logger->error($tag, "shaoye files ifno =" . json_encode($_FILES));
+
             if($file['error'] != UPLOAD_ERR_OK) {
                 throw new Exception("上传失败");
             }
 
             switch ($fileType) {
                 case \Zaly\Proto\Core\FileType::FileImage:
-                case "FileImage":
-                    $originFileName = $this->saveImgFile($file);
+                case \Zaly\Proto\Core\FileType::FileAudio:
+                case \Zaly\Proto\Core\FileType::FileDocument:
+                    $originFileName = $this->saveFile($file);
                     break;
             }
             $fileInfo = ["fileId" => $originFileName];
@@ -44,15 +47,13 @@ class Http_File_UploadWebController extends \HttpBaseController
         }
     }
 
-    private function saveImgFile($file)
+    private function saveFile($file)
     {
-        $fileSize = $file['size'];
         $tmpName  = $file['tmp_name'];
-
         $tmpFile = file_get_contents($tmpName);
         $fileName = $this->ctx->File_Manager->saveFile($tmpFile);
-
         return $fileName;
     }
+
 }
 
