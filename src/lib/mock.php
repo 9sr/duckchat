@@ -57,7 +57,19 @@ if(!function_exists('mime_content_type')) {
         $mimeTypeHexs = [
             "89504e470d0a1a0a" => "image/png",
             "ffd8ffe0010"      => "image/jpg",
-            "474946383961"     => 'image/gif'
+            "474946383961"     => 'image/gif',
+            "667479704d534e56" => 'video/mp4',
+            '6674797069736f6d' => 'audio/mp4',
+            '667479704d344120' => 'audio/x-m4a',
+            '25504446'         => 'application/pdf',
+            '526172211a0700'   => 'application/x-rar-compressed',
+            '57696e5a6970'     => 'application/zip',
+            'cf11e0a1b11ae100' => 'application/msword',
+            'eca5c100'         => 'application/msword',
+            '3c3f786d6c2076657273696f6e3d' => 'application/xml',
+            '4d534346' => 'application/vnd.ms-powerpoint',
+            'a0461df0' => 'application/vnd.ms-powerpoint',
+            'fdffffffnnnn0000' => 'application/vnd.ms-powerpoint'
         ];
 
         $fileContent    = file_get_contents($path);
