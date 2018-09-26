@@ -1546,3 +1546,37 @@ button:active{
     justify-content: center;
     margin-top: 2rem;
 }
+
+
+.download_ios {
+    width:11.26rem;
+    height:3.75rem;
+    background:rgba(99,169,255,1);
+    border-radius:0.38rem;
+    border:0.19rem solid rgba(76,169,255,1);
+    margin-left: 25rem;
+    margin-top:3rem;
+    font-size:1.88rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    line-height: 3.75rem;
+    margin-right: 2rem;
+    outline:  none;
+    cursor: pointer;
+}
+
+.download_android {
+    width:11.26rem;
+    height:3.75rem;
+    margin-top:3rem;
+    background:rgba(90,200,44,1);
+    border:0.19rem solid rgba(90,200,44,1);
+    border-radius:0.38rem;
+    font-size:1.88rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    outline:  none;
+    cursor: pointer;
+}

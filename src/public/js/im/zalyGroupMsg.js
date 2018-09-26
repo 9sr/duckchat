@@ -421,8 +421,9 @@ $(document).on("click", ".l-sb-item", function(){
             var html = template("tpl-download-app-div", {});
             $("#download-app-div").html(html);
 
-            urlLink = "http:;//";
-            src = "../../public/img/duckchat.png";
+            var urlLink = changeZalySchemeToDuckChat("", "download_app");
+            console.log("urlLink ==" + urlLink);
+            var src = "../../public/img/duckchat.png";
 
             generateQrcode($('#qrcodeCanvas'), urlLink, src, false, "more");
 
@@ -444,20 +445,21 @@ function generateQrcode(qrCodeObj, urlLink, src, isCircle, type)
         canvasWidth = getRemPx()*15;
         canvasHeight = getRemPx()*15;
     } else if(type == 'group') {
-         width  = getRemPx()*24;
-         height = getRemPx()*24;
+         width  = getRemPx()*24.5;
+         height = getRemPx()*24.5;
          canvasWidth = getRemPx()*22;
          canvasHeight = getRemPx()*22;
          className = "qrcodeCanvas";
          idName = "groupQrcode";
     } else {
-         width  = getRemPx()*24;
-         height = getRemPx()*24;
+         width  = getRemPx()*24.5;
+         height = getRemPx()*24.5;
          canvasWidth = getRemPx()*22;
          canvasHeight = getRemPx()*22;
          idName = "appDownload";
          className = "appDownload";
     }
+
     qrCodeObj.qrcode({
         idName:idName,
         render : "canvas",
@@ -2230,6 +2232,7 @@ $(document).on("click", ".share-group", function () {
     var groupProfile = getGroupProfile(chatSessionId);
     var groupName = groupProfile != false && groupProfile.name != "" ? groupProfile.name : $(".chatsession-title").html();
 
+
     var siteConfigJsonStr = localStorage.getItem(siteConfigKey);
     var siteName = "";
     if(siteConfigJsonStr ) {
@@ -2254,7 +2257,7 @@ $(document).on("click", ".share-group", function () {
     if(src == "" || src == undefined) {
         src="../../public/img/msg/group_default_avatar.png";
     }
-    var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, chatSessionId, "g");
+    var urlLink = changeZalySchemeToDuckChat(chatSessionId, "g");
     $("#share_group").attr("urlLink", urlLink);
     generateQrcode($('#qrcodeCanvas'),  urlLink, src, true, "group");
 });
@@ -2289,8 +2292,15 @@ function downloadImgFormQrcode(idName)
 }
 
 
-function changeZalySchemeToDuckChat(serverAddress, chatSessionId, type)
+function changeZalySchemeToDuckChat(chatSessionId, type)
 {
+    var siteConfigJsonStr = localStorage.getItem(siteConfigKey);
+    var siteName = "";
+    if(siteConfigJsonStr ) {
+        siteConfig = JSON.parse(siteConfigJsonStr);
+    }
+    serverAddress = siteConfig.serverAddressForApi;
+
     var parser = document.createElement('a');
     parser.href = serverAddress;
     var domain = serverAddress;
@@ -2300,9 +2310,11 @@ function changeZalySchemeToDuckChat(serverAddress, chatSessionId, type)
         var pathname = parser.pathname;
         domain =  protocol+"//"+hostname+pathname;
     }
-
-    var urlLink = domain.indexOf("?") > -1 ? domain+"&x="+type+"-"+chatSessionId : domain+"/?x="+type+"-"+chatSessionId;
-    urlLink = urlLink.indexOf("?") > -1 ? jumpPage+"&jumpUrl="+encodeURI(urlLink) :jumpPage+"?jumpUrl="+encodeURI(urlLink);
+    var urlLink = domain;
+    if(chatSessionId != "") {
+         urlLink = domain.indexOf("?") > -1 ? domain+"&x="+type+"-"+chatSessionId : domain+"/?x="+type+"-"+chatSessionId;
+    }
+    urlLink = jumpPage.indexOf("?") > -1 ? jumpPage+"&jumpUrl="+encodeURI(urlLink) :jumpPage+"?jumpUrl="+encodeURI(urlLink);
     return encodeURI(urlLink);
 }
 
@@ -2311,20 +2323,11 @@ $(document).on("click", "#self-qrcode", function () {
     $("#selfQrcodeDiv")[0].style.display = 'block';
     $("#selfInfoDiv")[0].style.display = 'none';
 
-    var siteConfigJsonStr = localStorage.getItem(siteConfigKey);
-    var siteName = "";
-    if(siteConfigJsonStr ) {
-        siteConfig = JSON.parse(siteConfigJsonStr);
-        siteName = siteConfig.name;
-    }
-
     $("#selfQrcodeCanvas").html("");
     var src = $(".selfInfo").attr("src");
-    var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, token, "u");
+    var urlLink = changeZalySchemeToDuckChat(token, "u");
     $("#selfQrcodeCanvas").attr("urlLink", urlLink);
-
     generateQrcode($('#selfQrcodeCanvas'), urlLink, src, true , "self");
-
 });
 
 function updateSelfNickName(event)

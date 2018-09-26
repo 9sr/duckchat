@@ -203,3 +203,4 @@ languageNum = languageName == "en" ? UserClientLangEN : UserClientLangZH;
 
 isSyncingMsg = false;
 isPreSyncingMsgTime="";
+
