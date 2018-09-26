@@ -3,7 +3,7 @@
 class File_Manager
 {
     private $attachmentDir = "attachment";
-
+    private $defaultSuffix = ".duckchat";
     private $mimeConfig = array(
         "image/png" => "png",
         "image/jpeg" => "jpeg",
@@ -102,6 +102,22 @@ class File_Manager
             rename($path, $this->getPath($dateDir, $fileName));
         }
 
+        return $dateDir . "-" . $fileName;
+    }
+
+    public function saveDocument($content, $ext, $dateDir = false)
+    {
+        if (!$dateDir) {
+            $dateDir = date("Ymd");
+        }
+        $fileName = sha1(uniqid());
+        $path = $this->getPath($dateDir, $fileName);
+        file_put_contents($path, $content);
+        if (false == empty($ext)) {
+            $fileName = $fileName . "." . $ext;
+        }
+        $fileName = $fileName.$this->defaultSuffix;
+        rename($path, $this->getPath($dateDir, $fileName));
         return $dateDir . "-" . $fileName;
     }
 
