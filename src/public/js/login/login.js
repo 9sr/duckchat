@@ -1,7 +1,6 @@
 
 var languageName = navigator.language == "en-US" ? "en" : "zh";
 
-var languageName = "zh";
 jQuery.i18n.properties({
     name: "lang",
     path: '../../public/js/config/',
@@ -72,12 +71,15 @@ function zalyLoginConfig(results) {
 
 function loginSuccess()
 {
+
     handleRedirect();
 }
 
 function handleRedirect()
 {
     var refererUrl = localStorage.getItem(refererUrlKey);
+    console.log("refererUrl ==" + refererUrl);
+
     if(refererUrl) {
         if(refererUrl.indexOf("?") > -1) {
             refererUrl = refererUrl+"&preSessionId="+preSessionId+"&isRegister="+isRegister;
@@ -86,6 +88,7 @@ function handleRedirect()
         }
         // window.location.href = refererUrl;
         refererUrl = refererUrl + " &fail_callback=failedCallBack&&success_callback=successCallBack";
+        console.log("refererUrl ==" + refererUrl);
         addJsByDynamic(refererUrl);
     }
 }
@@ -414,6 +417,38 @@ function validateEmail(email)
 
 
 $(document).on("click", ".login_button", function () {
+    loginPassport();
+});
+
+function checkIsEnterBack(event)
+{
+    var event = event || window.event;
+    var isIE = (document.all) ? true : false;
+    var key;
+
+    if(isIE) {
+        key = event.keyCode;
+    } else {
+        key = event.which;
+    }
+
+    if(key != 13) {
+        return false;
+    }
+    return true;
+}
+
+function loginPassportByKeyPress(event) {
+    if(checkIsEnterBack(event) == false) {
+        return false;
+    }
+    loginPassport();
+}
+
+
+
+function loginPassport()
+{
     loginName = $(".login_input_loginName").val();
     loginPassword  = $(".login_input_pwd").val();
     var isFocus = false;
@@ -442,7 +477,7 @@ $(document).on("click", ".login_button", function () {
         return false;
     }
     apiPassportPasswordLogin(handleApiPassportPasswordLogin);
-});
+}
 
 
 function apiPassportPasswordLogin(callback)

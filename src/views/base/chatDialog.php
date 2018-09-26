@@ -15,7 +15,7 @@
 
         </div>
 
-        <div id="emojies" style="display: none;position: absolute; bottom:13rem;">
+        <div id="emojies" style="display: none;position: absolute; bottom:11rem;">
             <div class="emoji-row" style="margin-top: 1rem;">
                 <item class="emotion-item">🙂</item>
                 <item  class="emotion-item">😂</item>
@@ -121,7 +121,7 @@
                 <textarea class="input-box-text msg_content" placeholder="Type a message…." id="msg_content"></textarea>
 
                 <div class="input-btn">
-                    <button class="send_msg" data-local-value="sendTip">Send</button>
+                    <button class="send_msg" data-local-value="sendTip">发送</button>
                 </div>
             </div>
             <div class="input-line"></div>

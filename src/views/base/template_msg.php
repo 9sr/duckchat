@@ -42,7 +42,11 @@
 </script>
 
 <script id="tpl-send-msg-audio" type="text/html">
-    <div class="msg-row msg-right msg-text" > <div class="msg-avatar"> {{if userAvatarSrc}}<img class="user-info-avatar info-avatar-{{userId}}"  src="{{userAvatarSrc}}" />{{else}}<img class="user-info-avatar info-avatar-{{userId}}"  src="../../public/img/msg/default_user.png" />{{/if}} </div> <div class="right-msg-body  text-align-right" > <div class="msg_status" style="margin-top: 1rem;"> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> <div class="text-align-left msgContent"> {{msgContent}} </div> </div> {{ if msgStatus == "MessageStatusSending"}} <div class="showbox msg_status_loading msg_status_loading_{{msgId}}" sendTime="{{timeServer}}"  msgId="{{msgId}}"   is-display="yes"> <div class="loader"> <svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg> </div> </div> <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}" > <img src="../../public/img/msg/msg_failed.png"> </div> {{ else if msgStatus == "MessageStatusFailed"}} <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}"  style="display: flex;"> <img src="../../public/img/msg/msg_failed.png"> </div> {{/if}} </div> </div> </div>
+    <div class="msg-row msg-right msg-text" > <div class="msg-avatar"> {{if userAvatarSrc}}<img class="user-info-avatar info-avatar-{{userId}}"  src="{{userAvatarSrc}}" />{{else}}<img class="user-info-avatar info-avatar-{{userId}}"  src="../../public/img/msg/default_user.png" />{{/if}} </div> <div class="right-msg-body  text-align-right" > <div class="msg_status" style="margin-top: 1rem;"> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> <div class="text-align-left msgContent"> [你发了一条语音消息，<span style="color: #FFAF5D;cursor: pointer"onclick="displayDownloadApp()">下载客户端</span>收听语音消息吧！] </div> </div> {{ if msgStatus == "MessageStatusSending"}} <div class="showbox msg_status_loading msg_status_loading_{{msgId}}" sendTime="{{timeServer}}"  msgId="{{msgId}}"   is-display="yes"> <div class="loader"> <svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg> </div> </div> <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}" > <img src="../../public/img/msg/msg_failed.png"> </div> {{ else if msgStatus == "MessageStatusFailed"}} <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}"  style="display: flex;"> <img src="../../public/img/msg/msg_failed.png"> </div> {{/if}} </div> </div> </div>
+</script>
+
+<script id="tpl-send-msg-default" type="text/html">
+    <div class="msg-row msg-right msg-text" > <div class="msg-avatar"> {{if userAvatarSrc}}<img class="user-info-avatar info-avatar-{{userId}}"  src="{{userAvatarSrc}}" />{{else}}<img class="user-info-avatar info-avatar-{{userId}}"  src="../../public/img/msg/default_user.png" />{{/if}} </div> <div class="right-msg-body  text-align-right" > <div class="msg_status" style="margin-top: 1rem;"> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> <div class="text-align-left msgContent">{{msgContent}}</div> </div> {{ if msgStatus == "MessageStatusSending"}} <div class="showbox msg_status_loading msg_status_loading_{{msgId}}" sendTime="{{timeServer}}"  msgId="{{msgId}}"   is-display="yes"> <div class="loader"> <svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg> </div> </div> <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}" > <img src="../../public/img/msg/msg_failed.png"> </div> {{ else if msgStatus == "MessageStatusFailed"}} <div  class="msg_status_img msg_status_failed_{{msgId}}" msgId="{{msgId}}"  style="display: flex;"> <img src="../../public/img/msg/msg_failed.png"> </div> {{/if}} </div> </div> </div>
 </script>
 
 <script id="tpl-send-msg-web" type="text/html">
@@ -167,16 +171,21 @@
     </div>
 </script>
 
+
+
 <script id="tpl-receive-msg-text" type="text/html">
     <div class="msg-row msg-left msg-text"> <div class="msg-avatar "> <img class="{{groupUserImg}} user-info-avatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png"  userId="{{userId}}" /> </div> <div class="right-msg-body  text-align-left" > {{if roomType == "MessageRoomGroup"}} <div class="msg-nickname-time"> <div class="msg-nickname nickname_{{userId}}">{{nickname}}</div> </div> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> {{else}} <div class="msg-content hint--bottom" aria-label="{{msgTime}}" style="margin-top: 1rem;"> {{/if}} <div class="text-align-left msgContent">{{msgContent}}</div> </div> </div> </div>
 </script>
 
 
 <script id="tpl-receive-msg-audio" type="text/html">
-    <div class="msg-row msg-left msg-text"> <div class="msg-avatar "> <img class="{{groupUserImg}} user-info-avatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png"  userId="{{userId}}" /> </div> <div class="right-msg-body  text-align-left" > {{if roomType == "MessageRoomGroup"}} <div class="msg-nickname-time"> <div class="msg-nickname nickname_{{userId}}">{{nickname}}</div> </div> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> {{else}} <div class="msg-content hint--bottom" aria-label="{{msgTime}}" style="margin-top: 1rem;"> {{/if}} <div class="text-align-left msgContent">{{msgContent}}</div> </div> </div> </div>
+    <div class="msg-row msg-left msg-text"> <div class="msg-avatar "> <img class="{{groupUserImg}} user-info-avatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png"  userId="{{userId}}" /> </div> <div class="right-msg-body  text-align-left" > {{if roomType == "MessageRoomGroup"}} <div class="msg-nickname-time"> <div class="msg-nickname nickname_{{userId}}">{{nickname}}</div> </div> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> {{else}} <div class="msg-content hint--bottom" aria-label="{{msgTime}}" style="margin-top: 1rem;"> {{/if}} <div class="text-align-left msgContent">[你收到一条语音消息，<span style="color: #4C3BB1;cursor: pointer" onclick="displayDownloadApp()">下载客户端</span>收听语音消息吧！]</div> </div> </div> </div>
 </script>
 
 
+<script id="tpl-receive-msg-default" type="text/html">
+    <div class="msg-row msg-left msg-text"> <div class="msg-avatar "> <img class="{{groupUserImg}} user-info-avatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png"  userId="{{userId}}" /> </div> <div class="right-msg-body  text-align-left" > {{if roomType == "MessageRoomGroup"}} <div class="msg-nickname-time"> <div class="msg-nickname nickname_{{userId}}">{{nickname}}</div> </div> <div class="msg-content hint--bottom" aria-label="{{msgTime}}"> {{else}} <div class="msg-content hint--bottom" aria-label="{{msgTime}}" style="margin-top: 1rem;"> {{/if}} <div class="text-align-left msgContent">{{msgContent}}</div> </div> </div> </div>
+</script>
 
 <script id="tpl-chatSession" type="text/html">
     <div class="chatsession-row {{className}} {{chatSessionId}}  chat_session_id_{{chatSessionId}}" chat-session-id="{{chatSessionId}}" msg_time="{{msgServerTime}}" roomType="{{roomType}}" >
@@ -447,6 +456,16 @@
         </div>
 </script>
 
+
+<script id="tpl-download-app-div" type="text/html">
+    <div class="app_download_header">下载客户端</div>
+    <div class="app_download_subheader">随时随地享受畅聊体验，同时还有语音聊天功能等你来哦！</div>
+    <div id="qrcodeCanvas"></div>
+    <div class="download_button_div">
+        <button class="download_ios"><img src="../../public/img/msg/ios.png" style="width: 1.4rem;height:2rem;margin-right: 1.9rem;">iOS</button> <button class="download_android"><img src="../../public/img/msg/android.png" style="width: 2rem;height:2rem;">Android</button>
+    </div>
+</script>
+
 <script id="tpl-add-friend-div" type="text/html">
 
         <div class="flex-container justify-content-center" >
@@ -505,7 +524,7 @@
 <script id="tpl-search-user-div" type="text/html">
     <div class="search-user-header">
         <div class="search-user-header-content">
-        <input type="text" class="form-control create_group_box_div_input search-user-input" onkeypress="searchUser()" onkeydown="searchUser()" >
+        <input type="text" class="form-control create_group_box_div_input search-user-input" onkeypress="searchUserByKeyPress()" onkeydown="searchUserByKeyPress()" onblur="searchUserByOnBlur()" >
         </div>
         <img src="../../public/img/msg/search_icon.png" style="width:2rem; height:2rem;">
         </div>
@@ -515,4 +534,4 @@
         </div>
 
         </div>
-    </script>
+</script>

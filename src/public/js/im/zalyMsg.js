@@ -121,6 +121,10 @@ function appendOrInsertRoomList(msg, isInsert)
         case MessageType.MessageImage:
             msgContent = "[图片消息]";
             break;
+        case MessageType.MessageAudio:
+        case MessageTypeNum.MessageAudio:
+            msgContent = "[语音消息]";
+            break;
         case MessageType.MessageNotice:
             msgContent = msg["notice"].body;
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
@@ -171,6 +175,9 @@ function appendOrInsertRoomList(msg, isInsert)
         if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
             $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
         }
+        if(msg.fromUserId != token) {
+            showWebNotification(msg, msgContent);
+        }
         return ;
     }
 
@@ -189,7 +196,8 @@ function appendOrInsertRoomList(msg, isInsert)
         avatar:avatar,
         timeServer:msgTime,
         msgServerTime:msg.timeServer,
-    });
+    })
+
     if($(".chatsession-row").length > 0 ) {
         $(html).insertBefore($(".chatsession-row")[0]);
     } else {
@@ -200,6 +208,9 @@ function appendOrInsertRoomList(msg, isInsert)
 
     if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
         $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
+    }
+    if(msg.fromUserId != token) {
+        showWebNotification(msg, msgContent);
     }
 }
 
@@ -393,8 +404,11 @@ function handleSyncMsg(msg)
 
     ///是自己群的消息，并且是新消息
     if(msg.chatSessionId  == currentChatSessionId && isNewMsg) {
+        var isEndMsgDialog = isCheckEndMsgDialog();
         appendMsgHtml(msg);
-        msgBoxScrollToBottom();
+        if(isEndMsgDialog == true) {
+            msgBoxScrollToBottom();
+        }
     } else if(msg.chatSessionId != currentChatSessionId && isNewMsg) {
         if(msg.chatSessionId != token) {
             setRoomMsgUnreadNum(msg.chatSessionId);
@@ -676,6 +690,7 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
 function addMsgToChatDialog(chatSessionId, msg)
 {
     msg.status = MessageStatus.MessageStatusSending;
+
     appendMsgHtml(msg);
 
     var node = $(".chat_dession_id_"+chatSessionId);
@@ -695,9 +710,20 @@ function addMsgToChatDialog(chatSessionId, msg)
             }
         }
     }, 10000);///10秒执行
-
-
+    ///在上部分查看消息的时候不滚动
     msgBoxScrollToBottom();
+}
+
+function isCheckEndMsgDialog()
+{
+    var rightchatBox = $(".right-chatbox")[0];
+    var sh = rightchatBox.scrollHeight;
+    var ch = rightchatBox.clientHeight;
+    var st = $(".right-chatbox").scrollTop();
+    if(sh - ch - st == 0) {
+        return true
+    }
+    return false;
 }
 
 function appendMsgHtml(msg)
@@ -765,14 +791,12 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageAudio:
-                var msgContent = "[你发了一条语音消息，下载客户端，收听语音消息吧！] ";
                 html = template("tpl-send-msg-audio", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
                     msgTime : msgTime,
                     msgStatus:msgStatus,
-                    msgContent:msgContent,
                     avatar:userAvatar,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
@@ -807,7 +831,7 @@ function appendMsgHtml(msg)
                 break;
             default:
                 var msgContent = "[暂不支持此类型消息] ";
-                html = template("tpl-send-msg-audio", {
+                html = template("tpl-send-msg-default", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
@@ -851,20 +875,17 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageAudio:
-                var msgContent = "[你收到一条语音消息，下载客户端收听语音消息吧！]";
                 html = template("tpl-receive-msg-audio", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
                     msgId : msgId,
                     userId :msg.fromUserId,
-                    msgContent:msgContent,
                     msgTime : msgTime,
                     groupUserImg : groupUserImageClassName,
                     avatar:msg.userAvatar,
                 });
                 break;
             case MessageType.MessageWebNotice :
-                // html =  msg['webNotice'].code;
                 var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
                 html = template("tpl-receive-msg-web-notice", {
                     roomType: msg.roomType == GROUP_MSG ? 1 : 0,
@@ -878,7 +899,6 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageWeb :
-                // html = "请前往客户端查看web消息";
                 var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
                 html = template("tpl-receive-msg-web", {
                     roomType: msg.roomType,
@@ -899,7 +919,7 @@ function appendMsgHtml(msg)
                 break;
             default:
                 var msgContent = "[暂不支持此类型消息] ";
-                html = template("tpl-receive-msg-audio", {
+                html = template("tpl-receive-msg-default", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
@@ -1173,5 +1193,3 @@ function updateUserAvatar(fileName)
     values.push(value);
     updateUserInfo(values);
 }
-
-

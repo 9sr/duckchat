@@ -14,6 +14,36 @@ function uploadFile(obj)
     $("#"+obj).click();
 }
 
+console.log("Notification.permission ==" + Notification.permission);
+function showWebNotification(msg, msgContent)
+{
+    var msgId = msg.msgId;
+    var nickname="";
+    var name='';
+    var notification;
+
+    if(msg.roomType == "MessageRoomGroup") {
+        name = msg.name;
+        nickname=msg.nickname;
+    } else {
+         name=msg.nickname;
+    }
+
+    if(name == undefined || name.length<1) {
+        name = "通知";
+    }
+
+    if(nickname == "") {
+         notification = "["+name+"] "+ msgContent;
+    } else {
+         notification = "["+name+"] "+nickname+":" + msgContent;
+    }
+
+    if(window.Notification && Notification.permission !== "denied"){
+        new Notification(notification, {"tag":msgId});
+    }
+}
+
 token = $('.token').attr("data");
 nickname = $(".nickname").attr("data");
 loginName=$(".loginName").attr("data");
@@ -387,10 +417,64 @@ $(document).on("click", ".l-sb-item", function(){
             $("#search-user-div").html(html);
             showWindow($("#search-user-div"));
             break;
-
+        case "more":
+            displayDownloadApp();
+            break;
     }
     displayRoomListMsgUnReadNum();
 });
+
+function displayDownloadApp() {
+    var html = template("tpl-download-app-div", {});
+    $("#download-app-div").html(html);
+    var urlLink = changeZalySchemeToDuckChat("", "download_app");
+    var src = "../../public/img/duckchat.png";
+    generateQrcode($('#qrcodeCanvas'), urlLink, src, false, "more");
+    showWindow($("#download-app-div"));
+}
+
+function generateQrcode(qrCodeObj, urlLink, src, isCircle, type)
+{
+    var idName, className,width,height,canvasWidth,canvasHeight;
+
+    if(type == "self") {
+         idName = "selfQrcode";
+         className = "selfCanvas";
+        width  = getRemPx()*17;
+        height = getRemPx()*17;
+        canvasWidth = getRemPx()*15;
+        canvasHeight = getRemPx()*15;
+    } else if(type == 'group') {
+         width  = getRemPx()*24.5;
+         height = getRemPx()*24.5;
+         canvasWidth = getRemPx()*22;
+         canvasHeight = getRemPx()*22;
+         className = "qrcodeCanvas";
+         idName = "groupQrcode";
+    } else {
+         width  = getRemPx()*24.5;
+         height = getRemPx()*24.5;
+         canvasWidth = getRemPx()*22;
+         canvasHeight = getRemPx()*22;
+         idName = "appDownload";
+         className = "appDownload";
+    }
+
+    qrCodeObj.qrcode({
+        idName:idName,
+        render : "canvas",
+        text    :urlLink,
+        className : className,
+        canvasWidth:canvasWidth,
+        canvasHeight:canvasHeight,
+        width : width,               //二维码的宽度
+        height : height,              //二维码的高度
+        background : "#ffffff",       //二维码的后景色
+        foreground : "#000000",        //二维码的前景色
+        src: src, //二维码中间的图片
+        isCircle:isCircle
+    });
+}
 
 function setDocumentTitle(type)
 {
@@ -787,7 +871,6 @@ function addActiveForRoomList(jqElement)
 
 function getGroupProfile(groupId)
 {
-
     var groupInfoKey = profileKey + groupId;
     var groupProfileStr = localStorage.getItem(groupInfoKey);
 
@@ -1154,6 +1237,38 @@ $(document).on("click", ".create-group-btn", function () {
 });
 
 $(document).on("click", ".create_group_button" , function(){
+    createGroup();
+});
+
+function createGroupByKeyPress(event)
+{
+
+    if(checkIsEnterBack(event) == false) {
+        return;
+    }
+    createGroup();
+}
+
+function checkIsEnterBack(event)
+{
+    var event = event || window.event;
+    var isIE = (document.all) ? true : false;
+    var key;
+
+    if(isIE) {
+        key = event.keyCode;
+    } else {
+        key = event.which;
+    }
+
+    if(key != 13) {
+        return false;
+    }
+    return true;
+}
+
+function createGroup()
+{
     var groupName = $(".group_name").val();
     if(groupName.length > 10 || groupName.length < 1) {
         ////TODO 换成 页面漂浮报错
@@ -1166,7 +1281,7 @@ $(document).on("click", ".create_group_button" , function(){
     };
     var action = "api.group.create";
     handleClientSendRequest(action, reqData, groupCreateSuccess);
-});
+}
 
 function groupCreateSuccess(results) {
     var groupProfile = results.profile["profile"];
@@ -1893,6 +2008,7 @@ $(function () {
         var ch  = pwLeft.clientHeight;
         var sh = pwLeft.scrollHeight;
         var st = $('.friend-right-body').scrollTop();
+
         ////文档的高度-视口的高度-滚动条的高度
         if((sh - ch - st) == 0){
             var action = "api.friend.applyList";
@@ -2116,6 +2232,7 @@ $(document).on("click", ".share-group", function () {
     var groupProfile = getGroupProfile(chatSessionId);
     var groupName = groupProfile != false && groupProfile.name != "" ? groupProfile.name : $(".chatsession-title").html();
 
+
     var siteConfigJsonStr = localStorage.getItem(siteConfigKey);
     var siteName = "";
     if(siteConfigJsonStr ) {
@@ -2128,6 +2245,7 @@ $(document).on("click", ".share-group", function () {
         groupName:groupName,
         groupId:chatSessionId
     });
+
     html = handleHtmlLanguage(html);
     $("#share_group").html(html);
     showWindow($("#share_group"));
@@ -2136,27 +2254,12 @@ $(document).on("click", ".share-group", function () {
 
     var src = $("#share_group").attr("src");
 
-    var width  = getRemPx()*23;
-    var height = getRemPx()*23;
-    var canvasWidth = getRemPx()*22;
-    var canvasHeight = getRemPx()*22;
-    var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, chatSessionId, "g");
-
+    if(src == "" || src == undefined) {
+        src="../../public/img/msg/group_default_avatar.png";
+    }
+    var urlLink = changeZalySchemeToDuckChat(chatSessionId, "g");
     $("#share_group").attr("urlLink", urlLink);
-    console.log(urlLink);
-    $('#qrcodeCanvas').qrcode({
-        idName:"groupQrcode",
-        render : "canvas",
-        text    :urlLink,
-        className : "qrcodeCanvas",
-        canvasWidth:canvasWidth,
-        canvasHeight:canvasHeight,
-        width : width,               //二维码的宽度
-        height : height,              //二维码的高度
-        background : "#ffffff",       //二维码的后景色
-        foreground : "#000000",        //二维码的前景色
-        src: src, //二维码中间的图片
-    });
+    generateQrcode($('#qrcodeCanvas'),  urlLink, src, true, "group");
 });
 
 $(document).on("click",".copy-share-group", function(){
@@ -2189,8 +2292,15 @@ function downloadImgFormQrcode(idName)
 }
 
 
-function changeZalySchemeToDuckChat(serverAddress, chatSessionId, type)
+function changeZalySchemeToDuckChat(chatSessionId, type)
 {
+    var siteConfigJsonStr = localStorage.getItem(siteConfigKey);
+    var siteName = "";
+    if(siteConfigJsonStr ) {
+        siteConfig = JSON.parse(siteConfigJsonStr);
+    }
+    serverAddress = siteConfig.serverAddressForApi;
+
     var parser = document.createElement('a');
     parser.href = serverAddress;
     var domain = serverAddress;
@@ -2200,9 +2310,11 @@ function changeZalySchemeToDuckChat(serverAddress, chatSessionId, type)
         var pathname = parser.pathname;
         domain =  protocol+"//"+hostname+pathname;
     }
-
-    var urlLink = domain.indexOf("?") > -1 ? domain+"&x="+type+"-"+chatSessionId : domain+"/?x="+type+"-"+chatSessionId;
-    urlLink = urlLink.indexOf("?") > -1 ? jumpPage+"&jumpUrl="+encodeURI(urlLink) :jumpPage+"?jumpUrl="+encodeURI(urlLink);
+    var urlLink = domain;
+    if(chatSessionId != "") {
+         urlLink = domain.indexOf("?") > -1 ? domain+"&x="+type+"-"+chatSessionId : domain+"/?x="+type+"-"+chatSessionId;
+    }
+    urlLink = jumpPage.indexOf("?") > -1 ? jumpPage+"&jumpUrl="+encodeURI(urlLink) :jumpPage+"?jumpUrl="+encodeURI(urlLink);
     return encodeURI(urlLink);
 }
 
@@ -2211,53 +2323,16 @@ $(document).on("click", "#self-qrcode", function () {
     $("#selfQrcodeDiv")[0].style.display = 'block';
     $("#selfInfoDiv")[0].style.display = 'none';
 
-    var siteConfigJsonStr = localStorage.getItem(siteConfigKey);
-    var siteName = "";
-    if(siteConfigJsonStr ) {
-        siteConfig = JSON.parse(siteConfigJsonStr);
-        siteName = siteConfig.name;
-    }
-
     $("#selfQrcodeCanvas").html("");
     var src = $(".selfInfo").attr("src");
-
-    var width  = getRemPx()*15;
-    var height = getRemPx()*15;
-    var canvasWidth = getRemPx()*15;
-    var canvasHeight = getRemPx()*15;
-    var urlLink = changeZalySchemeToDuckChat(siteConfig.serverAddressForApi, token, "u");
-
+    var urlLink = changeZalySchemeToDuckChat(token, "u");
     $("#selfQrcodeCanvas").attr("urlLink", urlLink);
-
-    $('#selfQrcodeCanvas').qrcode({
-        idName:"selfQrcode",
-        render : "canvas",
-        text    :urlLink,
-        className : "selfCanvas",
-        canvasWidth:canvasWidth,
-        canvasHeight:canvasHeight,
-        width : width,               //二维码的宽度
-        height : height,              //二维码的高度
-        background : "#ffffff",       //二维码的后景色
-        foreground : "#000000",        //二维码的前景色
-        src: src, //二维码中间的图片
-    });
-
-
-
+    generateQrcode($('#selfQrcodeCanvas'), urlLink, src, true , "self");
 });
-
 
 function updateSelfNickName(event)
 {
-    var isIE = (document.all) ? true : false;
-    var key;
-    if(isIE) {
-        key = event.keyCode;
-    } else {
-        key = event.which;
-    }
-    if(key != 13) {
+    if(checkIsEnterBack() == false) {
         return;
     }
     var nickname = $(".nickname").val();
@@ -2303,14 +2378,7 @@ $(document).on("click", ".groupName",function () {
 
 function updateGroupNameName(event)
 {
-    var isIE = (document.all) ? true : false;
-    var key;
-    if(isIE) {
-        key = event.keyCode;
-    } else {
-        key = event.which;
-    }
-    if(key != 13) {
+    if(checkIsEnterBack(event) == false) {
         return;
     }
 
@@ -2338,21 +2406,19 @@ $(document).on("click", ".web-msg-click", function(){
     window.open(url);
 });
 
-function searchUser(event)
+function searchUserByKeyPress(event)
 {
-    var event = event || window.event;
-    var isIE = (document.all) ? true : false;
-    var key;
-
-    if(isIE) {
-        key = event.keyCode;
-    } else {
-        key = event.which;
-    }
-
-    if(key != 13) {
+    if(checkIsEnterBack(event) == false) {
         return;
     }
+    searchUser();
+}
+
+function searchUserByOnBlur(){
+    searchUser();
+}
+
+function searchUser() {
     var searchValue = $(".search-user-input").val();
     if(searchValue.length<1) {
         return;
@@ -2371,7 +2437,6 @@ function handleSearchUser(results)
 {
     if(results.hasOwnProperty("friends")) {
         var friends = results.friends;
-        console.log("results == search user ==" + JSON.stringify(friends));
         var friendsLength = friends.length;
         for(var i=0; i<friendsLength; i++) {
             var friendProfile = friends[i].profile;
@@ -2400,3 +2465,8 @@ function closeMaskDiv(str)
 {
     removeWindow($(str));
 }
+
+$(document).on("click", ".msg_img", function () {
+    var src = $(this).attr("src");
+    window.open(src);
+});

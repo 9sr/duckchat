@@ -283,14 +283,6 @@
             }
 
             if (dbPort == "" || dbPort.length < 1) {
-                // $(".dbPortFailed")[0].style.display = "block";
-                // if (isFocus == false) {
-                //     $(".sql-dbPort").focus();
-                //     isFocus = true;
-                //     $(".dbNameFailed")[0].style.display = "none";
-                //     $(".dbHostFailed")[0].style.display = "none";
-                //     $(".dbPasswordFailed")[0].style.display = "none";
-                // }
                 dbPort = 3306;
             }
 
