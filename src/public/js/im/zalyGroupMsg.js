@@ -1689,7 +1689,8 @@ $(document).mouseup(function(e){
     }
     if(targetId != "selfAvatarUploadDiv" && targetId != "selfNickname" && targetId != "logout" && targetId != "logout-span"
         && targetId != "self-qrcode" && targetId != "user-image-upload" && targetId != "user-img-carmera"
-        &&targetClassName != "nickNameDiv" && targetId !="selfQrcodeDiv" && targetId !="selfQrcodeCanvas" && targetId != "selfQrcode") {
+        &&targetClassName != "nickNameDiv" && targetId !="selfQrcodeDiv" && targetId !="selfQrcodeCanvas" && targetId != "selfQrcode"
+        && targetClassName != "self-qrcode") {
         $("#selfInfo").remove();
     }
 });
@@ -2319,6 +2320,10 @@ function changeZalySchemeToDuckChat(chatSessionId, type)
 
 
 $(document).on("click", "#self-qrcode", function () {
+    getSelfQrcode();
+});
+
+function getSelfQrcode() {
     $("#selfQrcodeDiv")[0].style.display = 'block';
     $("#selfInfoDiv")[0].style.display = 'none';
 
@@ -2327,7 +2332,7 @@ $(document).on("click", "#self-qrcode", function () {
     var urlLink = changeZalySchemeToDuckChat(token, "u");
     $("#selfQrcodeCanvas").attr("urlLink", urlLink);
     generateQrcode($('#selfQrcodeCanvas'), urlLink, src, true , "self");
-});
+}
 
 function updateSelfNickName(event)
 {
