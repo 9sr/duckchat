@@ -88,7 +88,6 @@ function handleRedirect()
         }
         // window.location.href = refererUrl;
         refererUrl = refererUrl + " &fail_callback=failedCallBack&&success_callback=successCallBack";
-        console.log("refererUrl ==" + refererUrl);
         addJsByDynamic(refererUrl);
     }
 }

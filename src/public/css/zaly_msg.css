@@ -455,10 +455,12 @@ html, body{
 
 .msg-right .msg-content-img .msg_img{
     border-radius: 0.94rem 0rem 0.94rem 0.94rem;
+    cursor: pointer;
 }
 
 .msg-left .msg-content-img .msg_img{
     border-radius: 0rem 0.94rem  0.94rem 0.94rem;
+    cursor: pointer;
 }
 
 /*right-input*/

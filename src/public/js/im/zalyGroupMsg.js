@@ -14,7 +14,6 @@ function uploadFile(obj)
     $("#"+obj).click();
 }
 
-console.log("Notification.permission ==" + Notification.permission);
 function showWebNotification(msg, msgContent)
 {
     var msgId = msg.msgId;

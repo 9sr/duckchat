@@ -524,7 +524,7 @@
 <script id="tpl-search-user-div" type="text/html">
     <div class="search-user-header">
         <div class="search-user-header-content">
-        <input type="text" class="form-control create_group_box_div_input search-user-input" onkeypress="searchUserByKeyPress()" onkeydown="searchUserByKeyPress()" onblur="searchUserByOnBlur()" >
+        <input type="text" class="form-control create_group_box_div_input search-user-input" onkeydown="searchUserByKeyPress(event)" onblur="searchUserByOnBlur(event)" >
         </div>
         <img src="../../public/img/msg/search_icon.png" style="width:2rem; height:2rem;">
         </div>
