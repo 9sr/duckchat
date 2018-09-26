@@ -153,6 +153,7 @@ class Site_Login
 
             //save profile to db
             $userProfile['availableType'] = \Zaly\Proto\Core\UserAvailableType::UserAvailableNormal;
+            $userProfile['avatar'] = ZalyAvatar::getRandomAvatar();
 
             $result = $this->insertSiteUserProfile($userProfile);
 

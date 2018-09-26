@@ -8,6 +8,10 @@
 
 class SiteUserTable extends BaseTable
 {
+    /**
+     * @var Wpf_Logger
+     */
+    private $logger;
     private $table = "siteUser";
     private $columns = [
         "id",
@@ -30,6 +34,7 @@ class SiteUserTable extends BaseTable
 
     public function init()
     {
+        $this->logger = $this->ctx->getLogger();
         $this->selectColumns = implode(",", $this->columns);
     }
 
@@ -305,15 +310,13 @@ class SiteUserTable extends BaseTable
             $prepare->bindValue(":userId", $userId);
             $prepare->execute();
 
-            $results = $prepare->fetch(\PDO::FETCH_ASSOC);
-
-            if (!empty($results) && !empty($results['friendVersion'])) {
-                return $results['friendVersion'];
+            $results = $prepare->fetchColumn(0);
+            if (empty($results)) {
+                return 0;
             }
-
-            return 0;
+            return $results;
         } finally {
-            $this->ctx->wpf_Logger->writeSqlLog($tag, $sql, $results, $startTime);
+            $this->logger->writeSqlLog($tag, $sql, $results, $startTime);
         }
     }
 
@@ -336,9 +339,8 @@ class SiteUserTable extends BaseTable
 
         $friendVersion = 1;
         if (!empty($version)) {
-            $friendVersion = $version['friendVersion'] + 1;
+            $friendVersion = $version + 1;
         }
-
         return $this->updateUserFriendVersion($userId, $friendVersion);
     }
 

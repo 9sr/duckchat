@@ -79,9 +79,11 @@ class File_Manager
         return mime_content_type($path);
     }
 
-    public function saveFile($content)
+    public function saveFile($content, $dateDir = false)
     {
-        $dateDir = date("Ymd");
+        if (!$dateDir) {
+            $dateDir = date("Ymd");
+        }
 
         $fileName = sha1(uniqid());
 
