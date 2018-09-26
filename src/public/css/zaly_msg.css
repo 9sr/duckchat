@@ -498,9 +498,9 @@ html, body{
     flex-grow: 1;
     font-size:1.5rem;
     color:#C9C9C9;
-    line-height:2.06rem;
-    padding-top: 3rem;
+    padding-top: 1.5rem;
     resize: none;
+    height: 2rem;
     word-break: break-all;
 }
 
@@ -523,20 +523,18 @@ html, body{
 }
 
 .right-input .input-box .input-btn {
-    width: 15rem;
-    display: flex;
-    flex-direction: column-reverse;
-    border-radius:0.47rem;
+    margin-right: 2rem;
 }
 
 .right-input .input-box .input-btn button {
-    width:13.13rem;
+    width:11.26rem;
     height:3.75rem;
     background:rgba(76,59,177,1);
     border-radius:0.47rem;
-    font-size:1.69rem;
-    color: #fff;
-    line-height:2.35rem;
+    font-size:1.88rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(255,255,255,1);
 }
 
 /* mask and new window */

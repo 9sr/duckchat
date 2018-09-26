@@ -14,7 +14,7 @@ function uploadFile(obj)
     $("#"+obj).click();
 }
 
-
+console.log("Notification.permission ==" + Notification.permission);
 function showWebNotification(msg, msgContent)
 {
     var msgId = msg.msgId;
@@ -2437,7 +2437,6 @@ function handleSearchUser(results)
 {
     if(results.hasOwnProperty("friends")) {
         var friends = results.friends;
-        console.log("results == search user ==" + JSON.stringify(friends));
         var friendsLength = friends.length;
         for(var i=0; i<friendsLength; i++) {
             var friendProfile = friends[i].profile;

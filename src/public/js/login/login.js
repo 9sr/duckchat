@@ -1,7 +1,6 @@
 
 var languageName = navigator.language == "en-US" ? "en" : "zh";
 
-var languageName = "zh";
 jQuery.i18n.properties({
     name: "lang",
     path: '../../public/js/config/',
@@ -72,12 +71,15 @@ function zalyLoginConfig(results) {
 
 function loginSuccess()
 {
+
     handleRedirect();
 }
 
 function handleRedirect()
 {
     var refererUrl = localStorage.getItem(refererUrlKey);
+    console.log("refererUrl ==" + refererUrl);
+
     if(refererUrl) {
         if(refererUrl.indexOf("?") > -1) {
             refererUrl = refererUrl+"&preSessionId="+preSessionId+"&isRegister="+isRegister;
@@ -86,6 +88,7 @@ function handleRedirect()
         }
         // window.location.href = refererUrl;
         refererUrl = refererUrl + " &fail_callback=failedCallBack&&success_callback=successCallBack";
+        console.log("refererUrl ==" + refererUrl);
         addJsByDynamic(refererUrl);
     }
 }

@@ -56,8 +56,6 @@
 
     languageName = navigator.language == "en-US" ? "en" : "zh";
 
-    languageName = "zh";
-
     $(window).resize(function () {
         setFontSize();
     });
@@ -91,7 +89,6 @@
     window.addEventListener('popstate', function () {
         history.pushState(null, null, document.URL);
     });
-
 
     jQuery.i18n.properties({
         name: "lang",
@@ -128,15 +125,22 @@
         });
 
 
-    window.addEventListener('load', function () {
-        if (window.Notification && Notification.permission !== "granted") {
-            Notification.requestPermission(function (status) {
-                if (Notification.permission !== status) {
-                    Notification.permission = status;
-                }
-            });
-        }
-    });
+    if (window.Notification && Notification.permission !== "granted") {
+        Notification.requestPermission().then(function(result) {
+            console.log("Notification.permission result======+++" + result);
+
+            if (result === 'denied') {
+                console.log('Permission wasn\'t granted. Allow a retry.');
+                return;
+            }
+            if (result === 'default') {
+                console.log('The permission request was dismissed.');
+                return;
+            }
+        });
+
+
+    }
 
 </script>
 
