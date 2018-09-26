@@ -56,8 +56,6 @@
 
     languageName = navigator.language == "en-US" ? "en" : "zh";
 
-    languageName = "zh";
-
     $(window).resize(function () {
         setFontSize();
     });
@@ -92,7 +90,6 @@
         history.pushState(null, null, document.URL);
     });
 
-
     jQuery.i18n.properties({
         name: "lang",
         path: '../../public/js/config/',
@@ -126,6 +123,24 @@
             var qqUrl = "https://jq.qq.com/?_wv=1027&k=5GBN4lJ";
             window.open(qqUrl);
         });
+
+
+    if (window.Notification && Notification.permission !== "granted") {
+        Notification.requestPermission().then(function(result) {
+            console.log("Notification.permission result======+++" + result);
+
+            if (result === 'denied') {
+                console.log('Permission wasn\'t granted. Allow a retry.');
+                return;
+            }
+            if (result === 'default') {
+                console.log('The permission request was dismissed.');
+                return;
+            }
+        });
+
+
+    }
 
 </script>
 
