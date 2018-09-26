@@ -5,4 +5,5 @@ src/attachment/
 .idea/
 logs/
 .idea/
+.idea/vcs.xml
 
