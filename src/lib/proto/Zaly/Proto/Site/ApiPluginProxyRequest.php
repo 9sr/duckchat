@@ -41,9 +41,23 @@ class ApiPluginProxyRequest extends \Google\Protobuf\Internal\Message
      */
     private $headers;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $pluginId
+     *     @type string $url
+     *     @type int $method
+     *     @type string $body
+     *     @type string $cookie
+     *     @type array|\Google\Protobuf\Internal\MapField $headers
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiPluginProxy::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

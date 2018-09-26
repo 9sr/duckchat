@@ -18,9 +18,18 @@ class ApiPassportPasswordUpdateInvitationCodeResponse extends \Google\Protobuf\I
      */
     private $preSessionId = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $preSessionId
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiPassportPasswordUpdateInvitationCode::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

@@ -27,9 +27,20 @@ class ApiGroupListRequest extends \Google\Protobuf\Internal\Message
      */
     private $count = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $offset
+     *     @type int $count
+     *           default 200
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGroupList::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

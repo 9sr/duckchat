@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\PluginPermissionType</code>
+ * Protobuf type <code>core.PluginPermissionType</code>
  */
 class PluginPermissionType
 {

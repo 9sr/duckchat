@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\MessageType</code>
+ * Protobuf type <code>core.MessageType</code>
  */
 class MessageType
 {
@@ -37,6 +37,14 @@ class MessageType
      * Generated from protobuf enum <code>MessageWebNotice = 6;</code>
      */
     const MessageWebNotice = 6;
+    /**
+     * Generated from protobuf enum <code>MessageDocument = 7;</code>
+     */
+    const MessageDocument = 7;
+    /**
+     * Generated from protobuf enum <code>MessageVideo = 8;</code>
+     */
+    const MessageVideo = 8;
     /**
      * event message start
      *

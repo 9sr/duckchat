@@ -19,9 +19,20 @@ class ApiFileDownloadResponse extends \Google\Protobuf\Internal\Message
     private $contentType = '';
     protected $ret;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $file
+     *     @type string $fileBase64
+     *     @type string $contentType
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiFileDownload::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

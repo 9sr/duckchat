@@ -20,9 +20,18 @@ class ImStcMessageRequest extends \Google\Protobuf\Internal\Message
      */
     private $list;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Zaly\Proto\Core\Message[]|\Google\Protobuf\Internal\RepeatedField $list
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Client\ImStcMessage::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

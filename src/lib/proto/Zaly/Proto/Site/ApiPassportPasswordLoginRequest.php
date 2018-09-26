@@ -31,9 +31,20 @@ class ApiPassportPasswordLoginRequest extends \Google\Protobuf\Internal\Message
      */
     private $sitePubkPem = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $loginName
+     *     @type string $password
+     *     @type string $sitePubkPem
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiPassportPasswordLogin::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

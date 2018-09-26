@@ -32,9 +32,22 @@ class ImCtsSyncRequest extends \Google\Protobuf\Internal\Message
      */
     private $updatePointer = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $u2Count
+     *     @type int $groupCount
+     *     @type bool $updatePointer
+     *           if true: update the user's pointer to the value in MessageSyncReq
+     *           for http-only server.
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ImCtsSync::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

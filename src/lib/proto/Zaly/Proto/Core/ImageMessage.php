@@ -28,9 +28,21 @@ class ImageMessage extends \Google\Protobuf\Internal\Message
      */
     private $height = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $url
+     *           url or fileId
+     *     @type int $width
+     *     @type int $height
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Message::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

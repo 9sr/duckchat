@@ -19,9 +19,20 @@ class ApiUserUpdateValue extends \Google\Protobuf\Internal\Message
     private $type = 0;
     protected $fields;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $type
+     *     @type string $avatar
+     *     @type string $nickname
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiUserUpdate::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

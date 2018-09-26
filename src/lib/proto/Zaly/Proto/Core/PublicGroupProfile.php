@@ -58,9 +58,28 @@ class PublicGroupProfile extends \Google\Protobuf\Internal\Message
      */
     private $speakers;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $id
+     *     @type string $name
+     *     @type string $nameInLatin
+     *     @type string $avatar
+     *     @type \Zaly\Proto\Core\GroupDescription $description
+     *     @type int $permissionJoin
+     *     @type bool $canGuestReadMessage
+     *     @type int|string $timeCreate
+     *     @type \Zaly\Proto\Core\PublicUserProfile $owner
+     *     @type \Zaly\Proto\Core\PublicUserProfile[]|\Google\Protobuf\Internal\RepeatedField $admins
+     *     @type \Zaly\Proto\Core\PublicUserProfile[]|\Google\Protobuf\Internal\RepeatedField $speakers
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Group::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

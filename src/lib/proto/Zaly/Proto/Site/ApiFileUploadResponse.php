@@ -18,9 +18,18 @@ class ApiFileUploadResponse extends \Google\Protobuf\Internal\Message
      */
     private $fileId = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $fileId
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiFileUpload::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
