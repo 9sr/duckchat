@@ -791,14 +791,12 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageAudio:
-                var msgContent = "[你发了一条语音消息，下载客户端，收听语音消息吧！] ";
                 html = template("tpl-send-msg-audio", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
                     msgTime : msgTime,
                     msgStatus:msgStatus,
-                    msgContent:msgContent,
                     avatar:userAvatar,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
@@ -833,7 +831,7 @@ function appendMsgHtml(msg)
                 break;
             default:
                 var msgContent = "[暂不支持此类型消息] ";
-                html = template("tpl-send-msg-audio", {
+                html = template("tpl-send-msg-default", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
@@ -877,20 +875,17 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageAudio:
-                var msgContent = "[你收到一条语音消息，下载客户端收听语音消息吧！]";
                 html = template("tpl-receive-msg-audio", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
                     msgId : msgId,
                     userId :msg.fromUserId,
-                    msgContent:msgContent,
                     msgTime : msgTime,
                     groupUserImg : groupUserImageClassName,
                     avatar:msg.userAvatar,
                 });
                 break;
             case MessageType.MessageWebNotice :
-                // html =  msg['webNotice'].code;
                 var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
                 html = template("tpl-receive-msg-web-notice", {
                     roomType: msg.roomType == GROUP_MSG ? 1 : 0,
@@ -904,7 +899,6 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageWeb :
-                // html = "请前往客户端查看web消息";
                 var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
                 html = template("tpl-receive-msg-web", {
                     roomType: msg.roomType,
@@ -925,7 +919,7 @@ function appendMsgHtml(msg)
                 break;
             default:
                 var msgContent = "[暂不支持此类型消息] ";
-                html = template("tpl-receive-msg-audio", {
+                html = template("tpl-receive-msg-default", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,

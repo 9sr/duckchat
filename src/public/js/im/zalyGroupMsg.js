@@ -418,20 +418,20 @@ $(document).on("click", ".l-sb-item", function(){
             showWindow($("#search-user-div"));
             break;
         case "more":
-            var html = template("tpl-download-app-div", {});
-            $("#download-app-div").html(html);
-
-            var urlLink = changeZalySchemeToDuckChat("", "download_app");
-            console.log("urlLink ==" + urlLink);
-            var src = "../../public/img/duckchat.png";
-
-            generateQrcode($('#qrcodeCanvas'), urlLink, src, false, "more");
-
-            showWindow($("#download-app-div"));
+            displayDownloadApp();
             break;
     }
     displayRoomListMsgUnReadNum();
 });
+
+function displayDownloadApp() {
+    var html = template("tpl-download-app-div", {});
+    $("#download-app-div").html(html);
+    var urlLink = changeZalySchemeToDuckChat("", "download_app");
+    var src = "../../public/img/duckchat.png";
+    generateQrcode($('#qrcodeCanvas'), urlLink, src, false, "more");
+    showWindow($("#download-app-div"));
+}
 
 function generateQrcode(qrCodeObj, urlLink, src, isCircle, type)
 {
