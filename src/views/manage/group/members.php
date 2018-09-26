@@ -580,7 +580,8 @@
 
 <script type="text/javascript">
 
-    $(document).on("click", ".group-members", function () {
+
+    $(".group-members").click(function () {
         var userId = $(this).attr("userId");
         var url = "index.php?action=manage.user.profile&lang=" + getLanguage() + "&userId=" + userId;
         zalyjsCommonOpenPage(url);

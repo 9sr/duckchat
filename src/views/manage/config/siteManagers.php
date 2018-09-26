@@ -506,7 +506,8 @@
 <script type="text/javascript">
 
 
-    $(document).on("click", "#user-list-id", function () {
+    $("#user-list-id").click(function () {
+
         var userId = $(this).attr("userId");
 
         var url = "index.php?action=manage.user.profile&lang=" + getLanguage() + "&userId=" + userId;

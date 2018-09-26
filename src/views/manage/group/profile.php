@@ -770,7 +770,7 @@
     }
 
 
-    $(document).mouseup(function (e) {
+    $(".wrapper-mask").mouseup(function (e) {
         var targetId = e.target.id;
         var targetClassName = e.target.className;
 
@@ -792,7 +792,7 @@
     });
 
 
-    $(document).on("click", "#user-nickname", function () {
+    $("#user-nickname").click(function () {
         var title = $(this).find(".item-body-desc").html();
         var inputBody = $(this).find(".item-body-value").html();
 
@@ -804,7 +804,7 @@
 
     });
 
-    $(document).on("click", "#group-max-members", function () {
+    $("#group-max-members").click(function () {
         var title = $(this).find(".item-body-desc").html();
         var inputBody = $(this).find(".item-body-value").html();
 
@@ -907,7 +907,7 @@
     }
 
 
-    $(document).on("click", "#manage-group-members", function () {
+    $("#manage-group-members").click(function () {
         var groupId = $("#group-id").attr("data");
 
         var url = "index.php?action=manage.group.members&groupId=" + groupId + "&lang=" + getLanguage();
@@ -916,7 +916,7 @@
     });
 
 
-    $(document).on("click", "#remove-group", function () {
+    $("#remove-group").click(function () {
 
         var groupId = $("#group-id").attr("data");
 
@@ -945,7 +945,6 @@
             alert(getLanguage() == 1 ? "删除失败" : "delete error");
         }
     }
-
 
 </script>
 

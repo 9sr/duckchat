@@ -4,4 +4,6 @@ src/attachment/
 *.sqlite3
 .idea/
 logs/
-
+.idea/
+.idea/vcs.xml
+.DS_Store
