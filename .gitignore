@@ -6,4 +6,4 @@ src/attachment/
 logs/
 .idea/
 .idea/vcs.xml
-
+.DS_Store
