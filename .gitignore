@@ -4,4 +4,5 @@ src/attachment/
 *.sqlite3
 .idea/
 logs/
+.idea/
 
