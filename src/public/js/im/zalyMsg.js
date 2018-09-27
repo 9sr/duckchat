@@ -834,7 +834,6 @@ function appendMsgHtml(msg)
                     nickname: msg.nickname,
                     webWidth:webWidth,
                     webHeight:webHeight,
-                    leftWebWidth:Number(webWidth-30),
                     msgId : msgId,
                     msgTime : msgTime,
                     userId :msg.fromUserId,

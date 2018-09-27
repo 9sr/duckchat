@@ -114,11 +114,11 @@
                 </div>
                 {{if hrefURL}}
                     <div  class="msg_status_img" msgId="{{msgId}}"  style="display: flex;">
-                        <img src="../../public/img/msg/web_msg_click.png"  class="web-msg-click" style="width:2rem;height:2rem; left:{{leftWebWidth}}px;" src-data="{{hrefURL}}">
+                        <img src="../../public/img/msg/web_msg_click.png"  class="web-msg-click" style="width:2rem;height:2rem; left:-3rem;" src-data="{{hrefURL}}">
                     </div>
                 {{else}}
                     <div  class="msg_status_img " msgId="{{msgId}}"  style="display: flex;">
-                        <img src="../../public/img/msg/web_msg_unclick.png" style="width:2rem;height:2rem; left:{{leftWebWidth}}px;;">
+                        <img src="../../public/img/msg/web_msg_unclick.png" style="width:2rem;height:2rem; left:-3rem;">
                     </div>
                 {{/if}}
 
