@@ -47,7 +47,6 @@ class Api_Group_InviteController extends Api_Group_BaseController
                 $this->setRpcError($errorCode, $errorInfo);
                 throw new Exception($errorInfo);
             }
-            $this->ctx->Wpf_Logger->info($tag, "userIds ==" . json_encode($userList) . " groupId ==" . $groupId);
 
             //获取群组资料信息
             $groupInfo = $this->getGroupInfo($groupId);
@@ -209,7 +208,7 @@ class Api_Group_InviteController extends Api_Group_BaseController
         if (isset($fromUserId)) {
             $name = $this->getUserName($fromUserId);
             if ($name) {
-                $nameBody .= $name . " invite ";
+                $nameBody .= $name . " 邀请了 ";
             }
         }
 
@@ -228,7 +227,7 @@ class Api_Group_InviteController extends Api_Group_BaseController
 
         }
 
-        $nameBody .= " join this group chat";
+        $nameBody .= " 加入群聊";
 
         return $nameBody;
     }
@@ -240,8 +239,6 @@ class Api_Group_InviteController extends Api_Group_BaseController
     private function getUserName($userId)
     {
         $userInfo = $this->ctx->SiteUserTable->getUserByUserId($userId);
-
-        $this->ctx->Wpf_Logger->info("------------------", "userInfo=" . json_encode($userInfo));
 
         if (!empty($userInfo)) {
             $userName = $userInfo['nickname'];

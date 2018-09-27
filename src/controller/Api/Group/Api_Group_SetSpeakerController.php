@@ -56,6 +56,8 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
                     break;
             }
 
+            $this->proxyGroupNotice($groupId, $this->userId, $response->getSpeakerUserIds(), $setType);
+
             $this->returnSuccessRPC($response);
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error($tag, $e);
@@ -133,5 +135,84 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
     {
         $errInfo = ZalyError::getErrorInfo2($errCode, $this->language);
         throw new ZalyException($errCode, $errInfo);
+    }
+
+
+    private function proxyGroupNotice($groupId, $groupAdminId, $speakeIds, $setType)
+    {
+        $noticeText = $this->buildGroupNotice($groupAdminId, $speakeIds, $setType);
+        $this->logger->error("=============", "noticeText=" . $noticeText);
+
+        $this->ctx->Message_Client->proxyGroupNoticeMessage($groupAdminId, $groupId, $noticeText);
+    }
+
+    private function buildGroupNotice($groupAdminId, $speakerIds, $setType)
+    {
+
+        $nameBody = "";
+
+        if (isset($groupAdminId)) {
+            $name = $this->getUserName($groupAdminId);
+            if ($name) {
+                $nameBody .= $name;
+            }
+        }
+
+        if ($setType == Zaly\Proto\Site\SetSpeakerType::RemoveSpeaker) {
+            $nameBody .= " 关闭了";
+        } elseif ($setType == Zaly\Proto\Site\SetSpeakerType::CloseSpeaker) {
+            $nameBody .= " 关闭了发言者功能";
+            return $nameBody;
+        } else {//
+            $nameBody .= " 设置";
+        }
+
+        if (empty($speakerIds)) {
+            return false;
+        }
+
+        foreach ($speakerIds as $num => $userId) {
+
+            $name = $this->getUserName($userId);
+
+            if ($name) {
+                if ($num == 0) {
+                    $nameBody .= $name;
+                } else {
+                    $nameBody .= "," . $name;
+                }
+            }
+
+        }
+
+        if ($setType == Zaly\Proto\Site\SetSpeakerType::RemoveSpeaker) {
+            $nameBody .= " 发言人身份";
+        } else {//
+            $nameBody .= " 为发言人";
+        }
+
+        return $nameBody;
+    }
+
+    /**
+     * @param $userId
+     * @return null
+     */
+    private function getUserName($userId)
+    {
+        $userInfo = $this->ctx->SiteUserTable->getUserByUserId($userId);
+
+        if (!empty($userInfo)) {
+            $userName = $userInfo['nickname'];
+
+            if (empty($userName)) {
+                $userName = $userInfo['loginName'];
+            }
+
+            return $userName;
+        } else {
+            return null;
+        }
+
     }
 }

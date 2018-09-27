@@ -121,6 +121,7 @@ class Api_Friend_AcceptController extends BaseController
             $fromUserId = $agreeUserId;
 
             $text = "I accept your friend apply, let's talk";
+            $text = "我接受了你的好友申请, 现在找我聊天吧";
 
 //            if ($this->language == Zaly\Proto\Core\UserClientLangType::UserClientLangZH) {
 //                $text = "我接受了你的好友申请，现在开始聊天吧";

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: childeYin<尹少爷>
- * Date: 18/07/2018
- * Time: 8:45 AM
+ * User: anguoyue
+ * Date: 31/08/2018
+ * Time: 6:45 PM
  */
 
 class ZalyError extends ZalyErrorBase

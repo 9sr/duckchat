@@ -65,11 +65,7 @@ class Api_Group_CreateController extends Api_Group_BaseController
             ///TODO 创建成功了之后，代发消息，
             $groupId = $groupProfile['groupId'];
 
-            $noticeText = 'group created,invite your friends to join chat';
-
-            if ($this->language == Zaly\Proto\Core\UserClientLangType::UserClientLangZH) {
-                $noticeText = '群组已创建成功,邀请你的好友加入群聊吧';
-            }
+            $noticeText = ZalyText::getText(ZalyText::$textGroupCreate, $this->language);
 
             $this->ctx->Message_Client->proxyGroupNoticeMessage($this->userId, $groupId, $noticeText);
 
