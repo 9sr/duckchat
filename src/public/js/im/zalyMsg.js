@@ -779,17 +779,21 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageDocument:
+                var size = msg['document'].size;
+                var fileName =  msg['document'].name;
+                var url = msg['document'].url;
                 html = template("tpl-send-msg-file", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
+                    url:url,
                     msgTime : msgTime,
                     msgStatus:msgStatus,
                     avatar:userAvatar,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
-                    fileSize:"3.2M",
-                    fileName:"aaaaa",
+                    fileSize:size,
+                    fileName:fileName,
                     timeServer:msg.timeServer
                 });
                 break;
@@ -911,17 +915,21 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageDocument:
+                var size = msg['document'].size;
+                var fileName =  msg['document'].name;
+                var url = msg['document'].url;
                 html = template("tpl-receive-msg-file", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
+                    url:url,
                     msgTime : msgTime,
                     msgStatus:msgStatus,
                     avatar:userAvatar,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
-                    fileSize:"3.2M",
-                    fileName:"aaaaa",
+                    fileSize:size,
+                    fileName:fileName,
                     timeServer:msg.timeServer
                 });
                 break;
@@ -1031,6 +1039,7 @@ function getMsgSizeForDiv(msg)
     }
     return getMsgSize(msg['image'].width, msg['image'].height, h, w);
 }
+
 
 function getWebMsgHref(msgId, msgRoomType)
 {

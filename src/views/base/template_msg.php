@@ -50,7 +50,7 @@
         <div class="right-msg-body text-align-right">
             <div class="msg_status" style="margin-top: 1rem;">
                 <div class="msg-content-img justify-content-end hint--bottom" aria-label="{{msgTime}}">
-                    <div class="text-align-left left_msg_file_div" >
+                    <div class="text-align-left left_msg_file_div" url="{{url}}" msgId="{{msgId}}">
                         <div class="file_img">
                             <img src="../../public/img/msg/msg_file.png"/>
                         </div>
@@ -181,7 +181,7 @@
                 {{else}}
                 <div class="msg-content-img justify-content-end hint--bottom" aria-label="{{msgTime}}" style="margin-top:1rem;" >
                     {{/if}}
-                    <div class="text-align-right right_msg_file_div">
+                    <div class="text-align-right right_msg_file_div"  url="{{url}}" msgId="{{msgId}}">
                         <div class="file_img">
                             <img src="../../public/img/msg/msg_file.png"/>
                         </div>
