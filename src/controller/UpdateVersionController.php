@@ -39,7 +39,13 @@ class UpdateVersionController extends HttpBaseController
             if($configOlder['dbVersion'] < $configSampleNew['dbVersion']) {
                 $className = "DB_Version_V".$configSampleNew['dbVersion'];
                 require (dirname(__DIR__)."/model/DB/".$className.".php");
-                $className::getInstance()->upgradeDB();
+                new $className();
+                $configOlder['dbVersion'] = $configSampleNew['dbVersion'];
+                $contents = var_export($configOlder, true);
+                file_put_contents($configFileName, "<?php\n return {$contents};\n ");
+                if (function_exists("opcache_reset")) {
+                    opcache_reset();
+                }
             }
             $indexUrl = ZalyConfig::getConfig("apiPageIndex");
             header("Location:".$indexUrl);

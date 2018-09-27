@@ -426,30 +426,30 @@ class InstallDBController
                 'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
                 'authKey' => "",
             ],
-//            [
-//                'pluginId' => 104,
-//                'name' => "gif小程序",
-//                'logo' => "",
-//                'sort' => 2, //order = 2
-//                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
-//                'landingPageWithProxy' => 1, //1 表示走site代理
-//                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageU2Message,
-//                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
-//                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
-//                'authKey' => "",
-//            ],
-//            [
-//                'pluginId' => 104,
-//                'name' => "gif小程序",
-//                'logo' => "",
-//                'sort' => 2, //order = 2
-//                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
-//                'landingPageWithProxy' => 1, //1 表示走site代理
-//                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageGroupMessage,
-//                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
-//                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
-//                'authKey' => "",
-//            ],
+            [
+                'pluginId' => 104,
+                'name' => "gif小程序",
+                'logo' => "",
+                'sort' => 2, //order = 2
+                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
+                'landingPageWithProxy' => 1, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageU2Message,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+                'authKey' => "",
+            ],
+            [
+                'pluginId' => 104,
+                'name' => "gif小程序",
+                'logo' => "",
+                'sort' => 2, //order = 2
+                'landingPageUrl' => "index.php?action=miniProgram.gif.index",
+                'landingPageWithProxy' => 1, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageGroupMessage,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingChatbox,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+                'authKey' => "",
+            ],
             [
                 'pluginId' => 105,
                 'name' => "账户密码管理小程序",

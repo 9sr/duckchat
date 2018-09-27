@@ -20,8 +20,6 @@ function zalyjsCallbackHelperConstruct() {
     // helper.call({"_zalyjsCallbackId", "args": ["", "", "", ....]  })
     //
     this.callback = function(param) {
-
-
         try {
             param = atob(param);
             // js json for \n

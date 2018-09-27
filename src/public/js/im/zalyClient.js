@@ -55,7 +55,7 @@ function handleClientReceivedMessage(resp, callback)
         var result = JSON.parse(resp);
         if(result.header != undefined && result.header.hasOwnProperty(HeaderErrorCode)) {
             if(result.header[HeaderErrorCode] != "success") {
-                if(result.header[HeaderErrorCode] == ErrorSessionCode ) {
+                if(result.header[HeaderErrorCode] == ErrorSessionCode || result.header[HeaderErrorCode] == ErrorSiteInit) {
                     localStorage.clear();
                     window.location.href = "./index.php?action=page.logout";
                     return ;

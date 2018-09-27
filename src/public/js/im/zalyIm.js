@@ -125,7 +125,7 @@ function handleReceivedImMessage(resp, callback)
 
         if(result.header != undefined && result.header.hasOwnProperty(HeaderErrorCode)) {
             if(result.header[HeaderErrorCode] != "success") {
-                if(result.header[HeaderErrorCode] == ErrorSessionCode ) {
+                if(result.header[HeaderErrorCode] == ErrorSessionCode || result.header[HeaderErrorCode] == ErrorSiteInit) {
                     if(wsImObj != "" && wsImObj != undefined) {
                         wsImObj.close();
                     }

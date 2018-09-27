@@ -102,6 +102,7 @@ apiUrl = "server_address_for_api";
 
 ErrorSessionCode = "error.session";
 PageLoginAction  = "page.index";
+ErrorSiteInit = "error.site.init";
 
 sessionId = $(".session_id").attr("data");
 domain    = $(".domain").attr("data");

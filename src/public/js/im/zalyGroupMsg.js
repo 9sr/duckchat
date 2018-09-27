@@ -2318,7 +2318,6 @@ function changeZalySchemeToDuckChat(chatSessionId, type)
     return encodeURI(urlLink);
 }
 
-
 $(document).on("click", "#self-qrcode", function () {
     getSelfQrcode();
 });
