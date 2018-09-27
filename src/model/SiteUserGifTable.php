@@ -62,7 +62,7 @@ class SiteUserGifTable extends BaseTable
 
     public function getGifByGifId($gifId)
     {
-        $sql = "select gifId, gifUrl from $this->table where gifId=:gifId";
+        $sql = "select gifId, gifUrl, width, height from $this->table where gifId=:gifId";
         $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError("site.user.gif", $prepare);
         $prepare->bindValue(":gifId", $gifId, PDO::PARAM_STR);

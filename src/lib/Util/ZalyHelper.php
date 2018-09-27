@@ -25,6 +25,26 @@ class ZalyHelper
         return $msectime;
     }
 
+
+    public static function getMsgId($type, $toId)
+    {
+        if($type === 1) {
+            $timeMillis = self::getMsectime();
+            $msgId = "U2-" . substr($toId, 0, 8) . "-" . $timeMillis;
+        } else {
+            $timeMillis = self::getMsectime();
+            $msgId = "GP-";
+            if (!empty($toId)) {
+                $msgId .= substr($toId, 0, 8);
+            } else {
+                $randomStr = self::generateStrKey(8);
+                $msgId .= $randomStr;
+            }
+            $msgId .= "-" . $timeMillis;
+        }
+        return $msgId;
+    }
+
     public static function generateStrId()
     {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
