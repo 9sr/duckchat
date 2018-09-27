@@ -22,19 +22,9 @@ class VideoMessage extends \Google\Protobuf\Internal\Message
      */
     private $time = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $url
-     *     @type int $time
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Core\Message::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

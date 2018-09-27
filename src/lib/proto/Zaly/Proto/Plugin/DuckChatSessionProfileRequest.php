@@ -23,19 +23,9 @@ class DuckChatSessionProfileRequest extends \Google\Protobuf\Internal\Message
      */
     private $encryptedSessionId = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $encryptedSessionId
-     *          加密过的sessionId，小程序直接从cookie中获取
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Plugin\DuckchatSessionProfile::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

@@ -34,28 +34,9 @@ class ApiGroupUpdateValue extends \Google\Protobuf\Internal\Message
     private $speakerUserIds;
     protected $fields;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type int $type
-     *     @type int $writeType
-     *     @type string $name
-     *     @type int $permissionJoin
-     *     @type bool $canGuestReadMessage
-     *     @type \Zaly\Proto\Core\GroupDescription $description
-     *     @type bool $isMute
-     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $adminUserIds
-     *           work with: writeType
-     *           oneof doesnot support repeated.
-     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $speakerUserIds
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiGroupUpdate::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf type <code>core.HttpQueryType</code>
+ * Protobuf enum <code>Core\HttpQueryType</code>
  */
 class HttpQueryType
 {

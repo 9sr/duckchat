@@ -26,21 +26,9 @@ class ApiSessionVerifyResponse extends \Google\Protobuf\Internal\Message
      */
     private $encryptedProfile = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $key
-     *           = rsa(randomBytesKey, siteIdPem)
-     *     @type string $encryptedProfile
-     *           = aes(randomBytesKey, LoginUserProfile->toBytes());
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Platform\ApiSessionVerify::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

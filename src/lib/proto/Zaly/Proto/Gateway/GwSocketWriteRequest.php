@@ -22,18 +22,9 @@ class GwSocketWriteRequest extends \Google\Protobuf\Internal\Message
      */
     private $packages;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type \Zaly\Proto\Gateway\GwSocketWritePackage[]|\Google\Protobuf\Internal\RepeatedField $packages
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Gateway\GwSocketWrite::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

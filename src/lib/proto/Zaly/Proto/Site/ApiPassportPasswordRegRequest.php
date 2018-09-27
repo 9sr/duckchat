@@ -42,23 +42,9 @@ class ApiPassportPasswordRegRequest extends \Google\Protobuf\Internal\Message
      */
     private $invitationCode = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $loginName
-     *     @type string $password
-     *     @type string $email
-     *     @type string $nickname
-     *     @type string $sitePubkPem
-     *     @type string $invitationCode
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiPassportPasswordReg::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**
