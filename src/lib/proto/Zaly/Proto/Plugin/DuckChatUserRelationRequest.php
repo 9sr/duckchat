@@ -25,19 +25,9 @@ class DuckChatUserRelationRequest extends \Google\Protobuf\Internal\Message
      */
     private $oppositeUserId = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $userId
-     *     @type string $oppositeUserId
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Plugin\DuckchatUserRelation::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

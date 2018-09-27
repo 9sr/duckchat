@@ -48,25 +48,9 @@ class AllSiteConfig extends \Google\Protobuf\Internal\Message
      */
     private $maxClientsNum = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type \Zaly\Proto\Core\PublicSiteConfig $public
-     *     @type int $HooksType
-     *     @type string $hooksRedisServer
-     *     @type int $PushType
-     *     @type string $siteIdPrikBase64
-     *     @type string $maxGroupMembers
-     *     @type int $groupInvitationUrlExpiration
-     *     @type int $maxClientsNum
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Core\Site::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

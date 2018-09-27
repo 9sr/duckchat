@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf type <code>core.UserAvailableType</code>
+ * Protobuf enum <code>Core\UserAvailableType</code>
  */
 class UserAvailableType
 {

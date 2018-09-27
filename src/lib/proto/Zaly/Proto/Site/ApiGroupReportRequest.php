@@ -29,20 +29,9 @@ class ApiGroupReportRequest extends \Google\Protobuf\Internal\Message
      */
     private $note = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $groupId
-     *     @type int $reportType
-     *     @type string $note
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiGroupReport::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

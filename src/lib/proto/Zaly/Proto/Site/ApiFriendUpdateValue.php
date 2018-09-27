@@ -19,20 +19,9 @@ class ApiFriendUpdateValue extends \Google\Protobuf\Internal\Message
     private $type = 0;
     protected $fields;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type int $type
-     *     @type string $remark
-     *     @type bool $isMute
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiFriendUpdate::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

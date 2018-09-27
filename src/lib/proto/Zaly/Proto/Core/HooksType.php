@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf type <code>core.HooksType</code>
+ * Protobuf enum <code>Core\HooksType</code>
  */
 class HooksType
 {

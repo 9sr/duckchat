@@ -30,20 +30,9 @@ class ApiPassportPasswordResetPasswordRequest extends \Google\Protobuf\Internal\
      */
     private $password = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $loginName
-     *     @type string $token
-     *     @type string $password
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiPassportPasswordResetPassword::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

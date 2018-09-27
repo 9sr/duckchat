@@ -33,22 +33,9 @@ class ApiFriendSearchRequest extends \Google\Protobuf\Internal\Message
      */
     private $count = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $keywords
-     *          suport phone\loginName
-     *     @type int $offset
-     *     @type int $count
-     *           default 1000
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiFriendSearch::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

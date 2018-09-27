@@ -14,17 +14,9 @@ use Google\Protobuf\Internal\GPBUtil;
 class ApiGwOnDisconnectResponse extends \Google\Protobuf\Internal\Message
 {
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiGwOnDisconnect::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
 }

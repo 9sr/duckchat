@@ -25,19 +25,9 @@ class ApiTmpchatGroupRequest extends \Google\Protobuf\Internal\Message
      */
     private $toUserId = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $groupId
-     *     @type string $toUserId
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiTmpchatGroup::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

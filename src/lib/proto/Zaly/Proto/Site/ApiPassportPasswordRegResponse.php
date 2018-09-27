@@ -18,18 +18,9 @@ class ApiPassportPasswordRegResponse extends \Google\Protobuf\Internal\Message
      */
     private $preSessionId = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $preSessionId
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiPassportPasswordReg::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

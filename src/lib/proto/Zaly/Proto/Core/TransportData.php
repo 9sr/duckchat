@@ -48,33 +48,9 @@ class TransportData extends \Google\Protobuf\Internal\Message
      */
     private $timeMillis = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $action
-     *     @type \Google\Protobuf\Any $body
-     *     @type array|\Google\Protobuf\Internal\MapField $header
-     *           transfrom TransportDataHeaderKey to string.
-     *           key = "_" + TransportDataHeaderKey
-     *           ex: "_1", "_9"
-     *           
-     *           Q: why donot use TransportDataHeaderKey directly?
-     *           A: javascript(json) doesnot support int key in object.
-     *           Q: why donnot use string(TransportDataHeaderKey)?
-     *           A: php treat a string with a int pattern as an int, so the probuf cannot mergeFromJsonString.
-     *     @type int|string $packageId
-     *           uniqid for blockRequest
-     *           the default php config doesnot support bcmath required by int64
-     *     @type int|string $timeMillis
-     *           TransportData request time ms
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Core\Net::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

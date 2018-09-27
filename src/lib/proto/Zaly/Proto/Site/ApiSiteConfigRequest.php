@@ -23,19 +23,9 @@ class ApiSiteConfigRequest extends \Google\Protobuf\Internal\Message
      */
     private $random = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $random
-     *           appClient only.
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiSiteConfig::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

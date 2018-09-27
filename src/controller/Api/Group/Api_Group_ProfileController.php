@@ -8,8 +8,8 @@
 
 class Api_Group_ProfileController extends Api_Group_BaseController
 {
-    private $classNameForRequest   = '\Zaly\Proto\Site\ApiGroupProfileRequest';
-    private $classNameForResponse  = '\Zaly\Proto\Site\ApiGroupProfileResponse';
+    private $classNameForRequest = '\Zaly\Proto\Site\ApiGroupProfileRequest';
+    private $classNameForResponse = '\Zaly\Proto\Site\ApiGroupProfileResponse';
     public $userId;
 
     public function rpcRequestClassName()
@@ -28,31 +28,33 @@ class Api_Group_ProfileController extends Api_Group_BaseController
         try {
             $groupId = $request->getGroupId();
 
-            if(!$groupId) {
+            if (!$groupId) {
                 $errorCode = $this->zalyError->errorGroupProfile;
                 $errorInfo = $this->zalyError->getErrorInfo($errorCode);
                 $this->setRpcError($errorCode, $errorInfo);
                 throw new Exception($errorInfo);
             }
+
             $groupProfile = $this->getGroupProfile($groupId);
-            $response     =  $this->getApiGroupProfileResponse($groupProfile);
-            $this->setRpcError($this->defaultErrorCode, "");
-            $this->rpcReturn($transportData->getAction(), $response);
+
+            $response = $this->buildApiGroupProfileResponse($groupProfile);
+
+            $this->returnSuccessRPC($response);
         } catch (Exception $ex) {
-            $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex->getMessage());
-            $this->rpcReturn($transportData->getAction(), new $this->classNameForResponse());
+            $this->ctx->Wpf_Logger->error($tag, "error_msg=" . $ex);
+            $this->returnErrorRPC(new $this->classNameForResponse(), $ex);
         }
     }
 
-    private function getApiGroupProfileResponse($group)
+    private function buildApiGroupProfileResponse($group)
     {
         if (!$group) {
             $response = new \Zaly\Proto\Site\ApiGroupProfileResponse();
             return $response;
         }
-        $memberType = !$group['memberType'] ? \Zaly\Proto\Core\GroupMemberType::GroupMemberGuest :  $group['memberType'];
+        $memberType = !$group['memberType'] ? \Zaly\Proto\Core\GroupMemberType::GroupMemberGuest : $group['memberType'];
         $groupProfile = $this->getPublicGroupProfile($group);
-        $isMute = isset($group['isMute']) && $group['isMute'] == 1 ? 1 : 0 ;
+        $isMute = isset($group['isMute']) && $group['isMute'] == 1 ? 1 : 0;
         $response = new \Zaly\Proto\Site\ApiGroupProfileResponse();
         $response->setProfile($groupProfile);
         $response->setIsMute($isMute);

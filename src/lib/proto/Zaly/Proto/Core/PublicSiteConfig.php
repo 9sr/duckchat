@@ -78,33 +78,9 @@ class PublicSiteConfig extends \Google\Protobuf\Internal\Message
      */
     private $version = null;
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $name
-     *     @type string $logo
-     *     @type string $masters
-     *           json array, [A, B, C]
-     *     @type string $serverAddressForApi
-     *     @type string $serverAddressForIM
-     *     @type bool $enableCreateGroup
-     *     @type bool $enableAddFriend
-     *     @type bool $enableTmpChat
-     *     @type bool $enableInvitationCode
-     *     @type bool $enableRealName
-     *     @type int $loginPluginId
-     *     @type int $accountSafePluginId
-     *     @type bool $enableWidgetWeb
-     *     @type string $siteIdPubkBase64
-     *     @type \Zaly\Proto\Core\Version $version
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Core\Site::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

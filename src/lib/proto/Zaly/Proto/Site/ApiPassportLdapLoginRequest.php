@@ -26,19 +26,9 @@ class ApiPassportLdapLoginRequest extends \Google\Protobuf\Internal\Message
      */
     private $password = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $account
-     *     @type string $password
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiPassportLdapLogin::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**

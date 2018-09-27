@@ -21,18 +21,9 @@ class ApiFriendProfileRequest extends \Google\Protobuf\Internal\Message
      */
     private $userId = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $data {
-     *     Optional. Data for populating the Message object.
-     *
-     *     @type string $userId
-     * }
-     */
-    public function __construct($data = NULL) {
+    public function __construct() {
         \GPBMetadata\Site\ApiFriendProfile::initOnce();
-        parent::__construct($data);
+        parent::__construct();
     }
 
     /**
