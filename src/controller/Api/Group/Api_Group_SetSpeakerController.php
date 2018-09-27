@@ -132,6 +132,6 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
     private function throwZalyException($errCode)
     {
         $errInfo = ZalyError::getErrorInfo2($errCode, $this->language);
-        throw new ZalyException($errInfo);
+        throw new ZalyException($errCode, $errInfo);
     }
 }

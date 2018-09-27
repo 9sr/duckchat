@@ -26,8 +26,8 @@ class ZalyError extends ZalyErrorBase
 
     public static function getErrorInfo2($errorCode, $lang = Zaly\Proto\Core\UserClientLangType::UserClientLangZH)
     {
-        if (isset(self::errors[$errorCode])) {
-            return self::errors[$errorCode][$lang];
+        if (isset(self::$errors[$errorCode])) {
+            return self::$errors[$errorCode][$lang];
         }
         return self::$defaultErrors[$lang];
     }
