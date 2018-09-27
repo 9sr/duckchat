@@ -275,6 +275,16 @@ class Im_Cts_SyncController extends Im_BaseController
                     case \Zaly\Proto\Core\MessageType::MessageEventFriendRequest:
                         $this->ctx->Wpf_Logger->error("im.stc.message", "sync MessageEventFriendRequest");
                         break;
+                    case Zaly\Proto\Core\MessageType::MessageDocument:
+                        $documentMsg = new Zaly\Proto\Core\DocumentMessage();
+                        $documentMsg->mergeFromJsonString($u2OrGroupMessage["content"]);
+                        $message->setDocument($documentMsg);
+                        break;
+                    case Zaly\Proto\Core\MessageType::MessageVideo:
+                        $vedioMsg = new Zaly\Proto\Core\VideoMessage();
+                        $vedioMsg->mergeFromJsonString($u2OrGroupMessage["content"]);
+                        $message->setVideo($vedioMsg);
+                        break;
                     default:
                         $this->ctx->Wpf_Logger->error("im.stc.message", "sync message with error msgType");
                 }

@@ -27,7 +27,12 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
             $userId = $this->userId;
             $groupId = $request->getGroupId();
             $setType = $request->getSetType();
-            $setSpeakers = $request->getSpeakerUserIds();
+            $speakers = $request->getSpeakerUserIds();
+
+            $setSpeakers = [];
+            foreach ($speakers as $key => $val) {
+                $setSpeakers[] = $val;
+            }
 
             $this->logger->error($this->action, "request=" . $request->serializeToString());
 
@@ -36,22 +41,32 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
             }
 
             //group admin can set speaker
-            if ($this->isGroupAdmin($groupId)) {
+            if (!$this->isGroupAdmin($groupId)) {
                 $this->throwZalyException(ZalyError::$errorGroupPermission);
             }
 
             $groupInfo = $this->getGroupInfo($groupId);
 
             $groupSpeakers = $groupInfo['speakers'];
+            if (empty($groupSpeakers)) {
+                $groupSpeakers = [];
+            } else {
+                $groupSpeakers = explode(",", $groupSpeakers);
+            }
 
             switch ($setType) {
                 case \Zaly\Proto\Site\SetSpeakerType::AddSpeaker:
                     $latestSpeakers = $this->addGroupSpeakers($groupId, $groupSpeakers, $setSpeakers);
-                    $response->setSpeakerUserIds($latestSpeakers);
+                    if (!empty($latestSpeakers)) {
+                        $response->setSpeakerUserIds($latestSpeakers);
+                    }
                     break;
                 case \Zaly\Proto\Site\SetSpeakerType::RemoveSpeaker:
                     $latestSpeakers = $this->removeGroupSpeakers($groupId, $groupSpeakers, $setSpeakers);
-                    $response->setSpeakerUserIds($latestSpeakers);
+
+                    if (!empty($latestSpeakers)) {
+                        $response->setSpeakerUserIds($latestSpeakers);
+                    }
                     break;
                 case \Zaly\Proto\Site\SetSpeakerType::CloseSpeaker:
                     $this->closeGroupSpeaker($groupId, $groupSpeakers);
@@ -117,9 +132,9 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
         return true;
     }
 
-    private function updateGroupSpeakers($groupId, array $speakers = [])
+    private function updateGroupSpeakers($groupId, $speakers = [])
     {
-        if (empty($speakerList)) {
+        if (empty($speakers)) {
             $speakers = "";
         } else {
             $speakers = implode(",", $speakers);
@@ -130,6 +145,10 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
         $where = [
             'groupId' => $groupId,
         ];
+
+        $this->logger->error("==================", "where=" . json_encode($where));
+        $this->logger->error("==================", "data=" . json_encode($data));
+
         return $this->ctx->SiteGroupTable->updateGroupInfo($where, $data);
     }
 

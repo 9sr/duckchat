@@ -56,10 +56,14 @@ class Im_Cts_MessageController extends Im_BaseController
             } else {
                 //check
                 $speakers = $groupProfile['speakers'];
-                if (!empty($speakers) && $this->isGroupAdmin($this->toId)) {
-                    $noticeText = ZalyText::getText(ZalyText::$textGroupNotSpeaker);
-                    $this->returnGroupNotLawfulMessage($msgId, $msgRoomType, $fromUserId, $this->toId, $noticeText);
-                    return;
+
+                if (!empty($speakers)) {
+                    $speakers = explode(",", $speakers);
+                    if (!$this->isGroupAdmin($this->toId) && !in_array($speakers, $this->userId)) {
+                        $noticeText = ZalyText::getText(ZalyText::$textGroupNotSpeaker);
+                        $this->returnGroupNotLawfulMessage($msgId, $msgRoomType, $fromUserId, $this->toId, $noticeText);
+                        return;
+                    }
                 }
             }
 
@@ -72,9 +76,7 @@ class Im_Cts_MessageController extends Im_BaseController
                 return;
             }
 
-
             $result = $this->ctx->Message_Client->sendGroupMessage($msgId, $fromUserId, $this->toId, $msgType, $message);
-
 
         } else if (Zaly\Proto\Core\MessageRoomType::MessageRoomU2 == $msgRoomType) {
             $this->isGroupRoom = false;

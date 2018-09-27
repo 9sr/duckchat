@@ -66,20 +66,26 @@ class Message_Client
                 $web = $message->getWeb();
                 $webCode = $web->getCode();
                 $webCode = substr($webCode, 0, 10240);
-                //# TODO limit body length 2KB = 2048 Byte
                 $web->setCode($webCode);
                 $result = $this->saveU2Message($msgId, $userId, $fromUserId, $toUserId, $msgType, $web, $roomType);
                 break;
             case \Zaly\Proto\Core\MessageType::MessageWebNotice:
                 $webNotice = $message->getWebNotice();
                 $webNoticeBody = $webNotice->getCode();
-                //# TODO limit body length 2KB = 2048 Byte
                 $webNoticeBody = substr($webNoticeBody, 0, 10240);
                 $webNotice->setCode($webNoticeBody);
                 $result = $this->saveU2Message($msgId, $userId, $fromUserId, $toUserId, $msgType, $webNotice, $roomType);
                 break;
             case \Zaly\Proto\Core\MessageType::MessageEventFriendRequest:
                 $result = $this->saveU2Message($msgId, $userId, $fromUserId, $toUserId, $msgType, null, $roomType);
+                break;
+            case \Zaly\Proto\Core\MessageType::MessageDocument:
+                $document = $message->getDocument();
+                $result = $this->saveU2Message($msgId, $userId, $fromUserId, $toUserId, $msgType, $document, $roomType);
+                break;
+            case \Zaly\Proto\Core\MessageType::MessageVideo:
+                $vedio = $message->getVideo();
+                $result = $this->saveU2Message($msgId, $userId, $fromUserId, $toUserId, $msgType, $vedio, $roomType);
                 break;
             default:
                 $this->ctx->Wpf_Logger->error("u2-message", "unsupport message type");
@@ -136,7 +142,6 @@ class Message_Client
             case \Zaly\Proto\Core\MessageType::MessageWeb:
                 $web = $message->getWeb();
                 $webCode = $web->getCode();
-                ////# TODO limit body length 1B <= size <= 1M
                 $webCode = substr($webCode, 0, 10240);
                 $web->setCode($webCode);
                 $result = $this->saveGroupMessage($msgId, $fromUserId, $groupId, $msgType, $web);
@@ -144,17 +149,23 @@ class Message_Client
             case \Zaly\Proto\Core\MessageType::MessageWebNotice:
                 $webNotice = $message->getWebNotice();
                 $webNoticeCode = $webNotice->getCode();
-                ////# TODO limit body length 1B <= size <= 1M
                 $webNoticeCode = substr($webNoticeCode, 0, 10240);
                 $webNotice->setCode($webNoticeCode);
                 $result = $this->saveGroupMessage($msgId, $fromUserId, $groupId, $msgType, $webNotice);
+                break;
+            case \Zaly\Proto\Core\MessageType::MessageDocument:
+                $document = $message->getDocument();
+                $result = $this->saveGroupMessage($msgId, $fromUserId, $groupId, $msgType, $document);
+                break;
+            case \Zaly\Proto\Core\MessageType::MessageVideo:
+                $vedio = $message->getVideo();
+                $result = $this->saveGroupMessage($msgId, $fromUserId, $groupId, $msgType, $vedio);
                 break;
             default:
                 $this->ctx->Wpf_Logger->error($tag, "do error group Message with unsupport msgType=" . $msgType);
                 break;
 
         }
-
 //        $this->tellClientNews(true, $groupId);
 
         return $result;
