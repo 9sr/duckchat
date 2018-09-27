@@ -58,11 +58,12 @@ class Duckchat_Message_SendController extends Duckchat_MiniProgramController
 
             $fromMsgId = $this->buildU2MsgId($fromUserId);
             $result = $this->ctx->Message_Client->sendU2Message($fromMsgId, $this->toId, $fromUserId, $this->toId, $msgType, $message);
+            $this->ctx->Message_News->tellClientNews(false, $this->toId);
 
             $toMsgId = $this->buildU2MsgId($this->toId);
-            $result = $this->ctx->Message_Client->sendU2Message($toMsgId, $fromUserId, $this->toId, $fromUserId, $msgType, $message);
+            $result = $this->ctx->Message_Client->sendU2Message($toMsgId, $fromUserId, $fromUserId, $this->toId, $msgType, $message);
+            $this->ctx->Message_News->tellClientNews(false, $fromUserId);
 
-            $this->ctx->Message_News->tellClientNews($this->isGroupRoom, $fromUserId);
         }
 
         $this->returnMessage($msgId, $msgRoomType, $msgType, $message, $fromUserId, $this->toId, $result);
