@@ -14,7 +14,7 @@ class ZalyException extends Exception
 
     public function __construct($errCode, $errInfo, Throwable $previous = null)
     {
-        parent::__construct($errCode, $errInfo, $previous);
+        parent::__construct($errInfo, 0, $previous);
         $this->errCode = $errCode;
         $this->errInfo = $errInfo;
     }
