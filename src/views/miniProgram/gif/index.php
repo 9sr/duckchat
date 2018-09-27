@@ -203,6 +203,30 @@
         });
     }
 
+
+    function autoMsgImgSize(src, h, w)
+    {
+        var image = new Image();
+        image.src = src;
+        var imageNaturalWidth  = image.naturalWidth;
+        var imageNaturalHeight = image.naturalHeight;
+
+        if (imageNaturalWidth < w && imageNaturalHeight<h) {
+            imgObject.width  = imageNaturalWidth == 0 ? w : imageNaturalWidth;
+            imgObject.height = imageNaturalHeight == 0 ? h : imageNaturalHeight;
+        } else {
+            if (w / h <= imageNaturalWidth/ imageNaturalHeight) {
+                imgObject.width  = w;
+                imgObject.height = w* (imageNaturalHeight / imageNaturalWidth);
+            } else {
+                imgObject.width  = h * (imageNaturalWidth / imageNaturalHeight);
+                imgObject.height = h;
+            }
+        }
+    }
+
+
+
     $(".gif").on('touchstart click', function(event){
         if(!flag) {
             flag = true;
@@ -212,10 +236,10 @@
             autoMsgImgSize(src, 200, 300);
             var gifId = $(this).attr("gifId");
             if(gifId) {
-                getImageContent(gifId);
-            } else {
-                sendGifMsg(src, src);
+                var  downloadFileUrl = "./index.php?action=http.file.downloadFile";
+                var src = downloadFileUrl + "&fileId=" + gifId + "&returnBase64=0";
             }
+            sendGifMsg(src);
             setTimeout(function(){ flag = false; }, 100);
         }
         return false
@@ -270,7 +294,7 @@
         });
     }
 
-    function sendGifMsg(msgContent, hrefUrl)
+    function sendGifMsg(msgContent)
     {
         var msgId  = Date.now();
 
@@ -291,8 +315,9 @@
 
         message['timeServer'] = Date.parse(new Date());
         message['type'] = MessageType.MessageWeb;
-        message['web'] = {code:'<img src="'+msgContent+'" width="'+imgObject.width+'px" height="'+imgObject.height+'px">', width:imgObject.width, height:imgObject.height, hrefURL:hrefUrl}
+        message['web'] = {code:'<img src="'+msgContent+'" width="'+imgObject.width+'px" height="'+imgObject.height+'px">', width:imgObject.width, height:imgObject.height, hrefURL:msgContent}
 
+        console.log(JSON.stringify(message['web']));
         var action = "miniProgram.gif.index";
         var reqData = {
             "message" : message
@@ -389,26 +414,6 @@
         xhttp.send();
     }
 
-    function autoMsgImgSize(src, h, w)
-    {
-        var image = new Image();
-        image.src = src;
-        var imageNaturalWidth  = image.naturalWidth;
-        var imageNaturalHeight = image.naturalHeight;
-
-        if (imageNaturalWidth < w && imageNaturalHeight<h) {
-            imgObject.width  = imageNaturalWidth == 0 ? w : imageNaturalWidth;
-            imgObject.height = imageNaturalHeight == 0 ? h : imageNaturalHeight;
-        } else {
-            if (w / h <= imageNaturalWidth/ imageNaturalHeight) {
-                imgObject.width  = w;
-                imgObject.height = w* (imageNaturalHeight / imageNaturalWidth);
-            } else {
-                imgObject.width  = h * (imageNaturalWidth / imageNaturalHeight);
-                imgObject.height = h;
-            }
-        }
-    }
 
 </script>
 </body>
