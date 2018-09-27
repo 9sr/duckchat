@@ -69,7 +69,6 @@ class Duckchat_Message_SendController extends Duckchat_MiniProgramController
         $this->returnMessage($msgId, $msgRoomType, $msgType, $message, $fromUserId, $this->toId, $result);
 
         $this->ctx->Wpf_Logger->error("duckchat.message.send", "");
-
         return;
     }
 

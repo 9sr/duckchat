@@ -278,7 +278,7 @@ class Im_Cts_SyncController extends Im_BaseController
                     default:
                         $this->ctx->Wpf_Logger->error("im.stc.message", "sync message with error msgType");
                 }
-
+                $message->setType(111);
                 $message->setTimeServer($u2OrGroupMessage["msgTime"]);
                 $list[] = $message;
             }

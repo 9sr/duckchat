@@ -4,6 +4,7 @@ class File_Manager
 {
     private $attachmentDir = "attachment";
     private $defaultSuffix = ".duckchat";
+    private $gifDir = "gif";
     private $mimeConfig = array(
         "image/png" => "png",
         "image/jpeg" => "jpeg",
@@ -41,18 +42,22 @@ class File_Manager
         $this->wpf_Logger = new Wpf_Logger();
     }
 
-    public function getPath($dateDir, $fileId, $isCreateFolder = true)
+    public function getPath($dateDir, $fileId, $type = 'file', $isCreateFolder = true)
     {
         $fileId = str_replace("../", "", $fileId);
         $dateDir = str_replace("../", "", $dateDir);
-        $dirName = WPF_LIB_DIR . "/../{$this->attachmentDir}/$dateDir";
+        if($type == 'file') {
+            $dirName = WPF_LIB_DIR . "/../{$this->attachmentDir}/$dateDir";
+        } else {
+            $dirName = WPF_LIB_DIR . "/../{$this->gifDir}/$dateDir";
+        }
         if (!is_dir($dirName) && $isCreateFolder) {
             mkdir($dirName, 0755, true);
         }
         return $dirName . "/" . $fileId;
     }
 
-    public function readFile($fileId)
+    public function readFile($fileId, $type='file')
     {
         if (strlen($fileId) < 1) {
             return "";
@@ -62,9 +67,10 @@ class File_Manager
         $dirName = $fileName[0];
         $fileId = $fileName[1];
 
-        $path = $this->getPath($dirName, $fileId, false);
+        $path = $this->getPath($dirName, $fileId, $type, false);
         return file_get_contents($path);
     }
+
 
     public function contentType($fileId)
     {
@@ -79,7 +85,7 @@ class File_Manager
         return mime_content_type($path);
     }
 
-    public function saveFile($content, $dateDir = false)
+    public function saveFile($content, $dateDir = false,  $type = 'file')
     {
         if (!$dateDir) {
             $dateDir = date("Ymd");
@@ -87,7 +93,7 @@ class File_Manager
 
         $fileName = sha1(uniqid());
 
-        $path = $this->getPath($dateDir, $fileName);
+        $path = $this->getPath($dateDir, $fileName, $type);
         file_put_contents($path, $content);
 
         $mime = mime_content_type($path);
@@ -99,7 +105,7 @@ class File_Manager
         $ext = isset($this->mimeConfig[$mime]) ? $this->mimeConfig[$mime] : "";
         if (false == empty($ext)) {
             $fileName = $fileName . "." . $ext;
-            rename($path, $this->getPath($dateDir, $fileName));
+            rename($path, $this->getPath($dateDir, $fileName, $type));
         }
 
         return $dateDir . "-" . $fileName;

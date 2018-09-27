@@ -14,6 +14,7 @@
             font-size: 10.66px;
         }
         .zaly_container {
+            height: 18rem;
         }
         .gif {
             width:5rem;
@@ -45,7 +46,6 @@
 
 <div class="zaly_container" >
 
-    <input type="hidden" class="gifs" value='<?php echo $gifs;?>'>
     <input type="hidden" class="roomType" value='<?php echo $roomType;?>'>
     <input type="hidden" class="roomId" value='<?php echo $roomId;?>'>
     <input type="hidden" class="toId" value='<?php echo $toId;?>'>
@@ -62,7 +62,7 @@
 <script src="../../../public/js/im/zalyBaseWs.js"></script>
 
 <script type="text/javascript">
-    gifs  = $(".gifs").val();
+    gifs  = '<?php echo $gifs;?>';
     gifArr = JSON.parse(gifs);
     gifLength = gifArr.length + 1;
     var line = 0;
@@ -72,6 +72,7 @@
     toId = $(".toId").val();
     var startX, startY, moveEndX,moveEndY;
     var imgObject={};
+    var addGifType = "add_gif";
 
     var languageName = navigator.language == "en-US" ? "en" : "zh";
     var languageNum = languageName == "zh" ? UserClientLangZH : UserClientLangEN;
@@ -89,47 +90,40 @@
             }catch (error) {
                 gifId="";
             }
+            console.log(JSON.stringify(gif));
             if(i == 1) {
                 var html = '';
                 line = line+1;
-                html = "<div class='gif_div gif_div_0'  gif-div='"+(line-1)+"'>";
-                $(".zaly_container").append(html);
+                html += "<div class='gif_div gif_div_0'  gif-div='"+(line-1)+"'>";
             }
             if((i-9)%10 == 1) {
                 var html = '';
                 line = line+1;
                 var divNum = Math.ceil(((i-9)/10));
-                html = "<div class='gif_div gif_div_hidden gif_div_"+divNum+"' gif-div='"+(line-1)+"'>";
-                $(".zaly_container").append(html);
+                html += "<div class='gif_div gif_div_hidden gif_div_"+divNum+"' gif-div='"+(line-1)+"'>";
             }
 
             if(i==1) {
-                html = "<img src='../../../public/img/add.png' class='add_gif'>  " +
+                html += "<img src='../../../public/img/add.png' class='add_gif'>  " +
                     "<input id='gifFile' type='file' onchange='uploadFile(this)' accept='image/gif;capture=camera' style='display: none;'>";
-                $(".zaly_container").append(html);
             }
             if(gifId != "" && gifId != undefined) {
-                html = "<img id=gifId_"+i+" src='' class='gif' gifId='"+gifId+"'>";
-                $(".zaly_container").append(html);
-                showImage(gifId, "gifId_"+i);
+                html += "<img id=gifId_"+i+" src='"+gifId+"' class='gif' gifId='"+gifId+"'>";
             } else {
-                html = "<img src='"+url+"' class='gif'>";
-                $(".zaly_container").append(html);
+                html += "<img src='"+url+"' class='gif'>";
             }
 
             if(i==4) {
-                html ="<br/>";
-                $(".zaly_container").append(html);
+                html +="<br/>";
             } else if (i>5 && (i-5)%5 == 4) {
-                html ="<br/>";
-                $(".zaly_container").append(html);
+                html +="<br/>";
             }
 
             if((i-9)%10 == 0){
-                html = "<div/>";
+                html += "<div/>";
                 $(".zaly_container").append(html);
             } else if(i == gifLength-1) {
-                html = "<div/>";
+                html += "<div/>";
                 $(".zaly_container").append(html);
             }
         }
@@ -191,7 +185,7 @@
                         var res = JSON.parse(imageFileIdResult);
                         fileId = res.fileId;
                     }
-                    updateServerGif(fileId);
+                    updateServerGif(fileId, src);
                 } else {
                     alert(getLanguage() == 1 ? "上传返回结果空 " : "empty response");
                 }
@@ -289,6 +283,9 @@
                 data = JSON.parse(data);
                 if(data.errorCode == 'error.alert') {
                     zalyjsAlert(data.errorInfo);
+                    return false;
+                }
+                if(type == addGifType) {
                 }
             }
         });
@@ -315,27 +312,25 @@
 
         message['timeServer'] = Date.parse(new Date());
         message['type'] = MessageType.MessageWeb;
-        message['web'] = {code:'<img src="'+msgContent+'" width="'+imgObject.width+'px" height="'+imgObject.height+'px">', width:imgObject.width, height:imgObject.height, hrefURL:msgContent}
+        var webHtml = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'+msgContent+'" width="100%" > </body> </html>'
+        message['web'] = {code:webHtml, width:imgObject.width, height:imgObject.height, hrefURL:msgContent}
 
-        console.log(JSON.stringify(message['web']));
         var action = "miniProgram.gif.index";
         var reqData = {
             "message" : message
         };
 
-        sendPostToServer(reqData);
+        sendPostToServer(reqData, "send_msg");
     }
 
-
-    function updateServerGif(fileId)
+    function updateServerGif(fileId, src)
     {
         var reqData = {
             gifId : fileId,
-            type:"add_gif",
+            type:addGifType,
         }
-        sendPostToServer(reqData);
+        sendPostToServer(reqData, addGifType);
     }
-
 
     function leftSlide()
     {
@@ -364,56 +359,6 @@
         var unSelectImg = "../../public/gif/sliding_unselect.png";
         $("[select_gif_div='"+oldGifDivNum+"']").attr("src", unSelectImg);
     }
-
-
-    function showImage(fileId, htmlElementId) {
-        var  downloadFileUrl = "./index.php?action=http.file.downloadFile";
-        var requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
-
-        if (isMobile()) {
-             requestUrl = "./_api_file_download_/?fileId=" + fileId;
-        }
-
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
-                var blob = this.response;
-                var src = window.URL.createObjectURL(blob);
-                $("#" + htmlElementId).attr("src", src);
-            }
-        };
-        xhttp.open("GET", requestUrl, true);
-        xhttp.responseType = "blob";
-        xhttp.send();
-    }
-
-
-    function getImageContent(fileId)
-    {
-        var  downloadFileUrl = "./index.php?action=http.file.downloadFile";
-        var requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=1";
-
-        if (isMobile()) {
-            requestUrl = "./_api_file_download_/?fileId=" + fileId;
-        }
-
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
-                var blob = this.response;
-                var reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onload = function() {
-                    var msgContent = reader.result;
-                    sendGifMsg(msgContent, "");
-                }
-            }
-        };
-        xhttp.open("GET", requestUrl, true);
-        xhttp.responseType = "blob";
-        xhttp.send();
-    }
-
 
 </script>
 </body>

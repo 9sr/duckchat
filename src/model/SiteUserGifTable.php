@@ -17,6 +17,9 @@ class SiteUserGifTable extends BaseTable
         "id",
         "userId",
         "gifId",
+        "gifUrl",
+        "width",
+        "height",
         "addTime"
     ];
     private $queryColumns;
@@ -46,15 +49,27 @@ class SiteUserGifTable extends BaseTable
         throw new Exception("删除失败");
     }
 
-    public function getGif($userId, $offset, $limit)
+    public function getGifByUserId($userId, $offset, $limit)
     {
-        $sql = "select $this->queryColumns from $this->table where userId=:userId limit $offset, $limit";
+        $sql = "select gifId from $this->table where (userId=:userId  or userId=0) limit $offset, $limit";
         $prepare = $this->dbSlave->prepare($sql);
         $this->handlePrepareError("site.user.gif", $prepare);
         $prepare->bindValue(":userId", $userId, PDO::PARAM_STR);
         $prepare->execute();
         $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
         return $result;
+    }
+
+    public function getGifByGifId($gifId)
+    {
+        $sql = "select gifId, gifUrl from $this->table where gifId=:gifId";
+        $prepare = $this->dbSlave->prepare($sql);
+        $this->handlePrepareError("site.user.gif", $prepare);
+        $prepare->bindValue(":gifId", $gifId, PDO::PARAM_STR);
+        $prepare->execute();
+        $result = $prepare->fetch(PDO::FETCH_ASSOC);
+        return $result;
+
     }
 
 }

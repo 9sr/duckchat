@@ -28,6 +28,7 @@ abstract class HttpBaseController extends \Wpf_Controller
         "page.passport.login",
         "page.passport.account",
         "page.jump",
+        "http.file.gifDownload"
     ];
     private $groupType = "g";
     private $u2Type = "u";
@@ -40,7 +41,6 @@ abstract class HttpBaseController extends \Wpf_Controller
 
     public function __construct(BaseCtx $context)
     {
-
         if (!$this->checkDBIsExist()) {
             $initUrl = ZalyConfig::getConfig("apiPageSiteInit");
             header("Location:" . $initUrl);

@@ -73,39 +73,13 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
                 "fromUserId" => $this->userId,
             ];
 
-            $gifs = [
-                [
-                    "url" => "https://media.giphy.com/media/NWLUwtaivTes8/200w_d.gif",
-                    "width" => 200,
-                    "height" => 200
-                ],
-                [
-                    "url" => "https://media.giphy.com/media/NWLUwtaivTes8/200w_d.gif",
-                    "width" => 200,
-                    "height" => 200
-                ],
-                [
-                    "url" => "https://media.giphy.com/media/NWLUwtaivTes8/200w_d.gif",
-                    "width" => 200,
-                    "height" => 200
-                ],
-                [
-                    "url" => "https://media.giphy.com/media/NWLUwtaivTes8/200w_d.gif",
-                    "width" => 200,
-                    "height" => 200
-                ],
-                [
-                    "url" => "https://media.giphy.com/media/NWLUwtaivTes8/200w_d.gif",
-                    "width" => 200,
-                    "height" => 200
-                ],[
-                    "url" => "https://media.giphy.com/media/NWLUwtaivTes8/200w_d.gif",
-                    "width" => 200,
-                    "height" => 200
-                ]
-            ];
-            $result = $this->ctx->SiteUserGifTable->getGif($this->userId, 0, $this->limit);
-            $gifs = array_merge_recursive($result, $gifs);
+            $gifs = $this->ctx->SiteUserGifTable->getGifByUserId($this->userId, 0, $this->limit);
+            foreach ($gifs as $key => $gif) {
+                $url = "./index.php?action=http.file.gifDownload&gifId=".$gif['gifId'];
+                $gif['gifId'] = ZalyHelper::getFullReqUrl($url);
+                $gifs[$key] = $gif;
+            }
+
             $results['gifs'] = $gifs;
             $results['gifs'] = json_encode($results['gifs']);
             echo $this->display("miniProgram_gif_index", $results);
@@ -163,9 +137,6 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
         } else {
             $message->setToGroupId($sendMsg['toGroupId']);
         }
-
-        error_log("from userId =====". $this->userId);
-        error_log("to UserId ====". $sendMsg['toUserId']);
 
         $duckchatReqData = new \Zaly\Proto\Plugin\DuckChatMessageSendRequest();
         $duckchatReqData->setMessage($message);

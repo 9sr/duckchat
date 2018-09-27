@@ -20,13 +20,25 @@ class DB_Version_V3 extends DB_Base
         try{
             $sql = "create table if not EXISTS siteUserGif(
                       id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                      userId VARCHAR(100) NOT NULL, 
                       gifId VARCHAR(100) NOT NULL,
+                      userId VARCHAR(100) NOT NULL, 
+                      gifUrl  VARCHAR(100) NOT NULL, 
+                      width INTEGER not null default 0,
+                      height INTEGER not null default 0,
                       addTime BIGINT
                     );";
             $this->db->exec($sql);
+
+            for($i=1; $i<8; $i++) {
+                $gifId = ZalyHelper::generateStrKey();
+                $dataSql = "insert into siteUserGif ( gifId, userId, gifUrl, width, height) VALUES ('{$gifId}', 0, 'default-{$i}.gif', 200, 200);";
+                echo $dataSql;
+                $this->db->exec($dataSql);
+            }
+
             $sqlIndex = "create index userId on siteUserGif(userId);";
             $this->db->exec($sqlIndex);
+
         }catch (Exception $ex) {
             $this->wpf_Logger->error($tag, "error_msg ==" . $ex->getMessage());
             echo "升级失败";
