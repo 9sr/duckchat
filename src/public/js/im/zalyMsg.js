@@ -826,9 +826,10 @@ function appendMsgHtml(msg)
                 html =  msg['notice'].code;
                 break;
             case MessageType.MessageWeb :
-                var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
                 var webWidth = msg['web'].width;
                 var webHeight = msg['web'].height;
+                var hrefUrl =  msg['web'].hrefURL;
                 html = template("tpl-send-msg-web", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
@@ -840,6 +841,7 @@ function appendMsgHtml(msg)
                     groupUserImg : groupUserImageClassName,
                     avatar:userAvatar,
                     hrefURL:hrefUrl,
+                    linkUrl :linkUrl,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
                     timeServer:msg.timeServer,
@@ -924,7 +926,8 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageWebNotice :
-                var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var hrefUrl = msg['webNotice'].hrefURL;
                 html = template("tpl-receive-msg-web-notice", {
                     roomType: msg.roomType == GROUP_MSG ? 1 : 0,
                     nickname: msg.nickname,
@@ -933,13 +936,15 @@ function appendMsgHtml(msg)
                     userId :msg.fromUserId,
                     groupUserImg : groupUserImageClassName,
                     avatar:msg.userAvatar,
-                    hrefURL:hrefUrl
+                    hrefURL:hrefUrl,
+                    linkUrl:linkUrl,
                 });
                 break;
             case MessageType.MessageWeb :
-                var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
-                var webWidth = msg['web'].width;
+                var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var webWidth  = msg['web'].width;
                 var webHeight = msg['web'].height;
+                var hrefUrl =  msg['web'].hrefURL;
                 html = template("tpl-receive-msg-web", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
@@ -951,7 +956,8 @@ function appendMsgHtml(msg)
                     userId :msg.fromUserId,
                     groupUserImg : groupUserImageClassName,
                     avatar:msg.userAvatar,
-                    hrefURL:hrefUrl
+                    hrefURL:hrefUrl,
+                    linkUrl:linkUrl,
                 });
                 break;
             case MessageType.MessageNotice:
