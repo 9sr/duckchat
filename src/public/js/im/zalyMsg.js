@@ -849,7 +849,7 @@ function appendMsgHtml(msg)
                 });
                 break;
             default:
-                var msgContent = "[暂不支持此类型消息] ";
+                var msgContent = "[当前版本不支持此信息，请尝试升级客户端版本] ";
                 html = template("tpl-send-msg-default", {
                     roomType: msg.roomType,
                     nickname:nickname,
@@ -952,7 +952,7 @@ function appendMsgHtml(msg)
                 });
                 break;
             default:
-                var msgContent = "[暂不支持此类型消息] ";
+                var msgContent = "[当前版本不支持此信息，请尝试升级客户端版本] ";
                 html = template("tpl-receive-msg-default", {
                     roomType: msg.roomType,
                     nickname:nickname,

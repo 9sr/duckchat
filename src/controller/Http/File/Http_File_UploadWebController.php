@@ -34,8 +34,10 @@ class Http_File_UploadWebController extends \HttpBaseController
             switch ($fileType) {
                 case \Zaly\Proto\Core\FileType::FileImage:
                 case \Zaly\Proto\Core\FileType::FileAudio:
+                    $originFileName = $this->saveFile($file, \Zaly\Proto\Core\FileType::FileImage);
+                    break;
                 case \Zaly\Proto\Core\FileType::FileDocument:
-                    $originFileName = $this->saveFile($file);
+                    $originFileName = $this->saveFile($file, \Zaly\Proto\Core\FileType::FileDocument);
                     break;
             }
             $fileInfo = ["fileId" => $originFileName];
@@ -47,11 +49,18 @@ class Http_File_UploadWebController extends \HttpBaseController
         }
     }
 
-    private function saveFile($file)
+    private function saveFile($file, $type)
     {
         $tmpName  = $file['tmp_name'];
         $tmpFile = file_get_contents($tmpName);
-        $fileName = $this->ctx->File_Manager->saveFile($tmpFile);
+
+        if($type == \Zaly\Proto\Core\FileType::FileDocument) {
+            $name = $file['name'];
+            $ext = array_pop(explode(".", $name));
+            $fileName = $this->ctx->File_Manager->saveDocument($tmpFile, $ext, false);
+        } else{
+            $fileName = $this->ctx->File_Manager->saveFile($tmpFile);
+        }
         return $fileName;
     }
 

@@ -1588,14 +1588,13 @@ button:active{
     box-shadow:0rem 0.09rem 0.38rem 0rem rgba(233,233,233,1);
     border-radius:0.56rem 0rem 0.56rem 0.56rem;
     display: flex;
-    justify-content:space-between;
 }
 
 .left_msg_file_div img {
     width:5rem;
     height:5rem;
-    margin-right:1rem;
     margin-top: 1rem;
+    margin-left: 1rem;
 }
 
 .msg_file_info {

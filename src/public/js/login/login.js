@@ -78,8 +78,6 @@ function loginSuccess()
 function handleRedirect()
 {
     var refererUrl = localStorage.getItem(refererUrlKey);
-    console.log("refererUrl ==" + refererUrl);
-
     if(refererUrl) {
         if(refererUrl.indexOf("?") > -1) {
             refererUrl = refererUrl+"&preSessionId="+preSessionId+"&isRegister="+isRegister;

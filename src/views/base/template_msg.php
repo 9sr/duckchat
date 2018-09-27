@@ -51,13 +51,14 @@
             <div class="msg_status" style="margin-top: 1rem;">
                 <div class="msg-content-img justify-content-end hint--bottom" aria-label="{{msgTime}}">
                     <div class="text-align-left left_msg_file_div" >
+                        <div class="file_img">
+                            <img src="../../public/img/msg/msg_file.png"/>
+                        </div>
                         <div class="msg_file_info">
                             <div class="msg_file_name">{{fileName}}</div>
                             <div class="msg_file_size">{{fileSize}}</div>
                         </div>
-                        <div class="file_img">
-                            <img src="../../public/img/msg/msg_file.png"/>
-                        </div>
+
                     </div>
                 </div>
                 {{ if msgStatus == "MessageStatusSending"}}
@@ -433,7 +434,7 @@
         <div style="text-align: center;margin:0 auto;width: 34rem; height:1px;background:rgba(223,223,223,1);" ></div>
         <div class="d-flex flex-row justify-content-center">
             <div class="self-qrcode" id="self-qrcode" style="margin-top: 1rem;" >
-                <span data-local-value="friendQrcodeTip">Self Qrcode</span>
+                <span class="self-qrcode" data-local-value="friendQrcodeTip" onclick="getSelfQrcode()">Self Qrcode</span>
             </div>
             <div class="self-qrcode" id="logout" >
                 <span class="logout-span" id="logout-span" data-local-value="logoutTip" onclick="logout()">Logout</span>
@@ -534,9 +535,8 @@
         </div>
 </script>
 
-
 <script id="tpl-download-app-div" type="text/html">
-    <div class="app_download_header">下载客户端</div>
+    <div class="app_download_header">分享站点</div>
     <div class="app_download_subheader">随时随地享受畅聊体验，同时还有语音聊天功能等你来哦！</div>
     <div id="qrcodeCanvas"></div>
     <div class="download_button_div">
