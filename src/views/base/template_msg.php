@@ -110,15 +110,15 @@
 
             <div class="msg_status" style="margin-top: 1rem;">
                 <div class="msg-content hint--bottom" aria-label="{{msgTime}}">
-                    <div class="text-align-left" style=" width: 19rem; height:19rem;"><iframe src="{{hrefURL}}" frameborder="no" width="190px" height="190px"></iframe></div>
+                    <div class="text-align-left" style=" width: {{webWidth}}px; height:{{webHeight}}px;"><iframe src="{{hrefURL}}" frameborder="no" width="{{webWidth}}" height="{{webHeight}}"></iframe></div>
                 </div>
                 {{if hrefURL}}
                     <div  class="msg_status_img" msgId="{{msgId}}"  style="display: flex;">
-                        <img src="../../public/img/msg/web_msg_click.png"  class="web-msg-click" style="width:2rem;height:2rem; left: -3rem;" src-data="{{hrefURL}}">
+                        <img src="../../public/img/msg/web_msg_click.png"  class="web-msg-click" style="width:2rem;height:2rem; left:-3rem;" src-data="{{hrefURL}}">
                     </div>
                 {{else}}
                     <div  class="msg_status_img " msgId="{{msgId}}"  style="display: flex;">
-                        <img src="../../public/img/msg/web_msg_unclick.png" style="width:2rem;height:2rem; left: -3rem ;">
+                        <img src="../../public/img/msg/web_msg_unclick.png" style="width:2rem;height:2rem; left:-3rem;">
                     </div>
                 {{/if}}
 
@@ -212,17 +212,17 @@
                         <div class="msg-content hint--bottom" aria-label="{{msgTime}}" style="margin-top: 1rem;">
                 {{/if}}
 
-                        <div class="text-align-right" style=" width: 19rem; height:19rem;"><iframe src="{{hrefURL}}" frameborder="no" width="190px" height="190px"></iframe></div>
+                        <div class="text-align-right" style=" width: {{webWidth}}px; height:{{webHeight}}px"><iframe src="{{hrefURL}}" frameborder="no" width="{{webWidth}}" height="{{webHeight}}"></iframe></div>
                     </div>
 
 
                     {{if hrefURL}}
                         <div  class="msg_status_img  web-msg-click" msgId="{{msgId}}" src-data="{{hrefURL}}" style="display: flex;">
-                            <img src="../../public/img/msg/web_msg_click.png"  class="web-msg-click" src-data="{{hrefURL}}" style="width:2rem;height:2rem; left: 22rem ;">
+                            <img src="../../public/img/msg/web_msg_click.png"  class="web-msg-click" src-data="{{hrefURL}}" style="width:2rem;height:2rem; left: {{leftWebWidth}}px ;">
                         </div>
                     {{else}}
                         <div  class="msg_status_img " msgId="{{msgId}}"  style="display: flex;">
-                            <img src="../../public/img/msg/web_msg_unclick.png" style="width:2rem;height:2rem;  left: 22rem;">
+                            <img src="../../public/img/msg/web_msg_unclick.png" style="width:2rem;height:2rem;  left:{{leftWebWidth}}px;">
                         </div>
                     {{/if}}
             </div>
@@ -437,7 +437,7 @@
                 <span class="self-qrcode" data-local-value="friendQrcodeTip" onclick="getSelfQrcode()">Self Qrcode</span>
             </div>
             <div class="self-qrcode" id="logout" >
-                <span class="logout-span" id="logout-span" data-local-value="logoutTip" onclick="logout()">Logout</span>
+                <span class="logout-span" id="logout-span" data-local-value="logoutTip" onclick="logout(event)">Logout</span>
             </div>
         </div>
     </div>

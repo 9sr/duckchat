@@ -2122,11 +2122,11 @@ function handleFriendApplyAccept(jqElement)
 }
 
 
-$(document).on("click", "#logout", function () {
-    logout();
+$(document).on("click", "#logout", function (event) {
+    logout(event);
 });
 
-function logout()
+function logout(event)
 {
     event.stopPropagation();
 
@@ -2317,7 +2317,6 @@ function changeZalySchemeToDuckChat(chatSessionId, type)
     urlLink = jumpPage.indexOf("?") > -1 ? jumpPage+"&jumpUrl="+encodeURI(urlLink) :jumpPage+"?jumpUrl="+encodeURI(urlLink);
     return encodeURI(urlLink);
 }
-
 
 $(document).on("click", "#self-qrcode", function () {
     getSelfQrcode();

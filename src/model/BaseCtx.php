@@ -35,6 +35,7 @@
  * @property ZalyRsa ZalyRsa
  * @property ZalyAes ZalyAes
  * @property ZalyHelper ZalyHelper
+ * @property SiteUserGifTable SiteUserGifTable
  *
  * @property Pinyin Pinyin
  *

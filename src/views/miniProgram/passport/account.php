@@ -67,9 +67,7 @@
 <script src="../../public/js/im/zalyClient.js"></script>
 <script src="../../public/js/im/zalyBaseWs.js"></script>
 <script type="text/javascript">
-    var languageName = navigator.language == "en-US" ? "en" : "zh";
-
-    var languageName = "zh";
+       var languageName = navigator.language == "en-US" ? "en" : "zh";
     var languageNum = languageName == "zh" ? UserClientLangZH : UserClientLangEN;
 
     jQuery.i18n.properties({

@@ -48,6 +48,7 @@ abstract class  ZalyErrorBase
     public $errorFriendApplyFriendExists = "error.friend.apply.friendExist";
     public $errorFriendUpdate = "error.friend.update";
     public $errorFriendDelete = "error.friend.delete";
+    public $errorFriend = "error.friend";
 
     public $errorFileDownload = "error.file.download";
 

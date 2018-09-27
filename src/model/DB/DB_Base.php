@@ -37,6 +37,4 @@ class DB_Base
             $this->wpf_Logger->error($tag, "error_msg ==" . $ex->getMessage());
         }
     }
-
-
 }
