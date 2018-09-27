@@ -63,6 +63,10 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
                         break;
                     case "add_gif":
                         $this->addGif($_POST);
+                        break;
+                    case "del_gif":
+                        $this->delGif($_POST);
+                        break;
                 }
                 $this->ctx->Wpf_Logger->error($tag, "post msg =" . json_encode($_POST));
                 echo json_encode(["errorCode" => "success", "errorInfo" => ""]);
@@ -78,7 +82,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
 
             $gifs = $this->ctx->SiteUserGifTable->getGifByUserId($this->userId, 0, $this->limit);
             foreach ($gifs as $key => $gif) {
-                $url = "./index.php?action=http.file.gifDownload&gifId=".$gif['gifId'];
+                $url = "./index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
                 $gif['gifUrl'] = ZalyHelper::getFullReqUrl($url);
                 $gifs[$key] = $gif;
             }
@@ -122,7 +126,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
         }
 
         $gifInfo = $this->ctx->SiteUserGifTable->getGifByGifId($gifId);
-        $url = "./index.php?action=http.file.gifDownload&gifId=".$gifInfo['gifId'];
+        $url = "./index.php?action=http.file.downloadGif&gifId=".$gifInfo['gifId'];
         $gifUrl = ZalyHelper::getFullReqUrl($url);
         $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'.$gifUrl.'" width="100%" > </body> </html>';
 
@@ -157,12 +161,22 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
 
     public function addGif($data)
     {
-        $gifId = $data['gifId'];
+        $gifUrl = $data['gifId'];
+        $gifId = md5($gifUrl);
         $data = [
-            'userId' => $this->userId,
-            'gifId' => $gifId,
+            'userId'  => $this->userId,
+            'gifId'   => $gifId,
+            'gifUrl'  => $gifUrl,
+            'width'   => $data['width'],
+            'height'  => $data['height'],
             'addTime' => ZalyHelper::getMsectime()
         ];
         $this->ctx->SiteUserGifTable->addGif($data);
+    }
+
+    public function delGif($data)
+    {
+        $gifId = $data['gifId'];
+        return $this->ctx->SiteUserGifTable->delGif($this->userId, $gifId);
     }
 }

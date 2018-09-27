@@ -36,12 +36,12 @@ class SiteUserGifTable extends BaseTable
         return $this->insertData($this->table, $data, $this->columns);
     }
 
-    public function delGif($gifId, $userId)
+    public function delGif($userId,$gifId)
     {
         $sql = "delete from $this->table where userId=:userId and gifId=:gifId";
         $prepare = $this->dbSlave->prepare($sql);
         $prepare->bindValue(":userId", $userId, PDO::PARAM_STR);
-        $prepare->bindValue(":gidId", $gifId, PDO::PARAM_STR);
+        $prepare->bindValue(":gifId", $gifId, PDO::PARAM_STR);
         $result = $prepare->execute();
         if($result) {
             return true;

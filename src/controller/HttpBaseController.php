@@ -28,7 +28,7 @@ abstract class HttpBaseController extends \Wpf_Controller
         "page.passport.login",
         "page.passport.account",
         "page.jump",
-        "http.file.gifDownload"
+        "http.file.downloadGif"
     ];
     private $groupType = "g";
     private $u2Type = "u";

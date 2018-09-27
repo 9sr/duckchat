@@ -26,6 +26,7 @@ class File_Manager
         "image/jpeg",
         "image/jpg",
         "image/png",
+        "image/gif",
         "audio/mp4",
         "audio/x-m4a",
         "video/mp4",
@@ -42,22 +43,18 @@ class File_Manager
         $this->wpf_Logger = new Wpf_Logger();
     }
 
-    public function getPath($dateDir, $fileId, $type = 'file', $isCreateFolder = true)
+    public function getPath($dateDir, $fileId, $isCreateFolder = true)
     {
         $fileId = str_replace("../", "", $fileId);
         $dateDir = str_replace("../", "", $dateDir);
-        if($type == 'file') {
-            $dirName = WPF_LIB_DIR . "/../{$this->attachmentDir}/$dateDir";
-        } else {
-            $dirName = WPF_LIB_DIR . "/../{$this->gifDir}/$dateDir";
-        }
+        $dirName = WPF_LIB_DIR . "/../{$this->attachmentDir}/$dateDir";
         if (!is_dir($dirName) && $isCreateFolder) {
             mkdir($dirName, 0755, true);
         }
         return $dirName . "/" . $fileId;
     }
 
-    public function readFile($fileId, $type='file')
+    public function readFile($fileId)
     {
         if (strlen($fileId) < 1) {
             return "";
@@ -67,7 +64,7 @@ class File_Manager
         $dirName = $fileName[0];
         $fileId = $fileName[1];
 
-        $path = $this->getPath($dirName, $fileId, $type, false);
+        $path = $this->getPath($dirName, $fileId,false);
         return file_get_contents($path);
     }
 
@@ -85,7 +82,7 @@ class File_Manager
         return mime_content_type($path);
     }
 
-    public function saveFile($content, $dateDir = false,  $type = 'file')
+    public function saveFile($content, $dateDir = false)
     {
         if (!$dateDir) {
             $dateDir = date("Ymd");
@@ -93,7 +90,7 @@ class File_Manager
 
         $fileName = sha1(uniqid());
 
-        $path = $this->getPath($dateDir, $fileName, $type);
+        $path = $this->getPath($dateDir, $fileName);
         file_put_contents($path, $content);
 
         $mime = mime_content_type($path);
@@ -105,7 +102,7 @@ class File_Manager
         $ext = isset($this->mimeConfig[$mime]) ? $this->mimeConfig[$mime] : "";
         if (false == empty($ext)) {
             $fileName = $fileName . "." . $ext;
-            rename($path, $this->getPath($dateDir, $fileName, $type));
+            rename($path, $this->getPath($dateDir, $fileName));
         }
 
         return $dateDir . "-" . $fileName;

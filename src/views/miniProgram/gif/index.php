@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>login</title>
+    <title>Gif扩展</title>
     <!-- Latest compiled and minified CSS -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script type="text/javascript" src="../../../public/js/jquery.min.js"></script>
@@ -12,6 +12,7 @@
     <style>
         body, html {
             font-size: 10.66px;
+            width: 100%;
         }
         .zaly_container {
             height: 18rem;
@@ -21,6 +22,9 @@
             height:5rem;
             margin-left: 2rem;
             margin-top: 3rem;
+        }
+        .gif_sub_div{
+            display: flex;
         }
         .gif_div_hidden {
             display: none;
@@ -34,11 +38,26 @@
             text-align: center;
         }
         .add_gif{
-            width: 5rem;
             height: 5rem;
             margin-left: 2rem;
             margin-top: 3rem;
             cursor: pointer;
+        }
+        .del_gif{
+            width: 2rem;
+            height: 2rem;
+            margin-top: 2rem;
+            position: absolute;
+            margin-left: 6rem;
+            display: none;
+        }
+        .gif_content_div{
+            position: relative;
+            width: 5rem;
+            height: 5rem;
+            display: flex;
+            margin-left: 2rem;
+            margin-top: 2rem;
         }
     </style>
 </head>
@@ -70,9 +89,10 @@
     roomType = $(".roomType").val();
     fromUserId = $(".fromUserId").val();
     toId = $(".toId").val();
-    var startX, startY, moveEndX,moveEndY;
+    var startX, startY, moveEndX,moveEndY,timeOut;
     var imgObject={};
     var addGifType = "add_gif";
+    var delGifType = "del_gif";
 
     var languageName = navigator.language == "en-US" ? "en" : "zh";
     var languageNum = languageName == "zh" ? UserClientLangZH : UserClientLangEN;
@@ -83,20 +103,15 @@
             var gifId = "";
             var gifUrl="";
             try{
-                var url = gif.url;
-            }catch (error) {
-            }
-            try{
                 gifId=gif.gifId;
                 gifUrl=gif.gifUrl;
             }catch (error) {
                 gifId="";
             }
-            console.log(JSON.stringify(gif));
             if(i == 1) {
                 var html = '';
                 line = line+1;
-                html += "<div class='gif_div gif_div_0'  gif-div='"+(line-1)+"'>";
+                html += "<div class='gif_div gif_div_0'  gif-div='"+(line-1)+"'><div class='gif_sub_div'>";
             }
             if((i-9)%10 == 1) {
                 var html = '';
@@ -106,26 +121,24 @@
             }
 
             if(i==1) {
-                html += "<img src='../../../public/img/add.png' class='add_gif'>  " +
-                    "<input id='gifFile' type='file' onchange='uploadFile(this)' accept='image/gif;capture=camera' style='display: none;'>";
+                html += "<div class='gif_content_div'><img src='../../../public/img/add.png' class='add_gif'>  " +
+                    "<input id='gifFile' type='file' onchange='uploadFile(this)' accept='image/gif;capture=camera' style='display: none;'></div>";
             }
-            if(gifId != "" && gifId != undefined) {
-                html += "<img id=gifId_"+i+" src='"+gifUrl+"' class='gif' gifId='"+gifId+"'>";
-            } else {
-                html += "<img src='"+url+"' class='gif'>";
-            }
+            html += "<div class='gif_content_div'><img id=gifId_"+i+" src='"+gifUrl+"' class='gif' gifId='"+gifId+"'>" +
+                "<img src='../../public/img/msg/btn-x.png' class='del_gif  "+gifId+"' gifId='"+gifId+"'></div>";
+
 
             if(i==4) {
-                html +="<br/>";
+                html +="</div><div class='gif_sub_div'>";
             } else if (i>5 && (i-5)%5 == 4) {
-                html +="<br/>";
+                html +="</div><div class='gif_sub_div'>";
             }
 
             if((i-9)%10 == 0){
-                html += "<div/>";
+                html += "</div>";
                 $(".zaly_container").append(html);
             } else if(i == gifLength-1) {
-                html += "<div/>";
+                html += "</div>";
                 $(".zaly_container").append(html);
             }
         }
@@ -140,10 +153,7 @@
 
     var flag = false;
 
-    $(".add_gif").on("touchstart click", function (event) {
-        $("#gifFile").val("");
-        $("#gifFile").click();
-    });
+
 
     function uploadFile(obj) {
         if (obj) {
@@ -158,6 +168,7 @@
             return obj.value;
         }
     }
+
     function isMobile() {
         if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
             return true;
@@ -168,11 +179,12 @@
 
     function uploadFileToServer(formData, src) {
 
-        var url = "./index.php?action=http.file.uploadWeb";
+        var url = "./index.php?action=http.file.uploadGif";
 
         if (isMobile()) {
             url = "/_api_file_upload_/?fileType=1";  //fileType=1,表示文件
         }
+        autoMsgImgSize(src, 300, 400);
 
         $.ajax({
             url: url,
@@ -187,7 +199,7 @@
                         var res = JSON.parse(imageFileIdResult);
                         fileId = res.fileId;
                     }
-                    updateServerGif(fileId, src);
+                    updateServerGif(fileId);
                 } else {
                     alert(getLanguage() == 1 ? "上传返回结果空 " : "empty response");
                 }
@@ -221,26 +233,74 @@
         }
     }
 
-
-
-    $(".gif").on('touchstart click', function(event){
-        if(!flag) {
-            flag = true;
-            event.stopPropagation();
-            event.preventDefault();
-            var src = $(this).attr("src");
-            autoMsgImgSize(src, 200, 300);
+    $(".add_gif").on({
+        touchstart: function(e){
             var gifId = $(this).attr("gifId");
-            sendGifMsg(gifId);
-            setTimeout(function(){ flag = false; }, 100);
+            e.preventDefault();
+        },
+        touchmove: function(){
+        },
+        touchend: function(){
+            $("#gifFile").val("");
+            $("#gifFile").click();
+            return false;
         }
-        return false
     });
+
+    var timeOutEvent=0;
+    $(".gif").on({
+            touchstart: function(e){
+                var gifId = $(this).attr("gifId");
+                timeOutEvent = setTimeout("longEnterPress('"+gifId+"')",500);
+                e.preventDefault();
+            },
+            touchmove: function(){
+                clearTimeout(timeOutEvent);
+                timeOutEvent = 0;
+            },
+            touchend: function(){
+                clearTimeout(timeOutEvent);
+                if(timeOutEvent!=0){
+                    var src = $(this).attr("src");
+                    autoMsgImgSize(src, 200, 300);
+                    var gifId = $(this).attr("gifId");
+                    sendGifMsg(gifId);
+                    setTimeout(function(){ flag = false; }, 100);
+                }
+                return false;
+            }
+        })
+
+
+    function longEnterPress(gifId){
+        timeOutEvent = 0;
+        console.log(gifId);
+        var delGifObj = $(".del_gif");
+        var delGifLength = $(".del_gif").length;
+        for(i=0; i<delGifLength; i++) {
+            var item = delGifObj[i];
+            $(item)[0].style.display = "none";
+        }
+        $("."+gifId)[0].style.display="flex";
+    }
+
+
+    $(".del_gif").on("click", function () {
+        var gifId = $(this).attr("gifId");
+        console.log("del gifId =="+gifId);
+        var reqData = {
+            gifId : gifId,
+            type:delGifType,
+        }
+        sendPostToServer(reqData, delGifType);
+    });
+
 
     $(".zaly_container").on("touchstart", function(e) {
         e.preventDefault();
         startX = e.originalEvent.changedTouches[0].pageX,
             startY = e.originalEvent.changedTouches[0].pageY;
+
     });
 
     $(".zaly_container").on("touchend", function(e) {
@@ -299,11 +359,13 @@
         sendPostToServer(reqData, "send_msg");
     }
 
-    function updateServerGif(fileId, src)
+    function updateServerGif(fileId)
     {
         var reqData = {
             gifId : fileId,
             type:addGifType,
+            width:imgObject.width,
+            height:imgObject.height
         }
         sendPostToServer(reqData, addGifType);
     }

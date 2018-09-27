@@ -7,7 +7,7 @@
  */
 
 
-class Http_File_GifDownloadController extends \HttpBaseController
+class Http_File_DownloadGifController extends \HttpBaseController
 {
     private $fileType = 'gif';
     public function index()
