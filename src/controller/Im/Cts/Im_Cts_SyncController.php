@@ -244,7 +244,7 @@ class Im_Cts_SyncController extends Im_BaseController
                     case \Zaly\Proto\Core\MessageType::MessageNotice:
 //                        $contentMsg = new \Zaly\Proto\Core\NoticeMessage();
 //                        $contentMsg->mergeFromJsonString();
-                        $contentMsg = ZalyText::buildMessageNotice($u2OrGroupMessage["content"]);
+                        $contentMsg = ZalyText::buildMessageNotice($u2OrGroupMessage["content"], $this->language);
                         $message->setNotice($contentMsg);
                         break;
                     case \Zaly\Proto\Core\MessageType::MessageText:

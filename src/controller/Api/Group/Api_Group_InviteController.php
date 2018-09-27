@@ -208,7 +208,7 @@ class Api_Group_InviteController extends Api_Group_BaseController
         if (isset($fromUserId)) {
             $name = $this->getUserName($fromUserId);
             if ($name) {
-                $nameBody .= $name . " 邀请了 ";
+                $nameBody .= $name . ZalyText::$keyGroupInvite;
             }
         }
 
@@ -227,7 +227,7 @@ class Api_Group_InviteController extends Api_Group_BaseController
 
         }
 
-        $nameBody .= " 加入群聊";
+        $nameBody .= ZalyText::$keyGroupJoin;
 
         return $nameBody;
     }

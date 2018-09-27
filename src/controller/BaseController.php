@@ -375,8 +375,6 @@ abstract class BaseController extends \Wpf_Controller
 
         $headLang = isset($headers[TransportDataHeaderKey::HeaderUserClientLang]) ? $headers[TransportDataHeaderKey::HeaderUserClientLang] : "";
 
-        $this->ctx->Wpf_Logger->info("client-language", "==" . $headLang);
-
         if (isset($headLang) && $headLang == Zaly\Proto\Core\UserClientLangType::UserClientLangZH) {
             $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangZH;
             $this->zalyError = $this->ctx->ZalyErrorZh;

@@ -20,6 +20,14 @@ class ZalyText
         "text.group.create" => ["group created,invite your friends to join chat", "群组已创建成功,邀请你的好友加入群聊吧"],
     ];
 
+    public static $keyGroupInvite = "{key.group.invite}";
+    public static $keyGroupJoin = "{key.group.join}";
+
+    public static $templateKeys = [
+        "key.group.invite" => ["invite", " 邀请了 "],
+        "key.group.join" => ["join this group", " 加入了群聊"],
+    ];
+
     public static function getText($textKey, $lang = Zaly\Proto\Core\UserClientLangType::UserClientLangZH)
     {
         if (isset(self::$texts[$textKey])) {
@@ -30,11 +38,41 @@ class ZalyText
     }
 
 
-    public static function buildMessageNotice($noticeText)
+    public static function buildMessageNotice($noticeText, $lang = Zaly\Proto\Core\UserClientLangType::UserClientLangZH)
     {
         $contentMsg = new \Zaly\Proto\Core\NoticeMessage();
         $contentMsg->mergeFromJsonString($noticeText);
+
+        $body = $contentMsg->getBody();
+
+        //build origin body
+        $keys = self::getTemplateKey($body);
+
+        if (!empty($keys)) {
+            $values = [];
+            foreach ($keys as $i => $key) {
+                $keyToValue = self::$templateKeys[$key];
+                if (!empty($keyToValue)) {
+                    $values[] = $keyToValue[$lang];
+                } else {
+                    $values[] = "";
+                }
+                $keys[$i] = "{" . $key . "}";
+            }
+
+            $body = str_replace($keys, $values, $body);
+
+        }
+
+        $contentMsg->setBody($body);
         return $contentMsg;
+    }
+
+    public static function getTemplateKey($str)
+    {
+        $result = array();
+        preg_match_all("/(?<={)[^}]+/", $str, $result);
+        return $result[0];
     }
 
 }
