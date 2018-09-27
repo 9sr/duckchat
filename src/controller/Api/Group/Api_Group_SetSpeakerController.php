@@ -29,6 +29,8 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
             $setType = $request->getSetType();
             $setSpeakers = $request->getSpeakerUserIds();
 
+            $this->logger->error($this->action, "request=" . $request->serializeToString());
+
             if (empty($groupId)) {
                 $this->throwZalyException(ZalyError::$errorGroupEmptyId);
             }
