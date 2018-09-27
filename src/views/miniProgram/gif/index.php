@@ -71,6 +71,7 @@
     fromUserId = $(".fromUserId").val();
     toId = $(".toId").val();
     var startX, startY, moveEndX,moveEndY;
+    var imgObject={};
 
     var languageName = navigator.language == "en-US" ? "en" : "zh";
     var languageNum = languageName == "zh" ? UserClientLangZH : UserClientLangEN;
@@ -201,20 +202,20 @@
             }
         });
     }
-    
+
     $(".gif").on('touchstart click', function(event){
         if(!flag) {
             flag = true;
-            console.log("click");
             event.stopPropagation();
             event.preventDefault();
-            msgContent = $(this).attr("src");
-
-            var image = new Image();
-            image.src = msgContent;
-            var imageNaturalWidth  = image.naturalWidth;
-            var imageNaturalHeight = image.naturalHeight;
-            sendGifMsg( msgContent, imageNaturalWidth,  imageNaturalHeight);
+            var src = $(this).attr("src");
+            autoMsgImgSize(src, 200, 300);
+            var gifId = $(this).attr("gifId");
+            if(gifId) {
+                getImageContent(gifId);
+            } else {
+                sendGifMsg(src, src);
+            }
             setTimeout(function(){ flag = false; }, 100);
         }
         return false
@@ -269,7 +270,7 @@
         });
     }
 
-    function sendGifMsg(msgContent, imageNaturalWidth,  imageNaturalHeight)
+    function sendGifMsg(msgContent, hrefUrl)
     {
         var msgId  = Date.now();
 
@@ -290,8 +291,7 @@
 
         message['timeServer'] = Date.parse(new Date());
         message['type'] = MessageType.MessageWeb;
-
-        message['web'] = {code:"<img src='"+msgContent+"' width='"+imageNaturalWidth+"px' height='"+imageNaturalHeight+"px'>", width:imageNaturalWidth, height:imageNaturalHeight, hrefURL:msgContent}
+        message['web'] = {code:'<img src="'+msgContent+'" width="'+imgObject.width+'px" height="'+imgObject.height+'px">', width:imgObject.width, height:imgObject.height, hrefURL:hrefUrl}
 
         var action = "miniProgram.gif.index";
         var reqData = {
@@ -342,7 +342,6 @@
 
 
     function showImage(fileId, htmlElementId) {
-
         var  downloadFileUrl = "./index.php?action=http.file.downloadFile";
         var requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=0";
 
@@ -356,14 +355,59 @@
                 var blob = this.response;
                 var src = window.URL.createObjectURL(blob);
                 $("#" + htmlElementId).attr("src", src);
-                console.log("fileId ===" + fileId);
-                console.log("download src ===" + src);
-                console.log("download htmlElementId ===" + htmlElementId);
             }
         };
         xhttp.open("GET", requestUrl, true);
         xhttp.responseType = "blob";
         xhttp.send();
+    }
+
+
+    function getImageContent(fileId)
+    {
+        var  downloadFileUrl = "./index.php?action=http.file.downloadFile";
+        var requestUrl = downloadFileUrl + "&fileId=" + fileId + "&returnBase64=1";
+
+        if (isMobile()) {
+            requestUrl = "./_api_file_download_/?fileId=" + fileId;
+        }
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && (this.status == 200 || this.status == 304)) {
+                var blob = this.response;
+                var reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onload = function() {
+                    var msgContent = reader.result;
+                    sendGifMsg(msgContent, "");
+                }
+            }
+        };
+        xhttp.open("GET", requestUrl, true);
+        xhttp.responseType = "blob";
+        xhttp.send();
+    }
+
+    function autoMsgImgSize(src, h, w)
+    {
+        var image = new Image();
+        image.src = src;
+        var imageNaturalWidth  = image.naturalWidth;
+        var imageNaturalHeight = image.naturalHeight;
+
+        if (imageNaturalWidth < w && imageNaturalHeight<h) {
+            imgObject.width  = imageNaturalWidth == 0 ? w : imageNaturalWidth;
+            imgObject.height = imageNaturalHeight == 0 ? h : imageNaturalHeight;
+        } else {
+            if (w / h <= imageNaturalWidth/ imageNaturalHeight) {
+                imgObject.width  = w;
+                imgObject.height = w* (imageNaturalHeight / imageNaturalWidth);
+            } else {
+                imgObject.width  = h * (imageNaturalWidth / imageNaturalHeight);
+                imgObject.height = h;
+            }
+        }
     }
 
 </script>

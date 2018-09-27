@@ -827,9 +827,14 @@ function appendMsgHtml(msg)
                 break;
             case MessageType.MessageWeb :
                 var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var webWidth = msg['web'].width;
+                var webHeight = msg['web'].height;
                 html = template("tpl-send-msg-web", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
+                    webWidth:webWidth,
+                    webHeight:webHeight,
+                    leftWebWidth:Number(webWidth-30),
                     msgId : msgId,
                     msgTime : msgTime,
                     userId :msg.fromUserId,
@@ -838,7 +843,7 @@ function appendMsgHtml(msg)
                     hrefURL:hrefUrl,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
-                    timeServer:msg.timeServer
+                    timeServer:msg.timeServer,
                 });
                 break;
             case MessageType.MessageNotice:
@@ -934,11 +939,16 @@ function appendMsgHtml(msg)
                 break;
             case MessageType.MessageWeb :
                 var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var webWidth = msg['web'].width;
+                var webHeight = msg['web'].height;
                 html = template("tpl-receive-msg-web", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
                     msgId : msgId,
                     msgTime : msgTime,
+                    webWidth:webWidth,
+                    webHeight:webHeight,
+                    leftWebWidth:Number(webWidth+25),
                     userId :msg.fromUserId,
                     groupUserImg : groupUserImageClassName,
                     avatar:msg.userAvatar,

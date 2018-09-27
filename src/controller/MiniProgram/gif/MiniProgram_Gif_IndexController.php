@@ -15,6 +15,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
     private $u2Type = "u";
     private $userRelationAction = "duckChat.user.relation";
     private $limit=30;
+    private $title = "Gif扩展";
 
     public function getMiniProgramId()
     {
@@ -148,6 +149,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
         $webMsg->setHeight($sendMsg['web']['height']);
         $webMsg->setCode($sendMsg['web']['code']);
         $webMsg->setHrefURL($sendMsg['web']['hrefURL']);
+        $webMsg->setTitle($this->title);
 
         $message = new \Zaly\Proto\Core\Message();
         $message->setMsgId($sendMsg['msgId']);
@@ -161,6 +163,9 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
         } else {
             $message->setToGroupId($sendMsg['toGroupId']);
         }
+
+        error_log("from userId =====". $this->userId);
+        error_log("to UserId ====". $sendMsg['toUserId']);
 
         $duckchatReqData = new \Zaly\Proto\Plugin\DuckChatMessageSendRequest();
         $duckchatReqData->setMessage($message);

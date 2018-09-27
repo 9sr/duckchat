@@ -2122,11 +2122,11 @@ function handleFriendApplyAccept(jqElement)
 }
 
 
-$(document).on("click", "#logout", function () {
-    logout();
+$(document).on("click", "#logout", function (event) {
+    logout(event);
 });
 
-function logout()
+function logout(event)
 {
     event.stopPropagation();
 
