@@ -81,12 +81,14 @@
         for(var i=1; i<gifLength ;i ++) {
             var gif = gifArr[i];
             var gifId = "";
+            var gifUrl="";
             try{
                 var url = gif.url;
             }catch (error) {
             }
             try{
                 gifId=gif.gifId;
+                gifUrl=gif.gifUrl;
             }catch (error) {
                 gifId="";
             }
@@ -108,7 +110,7 @@
                     "<input id='gifFile' type='file' onchange='uploadFile(this)' accept='image/gif;capture=camera' style='display: none;'>";
             }
             if(gifId != "" && gifId != undefined) {
-                html += "<img id=gifId_"+i+" src='"+gifId+"' class='gif' gifId='"+gifId+"'>";
+                html += "<img id=gifId_"+i+" src='"+gifUrl+"' class='gif' gifId='"+gifId+"'>";
             } else {
                 html += "<img src='"+url+"' class='gif'>";
             }
@@ -229,11 +231,7 @@
             var src = $(this).attr("src");
             autoMsgImgSize(src, 200, 300);
             var gifId = $(this).attr("gifId");
-            if(gifId) {
-                var  downloadFileUrl = "./index.php?action=http.file.downloadFile";
-                var src = downloadFileUrl + "&fileId=" + gifId + "&returnBase64=0";
-            }
-            sendGifMsg(src);
+            sendGifMsg(gifId);
             setTimeout(function(){ flag = false; }, 100);
         }
         return false
@@ -291,33 +289,11 @@
         });
     }
 
-    function sendGifMsg(msgContent)
+    function sendGifMsg(gifId)
     {
-        var msgId  = Date.now();
-
-        var message = {};
-        message['fromUserId'] = fromUserId;
-        var msgIdSuffix = "";
-        if(roomType == U2_MSG) {
-            message['roomType'] = U2_MSG;
-            message['toUserId'] = toId
-            msgIdSuffix = "U2-";
-        } else {
-            message['roomType'] = GROUP_MSG;
-            message['toGroupId'] = toId;
-            msgIdSuffix = "GROUP-";
-        }
-        var msgId = msgIdSuffix + msgId+"";
-        message['msgId'] = msgId;
-
-        message['timeServer'] = Date.parse(new Date());
-        message['type'] = MessageType.MessageWeb;
-        var webHtml = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'+msgContent+'" width="100%" > </body> </html>'
-        message['web'] = {code:webHtml, width:imgObject.width, height:imgObject.height, hrefURL:msgContent}
-
         var action = "miniProgram.gif.index";
         var reqData = {
-            "message" : message
+            "gifId" : gifId
         };
 
         sendPostToServer(reqData, "send_msg");

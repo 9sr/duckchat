@@ -16,6 +16,8 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
     private $userRelationAction = "duckChat.user.relation";
     private $limit=30;
     private $title = "Gif扩展";
+    private $roomType="";
+    private $toId;
 
     public function getMiniProgramId()
     {
@@ -36,6 +38,22 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
         header('Access-Control-Allow-Origin: *');
         $method = $_SERVER['REQUEST_METHOD'];
         $tag = __CLASS__ ."-".__FUNCTION__;
+
+        $pageUrl = $_COOKIE['duckchat_page_url'];
+        $pageUrl = parse_url($pageUrl);
+        parse_str($pageUrl['query'], $queries);
+        $x = $queries['x'];
+        list($type, $this->toId) = explode("-", $x);
+        if($this->toId == $this->userId) {
+            return;
+        }
+
+        if($type == $this->groupType) {
+            $this->roomType = \Zaly\Proto\Core\MessageRoomType::MessageRoomGroup;
+        }elseif($type == $this->u2Type) {
+            $this->roomType = \Zaly\Proto\Core\MessageRoomType::MessageRoomU2;
+        }
+
         if ($method == 'POST') {
             try{
                 $type = isset($_POST['type']) ? $_POST['type'] :"send_msg";
@@ -52,31 +70,16 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
                 echo json_encode(["errorCode" => "error.alert", 'errorInfo' => $ex->getMessage()]);
             }
         } else {
-            $pageUrl = $_COOKIE['duckchat_page_url'];
-            $pageUrl = parse_url($pageUrl);
-            parse_str($pageUrl['query'], $queries);
-            $x = $queries['x'];
-            list($type, $toId) = explode("-", $x);
-            if($toId == $this->userId) {
-                return;
-            }
-
-            if($type == $this->groupType) {
-                $roomType = "MessageRoomGroup";
-            }elseif($type == $this->u2Type) {
-                $roomType = "MessageRoomU2";
-            }
-
             $results = [
-                "roomType" => $roomType,
-                "toId" => $toId,
+                "roomType" => $this->roomType,
+                "toId" => $this->toId,
                 "fromUserId" => $this->userId,
             ];
 
             $gifs = $this->ctx->SiteUserGifTable->getGifByUserId($this->userId, 0, $this->limit);
             foreach ($gifs as $key => $gif) {
                 $url = "./index.php?action=http.file.gifDownload&gifId=".$gif['gifId'];
-                $gif['gifId'] = ZalyHelper::getFullReqUrl($url);
+                $gif['gifUrl'] = ZalyHelper::getFullReqUrl($url);
                 $gifs[$key] = $gif;
             }
 
@@ -86,16 +89,17 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
             return;
         }
     }
-    private function sendWebMessage($msg)
+    private function sendWebMessage($data)
     {
+        $gifId = $data['gifId'];
 
-        $sendMsg  = $msg['message'];
-        $roomType = $sendMsg['roomType'] == "MessageRoomU2" ? \Zaly\Proto\Core\MessageRoomType::MessageRoomU2 : \Zaly\Proto\Core\MessageRoomType::MessageRoomGroup;
+
+        $roomType = $this->roomType ? \Zaly\Proto\Core\MessageRoomType::MessageRoomU2 : \Zaly\Proto\Core\MessageRoomType::MessageRoomGroup;
 
         if($roomType == \Zaly\Proto\Core\MessageRoomType::MessageRoomU2) {
             $userRelationReq = new \Zaly\Proto\Plugin\DuckChatUserRelationRequest();
             $userRelationReq->setUserId($this->userId);
-            $userRelationReq->setOppositeUserId($sendMsg['toUserId']);
+            $userRelationReq->setOppositeUserId($this->toId);
             $response = $this->requestDuckChatInnerApi($this->gifMiniProgramId, $this->userRelationAction, $userRelationReq);
 
             if($response->getRelationType() != \Zaly\Proto\Core\FriendRelationType::FriendRelationFollow) {
@@ -105,7 +109,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
             }
 
             $userRelationReq = new \Zaly\Proto\Plugin\DuckChatUserRelationRequest();
-            $userRelationReq->setUserId($sendMsg['toUserId']);
+            $userRelationReq->setUserId($this->toId);
             $userRelationReq->setOppositeUserId($this->userId);
             $response = $this->requestDuckChatInnerApi($this->gifMiniProgramId, $this->userRelationAction, $userRelationReq);
 
@@ -117,25 +121,33 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
 
         }
 
+        $gifInfo = $this->ctx->SiteUserGifTable->getGifByGifId($gifId);
+        $url = "./index.php?action=http.file.gifDownload&gifId=".$gifInfo['gifId'];
+        $gifUrl = ZalyHelper::getFullReqUrl($url);
+        $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'.$gifUrl.'" width="100%" > </body> </html>';
+
+        $webHrefUrl = "./index.php?action=miniProgram.gif.add&gifId=".$gifInfo['gifId'];
         $webMsg = new \Zaly\Proto\Core\WebMessage();
 
-        $webMsg->setWidth($sendMsg['web']['width']);
-        $webMsg->setHeight($sendMsg['web']['height']);
-        $webMsg->setCode($sendMsg['web']['code']);
-        $webMsg->setHrefURL($sendMsg['web']['hrefURL']);
+        $webMsg->setWidth($gifInfo['width']);
+        $webMsg->setHeight($gifInfo['height']);
+        $webMsg->setCode($webCode);
+        $webMsg->setHrefURL($webHrefUrl);
         $webMsg->setTitle($this->title);
 
+        $messageId = ZalyHelper::getMsgId($this->roomType, $this->toId);
+
         $message = new \Zaly\Proto\Core\Message();
-        $message->setMsgId($sendMsg['msgId']);
+        $message->setMsgId($messageId);
         $message->setType(\Zaly\Proto\Core\MessageType::MessageWeb);
-        $message->setTimeServer($sendMsg['timeServer']);
+        $message->setTimeServer(ZalyHelper::getMsectime());
         $message->setWeb($webMsg);
         $message->setRoomType($roomType);
         $message->setFromUserId($this->userId);
         if($roomType == \Zaly\Proto\Core\MessageRoomType::MessageRoomU2) {
-            $message->setToUserId($sendMsg['toUserId']);
+            $message->setToUserId($this->toId);
         } else {
-            $message->setToGroupId($sendMsg['toGroupId']);
+            $message->setToGroupId($this->toId);
         }
 
         $duckchatReqData = new \Zaly\Proto\Plugin\DuckChatMessageSendRequest();

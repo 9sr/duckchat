@@ -110,7 +110,7 @@
 
             <div class="msg_status" style="margin-top: 1rem;">
                 <div class="msg-content hint--bottom" aria-label="{{msgTime}}">
-                    <div class="text-align-left" style=" width: {{webWidth}}px; height:{{webHeight}}px;"><iframe src="{{hrefURL}}" frameborder="no" width="{{webWidth}}" height="{{webHeight}}"></iframe></div>
+                    <div class="text-align-left" style=" width: {{webWidth}}px; height:{{webHeight}}px;"><iframe src="{{linkUrl}}" frameborder="no" width="{{webWidth}}" height="{{webHeight}}"></iframe></div>
                 </div>
                 {{if hrefURL}}
                     <div  class="msg_status_img" msgId="{{msgId}}"  style="display: flex;">
@@ -212,7 +212,7 @@
                         <div class="msg-content hint--bottom" aria-label="{{msgTime}}" style="margin-top: 1rem;">
                 {{/if}}
 
-                        <div class="text-align-right" style=" width: {{webWidth}}px; height:{{webHeight}}px"><iframe src="{{hrefURL}}" frameborder="no" width="{{webWidth}}" height="{{webHeight}}"></iframe></div>
+                        <div class="text-align-right" style=" width: {{webWidth}}px; height:{{webHeight}}px"><iframe src="{{linkUrl}}" frameborder="no" width="{{webWidth}}" height="{{webHeight}}"></iframe></div>
                     </div>
 
 
@@ -234,7 +234,7 @@
     <div class="msg-row msg-text">
         <div class="right-msg-body text-align-center">
             <div class="text-align-right msg-notice">
-                <iframe src="{{hrefURL}}" frameborder="no" height="100%;" class="zalyiframe"></iframe>
+                <iframe src="{{linkUrl}}" frameborder="no" height="100%;" class="zalyiframe"></iframe>
             </div>
         </div>
     </div>
