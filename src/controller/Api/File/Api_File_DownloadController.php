@@ -86,6 +86,7 @@ class Api_File_DownloadController extends \BaseController
             $this->setRpcError($this->defaultErrorCode, "");
             $this->rpcReturn($this->getRequestAction(), $response);
         }catch (Exception $ex) {
+            $this->logger->error("api.file.download", $ex);
             $errorCode = $this->zalyError->errorFileDownload;
             $errorInfo = $this->zalyError->getErrorInfo($errorCode);
             $this->setRpcError($errorCode, $errorInfo);

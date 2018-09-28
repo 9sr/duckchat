@@ -50,7 +50,7 @@
         <div class="right-msg-body text-align-right">
             <div class="msg_status" style="margin-top: 1rem;">
                 <div class="msg-content-img justify-content-end hint--bottom" aria-label="{{msgTime}}">
-                    <div class="text-align-left left_msg_file_div" url="{{url}}" msgId="{{msgId}}">
+                    <div class="text-align-left left_msg_file_div" url="{{url}}" msgId="{{msgId}}" originName="{{originName}}">
                         <div class="file_img">
                             <img src="../../public/img/msg/msg_file.png"/>
                         </div>
@@ -58,7 +58,6 @@
                             <div class="msg_file_name">{{fileName}}</div>
                             <div class="msg_file_size">{{fileSize}}</div>
                         </div>
-
                     </div>
                 </div>
                 {{ if msgStatus == "MessageStatusSending"}}
@@ -82,7 +81,6 @@
     </div>
     </div>
 </script>
-
 
 
 <script id="tpl-send-msg-text" type="text/html">
@@ -109,7 +107,7 @@
         <div class="right-msg-body  text-align-right" >
 
             <div class="msg_status" style="margin-top: 1rem;">
-                <div class="msg-content hint--bottom" aria-label="{{msgTime}}">
+                <div class="msg-content hint--bottom" style="background-color:rgba(244,244,249,1); " aria-label="{{msgTime}}">
                     <div class="text-align-left" style=" width: {{webWidth}}px; height:{{webHeight}}px;"><iframe src="{{linkUrl}}" frameborder="no" width="{{webWidth}}" height="{{webHeight}}"></iframe></div>
                 </div>
                 {{if hrefURL}}

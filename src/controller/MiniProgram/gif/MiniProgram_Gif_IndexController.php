@@ -129,7 +129,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
         $gifInfo = $this->ctx->SiteUserGifTable->getGifByGifId($gifId);
         $url = "./index.php?action=http.file.downloadGif&gifId=".$gifInfo['gifId'];
         $gifUrl = ZalyHelper::getFullReqUrl($url);
-        $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'.$gifUrl.'" width="100%" > </body> </html>';
+        $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'.$gifUrl.'" width="'.$gifInfo['width'].'" height="'.$gifInfo['height'].'" > </body> </html>';
 
         $webHrefUrl = "./index.php?action=miniProgram.gif.add&gifId=".$gifInfo['gifId'];
         $webMsg = new \Zaly\Proto\Core\WebMessage();

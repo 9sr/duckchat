@@ -74,10 +74,9 @@ class Http_File_DownloadFileController extends \HttpBaseController
             } else {
                 echo $fileContent;
             }
-
-        }catch (Exception $e) {
+        }catch (Exception $ex) {
             header("Content-type:$mimeType");
-            $this->ctx->Wpf_Logger->error($tag, "error_msg ==" .$e->getMessage() );
+            $this->ctx->Wpf_Logger->error($tag, $ex );
             echo "failed";
         }
     }
