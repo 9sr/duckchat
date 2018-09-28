@@ -20,8 +20,6 @@
         .gif {
             width:5rem;
             height:5rem;
-            margin-left: 2rem;
-            margin-top: 3rem;
         }
         .gif_sub_div{
             display: flex;
@@ -39,8 +37,6 @@
         }
         .add_gif{
             height: 5rem;
-            margin-left: 2rem;
-            margin-top: 3rem;
             cursor: pointer;
         }
         .del_gif{
@@ -133,6 +129,7 @@
                 html += "<div class='gif_content_div'><img src='../../../public/img/add.png' class='add_gif'>  " +
                     "<input id='gifFile' type='file' onchange='uploadFile(this)' accept='image/gif;capture=camera' style='display: none;'></div>";
             }
+
             html +=template("tpl-gif", {
                 num:i,
                 gifUrl:gifUrl,
@@ -244,25 +241,27 @@
     }
 
     $(".add_gif").on({
-        touchstart: function(e){
-            var gifId = $(this).attr("gifId");
-            e.preventDefault();
+        touchstart: function(event){
+            event.preventDefault();
+            event.stopPropagation();
         },
-        touchmove: function(){
-        },
-        touchend: function(){
+
+        touchend: function(event){
+            event.preventDefault();
+            event.stopPropagation();
             $("#gifFile").val("");
             $("#gifFile").click();
             return false;
         }
     });
 
-
     function longEnterPress(gifId){
         timeOutEvent = 0;
         console.log(gifId);
         var delGifObj = $(".del_gif");
         var delGifLength = $(".del_gif").length;
+        console.log("longEntenrPress longEnterPress==");
+
         for(i=0; i<delGifLength; i++) {
             var item = delGifObj[i];
             $(item)[0].style.display = "none";
@@ -272,23 +271,22 @@
 
     var timeOutEvent=0;
     $(".gif").on({
-            touchstart: function(e){
+            touchstart: function(event){
+                event.preventDefault();
+                event.stopPropagation();
                 var gifId = $(this).attr("gifId");
                 var isDefault = $(this).attr("isDefault");
                 if(isDefault != "0") {
+                    console.log("longEntenrPress");
                     timeOutEvent = setTimeout("longEnterPress('"+gifId+"')",500);
                 }
-                e.preventDefault();
             },
-            touchmove: function(){
+            touchend: function(event){
+                event.preventDefault();
+                event.stopPropagation();
                 clearTimeout(timeOutEvent);
-                timeOutEvent = 0;
-            },
-            touchend: function(){
-                clearTimeout(timeOutEvent);
-                if(timeOutEvent!=0){
-                    var src = $(this
-                    ).attr("src");
+                if(timeOutEvent == 0){
+                    var src = $(this).attr("src");
                     autoMsgImgSize(src, 200, 300);
                     var gifId = $(this).attr("gifId");
                     sendGifMsg(gifId);
@@ -296,9 +294,7 @@
                 }
                 return false;
             }
-        })
-
-
+        });
 
 
     $(".del_gif").on("click", function () {
@@ -320,6 +316,9 @@
     });
 
     $(".zaly_container").on("touchend", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
         moveEndX = e.originalEvent.changedTouches[0].pageX;
         moveEndY = e.originalEvent.changedTouches[0].pageY;
         if(startX == undefined) {
@@ -345,6 +344,7 @@
             }
             leftSlide();
         }
+        return false;
     });
 
     function sendPostToServer(reqData, type)

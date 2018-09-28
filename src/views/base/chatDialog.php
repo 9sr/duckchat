@@ -114,7 +114,7 @@
                 <img src="../../public/img/msg/images.png" style="height: 2.06rem;" onclick="uploadFile('file1')" class="upload-img" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg"/>
                 <input type="file" id="file1" style="display:none" onchange="uploadMsgFileFromInput(this, FileType.FileImage)" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
                 <img src="../../public/img/msg/file.png" style="height: 2.06rem;" onclick="uploadFile('file3')" class="upload-img" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg"/>
-                <input type="file" id="file3" style="display:none" onchange="uploadMsgFileFromInput(this, FileType.FileDocument)" accept="application/xml,application/msword,application/zip,application/rar,application/vnd.ms-powerpoint">
+                <input type="file" id="file3" style="display:none" onchange="uploadMsgFileFromInput(this, FileType.FileDocument)">
             </div>
 
             <div class="input-box">

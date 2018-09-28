@@ -2443,15 +2443,10 @@ function closeMaskDiv(str)
     removeWindow($(str));
 }
 
-$(document).on("click", ".msg_img", function () {
-    var src = $(this).attr("src");
-    window.open(src);
-});
-
-$(document).on("click", ".right_msg_file_div", function () {
-    var fileId = $(this).attr("url");
-    var msgId = $(this).attr("msgId");
-    var originName = $(this).attr("originName");
+function downloadFile(elementObj) {
+    var fileId = elementObj.attr("url");
+    var msgId = elementObj.attr("msgId");
+    var originName = elementObj.attr("originName");
     var currentRoom = localStorage.getItem(chatSessionIdKey);
     var isGroupMessage = localStorage.getItem(currentRoom) == GROUP_MSG ? 1 : 0;
     var requestUrl = downloadFileUrl +  "&fileId="+fileId + "&returnBase64=0&isGroupMessage="+isGroupMessage+"&messageId="+msgId;
@@ -2460,4 +2455,19 @@ $(document).on("click", ".right_msg_file_div", function () {
     downloadLink.href =requestUrl;
     document.body.appendChild(downloadLink);
     downloadLink.click();
+}
+
+$(document).on("click", ".msg_img", function () {
+    var src = $(this).attr("src");
+    window.open(src);
+});
+
+$(document).on("click", ".right_msg_file_div", function () {
+
+    downloadFile($(this));
+
+});
+
+$(document).on("click", ".left_msg_file_div", function () {
+    downloadFile($(this));
 });
