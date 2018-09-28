@@ -735,18 +735,21 @@ function getMessageDocumentSize(size)
     return size;
 }
 
-function getMessageDocumentName(name)
+function getMessageDocumentName(name, url)
 {
-    if(name.length>10) {
+    var urlSuffix = url.split('.');
+    urlSuffix = urlSuffix.pop();
+    var urlSuffixLength = urlSuffix.length;
+    if(name.length>(20-urlSuffixLength)) {
         var names = name.split('.');
         var ext = names.pop();
         var extLength = ext.length;
         var prefix = names.shift();
-        if(prefix.length>Number((10-extLength-1))) {
-            prefix = prefix.substr(0, Number((10-extLength-1)));
-        }
+        var num = (20-extLength-3-urlSuffixLength)/2;
+        prefix = prefix.substr(0, num) + "..." + prefix.substr(prefix.length-num, prefix.length);
         name = prefix+"."+ext;
     }
+    name = name +'.'+urlSuffix;
     return name;
 }
 function appendMsgHtml(msg)
@@ -799,8 +802,9 @@ function appendMsgHtml(msg)
                 break;
             case MessageType.MessageDocument:
                 var size = getMessageDocumentSize(msg['document'].size);
-                var fileName =  getMessageDocumentName(msg['document'].name);
+                var fileName =  getMessageDocumentName(msg['document'].name, msg['document'].url);
                 var url = msg['document'].url;
+                var originName = msg['document'].name;
                 html = template("tpl-send-msg-file", {
                     roomType: msg.roomType,
                     nickname:nickname,
@@ -813,6 +817,7 @@ function appendMsgHtml(msg)
                     userId:token,
                     fileSize:size,
                     fileName:fileName,
+                    originName:originName,
                     timeServer:msg.timeServer
                 });
                 break;
@@ -935,8 +940,9 @@ function appendMsgHtml(msg)
                 break;
             case MessageType.MessageDocument:
                 var size = getMessageDocumentSize(msg['document'].size);
-                var fileName =  getMessageDocumentName(msg['document'].name);
+                var fileName =  getMessageDocumentName(msg['document'].name, msg['document'].url);
                 var url = msg['document'].url;
+                var originName = msg['document'].name;
                 html = template("tpl-receive-msg-file", {
                     roomType: msg.roomType,
                     nickname:nickname,
@@ -948,6 +954,7 @@ function appendMsgHtml(msg)
                     userId:msg.fromUserId,
                     fileSize:size,
                     fileName:fileName,
+                    originName:originName,
                     timeServer:msg.timeServer
                 });
                 break;

@@ -30,7 +30,7 @@ class Http_File_DownloadFileController extends \HttpBaseController
             if($messageId) {
                 if($isGroupMessage == true) {
                     $info = $this->ctx->SiteGroupMessageTable->checkUserCanLoadImg($messageId, $this->userId);
-//                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
+                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
                     if(!$info) {
                         throw new Exception("no group premission, can't load img");
                     }
@@ -43,7 +43,8 @@ class Http_File_DownloadFileController extends \HttpBaseController
                         throw new Exception("no premission, can't load img");
                     }
                     $info = array_shift($info);
-//                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
+                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
+
                     if($info['fromUserId'] != $this->userId && $info['toUserId'] != $this->userId) {
                         throw new Exception("no read permission, can't load img");
                     }
@@ -65,7 +66,9 @@ class Http_File_DownloadFileController extends \HttpBaseController
             }
             header('Cache-Control: max-age=86400, public');
             header("Content-type:$mimeType");
-
+            if($mimeType == $this->documentMimeType) {
+                header("Content-Disposition:attachment");
+            }
             if($returnBase64) {
                 echo base64_decode($fileContent);
             } else {

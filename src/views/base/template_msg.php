@@ -181,7 +181,7 @@
                 {{else}}
                 <div class="msg-content-img justify-content-end hint--bottom" aria-label="{{msgTime}}" style="margin-top:1rem;" >
                     {{/if}}
-                    <div class="text-align-right right_msg_file_div"  url="{{url}}" msgId="{{msgId}}">
+                    <div class="text-align-right right_msg_file_div"  url="{{url}}" msgId="{{msgId}}" originName="{{originName}}">
                         <div class="file_img">
                             <img src="../../public/img/msg/msg_file.png"/>
                         </div>
