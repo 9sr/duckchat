@@ -83,20 +83,16 @@ class Site_Default
     private function proxyNewFriendMessage($userId, $defaultUserId)
     {
         $tag = __CLASS__ . "->" . __FUNCTION__;
+
+        $text = ZalyText::$keyDefaultFriendsText;
         try {
-
-            $text = "we are friends, just talk to me";
-
             $this->ctx->Message_Client->proxyU2TextMessage($defaultUserId, $userId, $defaultUserId, $text);
-
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error($tag, $e);
         }
 
         try {
-            $greetings = "we are friends, just talk to me";
-
-            $this->ctx->Message_Client->proxyU2TextMessage($userId, $defaultUserId, $userId, $greetings);
+            $this->ctx->Message_Client->proxyU2TextMessage($userId, $defaultUserId, $userId, $text);
         } catch (Exception $e) {
             $this->ctx->Wpf_Logger->error($tag, $e);
         }
@@ -147,13 +143,13 @@ class Site_Default
             return "";
         }
 
-        $nameBody = "new member";
+        $nameBody = ZalyText::$keyDefaultGroupsText;
 
         if (isset($userId)) {
             $nameBody = $this->getUserName($userId);
         }
 
-        $nameBody .= " join this group chat";
+        $nameBody .= ZalyText::$keyGroupJoin;
         return $nameBody;
     }
 

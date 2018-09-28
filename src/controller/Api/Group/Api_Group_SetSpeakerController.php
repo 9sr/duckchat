@@ -146,9 +146,6 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
             'groupId' => $groupId,
         ];
 
-        $this->logger->error("==================", "where=" . json_encode($where));
-        $this->logger->error("==================", "data=" . json_encode($data));
-
         return $this->ctx->SiteGroupTable->updateGroupInfo($where, $data);
     }
 
@@ -162,8 +159,6 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
     private function proxyGroupNotice($groupId, $groupAdminId, $speakeIds, $setType)
     {
         $noticeText = $this->buildGroupNotice($groupAdminId, $speakeIds, $setType);
-        $this->logger->error("=============", "noticeText=" . $noticeText);
-
         $this->ctx->Message_Client->proxyGroupNoticeMessage($groupAdminId, $groupId, $noticeText);
     }
 
@@ -180,12 +175,12 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
         }
 
         if ($setType == Zaly\Proto\Site\SetSpeakerType::RemoveSpeaker) {
-            $nameBody .= " 关闭了";
+            $nameBody .= " 关闭了 ";
         } elseif ($setType == Zaly\Proto\Site\SetSpeakerType::CloseSpeaker) {
             $nameBody .= " 关闭了发言者功能";
             return $nameBody;
         } else {//
-            $nameBody .= " 设置";
+            $nameBody .= " 设置 ";
         }
 
         if (empty($speakerIds)) {
