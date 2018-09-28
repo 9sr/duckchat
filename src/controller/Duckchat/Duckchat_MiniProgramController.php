@@ -331,4 +331,16 @@ abstract class Duckchat_MiniProgramController extends \Wpf_Controller
     {
         return $this->ctx->ZalyHelper->getMsectime();
     }
+
+    public function returnSuccessRPC($response)
+    {
+        $this->setRpcError($this->defaultErrorCode, "");
+        $this->rpcReturn($this->action, $response);
+    }
+
+    public function returnErrorRPC($response, $e)
+    {
+        $this->setRpcError("error.alert", $e->getMessage());
+        $this->rpcReturn($this->action, $response);
+    }
 }
