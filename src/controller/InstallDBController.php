@@ -382,7 +382,7 @@ class InstallDBController
                 'pluginId' => 100,
                 'name' => "管理后台",
                 'logo' => "",
-                'sort' => 10,
+                'sort' => 100,
                 'landingPageUrl' => "index.php?action=manage.index",
                 'landingPageWithProxy' => 1, //1 表示走site代理
                 'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageIndex,
@@ -458,6 +458,18 @@ class InstallDBController
                 'landingPageUrl' => "index.php?action=miniProgram.passport.account",
                 'landingPageWithProxy' => 1, //1 表示走site代理
                 'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageAccountSafe,
+                'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage,
+                'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
+                'authKey' => "",
+            ],
+            [
+                'pluginId' => 199,  //200+ for user
+                'name' => "用户广场",
+                'logo' => "",
+                'sort' => 2, //order = 2
+                'landingPageUrl' => "index.php?action=miniProgram.square.index",
+                'landingPageWithProxy' => 1, //1 表示走site代理
+                'usageType' => Zaly\Proto\Core\PluginUsageType::PluginUsageIndex,
                 'loadingType' => Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage,
                 'permissionType' => Zaly\Proto\Core\PluginPermissionType::PluginPermissionAll,
                 'authKey' => "",

@@ -286,4 +286,14 @@ abstract class MiniProgramController extends \Wpf_Controller
         return ZalyHelper::getMsectime();
     }
 
+    protected function finish_request()
+    {
+        if (!function_exists("fastcgi_finish_request")) {
+            function fastcgi_finish_request()
+            {
+            }
+        }
+        fastcgi_finish_request();
+    }
+
 }

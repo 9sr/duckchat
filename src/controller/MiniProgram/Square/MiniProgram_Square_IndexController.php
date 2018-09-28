@@ -9,7 +9,8 @@
 class MiniProgram_Square_IndexController extends MiniProgramController
 {
 
-    private $squarePluginId = 102;
+    private $squarePluginId = 199;
+    private $pageSize = 12;
 
     public function getMiniProgramId()
     {
@@ -18,26 +19,50 @@ class MiniProgram_Square_IndexController extends MiniProgramController
 
     public function preRequest()
     {
-        if (!$this->ctx->Site_Config->isManager($this->userId)) {
-            //不是管理员，exception
-            throw new Exception("user has no permission");
-        }
+        //do nothing
     }
 
     public function doRequest()
     {
-        header('Access-Control-Allow-Origin: *');
         $method = $_SERVER['REQUEST_METHOD'];
         if ($method == 'POST') {
-            $fromUserId = $_POST['fromUserId'];
-            $roomId = $_POST['roomId'];
-            $roomType = $_POST['roomType'];
 
+            $result = [];
+
+            $pageNum = $_POST['pageNum'];
+
+            $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : $this->pageSize;
+
+            $this->logger->error("============", "pageNum=" . $pageNum);
+            $this->logger->error("============", "pageSize=" . $pageSize);
+
+            $userList = $this->buildUserDataList($pageNum, $pageSize);
+
+            $this->logger->error("============", "result=" . var_export($userList, true));
+
+            if (!empty($userList)) {
+                $result['loading'] = true;
+                $result['data'] = $userList;
+            } else {
+                $result['loading'] = false;
+            }
+
+            echo json_encode($result);
         } else {
-            echo "user square";
-            return;
-        }
+            //request
+            $pageSize = $this->pageSize;
+            if (isset($_GET["pageSize"])) {
+                $pageSize = $_GET["pageSize"];
+            }
 
+            $userList = $this->buildUserDataList(1, $pageSize);
+
+            $params = [
+                'userList' => $userList,
+            ];
+            echo $this->display("miniProgram_square_index", $params);
+        }
+        return;
     }
 
     public function requestException($ex)
@@ -45,4 +70,33 @@ class MiniProgram_Square_IndexController extends MiniProgramController
 //        $this->showPermissionPage();
     }
 
+
+    private function buildUserDataList($pageNum, $pageSize)
+    {
+        $userList = $this->getSiteUserList($this->userId, $pageNum, $pageSize);
+
+        if (!empty($userList)) {
+            foreach ($userList as $i => $user) {
+
+                if ($this->userId == $user['userId']) {
+                    unset($userList[$i]);
+                    continue;
+                }
+
+                $friendId = $user['friendId'];
+
+                if (isset($friendId)) {
+                    $user['isFollow'] = true;
+                }
+                $userList[$i] = $user;
+            }
+        }
+        return $userList;
+    }
+
+    private function getSiteUserList($userId, $pageNum, $pageSize)
+    {
+        $result = $this->ctx->SiteUserTable->getSiteUserListWithRelation($userId, $pageNum, $pageSize);
+        return $result;
+    }
 }

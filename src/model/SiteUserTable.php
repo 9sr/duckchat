@@ -198,7 +198,53 @@ class SiteUserTable extends BaseTable
         }
     }
 
-    public function getUserListNotInGroup($groupId, $offset, $pageSize)
+    /**
+     * 小程序用户广场使用
+     *
+     * @param $userId
+     * @param $pageNum
+     * @param $pageSize
+     * @return array|bool
+     * @throws Exception
+     */
+    public function getSiteUserListWithRelation($userId, $pageNum, $pageSize)
+    {
+        $startTime = $this->getCurrentTimeMills();
+
+        try {
+            $tag = __CLASS__ . "->" . __FUNCTION__;
+            $sql = "SELECT 
+                        a.userId as userId ,
+                        a.nickname as nickname,
+                        a.nicknameInLatin as nicknameInLatin,
+                        a.avatar as avatar,
+                        a.availableType as availableType,
+                        b.friendId as friendId 
+                    FROM 
+                        siteUser AS a 
+                    LEFT JOIN 
+                        (SELECT userId,friendId FROM siteUserFriend WHERE userId=:userId) AS b 
+                    ON a.userId=b.friendId 
+                    ORDER BY a.id DESC LIMIT :pageNum,:pageSize;";
+            $prepare = $this->db->prepare($sql);
+            $this->handlePrepareError($tag, $prepare);
+            $prepare->bindValue(":userId", $userId);
+            $prepare->bindValue(":pageNum", (int)(($pageNum - 1) * $pageSize), PDO::PARAM_INT);
+            $prepare->bindValue(":pageSize", (int)$pageSize, PDO::PARAM_INT);
+            $prepare->execute();
+
+            $this->logger->error("================", "result=" . var_export($prepare->errorInfo(), true));
+
+            $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } finally {
+            $this->logger->writeSqlLog($tag, $sql, [$userId, $pageNum, $pageSize], $startTime);
+        }
+        return false;
+    }
+
+    public
+    function getUserListNotInGroup($groupId, $offset, $pageSize)
     {
         try {
             $startTime = microtime(true);
@@ -235,7 +281,8 @@ class SiteUserTable extends BaseTable
         }
     }
 
-    public function getUserCount($groupId)
+    public
+    function getUserCount($groupId)
     {
         try {
             $startTime = microtime(true);
@@ -260,7 +307,8 @@ class SiteUserTable extends BaseTable
      * get site total user count
      * @return bool|mixed
      */
-    public function getSiteUserCount()
+    public
+    function getSiteUserCount()
     {
         try {
             $startTime = microtime(true);
@@ -279,7 +327,8 @@ class SiteUserTable extends BaseTable
         }
     }
 
-    public function getUserByUserIds($userIds)
+    public
+    function getUserByUserIds($userIds)
     {
         $tag = __CLASS__ . "-" . __FILE__;
         $startTime = microtime(true);
@@ -299,7 +348,8 @@ class SiteUserTable extends BaseTable
         }
     }
 
-    public function getUserFriendVersion($userId)
+    public
+    function getUserFriendVersion($userId)
     {
         $tag = __CLASS__ . "-" . __FILE__;
         $startTime = microtime(true);
@@ -320,12 +370,14 @@ class SiteUserTable extends BaseTable
         }
     }
 
-    public function updateUserData($where, $data)
+    public
+    function updateUserData($where, $data)
     {
         return $this->updateInfo($this->table, $where, $data, $this->columns);
     }
 
-    public function updateUserFriendVersion($userId, $friendVersion)
+    public
+    function updateUserFriendVersion($userId, $friendVersion)
     {
         $where = ['userId' => $userId];
         $data = ['friendVersion' => $friendVersion];
@@ -333,7 +385,8 @@ class SiteUserTable extends BaseTable
 
     }
 
-    public function updateNextFriendVersion($userId)
+    public
+    function updateNextFriendVersion($userId)
     {
         $version = $this->getUserFriendVersion($userId);
 
