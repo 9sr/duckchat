@@ -59,7 +59,8 @@ class Im_Cts_MessageController extends Im_BaseController
 
                 if (!empty($speakers)) {
                     $speakers = explode(",", $speakers);
-                    if (!$this->isGroupAdmin($this->toId) && !in_array($speakers, $this->userId)) {
+
+                    if (!$this->isGroupAdmin($this->toId) && !in_array($this->userId, $speakers)) {
                         $noticeText = ZalyText::getText(ZalyText::$textGroupNotSpeaker);
                         $this->returnGroupNotLawfulMessage($msgId, $msgRoomType, $fromUserId, $this->toId, $noticeText);
                         return;
