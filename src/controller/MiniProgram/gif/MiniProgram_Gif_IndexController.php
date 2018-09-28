@@ -84,7 +84,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
             foreach ($gifs as $key => $gif) {
                 $url = "./index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
                 $gif['gifUrl'] = ZalyHelper::getFullReqUrl($url);
-                $gif['isDefault'] = $gif['userId'] === 0 ?  1 : 0;
+                $gif['isDefault'] = $gif['userId'] === 0 ?  0 : 1;
                 $gifs[$key] = $gif;
             }
 
@@ -127,11 +127,11 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
         }
 
         $gifInfo = $this->ctx->SiteUserGifTable->getGifByGifId($gifId);
-        $url = "./index.php?action=http.file.downloadGif&gifId=".$gifInfo['gifId'];
-        $gifUrl = ZalyHelper::getFullReqUrl($url);
-        $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'.$gifUrl.'" width="'.$gifInfo['width'].'" height="'.$gifInfo['height'].'" > </body> </html>';
+        $gifUrl = "./index.php?action=http.file.downloadGif&gifId=".$gifInfo['gifId'];
+        $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'.$gifUrl.'" width="100%" > </body> </html>';
 
         $webHrefUrl = "./index.php?action=miniProgram.gif.add&gifId=".$gifInfo['gifId'];
+        $webHrefUrl = ZalyHelper::getFullReqUrl($webHrefUrl);
         $webMsg = new \Zaly\Proto\Core\WebMessage();
 
         $webMsg->setWidth($gifInfo['width']);
