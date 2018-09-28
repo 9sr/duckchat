@@ -23,9 +23,27 @@ class ZalyText
     public static $keyGroupInvite = "{key.group.invite}";
     public static $keyGroupJoin = "{key.group.join}";
 
+    public static $keyDefaultFriendsText = "{key.defaultFriend.text}";
+    public static $keyDefaultGroupsText = "{key.defaultGroup.text}";
+
+    public static $keySpeakerSet = "{key.speaker.set}";
+    public static $keySpeakerCloseUser = "{key.speaker.closeUser}";
+    public static $keySpeakerAsSpeaker = "{key.speaker.asSpeaker}";
+    public static $keySpeakerClose = "{key.speaker.close}";
+    public static $keySpeakerStatus = "{key.speaker.status}";
+
     public static $templateKeys = [
-        "key.group.invite" => ["invite", " 邀请了 "],
-        "key.group.join" => ["join this group", " 加入了群聊"],
+        "key.group.invite" => [" invite ", " 邀请了 "],
+        "key.group.join" => [" join this group", " 加入了群聊"],
+
+        "key.defaultFriend.text" => ["we are friends, just talk to me", "我们已经成为好友，开始聊天吧"],
+        "key.defaultGroup.text" => ["new member", "新成员"],
+
+        "key.speaker.set" => [" set ", " 设置了 "],
+        "key.speaker.asSpeaker" => [" as speaker", " 为发言人"],
+        "key.speaker.closeUser" => [" close ", " 关闭了 "],
+        "key.speaker.status" => [" speaker status", " 发言人状态"],
+        "key.speaker.close" => [" close speakers function ", " 关闭了发言者功能"],
     ];
 
     public static function getText($textKey, $lang = Zaly\Proto\Core\UserClientLangType::UserClientLangZH)
@@ -44,7 +62,26 @@ class ZalyText
         $contentMsg->mergeFromJsonString($noticeText);
 
         $body = $contentMsg->getBody();
+        $body = self::buildBody($body, $lang);
 
+        $contentMsg->setBody($body);
+        return $contentMsg;
+    }
+
+    public static function buildMessageText($text, $lang = Zaly\Proto\Core\UserClientLangType::UserClientLangZH)
+    {
+        $contentMsg = new \Zaly\Proto\Core\TextMessage();
+        $contentMsg->mergeFromJsonString($text);
+
+        $body = $contentMsg->getBody();
+        $body = self::buildBody($body, $lang);
+
+        $contentMsg->setBody($body);
+        return $contentMsg;
+    }
+
+    private static function buildBody($body, $lang)
+    {
         //build origin body
         $keys = self::getTemplateKey($body);
 
@@ -64,11 +101,10 @@ class ZalyText
 
         }
 
-        $contentMsg->setBody($body);
-        return $contentMsg;
+        return $body;
     }
 
-    public static function getTemplateKey($str)
+    private static function getTemplateKey($str)
     {
         $result = array();
         preg_match_all("/(?<={)[^}]+/", $str, $result);
