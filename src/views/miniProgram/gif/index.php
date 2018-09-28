@@ -42,9 +42,9 @@
         .del_gif{
             width: 2rem;
             height: 2rem;
-            margin-top: 2rem;
+            margin-top: -1rem;
             position: absolute;
-            margin-left: 6rem;
+            margin-left: 4.5rem;
             display: none;
         }
         .gif_content_div{
@@ -53,7 +53,7 @@
             height: 5rem;
             display: flex;
             margin-left: 2rem;
-            margin-top: 2rem;
+            margin-top: 3rem;
         }
     </style>
 </head>
@@ -62,7 +62,6 @@
 <div class="zaly_container" >
 
     <input type="hidden" class="roomType" value='<?php echo $roomType;?>'>
-    <input type="hidden" class="roomId" value='<?php echo $roomId;?>'>
     <input type="hidden" class="toId" value='<?php echo $toId;?>'>
     <input type="hidden" class="fromUserId" value='<?php echo $fromUserId;?>'>
 </div>
@@ -86,9 +85,8 @@
 <script type="text/javascript">
     gifs  = '<?php echo $gifs;?>';
     gifArr = JSON.parse(gifs);
-    gifLength = gifArr.length + 1;
+    gifLength = gifArr.length ;
     var line = 0;
-    roomId = $(".roomId").val();
     roomType = $(".roomType").val();
     fromUserId = $(".fromUserId").val();
     toId = $(".toId").val();
@@ -122,7 +120,7 @@
                 var html = '';
                 line = line+1;
                 var divNum = Math.ceil(((i-9)/10));
-                html += "<div class='gif_div gif_div_hidden gif_div_"+divNum+"' gif-div='"+(line-1)+"'>";
+                html += "<div class='gif_div gif_div_hidden gif_div_"+divNum+"' gif-div='"+(line-1)+"'><div class='gif_sub_div'>";
             }
 
             if(i==1) {
@@ -162,6 +160,15 @@
 
     var flag = false;
 
+    function getImgSize(src) {
+        var image = new Image();
+        image.src = src;
+        image.onload =  function (event) {
+            imgObject.width  =image.naturalWidth;
+            imgObject.height = image.naturalHeight;
+        };
+    }
+
     function uploadFile(obj) {
         if (obj) {
             if (obj.files) {
@@ -170,6 +177,7 @@
                 formData.append("fileType", "FileImage");
                 formData.append("isMessageAttachment", false);
                 var src = window.URL.createObjectURL(obj.files.item(0));
+                getImgSize(src);
                 uploadFileToServer(formData, src);
             }
             return obj.value;
@@ -191,8 +199,6 @@
         if (isMobile()) {
             url = "/_api_file_upload_/?fileType=1";  //fileType=1,表示文件
         }
-        autoMsgImgSize(src, 300, 400);
-
         $.ajax({
             url: url,
             type: "post",
@@ -219,27 +225,6 @@
     }
 
 
-    function autoMsgImgSize(src, h, w)
-    {
-        var image = new Image();
-        image.src = src;
-        var imageNaturalWidth  = image.naturalWidth;
-        var imageNaturalHeight = image.naturalHeight;
-
-        if (imageNaturalWidth < w && imageNaturalHeight<h) {
-            imgObject.width  = imageNaturalWidth == 0 ? w : imageNaturalWidth;
-            imgObject.height = imageNaturalHeight == 0 ? h : imageNaturalHeight;
-        } else {
-            if (w / h <= imageNaturalWidth/ imageNaturalHeight) {
-                imgObject.width  = w;
-                imgObject.height = w* (imageNaturalHeight / imageNaturalWidth);
-            } else {
-                imgObject.width  = h * (imageNaturalWidth / imageNaturalHeight);
-                imgObject.height = h;
-            }
-        }
-    }
-
     $(".add_gif").on({
         touchstart: function(event){
             event.preventDefault();
@@ -260,8 +245,6 @@
         console.log(gifId);
         var delGifObj = $(".del_gif");
         var delGifLength = $(".del_gif").length;
-        console.log("longEntenrPress longEnterPress==");
-
         for(i=0; i<delGifLength; i++) {
             var item = delGifObj[i];
             $(item)[0].style.display = "none";
@@ -277,7 +260,6 @@
                 var gifId = $(this).attr("gifId");
                 var isDefault = $(this).attr("isDefault");
                 if(isDefault != "0") {
-                    console.log("longEntenrPress");
                     timeOutEvent = setTimeout("longEnterPress('"+gifId+"')",500);
                 }
             },
@@ -285,9 +267,9 @@
                 event.preventDefault();
                 event.stopPropagation();
                 clearTimeout(timeOutEvent);
-                if(timeOutEvent == 0){
+                if(timeOutEvent !=0 ){
                     var src = $(this).attr("src");
-                    autoMsgImgSize(src, 200, 300);
+                    getImgSize(src);
                     var gifId = $(this).attr("gifId");
                     sendGifMsg(gifId);
                     setTimeout(function(){ flag = false; }, 100);
@@ -297,14 +279,21 @@
         });
 
 
-    $(".del_gif").on("click", function () {
-        var gifId = $(this).attr("gifId");
-        console.log("del gifId =="+gifId);
-        var reqData = {
-            gifId : gifId,
-            type:delGifType,
+    $(".del_gif").on({
+        touchstart: function(event){
+            event.preventDefault();
+            event.stopPropagation();
+        },
+        touchend: function(event){
+            var gifId = $(this).attr("gifId");
+            console.log("del gifId =="+gifId);
+            var reqData = {
+                gifId : gifId,
+                type:delGifType,
+            }
+            sendPostToServer(reqData, delGifType);
+            return false;
         }
-        sendPostToServer(reqData, delGifType);
     });
 
 
@@ -360,6 +349,10 @@
                     return false;
                 }
                 if(type == addGifType) {
+                    window.location.reload();
+                }
+                if(type == delGifType) {
+                    window.location.reload();
                 }
             }
         });
@@ -367,7 +360,6 @@
 
     function sendGifMsg(gifId)
     {
-        var action = "miniProgram.gif.index";
         var reqData = {
             "gifId" : gifId
         };

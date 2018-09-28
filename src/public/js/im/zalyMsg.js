@@ -1,6 +1,7 @@
 
 
 msgImageSize = "";
+webObject={};
 
 function getRoomList()
 {
@@ -27,7 +28,7 @@ function getRoomList()
             localStorage.setItem( msg.chatSessionId, msg.roomType);
         }
         msg = handleMsgInfo(msg);
-        appendOrInsertRoomList(msg, false);
+        appendOrInsertRoomList(msg, false, false);
     }
     displayCurrentProfile();
     displayRightPage(DISPLAY_CHAT);
@@ -100,7 +101,7 @@ function removeRoomFromRoomList(chatSessionId)
     return roomList;
 }
 
-function appendOrInsertRoomList(msg, isInsert)
+function appendOrInsertRoomList(msg, isInsert, showNotification)
 {
     if(msg != undefined && msg.hasOwnProperty("type") && msg.type == MessageStatus.MessageEventSyncEnd) {
         return ;
@@ -175,7 +176,8 @@ function appendOrInsertRoomList(msg, isInsert)
         if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
             $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
         }
-        if(msg.fromUserId != token) {
+        console.log("notification  showNotification ==" + showNotification);
+        if(msg.fromUserId != token && showNotification) {
             showWebNotification(msg, msgContent);
         }
         return ;
@@ -209,7 +211,7 @@ function appendOrInsertRoomList(msg, isInsert)
     if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
         $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
     }
-    if(msg.fromUserId != token) {
+    if(msg.fromUserId != token && showNotification) {
         showWebNotification(msg, msgContent);
     }
 }
@@ -415,7 +417,7 @@ function handleSyncMsg(msg)
             setDocumentTitle("new_msg");
         }
     }
-    appendOrInsertRoomList(msg, true);
+    appendOrInsertRoomList(msg, true, true);
 }
 
 function handleMsgStatusResult(msgId, msgStatus)
@@ -676,7 +678,7 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType, params)
 
     handleImSendRequest(action, reqData, "");
     message['chatSessionId'] = chatSessionId;
-    appendOrInsertRoomList(message, true);
+    appendOrInsertRoomList(message, true, false);
     handleMsgForMsgRoom(chatSessionId, message);
     addMsgToChatDialog(chatSessionId, message);
 };
@@ -751,6 +753,24 @@ function getMessageDocumentName(name, url)
     }
     name = name +'.'+urlSuffix;
     return name;
+}
+
+function getWebMessageSize(imageNaturalHeight, imageNaturalWidth, h, w)
+{
+    var webObject = {};
+    if (imageNaturalWidth < w && imageNaturalHeight<h) {
+        webObject.width  = imageNaturalWidth == 0 ? w : imageNaturalWidth;
+        webObject.height = imageNaturalHeight == 0 ? h : imageNaturalHeight;
+    } else {
+        if (w / h <= imageNaturalWidth/ imageNaturalHeight) {
+            webObject.width  = w;
+            webObject.height = w* (imageNaturalHeight / imageNaturalWidth);
+        } else {
+            webObject.width  = h * (imageNaturalWidth / imageNaturalHeight);
+            webObject.height = h;
+        }
+    }
+    return webObject;
 }
 function appendMsgHtml(msg)
 {
@@ -855,14 +875,13 @@ function appendMsgHtml(msg)
                 break;
             case MessageType.MessageWeb :
                 var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
-                var webWidth = msg['web'].width;
-                var webHeight = msg['web'].height;
                 var hrefUrl =  msg['web'].hrefURL;
+                var webSize = getWebMessageSize(msg['web'].height, msg['web'].width, 300, 400);
                 html = template("tpl-send-msg-web", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
-                    webWidth:webWidth,
-                    webHeight:webHeight,
+                    webWidth:webSize.width,
+                    webHeight:webSize.height,
                     msgId : msgId,
                     msgTime : msgTime,
                     userId :msg.fromUserId,
@@ -975,17 +994,16 @@ function appendMsgHtml(msg)
                 break;
             case MessageType.MessageWeb :
                 var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
-                var webWidth  = msg['web'].width;
-                var webHeight = msg['web'].height;
                 var hrefUrl =  msg['web'].hrefURL;
+                var webSize = getWebMessageSize(msg['web'].height, msg['web'].width, 300, 400);
                 html = template("tpl-receive-msg-web", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
                     msgId : msgId,
                     msgTime : msgTime,
-                    webWidth:webWidth,
-                    webHeight:webHeight,
-                    leftWebWidth:Number(webWidth+25),
+                    webWidth:webSize.width,
+                    webHeight:webSize.height,
+                    leftWebWidth:Number(webSize.width+25),
                     userId :msg.fromUserId,
                     groupUserImg : groupUserImageClassName,
                     avatar:msg.userAvatar,

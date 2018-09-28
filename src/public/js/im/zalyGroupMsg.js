@@ -1290,8 +1290,7 @@ function insertGroupRoom(groupId, groupName)
         "chatSessionId": groupId
     };
     msg = handleMsgInfo(msg);
-
-    appendOrInsertRoomList(msg, true);
+    appendOrInsertRoomList(msg, true, false);
 }
 
 $(document).on("click", ".group_cancle", function(){
@@ -1379,7 +1378,7 @@ function insertU2Room(userId)
         "chatSessionId": userId,
     };
     msg = handleMsgInfo(msg);
-    appendOrInsertRoomList(msg, true);
+    appendOrInsertRoomList(msg, true, false);
 }
 
 function displayProfile(profileId, profileType)
@@ -2443,10 +2442,10 @@ function closeMaskDiv(str)
     removeWindow($(str));
 }
 
-function downloadFile(elementObj) {
-    var fileId = elementObj.attr("url");
-    var msgId = elementObj.attr("msgId");
-    var originName = elementObj.attr("originName");
+function downloadFile(elementB) {
+    var fileId = $(this).attr("url");
+    var msgId = $(this).attr("msgId");
+    var originName = $(this).attr("originName");
     var currentRoom = localStorage.getItem(chatSessionIdKey);
     var isGroupMessage = localStorage.getItem(currentRoom) == GROUP_MSG ? 1 : 0;
     var requestUrl = downloadFileUrl +  "&fileId="+fileId + "&returnBase64=0&isGroupMessage="+isGroupMessage+"&messageId="+msgId;
