@@ -2127,15 +2127,28 @@ $(document).on("click", ".emotion-item", function () {
 });
 
 $(document).on("click", ".edit_remark_for_friend", function () {
-     var remarkName = $(".remark_name").val();
-     var userId = $("#edit-remark").attr("userId");
-     var value = {
-         type :ApiFriendUpdateType.ApiFriendUpdateRemark,
-         remark : remarkName,
-     }
-     removeWindow($("#edit-remark"));
-     friendUpdate(userId, value);
+     editFriendRemark();
 });
+
+function editFriendRemarkByKeyDown(event) {
+    if(!checkIsEnterBack(event)) {
+        return false;
+    }
+    editFriendRemark();
+}
+
+
+function editFriendRemark()
+{
+    var remarkName = $(".remark_name").val();
+    var userId = $("#edit-remark").attr("userId");
+    var value = {
+        type :ApiFriendUpdateType.ApiFriendUpdateRemark,
+        remark : remarkName,
+    }
+    removeWindow($("#edit-remark"));
+    friendUpdate(userId, value);
+}
 
 $(document).on("click", ".friend_mute", function () {
     var userId = localStorage.getItem(chatSessionIdKey);

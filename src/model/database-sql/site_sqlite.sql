@@ -193,3 +193,15 @@ CREATE TABLE IF NOT EXISTS siteUic(
             useTime BIGINT);
 
 CREATE INDEX IF NOT EXISTS indexSiteUicUserId ON siteUic(userId);
+
+
+CREATE TABLE IF NOT EXISTS siteUserGif(
+                      id INTEGER PRIMARY KEY AUTOINCREMENT,
+                      gifId VARCHAR(100) NOT NULL,
+                      userId VARCHAR(100) NOT NULL,
+                      gifUrl  VARCHAR(100) NOT NULL,
+                      width INTEGER not null default 0,
+                      height INTEGER not null default 0,
+                      addTime BIGINT);
+
+CREATE INDEX IF NOT EXISTS userId ON siteUserGif(userId);

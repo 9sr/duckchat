@@ -46,6 +46,7 @@ abstract class HttpBaseController extends \Wpf_Controller
             header("Location:" . $initUrl);
             exit();
         }
+        $this->checkDBVersion();
 
         $this->logger = $context->getLogger();
         $this->ctx = $context;

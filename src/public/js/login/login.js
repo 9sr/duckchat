@@ -353,7 +353,21 @@ function loginNameNotExist()
 }
 
 $(document).on("click", ".register_button", function () {
-    var isType = $(this).attr("is_type");
+    registerAndLogin();
+});
+
+
+function registerAndLoginByKeyDown(event)
+{
+    if(!checkIsEnterBack(event)){
+        return false;
+    }
+    registerAndLogin();
+}
+
+function registerAndLogin()
+{
+    var isType = $(".register_button").attr("is_type");
     invitationCode = $(".register_input_code").val();
 
     if(isType == updateInvitationCodeType) {
@@ -366,7 +380,7 @@ $(document).on("click", ".register_button", function () {
         var jsUrl = "./index.php?action=page.js&loginName="+registerLoginName+"&success_callback=loginNameExist&fail_callback=loginNameNotExist";
         addJsByDynamic(jsUrl);
     }
-});
+}
 
 $(document).on("click", ".update_code_btn", function () {
     invitationCode = $(".update_input_code").val();

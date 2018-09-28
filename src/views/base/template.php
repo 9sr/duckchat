@@ -77,7 +77,7 @@
         </div>
 
         <div class="d-flex flex-row justify-content-center" style="">
-            <input type="text" class="form-control remark_name create_group_box_div_input "  data-local-placeholder="remarkNamePlaceholder"  placeholder="Please Enter Remark Name" >
+            <input type="text" class="form-control remark_name create_group_box_div_input " onkeydown="editFriendRemarkByKeyDown(event)" data-local-placeholder="remarkNamePlaceholder"  placeholder="Please Enter Remark Name" >
         </div>
 
         <div class="line"></div>

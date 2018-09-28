@@ -270,7 +270,7 @@ abstract class MiniProgramController extends \Wpf_Controller
 
     protected function getAndSetClientLang()
     {
-        $headLang = $_GET['lang'];
+        $headLang = isset($_GET['lang']) ?  $_GET['lang'] : "";
 
         if (isset($headLang) && $headLang == Zaly\Proto\Core\UserClientLangType::UserClientLangZH) {
             $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangZH;

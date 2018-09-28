@@ -18,6 +18,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
     private $title = "GIF小程序";
     private $roomType="";
     private $toId;
+    private $seeType = "see_gif";
 
     public function getMiniProgramId()
     {
@@ -54,6 +55,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
             $this->roomType = \Zaly\Proto\Core\MessageRoomType::MessageRoomU2;
         }
 
+
         if ($method == 'POST') {
             try{
                 $type = isset($_POST['type']) ? $_POST['type'] :"send_msg";
@@ -79,26 +81,29 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
                 "toId" => $this->toId,
                 "fromUserId" => $this->userId,
             ];
+            $type = $_GET['type'] ? $_GET['type'] : "";
+            if($type == "see_gif") {
+                echo "pppafsdfas";
+                return ;
+            } else {
+                $gifs = $this->ctx->SiteUserGifTable->getGifByUserId($this->userId, 0, $this->limit);
+                foreach ($gifs as $key => $gif) {
+                    $url = "./index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
+                    $gif['gifUrl'] = ZalyHelper::getFullReqUrl($url);
+                    $gif['isDefault'] = $gif['userId'] === 0 ?  0 : 1;
+                    $gifs[$key] = $gif;
+                }
 
-            $gifs = $this->ctx->SiteUserGifTable->getGifByUserId($this->userId, 0, $this->limit);
-            foreach ($gifs as $key => $gif) {
-                $url = "./index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
-                $gif['gifUrl'] = ZalyHelper::getFullReqUrl($url);
-                $gif['isDefault'] = $gif['userId'] === 0 ?  0 : 1;
-                $gifs[$key] = $gif;
+                $results['gifs'] = $gifs;
+                $results['gifs'] = json_encode($results['gifs']);
+                echo $this->display("miniProgram_gif_index", $results);
+                return;
             }
-
-            $results['gifs'] = $gifs;
-            $results['gifs'] = json_encode($results['gifs']);
-            echo $this->display("miniProgram_gif_index", $results);
-            return;
         }
     }
     private function sendWebMessage($data)
     {
         $gifId = $data['gifId'];
-
-
         $roomType = $this->roomType ? \Zaly\Proto\Core\MessageRoomType::MessageRoomU2 : \Zaly\Proto\Core\MessageRoomType::MessageRoomGroup;
 
         if($roomType == \Zaly\Proto\Core\MessageRoomType::MessageRoomU2) {
@@ -127,18 +132,24 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
         }
 
         $gifInfo = $this->ctx->SiteUserGifTable->getGifByGifId($gifId);
-        $gifUrl = "./index.php?action=http.file.downloadGif&gifId=".$gifInfo['gifId'];
+        $gifUrl = "index.php?action=http.file.downloadGif&gifId=".$gifInfo['gifId'];
         $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'.$gifUrl.'" width="100%" > </body> </html>';
 
-        $webHrefUrl = "./index.php?action=miniProgram.gif.add&gifId=".$gifInfo['gifId'];
-        $webHrefUrl = ZalyHelper::getFullReqUrl($webHrefUrl);
-        $webMsg = new \Zaly\Proto\Core\WebMessage();
+        $landingPageUrl = "index.php?action=miniProgram.gif.index&type=see_gif&gifId=".$gifInfo['gifId'];
 
+        $simplePluginProfile = new \Zaly\Proto\Core\SimplePluginProfile();
+        $simplePluginProfile->setId($this->gifMiniProgramId);
+        $simplePluginProfile->setLoadingType(\Zaly\Proto\Core\PluginLoadingType::PluginLoadingNewPage);
+        $simplePluginProfile->setLandingPageUrl($landingPageUrl);
+        $simplePluginProfile->setLandingPageWithProxy(true);
+
+        $webMsg = new \Zaly\Proto\Core\WebMessage();
         $webMsg->setWidth($gifInfo['width']);
         $webMsg->setHeight($gifInfo['height']);
         $webMsg->setCode($webCode);
-        $webMsg->setHrefURL($webHrefUrl);
+        $webMsg->setPluginId($this->gifMiniProgramId);
         $webMsg->setTitle($this->title);
+        $webMsg->setJumpPluginProfile($simplePluginProfile);
 
         $messageId = ZalyHelper::getMsgId($this->roomType, $this->toId);
 

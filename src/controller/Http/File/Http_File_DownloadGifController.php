@@ -14,9 +14,7 @@ class Http_File_DownloadGifController extends \HttpBaseController
     {
         $tag = __CLASS__."-".__FUNCTION__;
         $gifId = $_GET['gifId'];
-        $mimeType = $this->ctx->File_Manager->contentType($gifId);
-        $returnBase64 = $_GET['returnBase64'];
-        error_log("http: giffiledownload");
+        $returnBase64 = isset($_GET['returnBase64']) ? $_GET['returnBase64'] : "";
         try{
             $result = $this->ctx->SiteUserGifTable->getGifByGifId($gifId);
             if(!$result) {
@@ -24,20 +22,21 @@ class Http_File_DownloadGifController extends \HttpBaseController
                 return;
             }
             $gifUrl = $result['gifUrl'];
+            $mimeType = $this->ctx->File_Manager->contentType($gifUrl);
             $fileContent = $this->ctx->File_Manager->readFile($gifUrl, $this->fileType );
 
             if(strlen($fileContent)<1) {
                 throw new Exception("load file void");
             }
             header('Cache-Control: max-age=86400, public');
-            header("Content-type:$mimeType");
+            header("Content-type:text/html");
 
             if($returnBase64) {
-                echo base64_decode($fileContent);
+                $fileContent =  base64_decode($fileContent);
             } else {
-                echo $fileContent;
+                $fileContent =  $fileContent;
             }
-
+            echo $fileContent;
         }catch (Exception $e) {
             header("Content-type:$mimeType");
             $this->ctx->Wpf_Logger->error($tag, "error_msg ==" .$e->getMessage() );

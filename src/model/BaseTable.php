@@ -181,10 +181,13 @@ class BaseTable
                 "error_code" => $this->db->errorCode(),
                 "error_info" => $this->db->errorInfo(),
             ];
+            if($this->db->errorCode() == 'HY000') {
+                $this->ctx->ZalyDB->upgradeDB();
+                $this->ctx->Wpf_Logger->error("===================table result ==", var_export($this->db->errorInfo(), true));
+            }
             $this->ctx->Wpf_Logger->error($tag, json_encode($error));
             throw new Exception("execute prepare fail" . json_encode($error));
         }
-
     }
 
     protected function getCurrentTimeMills()
@@ -205,6 +208,9 @@ class BaseTable
         if ($prepare) {
             if ($result && $prepare->errorCode() == '00000') {
                 return true;
+            } elseif($prepare->errorCode() == 'HY000') {
+                $this->ctx->ZalyDB->upgradeDB();
+                $this->ctx->Wpf_Logger->error("===================table result ==". var_export($prepare->errorInfo(), true));
             }
 
             throw new Exception($tag . " execute prepare error="

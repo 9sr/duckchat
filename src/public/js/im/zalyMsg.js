@@ -176,7 +176,6 @@ function appendOrInsertRoomList(msg, isInsert, showNotification)
         if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
             $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
         }
-        console.log("notification  showNotification ==" + showNotification);
         if(msg.fromUserId != token && showNotification) {
             showWebNotification(msg, msgContent);
         }
@@ -772,6 +771,7 @@ function getWebMessageSize(imageNaturalHeight, imageNaturalWidth, h, w)
     }
     return webObject;
 }
+
 function appendMsgHtml(msg)
 {
     if(msg == undefined) {
@@ -804,6 +804,7 @@ function appendMsgHtml(msg)
     var userAvatar = sendBySelf ? avatar : msg.userAvatar;
     var userAvatarSrc = sendBySelf ?  localStorage.getItem(selfInfoAvatar) : "";
     if(sendBySelf) {
+        getNotMsgImg(token, userAvatar);
         switch(msgType) {
             case MessageType.MessageText :
                 var msgContent = msg['text'].body;
@@ -918,6 +919,7 @@ function appendMsgHtml(msg)
                 break;
         }
     } else {
+        getNotMsgImg(msg.fromUserId,msg.userAvatar);
         switch(msgType) {
             case MessageType.MessageText:
                 var msgContent = msg['text'].body;
@@ -1040,7 +1042,6 @@ function appendMsgHtml(msg)
 
     // html = "请前往客户端查看web消息";
     $(".right-chatbox").append(html);
-    getNotMsgImg(userId, userAvatar);
     getMsgImgSrc(msg, msgId);
 }
 

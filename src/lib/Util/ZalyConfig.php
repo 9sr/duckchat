@@ -29,6 +29,12 @@ class ZalyConfig
         }
         return false;
     }
+    public static function getAllConfig()
+    {
+        self::getConfigFile();
+        return self::$config;
+    }
+
 
     public static function getSessionVerifyUrl($pluginId)
     {

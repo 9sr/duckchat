@@ -323,8 +323,8 @@ class InstallDBController
 
         $ownerUic = $this->uic;
         $this->_insertSiteOwnerUic($ownerUic);
-
         $this->initPluginMiniProgram();
+        $this->_initSiteUserGif();
         return;
     }
 
@@ -484,6 +484,15 @@ class InstallDBController
             }
         }
         $this->logger->info("site.install.db", "init miniPrograms finish success=" . json_encode($successParams));
+    }
+
+    private function _initSiteUserGif()
+    {
+        for($i=1; $i<8; $i++) {
+            $gifId = ZalyHelper::generateStrKey();
+            $dataSql = "insert into siteUserGif ( gifId, userId, gifUrl, width, height) VALUES ('{$gifId}', 0, 'default-{$i}.gif', 200, 200);";
+            $this->db->exec($dataSql);
+        }
     }
 
     public function insertData($tableName, $data)

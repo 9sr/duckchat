@@ -38,7 +38,12 @@
 
         <div class="login_name_div" style="margin-top: 2rem;">
             <image src="../../public/img/login/email.png" class="img"/>
+            {{if enableInvitationCode == 1}}
+
             <input type="text" class="input_login_site register_input_email" autocapitalize="off"  id="register_input_email" data-local-placeholder="enterEmailPlaceholder" placeholder="输入邮箱" >
+            {{else }}
+            <input type="text" class="input_login_site register_input_email" autocapitalize="off"  id="register_input_email" data-local-placeholder="enterEmailPlaceholder" onkeydown="registerAndLoginByKeyDown(event)" placeholder="输入邮箱" >
+            {{/if}}
             <img src="../../public/img/msg/msg_failed.png" class="img-failed register_input_email_failed">
             <div class="line"></div>
         </div>

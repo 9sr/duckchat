@@ -134,7 +134,7 @@
             </div>
 
             <div class="code_div login_name_div_mobile" style="margin-top: 8rem;">
-                <input type="text" class="input_login_site update_input_code" autocapitalize="off" style="margin-left: 0rem;" data-local-placeholder="enterCodePlaceholder"  placeholder="输入邀请码"  >
+                <input type="text" class="input_login_site update_input_code" autocapitalize="off" style="margin-left: 0rem;" data-local-placeholder="enterCodePlaceholder" onkeydown="registerAndLoginByKeyDown(event)" placeholder="输入邀请码"  >
                 <div class="line" ></div>
             </div>
 
