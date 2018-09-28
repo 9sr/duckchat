@@ -15,7 +15,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
     private $u2Type = "u";
     private $userRelationAction = "duckChat.user.relation";
     private $limit=30;
-    private $title = "Gif扩展";
+    private $title = "GIF小程序";
     private $roomType="";
     private $toId;
 
@@ -84,6 +84,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
             foreach ($gifs as $key => $gif) {
                 $url = "./index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
                 $gif['gifUrl'] = ZalyHelper::getFullReqUrl($url);
+                $gif['isDefault'] = $gif['userId'] === 0 ?  1 : 0;
                 $gifs[$key] = $gif;
             }
 

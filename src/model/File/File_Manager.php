@@ -30,12 +30,6 @@ class File_Manager
         "audio/mp4",
         "audio/x-m4a",
         "video/mp4",
-        'application/pdf',
-        'application/x-rar-compressed',
-        'application/zip',
-        'application/msword',
-        'application/xml',
-        'application/vnd.ms-powerpoint'
     ];
 
     public function __construct()
@@ -78,7 +72,7 @@ class File_Manager
         $fileName = explode("-", $fileId);
         $dirName = $fileName[0];
         $fileId = $fileName[1];
-        $path = $this->getPath($dirName, $fileId);
+        $path = $this->getPath($dirName, $fileId, false);
         return mime_content_type($path);
     }
 
@@ -165,7 +159,7 @@ class File_Manager
             $fileNameArray = explode("-", $fileId);
             $dirName = $fileNameArray[0];
             $fileName = $fileNameArray[1];
-            return $this->getPath($dirName, $fileName);
+            return $this->getPath($dirName, $fileName, false);
         } catch (Exception $e) {
             $this->wpf_Logger->error($tag, $e->getMessage());
         }

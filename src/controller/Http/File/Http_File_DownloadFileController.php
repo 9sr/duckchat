@@ -9,16 +9,11 @@
 
 class Http_File_DownloadFileController extends \HttpBaseController
 {
+    private $documentMimeType = "application/octet-stream";
     private $msgMimeType = [
-        "audio/mp4",
-        "audio/x-m4a",
-        "video/mp4",
-        'application/pdf',
-        'application/x-rar-compressed',
-        'application/zip',
-        'application/msword',
-        'application/xml',
-        'application/vnd.ms-powerpoint'
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
     ];
     public function index()
     {
@@ -29,12 +24,13 @@ class Http_File_DownloadFileController extends \HttpBaseController
         $messageId = isset($_GET['messageId']) ? $_GET['messageId'] : "";
         $returnBase64 = $_GET['returnBase64'];
         try{
-            if(in_array($mimeType, $this->msgMimeType) && !$messageId) {
+            if(!in_array($mimeType, $this->msgMimeType) && !$messageId) {
                 throw new Exception("it's msg attachment");
             }
             if($messageId) {
                 if($isGroupMessage == true) {
                     $info = $this->ctx->SiteGroupMessageTable->checkUserCanLoadImg($messageId, $this->userId);
+                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
                     if(!$info) {
                         throw new Exception("no group premission, can't load img");
                     }
@@ -48,11 +44,12 @@ class Http_File_DownloadFileController extends \HttpBaseController
                         throw new Exception("no premission, can't load img");
                     }
                     $info = array_shift($info);
-
+                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
                     if($info['fromUserId'] != $this->userId && $info['toUserId'] != $this->userId) {
                         throw new Exception("no read permission, can't load img");
                     }
                 }
+                error_log("mimitype ==========================".$mimeType);
                 $contentJson = $info['content'];
                 $contentArr  = json_decode($contentJson, true);
                 $url = $contentArr['url'];

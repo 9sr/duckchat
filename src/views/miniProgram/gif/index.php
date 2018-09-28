@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Gif扩展</title>
+    <title>GIF小程序</title>
     <!-- Latest compiled and minified CSS -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script type="text/javascript" src="../../../public/js/jquery.min.js"></script>
@@ -80,6 +80,13 @@
 <script src="../../../public/js/im/zalyClient.js"></script>
 <script src="../../../public/js/im/zalyBaseWs.js"></script>
 
+<script id="tpl-gif" type="text/html">
+    <div class='gif_content_div'>
+        <img id="gifId_{{num}}" src='{{gifUrl}}' class='gif' gifId='{{gifId}}' isDefault='{{isDefault}}'>
+        <img src='../../public/img/msg/btn-x.png' class='del_gif  {{gifId}}' gifId="{{gifId}}">
+    </div>
+</script>
+
 <script type="text/javascript">
     gifs  = '<?php echo $gifs;?>';
     gifArr = JSON.parse(gifs);
@@ -102,9 +109,11 @@
             var gif = gifArr[i];
             var gifId = "";
             var gifUrl="";
+            var isDefault=0;
             try{
                 gifId=gif.gifId;
                 gifUrl=gif.gifUrl;
+                isDefault=gif.isDefault;
             }catch (error) {
                 gifId="";
             }
@@ -124,9 +133,12 @@
                 html += "<div class='gif_content_div'><img src='../../../public/img/add.png' class='add_gif'>  " +
                     "<input id='gifFile' type='file' onchange='uploadFile(this)' accept='image/gif;capture=camera' style='display: none;'></div>";
             }
-            html += "<div class='gif_content_div'><img id=gifId_"+i+" src='"+gifUrl+"' class='gif' gifId='"+gifId+"'>" +
-                "<img src='../../public/img/msg/btn-x.png' class='del_gif  "+gifId+"' gifId='"+gifId+"'></div>";
-
+            html +=template("tpl-gif", {
+                num:i,
+                gifUrl:gifUrl,
+                gifId:gifId,
+                isDefault:isDefault
+            })
 
             if(i==4) {
                 html +="</div><div class='gif_sub_div'>";
@@ -152,8 +164,6 @@
     currentGifDivNum = 0;
 
     var flag = false;
-
-
 
     function uploadFile(obj) {
         if (obj) {
@@ -247,30 +257,6 @@
         }
     });
 
-    var timeOutEvent=0;
-    $(".gif").on({
-            touchstart: function(e){
-                var gifId = $(this).attr("gifId");
-                timeOutEvent = setTimeout("longEnterPress('"+gifId+"')",500);
-                e.preventDefault();
-            },
-            touchmove: function(){
-                clearTimeout(timeOutEvent);
-                timeOutEvent = 0;
-            },
-            touchend: function(){
-                clearTimeout(timeOutEvent);
-                if(timeOutEvent!=0){
-                    var src = $(this).attr("src");
-                    autoMsgImgSize(src, 200, 300);
-                    var gifId = $(this).attr("gifId");
-                    sendGifMsg(gifId);
-                    setTimeout(function(){ flag = false; }, 100);
-                }
-                return false;
-            }
-        })
-
 
     function longEnterPress(gifId){
         timeOutEvent = 0;
@@ -283,6 +269,36 @@
         }
         $("."+gifId)[0].style.display="flex";
     }
+
+    var timeOutEvent=0;
+    $(".gif").on({
+            touchstart: function(e){
+                var gifId = $(this).attr("gifId");
+                var isDefault = $(this).attr("isDefault");
+                if(isDefault != "0") {
+                    timeOutEvent = setTimeout("longEnterPress('"+gifId+"')",500);
+                }
+                e.preventDefault();
+            },
+            touchmove: function(){
+                clearTimeout(timeOutEvent);
+                timeOutEvent = 0;
+            },
+            touchend: function(){
+                clearTimeout(timeOutEvent);
+                if(timeOutEvent!=0){
+                    var src = $(this
+                    ).attr("src");
+                    autoMsgImgSize(src, 200, 300);
+                    var gifId = $(this).attr("gifId");
+                    sendGifMsg(gifId);
+                    setTimeout(function(){ flag = false; }, 100);
+                }
+                return false;
+            }
+        })
+
+
 
 
     $(".del_gif").on("click", function () {

@@ -2478,7 +2478,8 @@ $(document).on("click", ".right_msg_file_div", function () {
     var fileId = $(this).attr("url");
     var msgId = $(this).attr("msgId");
     var currentRoom = localStorage.getItem(chatSessionIdKey);
-    var isGroupMessage = localStorage.getItem(currentRoom) == GROUP_MSG ? 0 : 1;
+    var isGroupMessage = localStorage.getItem(currentRoom) == GROUP_MSG ? 1 : 0;
+
     var requestUrl = downloadFileUrl +  "&fileId="+fileId + "&returnBase64=0&isGroupMessage="+isGroupMessage+"&messageId="+msgId;
     window.location.href = requestUrl;
 });
