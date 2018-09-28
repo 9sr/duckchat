@@ -25,7 +25,6 @@ class Duckchat_Session_ProfileController extends Duckchat_MiniProgramController
     {
         try {
             $duckchatSessionId = $request->getEncryptedSessionId();
-            error_log( "duckchatSessionId ==".$duckchatSessionId);
 
             $pluginId = $this->pluginMiniProgramId;
             $pluginProfile = $this->getPluginProfile($pluginId);
@@ -46,9 +45,6 @@ class Duckchat_Session_ProfileController extends Duckchat_MiniProgramController
             $sessionId = $this->ctx->ZalyAes->decrypt($duckchatSessionId, $authKey);
 
             if (empty($sessionId)) {
-                error_log(" authKey ==".$authKey);
-                error_log(" pluginId ===".$pluginId);
-
                 throw new Exception("decrypt user sesssionId is empty");
             }
 
