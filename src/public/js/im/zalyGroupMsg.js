@@ -2451,10 +2451,13 @@ $(document).on("click", ".msg_img", function () {
 $(document).on("click", ".right_msg_file_div", function () {
     var fileId = $(this).attr("url");
     var msgId = $(this).attr("msgId");
+    var originName = $(this).attr("originName");
     var currentRoom = localStorage.getItem(chatSessionIdKey);
     var isGroupMessage = localStorage.getItem(currentRoom) == GROUP_MSG ? 1 : 0;
-
     var requestUrl = downloadFileUrl +  "&fileId="+fileId + "&returnBase64=0&isGroupMessage="+isGroupMessage+"&messageId="+msgId;
-    console.log("request url download ==="+requestUrl);
-    window.location.href = requestUrl;
+    var downloadLink = document.createElement('a');
+    downloadLink.download = originName;
+    downloadLink.href =requestUrl;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
 });
