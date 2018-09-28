@@ -610,15 +610,6 @@ function compare(msg1, msg2) {
     return 0;
 }
 
-
-function getMsgTime()
-{
-    var date = new Date(); //获取一个时间对象
-    var minutes =  date.getMinutes()>=10 ? date.getMinutes():"0"+date.getMinutes();
-    var month = date.getMonth() >=10 ? date.getMonth() : "0"+date.getMonth();
-    return date.getFullYear() + '-' + month + '-' +date.getDate() + " " + date.getHours()+":"+minutes;  // 获取完整的年份(4位,1970)
-}
-
 function getMsgTimeByMsg(time)
 {
     time = Number(time);
@@ -730,6 +721,34 @@ function isCheckEndMsgDialog()
     return false;
 }
 
+function getMessageDocumentSize(size)
+{
+    if(Number(size) < 1024) {
+        size = size+" bytes";
+    } else if(Number(size)>=1024&&Number(size)<Number(1024*1024)) {
+        size = Math.ceil(size/1024)+" KB";
+    }  else if(Number(size)>=Number(1024*1024) && Number(size)<Number(1024*1024*1024)) {
+        size = Math.ceil(size/(1024*1024))+" M";
+    } else {
+        size = Math.ceil(size/(1024*1024*1024))+" G";
+    }
+    return size;
+}
+
+function getMessageDocumentName(name)
+{
+    if(name.length>10) {
+        var names = name.split('.');
+        var ext = names.pop();
+        var extLength = ext.length;
+        var prefix = names.shift();
+        if(prefix.length>Number((10-extLength-1))) {
+            prefix = prefix.substr(0, Number((10-extLength-1)));
+        }
+        name = prefix+"."+ext;
+    }
+    return name;
+}
 function appendMsgHtml(msg)
 {
     if(msg == undefined) {
@@ -779,8 +798,8 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageDocument:
-                var size = msg['document'].size;
-                var fileName =  msg['document'].name;
+                var size = getMessageDocumentSize(msg['document'].size);
+                var fileName =  getMessageDocumentName(msg['document'].name);
                 var url = msg['document'].url;
                 html = template("tpl-send-msg-file", {
                     roomType: msg.roomType,
@@ -827,7 +846,7 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageWebNotice:
-                html =  msg['notice'].code;
+                html =  msg['webNotice'].code;
                 break;
             case MessageType.MessageWeb :
                 var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
@@ -915,8 +934,8 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageDocument:
-                var size = msg['document'].size;
-                var fileName =  msg['document'].name;
+                var size = getMessageDocumentSize(msg['document'].size);
+                var fileName =  getMessageDocumentName(msg['document'].name);
                 var url = msg['document'].url;
                 html = template("tpl-receive-msg-file", {
                     roomType: msg.roomType,
@@ -925,9 +944,8 @@ function appendMsgHtml(msg)
                     url:url,
                     msgTime : msgTime,
                     msgStatus:msgStatus,
-                    avatar:userAvatar,
-                    userAvatarSrc:userAvatarSrc,
-                    userId:token,
+                    avatar:msg.userAvatar,
+                    userId:msg.fromUserId,
                     fileSize:size,
                     fileName:fileName,
                     timeServer:msg.timeServer
@@ -983,9 +1001,8 @@ function appendMsgHtml(msg)
                     msgTime : msgTime,
                     msgStatus:msgStatus,
                     msgContent:msgContent,
-                    avatar:userAvatar,
-                    userAvatarSrc:userAvatarSrc,
-                    userId:token,
+                    avatar:msg.userAvatar,
+                    userId :msg.fromUserId,
                     timeServer:msg.timeServer
                 });
                 break;

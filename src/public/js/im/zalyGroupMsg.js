@@ -1093,31 +1093,6 @@ function sortRoomList(jqElement)
     }
 }
 
-function handleMsgResult(result)
-{
-    var groupId = localStorage.getItem(chatSessionIdKey);
-    var pointerKey = groupId+"_pointer"
-    var localPointer = localStorage.getItem(pointerKey);
-    if(localPointer == null) {
-        localPointer = 1;
-    }
-    localStorage.setItem(pointerKey, localPointer);
-}
-
-function getMsgTime()
-{
-    var date = new Date(); //获取一个时间对象
-    return date.getFullYear() + '-' + date.getMonth() + '-' +date.getDate() + " " + date.getHours()+":"+date.getMinutes();  // 获取完整的年份(4位,1970)
-}
-
-function getMsgHour()
-{
-    var date = new Date(); //获取一个时间对象
-    var minutes = date.getMinutes()>9 ? date.getMinutes() : "0"+date.getMinutes();
-    return date.getHours() + ":" + minutes;  // 获取完整的年份(4位,1970)
-
-}
-
 $(document).on("click", ".quit-group", function () {
     if(confirm($.i18n.map['quitGroupJsTip'])) {
         var groupId = localStorage.getItem(chatSessionIdKey);
@@ -1150,7 +1125,6 @@ function handleDeleteOrQuitGroup() {
     removeRoomFromRoomList(groupId);
     getRoomList();
 }
-
 
 
 window.onresize = function(){
@@ -2481,5 +2455,6 @@ $(document).on("click", ".right_msg_file_div", function () {
     var isGroupMessage = localStorage.getItem(currentRoom) == GROUP_MSG ? 1 : 0;
 
     var requestUrl = downloadFileUrl +  "&fileId="+fileId + "&returnBase64=0&isGroupMessage="+isGroupMessage+"&messageId="+msgId;
+    console.log("request url download ==="+requestUrl);
     window.location.href = requestUrl;
 });

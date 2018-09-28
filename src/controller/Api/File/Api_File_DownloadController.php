@@ -10,6 +10,11 @@
 class Api_File_DownloadController extends \BaseController
 {
     private $classNameForRequest  = '\Zaly\Proto\Site\ApiFileDownloadRequest';
+    private $notMsgMimeType = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+    ];
 
     public function rpcRequestClassName()
     {
@@ -36,6 +41,10 @@ class Api_File_DownloadController extends \BaseController
             $messageId = $request->getMessageId();
             $isGroupMessage = $request->getIsGroupMessage();
 
+            $mimeType = $this->ctx->File_Manager->contentType($fileId);
+            if(!in_array($mimeType, $this->notMsgMimeType) && !$messageId) {
+                throw new Exception("it's msg attachment");
+            }
             if($messageId) {
                 if($isGroupMessage == true) {
                     $info = $this->ctx->SiteGroupMessageTable->checkUserCanLoadImg($messageId, $this->userId);

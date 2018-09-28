@@ -10,7 +10,7 @@
 class Http_File_DownloadFileController extends \HttpBaseController
 {
     private $documentMimeType = "application/octet-stream";
-    private $msgMimeType = [
+    private $notMsgMimeType = [
         "image/jpeg",
         "image/jpg",
         "image/png",
@@ -24,17 +24,16 @@ class Http_File_DownloadFileController extends \HttpBaseController
         $messageId = isset($_GET['messageId']) ? $_GET['messageId'] : "";
         $returnBase64 = $_GET['returnBase64'];
         try{
-            if(!in_array($mimeType, $this->msgMimeType) && !$messageId) {
+            if(!in_array($mimeType, $this->notMsgMimeType) && !$messageId) {
                 throw new Exception("it's msg attachment");
             }
             if($messageId) {
                 if($isGroupMessage == true) {
                     $info = $this->ctx->SiteGroupMessageTable->checkUserCanLoadImg($messageId, $this->userId);
-                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
+//                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
                     if(!$info) {
                         throw new Exception("no group premission, can't load img");
                     }
-                    $this->ctx->Wpf_Logger->info($tag, "info ==" . json_encode($info) );
                 } else {
 
                     ////TODO u2 can load img
@@ -44,12 +43,13 @@ class Http_File_DownloadFileController extends \HttpBaseController
                         throw new Exception("no premission, can't load img");
                     }
                     $info = array_shift($info);
-                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
+//                    $mimeType = $info['msgType'] == \Zaly\Proto\Core\MessageType::MessageDocument ? $this->documentMimeType : $mimeType;
                     if($info['fromUserId'] != $this->userId && $info['toUserId'] != $this->userId) {
                         throw new Exception("no read permission, can't load img");
                     }
                 }
-                error_log("mimitype ==========================".$mimeType);
+                $this->ctx->Wpf_Logger->error($tag, "download file info ==" . json_encode($info) );
+
                 $contentJson = $info['content'];
                 $contentArr  = json_decode($contentJson, true);
                 $url = $contentArr['url'];

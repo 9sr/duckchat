@@ -9,9 +9,6 @@
 
 class Http_File_UploadWebController extends \HttpBaseController
 {
-
-    private $defaultImgSize = 5*1024*1024;///5M
-    ///
     public function index()
     {
         $originFileName = "";
@@ -25,7 +22,7 @@ class Http_File_UploadWebController extends \HttpBaseController
                 throw new Exception( "文件类型不符合要求，上传失败");
             }
             $file = $_FILES['file'];
-            $this->ctx->Wpf_Logger->error($tag, "shaoye files ifno =" . json_encode($_FILES));
+            $this->ctx->Wpf_Logger->error($tag, "shaoye files info =" . json_encode($_FILES));
 
             if($file['error'] != UPLOAD_ERR_OK) {
                 throw new Exception("上传失败");
@@ -57,7 +54,7 @@ class Http_File_UploadWebController extends \HttpBaseController
         if($type == \Zaly\Proto\Core\FileType::FileDocument) {
             $name = $file['name'];
             $ext = array_pop(explode(".", $name));
-            $fileName = $this->ctx->File_Manager->saveDocument($tmpFile, $ext, false);
+            $fileName = $this->ctx->File_Manager->saveDocument($tmpFile, $ext);
         } else{
             $fileName = $this->ctx->File_Manager->saveFile($tmpFile);
         }
