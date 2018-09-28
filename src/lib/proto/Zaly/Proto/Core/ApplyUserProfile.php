@@ -22,9 +22,19 @@ class ApplyUserProfile extends \Google\Protobuf\Internal\Message
      */
     private $greetings = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Zaly\Proto\Core\PublicUserProfile $public
+     *     @type string $greetings
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\User::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

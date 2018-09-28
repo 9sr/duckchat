@@ -18,9 +18,18 @@ class ApiGwConfigResponse extends \Google\Protobuf\Internal\Message
      */
     private $socketIdSalt = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $socketIdSalt
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGwConfig::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

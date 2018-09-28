@@ -32,9 +32,22 @@ class Version extends \Google\Protobuf\Internal\Message
      */
     private $proto = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $first
+     *     @type int $second
+     *     @type int $third
+     *     @type int $proto
+     *           proto-version
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Site::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

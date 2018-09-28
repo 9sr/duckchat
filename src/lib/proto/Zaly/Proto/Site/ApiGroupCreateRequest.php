@@ -21,9 +21,18 @@ class ApiGroupCreateRequest extends \Google\Protobuf\Internal\Message
      */
     private $groupName = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $groupName
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGroupCreate::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

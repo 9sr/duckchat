@@ -52,9 +52,39 @@ class Message extends \Google\Protobuf\Internal\Message
     protected $toRoom;
     protected $maybe;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $msgId
+     *           basic info
+     *     @type string $fromUserId
+     *     @type int|string $pointer
+     *     @type int|string $timeServer
+     *     @type int $roomType
+     *           type info
+     *     @type string $toUserId
+     *     @type string $toGroupId
+     *     @type int $type
+     *           body info
+     *     @type \Zaly\Proto\Core\TextMessage $text
+     *     @type \Zaly\Proto\Core\ImageMessage $image
+     *     @type \Zaly\Proto\Core\AudioMessage $audio
+     *     @type \Zaly\Proto\Core\WebMessage $web
+     *     @type \Zaly\Proto\Core\StatusMessage $status
+     *     @type \Zaly\Proto\Core\NoticeMessage $notice
+     *     @type \Zaly\Proto\Core\WebNoticeMessage $webNotice
+     *     @type \Zaly\Proto\Core\DocumentMessage $document
+     *     @type \Zaly\Proto\Core\VideoMessage $video
+     *     @type bool $treatPointerAsU2Pointer
+     *           reverts 15-50
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Message::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

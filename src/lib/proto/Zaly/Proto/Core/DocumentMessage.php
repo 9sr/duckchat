@@ -18,6 +18,8 @@ class DocumentMessage extends \Google\Protobuf\Internal\Message
      */
     private $url = '';
     /**
+     *bytes
+     *
      * Generated from protobuf field <code>int32 size = 2;</code>
      */
     private $size = 0;
@@ -26,9 +28,21 @@ class DocumentMessage extends \Google\Protobuf\Internal\Message
      */
     private $name = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $url
+     *     @type int $size
+     *          bytes
+     *     @type string $name
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Message::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -54,6 +68,8 @@ class DocumentMessage extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     *bytes
+     *
      * Generated from protobuf field <code>int32 size = 2;</code>
      * @return int
      */
@@ -63,6 +79,8 @@ class DocumentMessage extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     *bytes
+     *
      * Generated from protobuf field <code>int32 size = 2;</code>
      * @param int $var
      * @return $this

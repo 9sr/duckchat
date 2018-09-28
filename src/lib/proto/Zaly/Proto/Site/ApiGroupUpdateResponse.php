@@ -26,9 +26,20 @@ class ApiGroupUpdateResponse extends \Google\Protobuf\Internal\Message
      */
     private $memberType = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Zaly\Proto\Core\PublicGroupProfile $profile
+     *     @type bool $isMute
+     *     @type int $memberType
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGroupUpdate::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

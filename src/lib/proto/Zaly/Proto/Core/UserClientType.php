@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\UserClientType</code>
+ * Protobuf type <code>core.UserClientType</code>
  */
 class UserClientType
 {

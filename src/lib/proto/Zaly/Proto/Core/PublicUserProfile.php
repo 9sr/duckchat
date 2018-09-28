@@ -44,9 +44,25 @@ class PublicUserProfile extends \Google\Protobuf\Internal\Message
      */
     private $realNickname = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $userId
+     *     @type string $loginName
+     *     @type string $nickname
+     *           nickname or alias nickname
+     *     @type string $nicknameInLatin
+     *     @type string $avatar
+     *     @type int $availableType
+     *     @type string $realNickname
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\User::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

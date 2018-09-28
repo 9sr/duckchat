@@ -26,9 +26,21 @@ class ApiFriendSearchResponse extends \Google\Protobuf\Internal\Message
      */
     private $totalCount = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Zaly\Proto\Core\FriendUserProfile[]|\Google\Protobuf\Internal\RepeatedField $friends
+     *          user friend list
+     *     @type int $totalCount
+     *          total count of user's friends
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiFriendSearch::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

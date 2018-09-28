@@ -35,9 +35,21 @@ class ApiSiteLoginRequest extends \Google\Protobuf\Internal\Message
      */
     private $isRegister = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $preSessionId
+     *     @type string $devicePubkPem
+     *     @type string $loginName
+     *     @type bool $isRegister
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiSiteLogin::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

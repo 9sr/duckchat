@@ -21,9 +21,18 @@ class ApiPluginListRequest extends \Google\Protobuf\Internal\Message
      */
     private $usageType = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $usageType
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiPluginList::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

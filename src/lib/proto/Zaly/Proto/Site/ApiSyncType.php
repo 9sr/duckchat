@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Site;
 
 /**
- * Protobuf enum <code>Site\ApiSyncType</code>
+ * Protobuf type <code>site.ApiSyncType</code>
  */
 class ApiSyncType
 {

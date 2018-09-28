@@ -26,9 +26,20 @@ class ApiGroupSetSpeakerRequest extends \Google\Protobuf\Internal\Message
      */
     private $speakerUserIds;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $groupId
+     *     @type int $setType
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $speakerUserIds
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiGroupSetSpeaker::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Site;
 
 /**
- * Protobuf enum <code>Site\SetSpeakerType</code>
+ * Protobuf type <code>site.SetSpeakerType</code>
  */
 class SetSpeakerType
 {

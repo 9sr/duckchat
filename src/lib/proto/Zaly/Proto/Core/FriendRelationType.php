@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\FriendRelationType</code>
+ * Protobuf type <code>core.FriendRelationType</code>
  */
 class FriendRelationType
 {
