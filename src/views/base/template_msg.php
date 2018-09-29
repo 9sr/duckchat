@@ -537,8 +537,14 @@
     <div class="app_download_header">分享站点</div>
     <div class="app_download_subheader">随时随地享受畅聊体验，同时还有语音聊天功能等你来哦！</div>
     <div id="qrcodeCanvas"></div>
-    <div class="download_button_div">
-        <button class="download_ios"><img src="../../public/img/msg/ios.png" style="width: 1.4rem;height:2rem;margin-right: 1.9rem;">iOS</button> <button class="download_android"><img src="../../public/img/msg/android.png" style="width: 2rem;height:2rem;">Android</button>
+    <div class="download_button_div" style="margin-left:26rem;margin-top:2rem">
+        <div class="ios_info">
+            <img src="../../public/img/msg/ios.png" style="width: 2.1rem;height:2.8rem;margin-right:1rem;">iOS
+
+        </div>
+        <div class="android_info">
+            <img src="../../public/img/msg/android.png" style="width: 2.3rem;height:2.8rem;margin-right: 1rem;">Android
+        </div>
     </div>
 </script>
 

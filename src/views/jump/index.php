@@ -153,7 +153,25 @@
 
     isPc();
 
+    function getOsType() {
+        var clientType;
+        var u = navigator.userAgent;
+        if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+            clientType =  'Android';
+        } else if (u.indexOf('iPhone') > -1) {
+            clientType = 'IOS';
+        } else {
+            clientType = "PC";
+        }
+        return clientType;
+    }
+
     $(document).on("click", ".download_app" , function () {
+        var clientType = getOsType();
+        if(clientType == "IOS") {
+            window.location.href = "https://itunes.apple.com/cn/app/duckchat/id1434153512?l=en&mt=8";
+            return ;
+        }
         window.location.href = "http://duckchat.akaxin.com";
     });
 
