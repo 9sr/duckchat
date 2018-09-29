@@ -1360,25 +1360,15 @@ $(document).on("click", ".group-user-img", function(){
 function checkGroupMemberSpeakerType(userId, groupProfile)
 {
     var users;
-    var speakers=false;
+    var speakersAll=false;
     var usersJsonStr = localStorage.getItem(speakerUserIdsKey+groupProfile.id);
     if(groupProfile.hasOwnProperty("speakers")) {
-        speakers = groupProfile.speakers;
+        speakersAll = groupProfile.speakers;
     }
     var isCanSpeak = false;
 
-    if((usersJsonStr == false || usersJsonStr == "undefined") && (speakers == false)) {
+    if((usersJsonStr == false || usersJsonStr == "undefined") && (speakersAll == false)) {
         return isCanSpeak;
-    }
-
-    ////以群资料为主，
-    var length = speakers.length;
-    for(var i=0; i<length; i++) {
-        var speakers = speakers[i];
-        console.log("speakerss ==="+JSON.stringify(speakers));
-        if(speakers.userId == userId) {
-            isCanSpeak = true;
-        }
     }
 
    if(usersJsonStr != false && usersJsonStr != "undefined" && usersJsonStr != null) {

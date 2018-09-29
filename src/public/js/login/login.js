@@ -1,5 +1,25 @@
 
-var languageName = navigator.language == "en-US" ? "en" : "zh";
+
+UserClientLangZH = "1";
+UserClientLangEN = "0";
+
+function getLanguage() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return UserClientLangZH;
+    }
+    return UserClientLangEN;
+}
+
+function getLanguageName() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return "zh";
+    }
+    return "en";
+}
+var languageName = getLanguageName();
+
 
 jQuery.i18n.properties({
     name: "lang",

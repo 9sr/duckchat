@@ -9,6 +9,7 @@
     <script type="text/javascript" src="../../../public/js/jquery.min.js"></script>
     <script src="../../../public/js/zalyjsNative.js"></script>
     <script src="../../../public/js/template-web.js"></script>
+
     <style>
         body, html {
             font-size: 10.66px;
@@ -56,16 +57,31 @@
 </div>
 
 <script type="text/javascript">
+
+    function getLanguage() {
+        var nl = navigator.language;
+        if ("zh-cn" == nl || "zh-CN" == nl) {
+            return UserClientLangZH;
+        }
+        return UserClientLangEN;
+    }
+
+    function getLanguageName() {
+        var nl = navigator.language;
+        if ("zh-cn" == nl || "zh-CN" == nl) {
+            return "zh";
+        }
+        return "en";
+    }
+
     roomType = $(".roomType").val();
     fromUserId = $(".fromUserId").val();
     toId = $(".toId").val();
-    UserClientLangZH = "1";
-    UserClientLangEN = "0";
     var imgObject = {};
     var saveGifType = "save_gif";
 
-    var languageName = navigator.language == "en-US" ? "en" : "zh";
-    var languageNum = languageName == "zh" ? 1 : UserClientLangEN;
+    var languageNum = getLanguage();
+
     var src = $("#gifInfo").attr("src");
     autoImgSize(src, 200, 200);
 

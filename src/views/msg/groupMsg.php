@@ -54,8 +54,6 @@
 
 <script type="text/javascript">
 
-    languageName = navigator.language == "en-US" ? "en" : "zh";
-
     $(window).resize(function () {
         setFontSize();
     });

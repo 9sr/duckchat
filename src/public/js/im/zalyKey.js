@@ -192,12 +192,27 @@ reqTimeout = 1000*60*5;///5分钟
 defaultUserName = "匿名";
 
 downloadFileUrl = "./index.php?action=http.file.downloadFile";
-languageName = navigator.language == "en-US" ? "en" : "zh";
+
+function getLanguage() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return UserClientLangZH;
+    }
+    return UserClientLangEN;
+}
+
+function getLanguageName() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return "zh";
+    }
+    return "en";
+}
+
+languageName = getLanguageName();
+languageNum = getLanguage();
 
 uploadFileUrl = './index.php?action=http.file.uploadWeb';
-
-languageNum = languageName == "en" ? UserClientLangEN : UserClientLangZH;
-
 isSyncingMsg = false;
 isPreSyncingMsgTime="";
 

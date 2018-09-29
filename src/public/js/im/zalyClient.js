@@ -16,9 +16,9 @@ function handleClientSendRequest(action, reqData, callback)
         var header = {};
         header[HeaderSessionid] = sessionId;
         header[HeaderHostUrl] = originDomain;
-        header[HeaderUserClientLang] = languageName  == "en-US" ? "0" : "1";
+        header[HeaderUserClientLang] = getLanguage();
         header[HeaderUserAgent] = navigator.userAgent;
-
+        header[HeaderUserAgent] = navigator.userAgent;
         var packageId = localStorage.getItem(PACKAGE_ID);
 
         var transportData = {
