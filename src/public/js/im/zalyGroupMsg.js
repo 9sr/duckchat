@@ -457,7 +457,6 @@ $(function () {
 $(document).on("click", ".l-sb-item", function(){
     var currentActive = $(".left-sidebar").find(".l-sb-item-active");
     $(currentActive).removeClass("l-sb-item-active");
-
     $(this).addClass("l-sb-item-active");
 
     var dataType  = $(this).attr("data");
@@ -967,7 +966,7 @@ function addActiveForRoomList(jqElement)
     jqElement.addClass("chatsession-row-active");
 }
 
-function getGroupProfile(groupId, isForceSend)
+function getGroupProfile(groupId)
 {
     var groupInfoKey = profileKey + groupId;
     var groupProfileStr = localStorage.getItem(groupInfoKey);
@@ -984,7 +983,7 @@ function getGroupProfile(groupId, isForceSend)
         }
     }
 
-    if(reqProfileTime != false && reqProfileTime != null && ((nowTimestamp-reqProfileTime)<reqTimeout) && isForceSend == false) {
+    if(reqProfileTime != false && reqProfileTime != null && ((nowTimestamp-reqProfileTime)<reqTimeout) ) {
         return false;
     }
     sessionStorage.setItem(groupInfoReqKey, nowTimestamp);
@@ -2024,7 +2023,7 @@ function handleAddSpeaker()
     }
     addSpeakerInfo=[];
     var groupId = localStorage.getItem(chatSessionIdKey);
-    getGroupProfile(groupId, true);
+    sendGroupProfileReq(groupId, handleGetGroupProfile);
 }
 
 $(document).on("click", ".add_speaker_btn", function () {
@@ -2060,7 +2059,7 @@ function handleRemoveSpeaker()
     deleteSpeakerInfo=[];
 
     var groupId = localStorage.getItem(chatSessionIdKey);
-    getGroupProfile(groupId, true);
+    sendGroupProfileReq(groupId, handleGetGroupProfile);
 }
 
 $(document).on("click", ".remove_speaker_btn", function () {
