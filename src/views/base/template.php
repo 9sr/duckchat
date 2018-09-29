@@ -51,7 +51,9 @@
             <div class="remove-all-speaker" data-local-value="removeAllSpeakerTip"> 移除所有发言人 </div>
         </div>
         <div class="speaker-line"></div>
-        <div class="speaker-people-div" style="width: 100%;">
+        <div class="speaker-content">
+            <div class="speaker-people-div" style="width: 100%;">
+            </div>
         </div>
 
     </div>

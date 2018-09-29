@@ -589,7 +589,6 @@ html, body{
     height:59rem;
     background:rgba(255,255,255,1);
     box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
-    overflow-y: scroll;
 }
 
 .sub-speaker-div{
@@ -627,6 +626,11 @@ html, body{
     height:0.09rem;
     background:rgba(243,243,243,1);
     margin-left: 2rem;
+}
+
+.speaker-content{
+    height:48rem;
+    overflow-y: scroll;
 }
 
 .speaker-group-member-div {

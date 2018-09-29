@@ -183,7 +183,7 @@ function getUnselectMemberListHtml(results)
     if(list) {
         $(".pw-left").html("");
         var i;
-        unselectMemberOffset = (unselectMemberOffset+defaultCountKey);
+        unselectMemberOffset = Number(unselectMemberOffset+defaultCountKey);
         var length = list.length;
         for(i=0; i<length ; i++) {
             var user = list[i];
@@ -257,7 +257,7 @@ function initGroupRemoveMemberList(results)
 {
     var list = results.list;
     if(list) {
-        unselectRemoveMemberOffset = (unselectRemoveMemberOffset+defaultCountKey);
+        unselectRemoveMemberOffset = Number(unselectRemoveMemberOffset+defaultCountKey);
         var length = list.length;
         var html = "";
         for(i=0; i<length ; i++) {
@@ -362,7 +362,7 @@ function initSpeakerGroupMemberList(results)
 {
     var list = results.list;
     if(list) {
-        unselectSpeakerMemberOffset = (unselectSpeakerMemberOffset+defaultCountKey);
+        unselectSpeakerMemberOffset = Number(unselectSpeakerMemberOffset+defaultCountKey);
         var length = list.length;
         var html = "";
         var groupId = localStorage.getItem(chatSessionIdKey);
@@ -425,7 +425,7 @@ $(".group_speakers").on("click", function () {
     if(isAdmin) {
         $(".speaker-group-member").remove();
         var html = template("tpl-group-member-for-speaker", {});
-        $("#group-speaker-people").append(html);
+        $(".speaker-content").append(html);
         $(".speaker-group-member-div").html('');
         getGroupMembers(unselectSpeakerMemberOffset, initSpeakerGroupMemberList);
     }
@@ -433,11 +433,11 @@ $(".group_speakers").on("click", function () {
 
 $(function () {
     ////加载设置群成员列表
-    $('.speaker-people-div').scroll(function(){
-        var pwLeft = $(".speaker-group-member-div")[0];
+    $('.speaker-content').scroll(function(){
+        var pwLeft = $(".speaker-content")[0];
         var ch  = pwLeft.clientHeight;
         var sh = pwLeft.scrollHeight;
-        var st = $('.speaker-group-member-div').scrollTop();
+        var st = $('.speaker-content').scrollTop();
 
         ////文档的高度-视口的高度-滚动条的高度
         if((sh - ch - st) == 0){
@@ -446,7 +446,7 @@ $(function () {
             var reqData = {
                 "groupId": groupId,
                 "offset" : unselectSpeakerMemberOffset,
-                "count"  : 5
+                "count"  : defaultCountKey
             }
             handleClientSendRequest(action, reqData, initSpeakerGroupMemberList);
         }
@@ -683,7 +683,7 @@ function  getFriendListHtml(results)
     }
     var u2List = results.friends;
     if(u2List) {
-        friendOffset = (friendOffset + defaultCountKey);
+        friendOffset = Number(friendOffset + defaultCountKey);
         var u2Length = u2List.length;
         for(i=0; i<u2Length; i++) {
             var u2 = u2List[i].profile;
@@ -744,7 +744,7 @@ function getGroupListHtml(results) {
     }
     var groupList = results.list;
     if(groupList) {
-        groupOffset = (groupOffset + defaultCountKey);
+        groupOffset = Number(groupOffset + defaultCountKey);
         var groupLength = groupList.length;
         html = "";
         for(i=0; i<groupLength; i++) {
@@ -2245,7 +2245,7 @@ function getApplyFriendListHtml(results)
     var html = "";
     setFriendListTip(results.totalCount);
     if(lists) {
-        applyFriendListOffset = (applyFriendListOffset + defaultCountKey);
+        applyFriendListOffset = Number(applyFriendListOffset + defaultCountKey);
         var length = lists.length;
         for (i = 0; i < length; i++) {
             var applyInfo = lists[i];
