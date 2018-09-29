@@ -1185,11 +1185,13 @@ html, body{
 
 .mute {
     position: absolute;
-
     bottom: 1rem;
     right: 2rem;
     top: 4rem;
+    width: 1.4rem;
+    height: 1.5rem;
 }
+
 .mute_div {
     background-color: red;
     width: 1rem;
