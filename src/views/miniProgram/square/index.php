@@ -130,6 +130,79 @@
             color: rgba(255, 255, 255, 1);
         }
 
+        /* mask and new window */
+        .wrapper-mask {
+            background: rgba(0, 0, 0, 0.8);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            position: fixed;
+            z-index: 9999;
+            overflow: hidden;
+            visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #popup-group {
+            width: 320px;
+            height: 300px;
+            background: rgba(255, 255, 255, 1);
+            border-radius: 10px;
+        }
+
+        .header_tip_font {
+            justify-content: center;
+            text-align: center;
+            margin-top: 29px;
+            height: 24px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #4C3BB1;
+            font-family: PingFangSC;
+            /*line-height: 3.75rem;*/
+        }
+
+        .popup-group-input {
+            background-color: #ffffff;
+            border-style: none;
+            outline: none;
+            /*height: 1.88rem;*/
+            font-size: 20px;
+            font-family: PingFangSC-Regular;
+            /*color: rgba(205, 205, 205, 1);*/
+            line-height: 20px;
+            margin-top: 65px;
+            width: 250px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .create_button,
+        .create_button:hover,
+        .create_button:focus,
+        .create_button:active {
+            margin-top: 45px;
+            width: 250px;
+            height: 50px;
+            background: rgba(76, 59, 177, 1);
+            border-width: 0px;
+            border-radius: 7px;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .line {
+            width: 250px;
+            height: 1px;
+            background: rgba(201, 201, 201, 1);
+            border: 0.1px solid rgba(201, 201, 201, 1);
+            overflow: hidden;
+            text-align: center;
+            margin: 0 auto;
+        }
 
     </style>
 
@@ -139,6 +212,8 @@
 
 <body id="square-body">
 
+<div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
+
 <div class="wrapper" id="wrapper">
     <div class="layout-all-row">
 
@@ -146,7 +221,7 @@
 
             <?php foreach ($userList as $i => $user) { ?>
                 <!--                <div class="item-row user-id-item" userId="--><?php //echo $user['userId'] ?><!--">-->
-                <div class="item-row" userId="<?php echo $user['userId'] ?>" avatar="<?php echo $user['avatar'] ?>">
+                <div class="item-row">
                     <div class="item-header">
                         <img class="user-avatar-image"
                              src="/_api_file_download_/?fileId=<?php echo $user['avatar'] ?>"
@@ -161,7 +236,7 @@
                             <div class="item-body-tail">
 
                                 <?php if (!$user['isFollow']) { ?>
-                                    <button class="addButton" onclick="applyAddFriend('<?php echo $user['userId'] ?>')">
+                                    <button class="addButton applyButton" userId="<?php echo $user['userId'] ?>">
                                         添加好友
                                     </button>
                                 <?php } ?>
@@ -180,8 +255,42 @@
 
 </div>
 
+
+<div class="wrapper-mask" id="wrapper-mask" style="display: none;"></div>
+
+<div class="popup-template" style="display:none;">
+
+    <div class="config-hidden" id="popup-group">
+
+        <div class="flex-container">
+            <div class="header_tip_font popup-group-title"></div>
+        </div>
+
+        <div class="" style="text-align: center">
+            <input type="text" class="popup-group-input"
+                   data-local-placeholder="enterGroupNamePlaceholder" placeholder="please input">
+        </div>
+
+        <div class="line"></div>
+
+        <div class="" style="text-align:center;">
+            <?php if ($lang == "1") { ?>
+                <button id="update-user-button" type="button" class="create_button" data=""
+                        onclick="sendRequest();"> 发送
+                </button>
+            <?php } else { ?>
+                <button id="update-user-button" type="button" class="create_button" data=""
+                        onclick="sendRequest();">Send
+                </button>
+            <?php } ?>
+        </div>
+
+    </div>
+
+</div>
+
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>
+<!--<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>-->
 
 <script type="text/javascript">
 
@@ -299,35 +408,90 @@
 
 <script type="text/javascript">
 
-    var currentPageNum = 2;
-    // var pageSize = 12;
-    var loading = true;
+    function showWindow(jqElement) {
+        jqElement.css("visibility", "visible");
+        $(".wrapper-mask").css("visibility", "visible").append(jqElement);
+    }
 
-    // $(function () {
-    //     alert(currentPageNum);
-    // });
 
-    // $(".user-id-item").click(function () {
-    //     var userId = $(this).attr("userId");
-    //
-    //     alert(userId);
-    // });
+    function removeWindow(jqElement) {
+        jqElement.remove();
+        $(".popup-template").append(jqElement);
+        $(".wrapper-mask").css("visibility", "hidden");
+        $("#update-user-button").attr("data", "");
+        $(".popup-group-input").val("");
+        $(".popup-template").hide();
+    }
 
+
+    // $(document).mouseup(function (e) {
+    $(".wrapper-mask").mouseup(function (e) {
+        var targetId = e.target.id;
+        var targetClassName = e.target.className;
+
+        if (targetId == "wrapper-mask") {
+            var wrapperMask = document.getElementById("wrapper-mask");
+            var length = wrapperMask.children.length;
+            var i;
+            for (i = 0; i < length; i++) {
+                var node = wrapperMask.children[i];
+                node.remove();
+                // addTemplate(node);
+                $(".popup-template").append(node);
+                $(".popup-template").hide();
+            }
+            $("#update-user-button").attr("data", "");
+            wrapperMask.style.visibility = "hidden";
+        }
+    });
 
     function applyAddFriend(friendUserId) {
+
+        var title = "申请好友";
+        var inputBody = "我是xxx,申请添加好友";
+
+        $("#update-user-button").attr("data", friendUserId);
+        showWindow($(".config-hidden"));
+
+        $(".popup-group-title").html(title);
+        $(".popup-group-input").val(inputBody);
+
+    }
+
+    function sendRequest() {
+        var userId = $("#user-id").attr("data");
+        var value = $(".popup-group-input").val();
+        var friendUserId = $("#update-user-button").attr("data");
+
+
         var data = {
             'friendId': friendUserId
         };
 
         var url = "index.php?action=miniProgram.square.apply";
         zalyjsCommonAjaxPostJson(url, data, applyResponse)
+
+        removeWindow($(".config-hidden"));
     }
+
 
     function applyResponse(url, data, result) {
         var res = JSON.parse(result);
 
-        alert(res.errCode);
+        if (res.errCode == "success") {
+            alert("申请成功");
+        } else {
+            alert(res.errInfo);
+        }
     }
+
+</script>
+
+<script type="text/javascript">
+
+    var currentPageNum = 2;
+    // var pageSize = 12;
+    var loading = true;
 
     $(window).scroll(function () {
         //判断是否滑动到页面底部
@@ -353,7 +517,6 @@
 
     function loadMoreResponse(url, data, result) {
 
-        alert("pageNum=" + data['pageNum'] + " pageSize=" + data['pageSize'] + " isloading=" + loading);
         if (result) {
             var res = JSON.parse(result);
 
