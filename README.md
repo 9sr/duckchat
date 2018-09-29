@@ -1,21 +1,22 @@
 
-<center>
+> # [DuckChat](https://duckchat.akaxin.com)
+>
+> **一个安全的私有聊天软件**
+>
+> `私有部署 | 安全可靠 | 随意定制`
+>
+> `长链接、大集群，支持500+服务器`  `也支持单机部署，非常灵活`
+> 
+> `iOS、Android、Web全端支持`
+>
+> #### 1. 体验 | 2. 部署 | 3. 运营
 
-# [DuckChat](https://duckchat.akaxin.com)
+<br />
+<br />
+<p align="center">😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎 😍 😘 😗 😙 😚 ☺️ </p>
+<br />
 
-**一个安全的私有聊天软件**
-
-`私有部署 | 安全可靠 | 随意定制`
-
-`长链接、大集群，支持500+服务器`  `也支持单机部署，非常灵活`
-
-`iOS、Android、Web全端支持`
-
-#### 1️⃣ 体验 | 2️⃣ 部署 | 3⃣️ 运营
-</center>
-
-
-## 1️⃣ 体验
+## 1. 体验
 
 
 |内容|地址|
@@ -24,12 +25,13 @@
 |Android客户端|Android下载：https://duckchat.akaxin.com|
 |iOS客户端|iOS下载：[AppStore官方下载 ](https://itunes.apple.com/cn/app/duckchat/id1434153512?l=en&mt=8)|
 |官方QQ群|[`QQ5群：131465422`](https://jq.qq.com/?_wv=1027&k=5z7aEG7)|
+|官方网站|[DuckChat官方网站 https://duckchat.akaxin.com](https://duckchat.akaxin.com)|
 
 
 
 <br />
 
-## 2️⃣ 部署
+## 2. 部署
 
 #### 最简单的部署方式
 
@@ -48,7 +50,7 @@
 
 <br />
 
-## 3⃣️ 运营
+## 3. 运营
 
 通过 [DuckChat](https://duckchat.akaxin.com) 强大的扩展能力，以及完善的基础产品，可以快速帮你搭建起一套自己的社交产品，用在企业内部沟通、社交产品创业等场景。
 
@@ -65,13 +67,9 @@
 
 > 我们提供 `OEM贴牌客户端`，请联系管理员或查看相关文档。
 
-**其他等等**
+<br />
 
-欢迎联系我们: [DuckChat官方网站](https://duckchat.akaxin.com)
-
-----
-
-## 4️⃣ 功能列表
+## 4. 功能列表
 
 [DuckChat](https://duckchat.akaxin.com) 是一款私有的聊天软件，需要部署在用户自己的服务器上，如此，数据、业务、定制性以及站点的完整控制权均属于用户自己。
 
@@ -108,20 +106,20 @@
 >    - Discuz
 >    - 等等
 
+<br />
+<br />
 
-```
-```
+<p align="center">😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎 😍 😘 😗 😙 😚 ☺️ </p>
 
-<center>
 
-# [DuckChat](https://duckchat.akaxin.com)
+<br />
 
-**一个安全的私有聊天软件**
-
-`私有部署 | 安全可靠 | 随意定制`
-
-`长链接、大集群，支持500+服务器`  `也支持单机部署，非常灵活`
-
-`iOS、Android、Web全端支持`
-
-</center>
+> # [DuckChat](https://duckchat.akaxin.com)
+>
+> **一个安全的私有聊天软件**
+>
+> `私有部署 | 安全可靠 | 随意定制`
+>
+> `长链接、大集群，支持500+服务器`  `也支持单机部署，非常灵活`
+> 
+> `iOS、Android、Web全端支持`
