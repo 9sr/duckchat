@@ -7,23 +7,33 @@
     <!-- Latest compiled and minified CSS -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script type="text/javascript" src="../../../public/js/jquery.min.js"></script>
-    <script src="../../../public/js/zalyjsNative.js"></script>
     <script src="../../../public/js/template-web.js"></script>
 
     <style>
         body, html {
             font-size: 10.66px;
             width: 100%;
+            height:100%;
+            padding: 0;
+            margin: 0;
         }
         .zaly_container {
             width: 100%;
             height:100%;
-            display: flex;
-            justify-content: center;
+            display: block;
+            position: relative;
+        }
+        .gif_div{
             text-align: center;
+            position: absolute;
+            top:30%;
+            left:0;
+            right:0;
+            margin:auto;
+
         }
         .save_button {
-            width:7.5rem;
+            width:8rem;
             height:3.38rem;
             background:rgba(76,59,177,1);
             border-radius:0.38rem;
@@ -32,9 +42,12 @@
             font-weight:400;
             color:rgba(255,255,255,1);
         }
-        .gif_div {
-            width: 19rem;
-            height:19rem;
+        .gif_div_button {
+            display: flex;
+            justify-content: center;
+            margin-top: 5rem;
+            cursor: pointer;
+            outline: none;
         }
     </style>
 </head>
@@ -44,19 +57,34 @@
     <input type="hidden" class="roomType" value='<?php echo $roomType;?>'>
     <input type="hidden" class="toId" value='<?php echo $toId;?>'>
     <input type="hidden" class="fromUserId" value='<?php echo $fromUserId;?>'>
-    <?php if(!isset($gifId)) {?>
-        出错啦~~~
-    <?php }else {?>
-        <div class="gif_div">
-            <img id="gifInfo" src='<?php echo $gifUrl?>' class='gif' gifId='<?php echo $gifId?>'>
-        </div>
-        <div>
-            <button class="save_gif save_button" gifId='<?php echo $gifId?>'>收藏</button>
-        </div>
-    <?php } ?>
+    <input type="hidden" class="gifId" value='<?php echo $gifId;?>'>
+    <input type="hidden" class="gifUrl" value='<?php echo $gifUrl;?>'>
+    <input type="hidden" class="gifWidth" value='<?php echo $width;?>'>
+    <input type="hidden" class="gifHeight" value='<?php echo $height;?>'>
+    <input type="hidden" class="isDefault" value='<?php echo $isDefault;?>'>
+
 </div>
 
+<script id="tpl-gif" type="text/html">
+    <div class="gif_div" id="gifDiv">
+        <img id="gifInfo" src='{{gifUrl}}' class='gif' gifId='{{gifId}}'>
+        {{if isDefault == "0" }}
+        <div class="gif_div_button">
+            <button class="save_gif save_button" gifId='{{gifId}}'>收藏</button>
+        </div>
+        {{ else }}
+        <div class="gif_div_button">
+            <button class="save_gif save_button" gifId='{{gifId}}' disabled>已收藏</button>
+        </div>
+        {{/if}}
+    </div>
+
+</script>
+
 <script type="text/javascript">
+
+    UserClientLangZH = "1";
+    UserClientLangEN = "0";
 
     function getLanguage() {
         var nl = navigator.language;
@@ -66,21 +94,27 @@
         return UserClientLangEN;
     }
 
-    function getLanguageName() {
-        var nl = navigator.language;
-        if ("zh-cn" == nl || "zh-CN" == nl) {
-            return "zh";
-        }
-        return "en";
-    }
-
     roomType = $(".roomType").val();
     fromUserId = $(".fromUserId").val();
     toId = $(".toId").val();
+    gifId = $(".gifId").val();
+    gifUrl = $(".gifUrl").val();
+    gifWidth = $(".gifWidth").val();
+    gifHeight = $(".gifHeight").val();
+    isDefault = $(".isDefault").val();
+
     var imgObject = {};
     var saveGifType = "save_gif";
 
     var languageNum = getLanguage();
+
+    var html = template("tpl-gif", {
+        gifId:gifId,
+        gifUrl:gifUrl,
+        isDefault:isDefault
+    });
+
+    $(".zaly_container").append(html);
 
     var src = $("#gifInfo").attr("src");
     autoImgSize(src, 200, 200);
@@ -121,15 +155,16 @@
             gifId : gifId,
             type:saveGifType,
         }
-        sendPostToServer(reqData, saveGifType);
+        sendPostToServer(reqData);
         return false;
     });
 
-    function sendPostToServer(reqData, type)
+    function sendPostToServer(reqData)
     {
+        console.log("save gif =======" + JSON.stringify(reqData));
         $.ajax({
             method: "POST",
-            url:"./index.php?action=miniProgram.gif.index&lang="+languageNum,
+            url:"./index.php?action=miniProgram.gif.index&type="+saveGifType+"&lang="+languageNum,
             data: reqData,
             success:function (data) {
                 data = JSON.parse(data);
@@ -137,6 +172,7 @@
                     zalyjsAlert(data.errorInfo);
                     return false;
                 }
+                window.close();
             }
         });
     }
@@ -151,8 +187,6 @@
         }
         sendPostToServer(reqData, addGifType);
     }
-
-
 
 </script>
 </body>

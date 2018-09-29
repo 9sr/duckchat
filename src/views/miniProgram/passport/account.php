@@ -254,7 +254,9 @@
                 var error = JSON.parse(resp);
                 if(error["errCode"].length>1) {
                     zalyjsAlert(error['errCode']);
+                    return;
                 }
+                window.close();
             },
             failed:function (error) {
                 console.log(error);
