@@ -89,6 +89,7 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
             $groupSpeakers = $setSpeakers;
         } else {
             $groupSpeakers = array_merge($groupSpeakers, $setSpeakers);
+            $groupSpeakers = array_unique($groupSpeakers);
         }
 
         $result = $this->updateGroupSpeakers($groupId, $groupSpeakers);
@@ -175,12 +176,12 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
         }
 
         if ($setType == Zaly\Proto\Site\SetSpeakerType::RemoveSpeaker) {
-            $nameBody .= " 关闭了 ";
+            $nameBody .= ZalyText::$keySpeakerCloseUser;
         } elseif ($setType == Zaly\Proto\Site\SetSpeakerType::CloseSpeaker) {
-            $nameBody .= " 关闭了发言者功能";
+            $nameBody .= ZalyText::$keySpeakerClose;
             return $nameBody;
         } else {//
-            $nameBody .= " 设置 ";
+            $nameBody .= ZalyText::$keySpeakerSet;
         }
 
         if (empty($speakerIds)) {
@@ -202,9 +203,9 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
         }
 
         if ($setType == Zaly\Proto\Site\SetSpeakerType::RemoveSpeaker) {
-            $nameBody .= " 发言人身份";
+            $nameBody .= ZalyText::$keySpeakerStatus;
         } else {//
-            $nameBody .= " 为发言人";
+            $nameBody .= ZalyText::$keySpeakerAsSpeaker;
         }
 
         return $nameBody;
