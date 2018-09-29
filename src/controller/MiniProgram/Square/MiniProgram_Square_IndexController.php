@@ -10,7 +10,8 @@ class MiniProgram_Square_IndexController extends MiniProgramController
 {
 
     private $squarePluginId = 199;
-    private $pageSize = 12;
+    private $pageSize = 20;
+    private $nickname;
 
     public function getMiniProgramId()
     {
@@ -20,6 +21,8 @@ class MiniProgram_Square_IndexController extends MiniProgramController
     public function preRequest()
     {
         //do nothing
+        $this->nickname = $this->userProfile->getNickname();
+        return true;
     }
 
     public function doRequest()
@@ -33,12 +36,7 @@ class MiniProgram_Square_IndexController extends MiniProgramController
 
             $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : $this->pageSize;
 
-            $this->logger->error("============", "pageNum=" . $pageNum);
-            $this->logger->error("============", "pageSize=" . $pageSize);
-
             $userList = $this->buildUserDataList($pageNum, $pageSize);
-
-            $this->logger->error("============", "result=" . var_export($userList, true));
 
             if (!empty($userList)) {
                 $result['loading'] = true;
@@ -58,7 +56,9 @@ class MiniProgram_Square_IndexController extends MiniProgramController
             $userList = $this->buildUserDataList(1, $pageSize);
 
             $params = [
+                'userId' => $this->userId,
                 'userList' => $userList,
+                'nickname' => $this->nickname,
             ];
             echo $this->display("miniProgram_square_index", $params);
         }

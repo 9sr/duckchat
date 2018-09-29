@@ -22,6 +22,8 @@ class MiniProgram_Square_ApplyController extends MiniProgramController
     protected function preRequest()
     {
         //do nothing
+
+        return true;
     }
 
     /**
@@ -30,7 +32,7 @@ class MiniProgram_Square_ApplyController extends MiniProgramController
     protected function doRequest()
     {
         $friendId = $_POST['friendId'];
-        $greetings = $_POST['greetings'];
+        $greeting = $_POST['greeting'];
 
         $result = [
             "errCode" => "error"
@@ -41,7 +43,7 @@ class MiniProgram_Square_ApplyController extends MiniProgramController
             $this->checkSiteAddFriendConfig($this->userId);//check is friend before is friend,with exception
             $this->checkIsFriend($friendId);//save data
 
-            if ($this->addApplyData($friendId, $greetings)) {
+            if ($this->addApplyData($friendId, $greeting)) {
                 $result['errCode'] = "success";
             }
             echo json_encode($result);
