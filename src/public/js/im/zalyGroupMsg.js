@@ -88,8 +88,6 @@ function handleSendFriendApplyReq()
     alert("已经发送好友请求");
 }
 
-getNotMsgImg(token, avatar);
-
 function getNotMsgImg(userId, avatarImgId)
 {
     if(avatarImgId == undefined || avatarImgId == "" || avatarImgId.length<1) {
@@ -124,6 +122,7 @@ function getNotMsgImg(userId, avatarImgId)
     xhttp.send();
 }
 
+
 function getMsgImg(imgId, isGroupMessage, msgId)
 {
     if(imgId == undefined || imgId == "" || imgId.length<1) {
@@ -145,6 +144,7 @@ function getMsgImg(imgId, isGroupMessage, msgId)
     xhttp.send();
 }
 
+getNotMsgImg(token, avatar);
 
 unselectMemberOffset = 0;
 
@@ -219,6 +219,7 @@ $(function(){
     });
 });
 
+
 function appendUnselectMemberList(results)
 {
     var html = getUnselectMemberListHtml(results);
@@ -236,20 +237,23 @@ unselectRemoveMemberOffset = 0;
 $(document).on("click", ".remove_member", function () {
     unselectRemoveMemberOffset = 0;
     showWindow($("#group-remove-people"));
+    $(".remove-people-div").html("");
+    getGroupMembers(unselectRemoveMemberOffset, initGroupRemoveMemberList);
+});
+
+function getGroupMembers(offset, callback)
+{
     var action = "api.group.members";
     var groupId = localStorage.getItem(chatSessionIdKey);
     var reqData = {
         "groupId": groupId,
-        "offset" : unselectRemoveMemberOffset,
+        "offset" : offset,
         "count" : defaultCountKey,
     }
-    $(".remove-people-div").html("");
+    handleClientSendRequest(action, reqData, callback);
+}
 
-    handleClientSendRequest(action, reqData, initGroupMemberList);
-});
-
-
-function initGroupMemberList(results)
+function initGroupRemoveMemberList(results)
 {
     var list = results.list;
     if(list) {
@@ -263,7 +267,6 @@ function initGroupMemberList(results)
                 nickname:user.nickname
             })
             html = handleHtmlLanguage(html);
-
             $(".remove-people-div").append(html);
             getNotMsgImg(user.userId, user.avatar);
         }
@@ -353,6 +356,102 @@ function quiteFromGroup()
     }
     handleClientSendRequest(action, reqData, reloadPage);
 }
+
+unselectSpeakerMemberOffset = 0;
+function initSpeakerGroupMemberList(results)
+{
+    var list = results.list;
+    if(list) {
+        unselectSpeakerMemberOffset = (unselectSpeakerMemberOffset+defaultCountKey);
+        var length = list.length;
+        var html = "";
+        var groupId = localStorage.getItem(chatSessionIdKey);
+        var groupProfile = getGroupProfile(groupId);
+        for(i=0; i<length ; i++) {
+            var user = list[i].profile;
+            var isSpeaker = checkGroupMemberSpeakerType(user.userId, groupProfile);
+            var isAdmin = checkGroupMemberAdminType(user.userId, groupProfile);
+            var isOwner = checkGroupOwnerType(user.userId, groupProfile);
+
+            if (!isSpeaker && !isOwner && !isAdmin) {
+                html = template("tpl-speaker-member", {
+                    userId: user.userId,
+                    nickname: user.nickname,
+                    isSpeaker: false,
+                    avatar: user.avatar,
+                })
+                html = handleHtmlLanguage(html);
+                $(".speaker-group-member-div").append(html);
+                getNotMsgImg(user.userId, user.avatar);
+            }
+        }
+    }
+}
+
+$(".group_speakers").on("click", function () {
+    showWindow($("#group-speaker-people"));
+    unselectSpeakerMemberOffset =0;
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var groupProfileJsonStr = localStorage.getItem(profileKey+groupId);
+    var groupProfile = JSON.parse(groupProfileJsonStr);
+    var isAdmin = false;
+    if(checkGroupMemberAdminType(token, groupProfile)) {
+        isAdmin = true;
+    }
+    if(checkGroupOwnerType(token, groupProfile)){
+        isAdmin = true;
+    }
+    $(".speaker-people-div").html('');
+
+    if(groupProfile.hasOwnProperty("speakers")) {
+        var speakers = groupProfile.speakers;
+        var speakersLength = speakers.length;
+        var html = "";
+        for(var i=0; i<speakersLength;i++){
+            var speaker = speakers[i];
+            console.log("useravatar ====="+JSON.stringify(speaker));
+            html = template("tpl-speaker-member", {
+                userId:speaker.userId,
+                nickname:speaker.nickname,
+                avatar:speaker.avatar,
+                isAdmin:isAdmin,
+                isSpeaker:true
+            });
+            $(".speaker-people-div").append(html);
+            getNotMsgImg(speaker.userId, speaker.avatar)
+        }
+    }
+
+    if(isAdmin) {
+        $(".speaker-group-member").remove();
+        var html = template("tpl-group-member-for-speaker", {});
+        $("#group-speaker-people").append(html);
+        $(".speaker-group-member-div").html('');
+        getGroupMembers(unselectSpeakerMemberOffset, initSpeakerGroupMemberList);
+    }
+});
+
+$(function () {
+    ////加载设置群成员列表
+    $('.speaker-people-div').scroll(function(){
+        var pwLeft = $(".speaker-group-member-div")[0];
+        var ch  = pwLeft.clientHeight;
+        var sh = pwLeft.scrollHeight;
+        var st = $('.speaker-group-member-div').scrollTop();
+
+        ////文档的高度-视口的高度-滚动条的高度
+        if((sh - ch - st) == 0){
+            groupId = localStorage.getItem(chatSessionIdKey);
+            var action = "api.group.members";
+            var reqData = {
+                "groupId": groupId,
+                "offset" : unselectSpeakerMemberOffset,
+                "count"  : 5
+            }
+            handleClientSendRequest(action, reqData, initSpeakerGroupMemberList);
+        }
+    });
+});
 
 
 $(document).on("click", ".l-sb-item", function(){
@@ -868,7 +967,7 @@ function addActiveForRoomList(jqElement)
     jqElement.addClass("chatsession-row-active");
 }
 
-function getGroupProfile(groupId)
+function getGroupProfile(groupId, isForceSend)
 {
     var groupInfoKey = profileKey + groupId;
     var groupProfileStr = localStorage.getItem(groupInfoKey);
@@ -885,7 +984,7 @@ function getGroupProfile(groupId)
         }
     }
 
-    if(reqProfileTime != false && reqProfileTime != null && ((nowTimestamp-reqProfileTime)<reqTimeout)) {
+    if(reqProfileTime != false && reqProfileTime != null && ((nowTimestamp-reqProfileTime)<reqTimeout) && isForceSend == false) {
         return false;
     }
     sessionStorage.setItem(groupInfoReqKey, nowTimestamp);
@@ -994,35 +1093,6 @@ $(document).on("click", ".send_msg" , function(){
     sendMsgBySend();
 });
 
-function checkIsCanSpeak(chatSessionId)
-{
-
-    var speakerKey = speakerUserIdsKey + chatSessionId;
-    var userIdsJsonStr = localStorage.getItem(speakerKey);
-    var profileJson = localStorage.getItem(profileKey+chatSessionId);
-    var groupProfile = JSON.parse(profileJson);
-
-    if((userIdsJsonStr == 'undefined' || userIdsJsonStr == false || userIdsJsonStr == null ) && !groupProfile.hasOwnProperty("speakers")) {
-        return true;
-    }
-
-    var owner = groupProfile['owner'];
-
-    ///检查是否为群主
-    if(owner.userId == token) {
-        return true;
-    }
-    ///检查是否为管理员
-    if(checkGroupMemberAdminType(token, groupProfile)) {
-        return true;
-    }
-
-    if(checkGroupMemberSpeakerType(token, groupProfile)) {
-        return true;
-    }
-
-    return false;
-}
 
 function sendMsgBySend()
 {
@@ -1031,10 +1101,6 @@ function sendMsgBySend()
     var msgContent = $(".msg_content").val();
     var imgData = $("#msgImage img").attr("src");
 
-    // if(chatSessionType == GROUP_MSG && !checkIsCanSpeak(chatSessionId)){
-    //     alert("暂时无权限发言");
-    //     return;
-    // }
     if(imgData) {
         uploadMsgImgFromCopy(imgData);
     }
@@ -1357,7 +1423,7 @@ $(document).on("click", ".group-user-img", function(){
     $(node).append($(html));
 });
 
-function checkGroupMemberSpeakerType(userId, groupProfile)
+function checkGroupMemberCanSpeaker(userId, groupProfile)
 {
     var users;
     var speakersAll=false;
@@ -1383,8 +1449,24 @@ function checkGroupMemberSpeakerType(userId, groupProfile)
            }
        }
    }
-
     return isCanSpeak;
+}
+
+function checkGroupMemberSpeakerType(userId, groupProfile)
+{
+    var users = groupProfile.speakers;
+    if(users == null ){
+        return false;
+    }
+    var length = users.length;
+    var i;
+    for(i=0; i<length; i++) {
+        var user = users[i];
+        if(user.userId == userId) {
+            return user;
+        }
+    }
+    return false;
 }
 
 function checkGroupMemberAdminType(userId, groupProfile)
@@ -1400,6 +1482,16 @@ function checkGroupMemberAdminType(userId, groupProfile)
         if(user.userId == userId) {
             return user;
         }
+    }
+    return false;
+}
+
+function checkGroupOwnerType(userId, groupProfile)
+{
+    var owner = groupProfile['owner'];
+    ///检查是否为群主
+    if(owner.userId == userId) {
+        return true;
     }
     return false;
 }
@@ -1880,7 +1972,6 @@ $(document).on("click", "#remove-admin", function () {
     }
 });
 
-
 $(document).on("click", "#set-speaker", function () {
     var groupId = localStorage.getItem(chatSessionIdKey);
     var node = $(this)[0].parentNode;
@@ -1889,11 +1980,11 @@ $(document).on("click", "#set-speaker", function () {
     ////追加操作
     if(confirm($.i18n.map['setSpeakerJsTip'])) {
         speakerUserIds.push(userId);
-        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.AddSpeaker);
+        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.AddSpeaker, handleSetSpeaker);
     }
 });
 
-function updateGroupSpeaker(groupId, speakerUserIds, type)
+function updateGroupSpeaker(groupId, speakerUserIds, type, callback)
 {
     var action = "api.group.setSpeaker";
     var reqData = {
@@ -1901,7 +1992,7 @@ function updateGroupSpeaker(groupId, speakerUserIds, type)
         "setType" : type,
         "speakerUserIds" :speakerUserIds,
     }
-    handleClientSendRequest(action, reqData, handleSetSpeaker);
+    handleClientSendRequest(action, reqData, callback);
 }
 
 function handleSetSpeaker(result)
@@ -1909,14 +2000,82 @@ function handleSetSpeaker(result)
     try{
         var speakerUserIds = result.speakerUserIds;
         var speakerKey = speakerUserIdsKey+localStorage.getItem(chatSessionIdKey);
-        console.log("localstorage =="+speakerKey);
-        console.log("localstorage speakerUserIds=="+JSON.stringify(speakerUserIds));
-
         localStorage.setItem(speakerKey, JSON.stringify(speakerUserIds));
     }catch (error) {
 
     }
 }
+addSpeakerInfo=[];
+
+function handleAddSpeaker()
+{
+    var addSpeakerIdLenght = addSpeakerInfo.length;
+    for(var i=0; i<addSpeakerIdLenght; i++) {
+        var speakerInfo = addSpeakerInfo[i];
+        $("."+speakerInfo.userId).remove();
+        var html = template("tpl-speaker-member",{
+            nickname:speakerInfo.nickname,
+            userId:speakerInfo.userId,
+            avatar:speakerInfo.avatar,
+            isSpeaker:true,
+        });
+        $(".speaker-people-div").append(html);
+        getNotMsgImg(speakerInfo.userId, speakerInfo.avatar)
+    }
+    addSpeakerInfo=[];
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    getGroupProfile(groupId, true);
+}
+
+$(document).on("click", ".add_speaker_btn", function () {
+    var userId = $(this).attr("userId");
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var speakerUserIds = [];
+    speakerUserIds.push(userId);
+    var speakerInfo = {
+        userId:userId,
+        nickname:$(this).attr("nickname"),
+        avatar:$(this).attr("avatar"),
+    }
+    addSpeakerInfo.push(speakerInfo);
+    updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.AddSpeaker, handleAddSpeaker)
+});
+
+deleteSpeakerInfo=[];
+function handleRemoveSpeaker()
+{
+    var delSpeakerLength=deleteSpeakerInfo.length;
+    for(var i=0; i<delSpeakerLength; i++) {
+        var speakerInfo = deleteSpeakerInfo[i];
+        $("."+speakerInfo.userId).remove();
+        var html = template("tpl-speaker-member",{
+            nickname:speakerInfo.nickname,
+            userId:speakerInfo.userId,
+            avatar:speakerInfo.avatar,
+            isSpeaker:false,
+        });
+        $(".speaker-group-member-div").append(html);
+        getNotMsgImg(speakerInfo.userId, speakerInfo.avatar)
+    }
+    deleteSpeakerInfo=[];
+
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    getGroupProfile(groupId, true);
+}
+
+$(document).on("click", ".remove_speaker_btn", function () {
+    var userId = $(this).attr("userId");
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var speakerUserIds = [];
+    speakerUserIds.push(userId);
+    var speakerInfo = {
+        userId:userId,
+        nickname:$(this).attr("nickname"),
+        avatar:$(this).attr("avatar"),
+    }
+    deleteSpeakerInfo.push(speakerInfo);
+    updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleRemoveSpeaker)
+});
 
 $(document).on("click", "#remove-speaker", function () {
     var groupId = localStorage.getItem(chatSessionIdKey);
@@ -1926,7 +2085,7 @@ $(document).on("click", "#remove-speaker", function () {
     ////追加操作
     if(confirm($.i18n.map['removeSpeakerJsTip'])) {
         speakerUserIds.push(userId);
-        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker)
+        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleSetSpeaker)
     }
 });
 
@@ -2548,7 +2707,6 @@ $(document).on("click", ".msg_img", function () {
 });
 
 $(document).on("click", ".right_msg_file_div", function () {
-
     downloadFile($(this));
 
 });

@@ -181,6 +181,13 @@
                         </div>
                     </div>
 
+                    <div class="action-row group_speakers" >
+                        <div class="action-title" data-local-value="groupSpeakersTip">群发言人</div>
+                        <div class="action-btn ">
+                            <img src="../../public/img/msg/icon_disclosure.png" />
+                        </div>
+                    </div>
+
                     <div class="action-row share-group" >
                         <div class="action-title" data-local-value="shareGroupTip">分享群名片</div>
                     </div>

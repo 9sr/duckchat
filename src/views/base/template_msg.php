@@ -464,6 +464,37 @@
 </script>
 
 
+<script id="tpl-speaker-member" type="text/html">
+    <div class="pw-contact-row choose-member {{userId}} "  user-id="{{userId}}">
+        <div class="pw-contact-row-image">
+            <img class="useravatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" />
+        </div>
+        <div class="pw-contact-row-name">{{nickname}}</div>
+        {{if isSpeaker == true}}
+        <div class="pw-contact-row-btn speaker_remove_people" >
+            <button class="remove_speaker_btn" userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}">取消</button>
+        </div>
+        {{else}}
+        <div class="pw-contact-row-btn speaker_add_people" >
+            <button class="add_speaker_btn" userId="{{userId}}" nickname="{{nickname}}" avatar="{{avatar}}">添加</button>
+        </div>
+        {{/if}}
+    </div>
+</script>
+
+<script id="tpl-group-member-for-speaker" type="text/html">
+    <div class="speaker-group-member">
+        <div class="sub-speaker-div">
+            <div class="sub-speaker-title" data-local-value="allGroupMemberTip"> 群成员 </div>
+        </div>
+        <div class="speaker-line"></div>
+        <div class="speaker-group-member-div" style="width: 100%;">
+        </div>
+    </div>
+</script>
+
+
+
 <script id="tpl-invite-member" type="text/html">
 
     <div class="pw-contact-row choose-member {{userId}} "  user-id="{{userId}}">

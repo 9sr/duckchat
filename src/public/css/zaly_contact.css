@@ -43,6 +43,12 @@
     width: 100%;
 }
 
+.pw-contact-row-btn {
+    width:4.69rem;
+    height:2.63rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+}
 
 /*left-body Special */
 .left-body-container  .pw-contact-row-image img {

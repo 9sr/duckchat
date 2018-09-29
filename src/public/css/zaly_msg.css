@@ -584,10 +584,90 @@ html, body{
     box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
 }
 
+#group-speaker-people {
+    width:39rem;
+    height:59rem;
+    background:rgba(255,255,255,1);
+    box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
+    overflow-y: scroll;
+}
 
+.sub-speaker-div{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    overflow-y: scroll;
+}
+.sub-speaker-title {
+    width:10.69rem;
+    height:1.88rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(102,102,102,1);
+    line-height:1.88rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.remove-all-speaker {
+    margin-right: 1rem;
+    width:12.95rem;
+    height:1.88rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(76,59,177,1);
+    line-height:1.88rem;
+    cursor: pointer;
+}
+.speaker-line{
+    width:35.18rem;
+    height:0.09rem;
+    background:rgba(243,243,243,1);
+    margin-left: 2rem;
+}
+
+.speaker-group-member-div {
+    overflow-y: scroll;
+}
+
+.remove_speaker_btn {
+    width:4.69rem;
+    height:2.63rem;
+    border-radius:0.38rem;
+    border:0.09rem solid rgba(76,59,177,1);
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(76,59,177,1);
+    cursor: pointer;
+    outline: none;
+}
+.speaker_remove_people, .speaker_add_people {
+    cursor: pointer;
+    outline: none;
+}
+
+.add_speaker_btn {
+    width:4.69rem;
+    height:2.63rem;
+    background:rgba(76,59,177,1);
+    border-radius:0.38rem;
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    cursor: pointer;
+    outline: none;
+}
 .remove-people-div {
     overflow: scroll;
     height: 45rem;
+}
+
+.speaker-people-div {
 }
 
 #group-invite-people .pw-right {
@@ -598,8 +678,11 @@ html, body{
 }
 
 .pw-right-header {
-    height: 3.75rem;
     overflow: hidden;
+    height:4.69rem;
+    background:rgba(255,255,255,1);
+    box-shadow:0rem 0.09rem 0.38rem 0rem rgba(223,223,223,1);
+
     display: flex;
     align-items: center;
 
@@ -1207,9 +1290,10 @@ html, body{
     color:rgba(153,153,153,1);
     display: block;
 }
-.share-group {
+.share-group , .group_speakers{
     cursor: pointer;
 }
+
 #share_group {
     width:75rem;
     height: 47rem;
