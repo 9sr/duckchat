@@ -69,6 +69,9 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
                     case "del_gif":
                         $this->delGif($_POST);
                         break;
+                    case "save_gif":
+                        $this->saveGif($_POST);
+                        break;
                 }
                 $this->ctx->Wpf_Logger->error($tag, "post msg =" . json_encode($_POST));
                 echo json_encode(["errorCode" => "success", "errorInfo" => ""]);
@@ -83,17 +86,23 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
             ];
             $type = $_GET['type'] ? $_GET['type'] : "";
             if($type == "see_gif") {
-                echo "pppafsdfas";
-                return ;
+                $gifId = isset($_GET['gifId']) ? $_GET['gifId'] : '';
+                $gif = $this->ctx->SiteUserGifTable->getGifInfo($this->userId, $gifId);
+                if(!$gif) {
+                    echo $this->display("miniProgram_gif_info", $gif);
+                    return;
+                }
+                //gifId, gifUrl, width, height, userId
+                $gif['gifUrl'] = "./index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
+                echo $this->display("miniProgram_gif_info", $gif);
+                return;
             } else {
                 $gifs = $this->ctx->SiteUserGifTable->getGifByUserId($this->userId, 0, $this->limit);
                 foreach ($gifs as $key => $gif) {
-                    $url = "./index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
-                    $gif['gifUrl'] = ZalyHelper::getFullReqUrl($url);
+                    $gif['gifUrl'] = "index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
                     $gif['isDefault'] = $gif['userId'] === 0 ?  0 : 1;
                     $gifs[$key] = $gif;
                 }
-
                 $results['gifs'] = $gifs;
                 $results['gifs'] = json_encode($results['gifs']);
                 echo $this->display("miniProgram_gif_index", $results);
@@ -173,17 +182,28 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
 
     public function addGif($data)
     {
-        $gifUrl = $data['gifId'];
-        $gifId = md5($gifUrl);
-        $data = [
-            'userId'  => $this->userId,
-            'gifId'   => $gifId,
-            'gifUrl'  => $gifUrl,
-            'width'   => $data['width'],
-            'height'  => $data['height'],
-            'addTime' => ZalyHelper::getMsectime()
-        ];
-        $this->ctx->SiteUserGifTable->addGif($data);
+        $tag = __CLASS__.'-'.__FUNCTION__;
+        try{
+            $gifUrl = $data['gifId'];
+            $gifId = md5($gifUrl);
+            $siteGifData = [
+                'gifId'   => $gifId,
+                'gifUrl'  => $gifUrl,
+                'width'   => $data['width'],
+                'height'  => $data['height'],
+                'addTime' => ZalyHelper::getMsectime()
+            ];
+
+            $siteUserGifData = [
+                'userId'  => $this->userId,
+                'gifId'   => $gifId,
+                'addTime' => ZalyHelper::getMsectime()
+            ];
+            $this->ctx->SiteUserGifTable->addGif($siteGifData, $siteUserGifData);
+        }catch (Exception $ex) {
+            $this->logger->error($tag, $ex);
+            throw $ex;
+        }
     }
 
     public function delGif($data)
@@ -191,4 +211,22 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
         $gifId = $data['gifId'];
         return $this->ctx->SiteUserGifTable->delGif($this->userId, $gifId);
     }
+
+    public function saveGif($data)
+    {
+        $tag = __CLASS__.'-'.__FUNCTION__;
+        try{
+           $gifId = $data['gifId'];
+           $siteUserGifData = [
+               'userId'  => $this->userId,
+               'gifId'   => $gifId,
+               'addTime' => ZalyHelper::getMsectime()
+           ];
+           $this->ctx->SiteUserGifTable->addUserGif($siteUserGifData);
+       }catch (Exception $ex) {
+           $this->logger->error($tag, $ex);
+           throw $ex;
+       }
+    }
+
 }

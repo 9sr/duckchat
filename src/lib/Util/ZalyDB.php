@@ -190,7 +190,9 @@ class ZalyDB
             for($i=1; $i<8; $i++) {
                 rename($gifDirName."/".$i.".gif", $dirName."/".$i.".gif");
                 $gifId = ZalyHelper::generateStrKey();
-                $dataSql = "insert into siteUserGif ( gifId, userId, gifUrl, width, height) VALUES ('{$gifId}', 0, 'default-{$i}.gif', 200, 200);";
+                $dataSql = "insert into siteGif (gifId, gifUrl, width, height) VALUES ('{$gifId}', 'default-{$i}.gif', 200, 200);";
+                $this->db->exec($dataSql);
+                $dataSql = "insert into siteUserGif(userId, gifId) VALUES ('duckchat', '{$gifId}');";
                 $this->db->exec($dataSql);
             }
         }catch (Exception $ex) {
