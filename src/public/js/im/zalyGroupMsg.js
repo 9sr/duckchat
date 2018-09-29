@@ -687,7 +687,7 @@ $(document).on("click", ".see_group_profile", function () {
     if(chatSessionType == U2_MSG) {
         sendFriendProfileReq(chatSessionId);
     } else {
-        sendGroupProfileReq(chatSessionId);
+        sendGroupProfileReq(chatSessionId, handleGetGroupProfile);
     }
     $('.right-body-sidebar').show();
 });
@@ -994,14 +994,47 @@ $(document).on("click", ".send_msg" , function(){
     sendMsgBySend();
 });
 
-function sendMsgBySend() {
+function checkIsCanSpeak(chatSessionId)
+{
+
+    var speakerKey = speakerUserIdsKey + chatSessionId;
+    var userIdsJsonStr = localStorage.getItem(speakerKey);
+    var profileJson = localStorage.getItem(profileKey+chatSessionId);
+    var groupProfile = JSON.parse(profileJson);
+
+    if((userIdsJsonStr == 'undefined' || userIdsJsonStr == false || userIdsJsonStr == null ) && !groupProfile.hasOwnProperty("speakers")) {
+        return true;
+    }
+
+    var owner = groupProfile['owner'];
+
+    ///检查是否为群主
+    if(owner.userId == token) {
+        return true;
+    }
+    ///检查是否为管理员
+    if(checkGroupMemberAdminType(token, groupProfile)) {
+        return true;
+    }
+
+    if(checkGroupMemberSpeakerType(token, groupProfile)) {
+        return true;
+    }
+
+    return false;
+}
+
+function sendMsgBySend()
+{
     var chatSessionId   = localStorage.getItem(chatSessionIdKey);
     var chatSessionType = localStorage.getItem(chatSessionId);
-
     var msgContent = $(".msg_content").val();
-
     var imgData = $("#msgImage img").attr("src");
 
+    // if(chatSessionType == GROUP_MSG && !checkIsCanSpeak(chatSessionId)){
+    //     alert("暂时无权限发言");
+    //     return;
+    // }
     if(imgData) {
         uploadMsgImgFromCopy(imgData);
     }
@@ -1307,8 +1340,8 @@ $(document).on("click", ".group-user-img", function(){
     var groupProfile = getGroupProfile(groupId);
     var isOwner = groupProfile.memberType == GroupMemberType.GroupMemberOwner ? 1 : 0;
     var isAdmin = groupProfile.memberType == GroupMemberType.GroupMemberAdmin || isOwner ? 1 : 0 ;
-    var memberIsAdmin = checkGroupMemberType(userId, groupProfile, "admin");
-    var memberIsSpeaker = checkGroupMemberType(userId, groupProfile, "speakers");
+    var memberIsAdmin = checkGroupMemberAdminType(userId, groupProfile);
+    var memberIsSpeaker = checkGroupMemberSpeakerType(userId, groupProfile)
 
     var isFriend = localStorage.getItem(friendRelationKey+userId) == FriendRelation.FriendRelationFollow ? 1 : 0;
     var html = template("tpl-group-user-menu", {
@@ -1324,15 +1357,49 @@ $(document).on("click", ".group-user-img", function(){
     $(node).append($(html));
 });
 
-
-function checkGroupMemberType(userId, groupProfile, memberType)
+function checkGroupMemberSpeakerType(userId, groupProfile)
 {
     var users;
-    if(memberType == 'admin') {
-        users = groupProfile.admins;
-    } else if (memberType == 'speakers') {
-        users = groupProfile.speakers;
+    var speakers=false;
+    var usersJsonStr = localStorage.getItem(speakerUserIdsKey+groupProfile.id);
+    if(groupProfile.hasOwnProperty("speakers")) {
+        speakers = groupProfile.speakers;
     }
+    var isCanSpeak = false;
+
+    if((usersJsonStr == false || usersJsonStr == "undefined") && (speakers == false)) {
+        return isCanSpeak;
+    }
+
+    ////以群资料为主，
+    var length = speakers.length;
+    for(var i=0; i<length; i++) {
+        var speakers = speakers[i];
+        console.log("speakerss ==="+JSON.stringify(speakers));
+        if(speakers.userId == userId) {
+            isCanSpeak = true;
+        }
+    }
+
+   if(usersJsonStr != false && usersJsonStr != "undefined" && usersJsonStr != null) {
+       users = JSON.parse(usersJsonStr);
+       if(users != null ){
+           var length = users.length;
+           for(var i=0; i<length; i++) {
+               var speakerUserId = users[i];
+               if(speakerUserId == userId) {
+                   isCanSpeak = true;
+               }
+           }
+       }
+   }
+
+    return isCanSpeak;
+}
+
+function checkGroupMemberAdminType(userId, groupProfile)
+{
+    var users = groupProfile.admins;
     if(users == null ){
         return false;
     }
@@ -1346,6 +1413,7 @@ function checkGroupMemberType(userId, groupProfile, memberType)
     }
     return false;
 }
+
 ////设置新的聊天界面
 $(document).on("click", "#open-temp-chat", function () {
     var node = $(this)[0].parentNode;
@@ -1831,14 +1899,34 @@ $(document).on("click", "#set-speaker", function () {
     ////追加操作
     if(confirm($.i18n.map['setSpeakerJsTip'])) {
         speakerUserIds.push(userId);
-        var values = {
-            type : ApiGroupUpdateType.ApiGroupUpdateSpeaker,
-            writeType:DataWriteType.WriteAdd,
-            speakerUserIds : speakerUserIds,
-        }
-        updateGroupProfile(groupId, values);
+        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.AddSpeaker);
     }
 });
+
+function updateGroupSpeaker(groupId, speakerUserIds, type)
+{
+    var action = "api.group.setSpeaker";
+    var reqData = {
+        "groupId": groupId,
+        "setType" : type,
+        "speakerUserIds" :speakerUserIds,
+    }
+    handleClientSendRequest(action, reqData, handleSetSpeaker);
+}
+
+function handleSetSpeaker(result)
+{
+    try{
+        var speakerUserIds = result.speakerUserIds;
+        var speakerKey = speakerUserIdsKey+localStorage.getItem(chatSessionIdKey);
+        console.log("localstorage =="+speakerKey);
+        console.log("localstorage speakerUserIds=="+JSON.stringify(speakerUserIds));
+
+        localStorage.setItem(speakerKey, JSON.stringify(speakerUserIds));
+    }catch (error) {
+
+    }
+}
 
 $(document).on("click", "#remove-speaker", function () {
     var groupId = localStorage.getItem(chatSessionIdKey);
@@ -1848,12 +1936,7 @@ $(document).on("click", "#remove-speaker", function () {
     ////追加操作
     if(confirm($.i18n.map['removeSpeakerJsTip'])) {
         speakerUserIds.push(userId);
-        var values = {
-            type : ApiGroupUpdateType.ApiGroupUpdateSpeaker,
-            writeType:DataWriteType.WriteDel,
-            speakerUserIds : speakerUserIds,
-        }
-        updateGroupProfile(groupId, values);
+        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker)
     }
 });
 

@@ -24,8 +24,14 @@ MessageType = {
     MessageEventFriendRequest : "MessageEventFriendRequest",
     MessageEventStatus  : "MessageEventStatus",   // -> StatusMessage
     MessageEventSyncEnd :"MessageEventSyncEnd",
-
 };
+
+
+SetSpeakerType = {
+    AddSpeaker    : "AddSpeaker",    //add new speakers
+    RemoveSpeaker  : "RemoveSpeaker",    //remove old speakers
+    CloseSpeaker  : "CloseSpeaker",    //close speaker function
+}
 
 UserClientLangZH = "1";
 UserClientLangEN = "0";
@@ -164,6 +170,7 @@ chatTypeKey = "chat_type";
 WidgetChat = "widget_chat";
 DefaultChat = "default_chat";
 MobileChat = "mobile_chat";
+speakerUserIdsKey="speaker_userIds_";
 
 DefaultTitle = "DuckChat 聊天室";
 

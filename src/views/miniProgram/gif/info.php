@@ -21,7 +21,20 @@
             justify-content: center;
             text-align: center;
         }
-
+        .save_button {
+            width:7.5rem;
+            height:3.38rem;
+            background:rgba(76,59,177,1);
+            border-radius:0.38rem;
+            font-size:1.5rem;
+            font-family:PingFangSC-Regular;
+            font-weight:400;
+            color:rgba(255,255,255,1);
+        }
+        .gif_div {
+            width: 19rem;
+            height:19rem;
+        }
     </style>
 </head>
 <body>
@@ -33,8 +46,12 @@
     <?php if(!isset($gifId)) {?>
         出错啦~~~
     <?php }else {?>
-        <img id="gifInfo" src='<?php echo $gifUrl?>' class='gif' gifId='<?php echo $gifId?>'>
-        <button class="save_gif" gifId='<?php echo $gifId?>'>save</button>
+        <div class="gif_div">
+            <img id="gifInfo" src='<?php echo $gifUrl?>' class='gif' gifId='<?php echo $gifId?>'>
+        </div>
+        <div>
+            <button class="save_gif save_button" gifId='<?php echo $gifId?>'>收藏</button>
+        </div>
     <?php } ?>
 </div>
 
@@ -50,7 +67,7 @@
     var languageName = navigator.language == "en-US" ? "en" : "zh";
     var languageNum = languageName == "zh" ? 1 : UserClientLangEN;
     var src = $("#gifInfo").attr("src");
-    autoImgSize(src, 100, 100);
+    autoImgSize(src, 200, 200);
 
     function autoImgSize(src, h, w)
     {
