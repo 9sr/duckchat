@@ -2044,6 +2044,7 @@ deleteSpeakerInfo=[];
 function handleRemoveSpeaker()
 {
     var delSpeakerLength=deleteSpeakerInfo.length;
+
     for(var i=0; i<delSpeakerLength; i++) {
         var speakerInfo = deleteSpeakerInfo[i];
         $("."+speakerInfo.userId).remove();
@@ -2057,7 +2058,6 @@ function handleRemoveSpeaker()
         getNotMsgImg(speakerInfo.userId, speakerInfo.avatar)
     }
     deleteSpeakerInfo=[];
-
     var groupId = localStorage.getItem(chatSessionIdKey);
     sendGroupProfileReq(groupId, handleGetGroupProfile);
 }
@@ -2073,6 +2073,25 @@ $(document).on("click", ".remove_speaker_btn", function () {
         avatar:$(this).attr("avatar"),
     }
     deleteSpeakerInfo.push(speakerInfo);
+    updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleRemoveSpeaker)
+});
+
+$(document).on("click", ".remove-all-speaker", function () {
+    var removeSpeakers = $(".remove-speaker");
+    var removeSpeakersLength = removeSpeakers.length;
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var speakerUserIds = [];
+    for(var i=0; i<removeSpeakersLength;i++) {
+        var speakers = removeSpeakers[i];
+        var userId = $(speakers).attr("userId");
+        speakerUserIds.push(userId);
+        var speakerInfo = {
+            userId:userId,
+            nickname:$(speakers).attr("nickname"),
+            avatar:$(speakers).attr("avatar"),
+        }
+        deleteSpeakerInfo.push(speakerInfo);
+    }
     updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleRemoveSpeaker)
 });
 

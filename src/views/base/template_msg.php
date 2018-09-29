@@ -465,7 +465,11 @@
 
 
 <script id="tpl-speaker-member" type="text/html">
-    <div class="pw-contact-row choose-member {{userId}} "  user-id="{{userId}}">
+       {{if isSpeaker == true}}
+        <div class="pw-contact-row choose-member remove-speaker {{userId}} "  userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}">
+        {{else}}
+        <div class="pw-contact-row choose-member {{userId}} "  userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}">
+        {{/if}}
         <div class="pw-contact-row-image">
             <img class="useravatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" />
         </div>
