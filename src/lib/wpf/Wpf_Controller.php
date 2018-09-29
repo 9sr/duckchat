@@ -92,6 +92,7 @@ abstract class Wpf_Controller
         $configSampleNew =  require($sampleFileName);
         $configOlder['dbVersion'] = isset($configOlder['dbVersion'] ) ? $configOlder['dbVersion']  : 0;
 
+        $ctx = new BaseCtx();
         if(file_exists($configFileName) && ($configOlder['dbVersion'] < $configSampleNew['dbVersion'])) {
             $configs = array_merge($configSampleNew, $configOlder);
             $contents = var_export($configs, true);
@@ -99,9 +100,9 @@ abstract class Wpf_Controller
             if (function_exists("opcache_reset")) {
                 opcache_reset();
             }
-            $upgradeFlag = $this->ctx->ZalyDB->upgradeDB();
+            $upgradeFlag = $ctx->ZalyDB->upgradeDB();
             if($upgradeFlag == false) {
-                $this->ctx->getLogger()->error("zaly.db", "upgrade db is failed");
+                $ctx->getLogger()->error("zaly.db", "upgrade db is failed");
                 return;
             }
             $configOlder['dbVersion'] = $configSampleNew['dbVersion'];

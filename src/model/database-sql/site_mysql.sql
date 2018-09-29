@@ -211,13 +211,18 @@ CREATE TABLE IF NOT EXISTS siteUic(
 
 ALTER TABLE siteUic CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS siteUserGif(
+
+CREATE TABLE IF NOT EXISTS siteGif(
                       id INTEGER PRIMARY KEY AUTO_INCREMENT,
                       gifId VARCHAR(100) NOT NULL,
-                      userId VARCHAR(100) NOT NULL,
                       gifUrl  VARCHAR(100) NOT NULL,
                       width INTEGER not null default 0,
                       height INTEGER not null default 0,
                       addTime BIGINT,
-                      INDEX(userId))DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+                      UNIQUE (gifUrl));
 
+CREATE TABLE IF NOT EXISTS siteUserGif(
+                      id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                      gifId VARCHAR(100) NOT NULL,
+                      userId VARCHAR(100) NOT NULL,
+                      addTime BIGINT);

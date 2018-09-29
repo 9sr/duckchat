@@ -500,11 +500,29 @@ class InstallDBController
 
     private function _initSiteUserGif()
     {
-        for($i=1; $i<8; $i++) {
-            $gifId = ZalyHelper::generateStrKey();
-            $dataSql = "insert into siteUserGif ( gifId, userId, gifUrl, width, height) VALUES ('{$gifId}', 0, 'default-{$i}.gif', 200, 200);";
-            $this->db->exec($dataSql);
-        }
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+
+            for($i=1; $i<8; $i++) {
+                try{
+                    $dirName = WPF_LIB_DIR . "/../{$this->attachmentDir}/default";
+                    if (!is_dir($dirName)) {
+                        mkdir($dirName, 0755, true);
+                    }
+                    $gifDirName =   WPF_LIB_DIR . "/../{$this->gifDir}/default";
+                    $this->db->beginTransaction();
+                    $gifId = ZalyHelper::generateStrKey();
+                    $dataSql = "insert into siteGif (gifId, gifUrl, width, height) VALUES ('{$gifId}', 'default-{$i}.gif', 200, 200);";
+                    $this->db->exec($dataSql);
+                    $dataSql = "insert into siteUserGif(userId, gifId) VALUES ('duckchat', '{$gifId}');";
+                    $this->db->exec($dataSql);
+                    $this->db->commit();
+                    rename($gifDirName."/".$i.".gif", $dirName."/".$i.".gif");
+                }catch (Exception $ex) {
+                    $this->db->rollBack();
+                    $this->logger->error($tag, $ex);
+                }
+            }
+        $this->logger->info("site.install.db", "init siteUserGif finish success=");
     }
 
     public function insertData($tableName, $data)

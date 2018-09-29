@@ -45,13 +45,14 @@ class ZalyDB
      */
     private function initSiteWithMysql(array $config)
     {
+        $dbName = $config['mysql']['dbName'];
         $dbHost = $config['mysql']['dbHost'];
         $dbPort = $config['mysql']['dbPort'];
         $dbUserName = $config['mysql']['dbUserName'];
         $dbPwssword = $config['mysql']['dbPassword'];
 
         //check mysql args
-        $dbDsn = "mysql:host=$dbHost;port=$dbPort;";//;dbname=$dbName
+        $dbDsn = "mysql:host=$dbHost;port=$dbPort;dbname=$dbName";
         $options = array(
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
         );
@@ -78,6 +79,7 @@ class ZalyDB
         try {
             $this->db->beginTransaction();
             foreach ($_sqlArr as $sql) {
+                error_log("===========mysql====sql===========".$sql);
                 $this->db->exec($sql);
             }
             $this->db->commit();
@@ -185,12 +187,14 @@ class ZalyDB
             if (!is_dir($dirName)) {
                 mkdir($dirName, 0755, true);
             }
-            $gifDirName =  $this->baseUrl  . "/{$this->gifDir}";
+            $gifDirName =  $this->baseUrl  . "/{$this->gifDir}/default";
 
             for($i=1; $i<8; $i++) {
                 rename($gifDirName."/".$i.".gif", $dirName."/".$i.".gif");
                 $gifId = ZalyHelper::generateStrKey();
-                $dataSql = "insert into siteUserGif ( gifId, userId, gifUrl, width, height) VALUES ('{$gifId}', 0, 'default-{$i}.gif', 200, 200);";
+                $dataSql = "insert into siteGif (gifId, gifUrl, width, height) VALUES ('{$gifId}', 'default-{$i}.gif', 200, 200);";
+                $this->db->exec($dataSql);
+                $dataSql = "insert into siteUserGif(userId, gifId) VALUES ('duckchat', '{$gifId}');";
                 $this->db->exec($dataSql);
             }
         }catch (Exception $ex) {
