@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-control" content="public,max-age=310">
     <title><?php if ($lang == "1") { ?>用户广场<?php } else { ?>User Square<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -215,12 +216,15 @@
 <div class="wrapper-mask" id="wrapper-mask" style="visibility: hidden;"></div>
 
 <div class="wrapper" id="wrapper">
+
+    <input type="hidden" id="myUserId" userId="<?php echo $userId ?>"
+           nickname="<?php echo $nickname ?>">
+
     <div class="layout-all-row">
 
         <div class="list-item-center">
 
             <?php foreach ($userList as $i => $user) { ?>
-                <!--                <div class="item-row user-id-item" userId="--><?php //echo $user['userId'] ?><!--">-->
                 <div class="item-row">
                     <div class="item-header">
                         <img class="user-avatar-image"
@@ -255,8 +259,6 @@
 
 </div>
 
-
-<div class="wrapper-mask" id="wrapper-mask" style="display: none;"></div>
 
 <div class="popup-template" style="display:none;">
 
@@ -445,27 +447,33 @@
         }
     });
 
-    function applyAddFriend(friendUserId) {
+    $(".applyButton").click(function () {
+        var lang = getLanguage();
+        var myNickname = $("#myUserId").attr("nickname");
+        var title = lang == 1 ? "申请好友" : "Apply Friend";
+        var inputBody = "I'm " + myNickname + ",apply for friend";
 
-        var title = "申请好友";
-        var inputBody = "我是xxx,申请添加好友";
+        if (lang == 1) {
+            inputBody = "我是 " + myNickname + ",申请添加好友";
+        }
 
-        $("#update-user-button").attr("data", friendUserId);
+        var friendId = $(this).attr("userId");
+
+        $("#update-user-button").attr("data", friendId);
         showWindow($(".config-hidden"));
 
         $(".popup-group-title").html(title);
         $(".popup-group-input").val(inputBody);
+    });
 
-    }
 
     function sendRequest() {
-        var userId = $("#user-id").attr("data");
-        var value = $(".popup-group-input").val();
         var friendUserId = $("#update-user-button").attr("data");
-
+        var applyInfo = $(".popup-group-input").val();
 
         var data = {
-            'friendId': friendUserId
+            'friendId': friendUserId,
+            'greeting': applyInfo
         };
 
         var url = "index.php?action=miniProgram.square.apply";
@@ -478,9 +486,7 @@
     function applyResponse(url, data, result) {
         var res = JSON.parse(result);
 
-        if (res.errCode == "success") {
-            alert("申请成功");
-        } else {
+        if (res.errCode != "success") {
             alert(res.errInfo);
         }
     }
@@ -537,7 +543,7 @@
                         + '<div class="item-body-tail">';
 
                     if (!user['isFollow']) {
-                        userHtml += '<button class="addButton" onclick="applyAddFriend(\'' + user["userId"] + '\')">添加好友</button>';
+                        userHtml += '<button class="addButton applyButton" userId="' + user["userId"] + '" > 添加好友 </button>';
                     }
 
 
