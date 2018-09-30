@@ -959,17 +959,33 @@ $(document).on("click", ".add-friend-by-group-member",function () {
     $(".group-member-info")[0].style.display='none';
 });
 
+function closeGroupMemberInfo()
+{
+    $(".group-member-info")[0].style.display='none';
+}
 
 $(document).on("click", ".group-member", function (event) {
     event.stopPropagation();
     event.preventDefault();
     var userId = $(this).attr("userId");
+    var relation = localStorage.getItem(friendRelationKey+userId);
+    var html = template("tpl-group-member-info", {
+        userId : userId,
+        nickname:$(this).attr("nickname"),
+        relation:relation,
+        avatar:$(".info-avatar-"+userId).attr("src"),
+    });
+    html = handleHtmlLanguage(html);
+    $(".group-member-info").html(html);
     getFriendProfile(userId, true, handleGetGroupMemberInfo);
 });
 
 $(document).on("click", ".see_all_group_member", function () {
     groupMemberListOffset = 0;
+
+
     showWindow($("#group-member-list-div"));
+    $(".group-member-info")[0].style.display="none";
     $(".group-member-content").html("");
     addOwnerAndAdminsToGroupMemberList();
     getGroupMembers(groupMemberListOffset, defaultCountKey, initGroupMemberForGroupMemberList);
@@ -2448,7 +2464,6 @@ function applyFriend() {
     var userId = $("#add-friend-div").attr("userId");
     var greetings = $(".apply-friend-reason").val();
     sendFriendApplyReq(userId, greetings, handleApplyFriend);
-
 }
 
 function sendFriendApplyReq(userId, greetings, callback)
@@ -2552,14 +2567,18 @@ function handleHtmlLanguage(html)
         var changeHtmlValue = $(this).attr("data-local-value");
         var valueHtml = $(this).html();
         var newValueHtml = $.i18n.map[changeHtmlValue];
-        html = html.replace(valueHtml, newValueHtml);
+        if(newValueHtml != undefined && newValueHtml != "" && newValueHtml != false) {
+            html = html.replace(valueHtml, newValueHtml);
+        }
     });
 
     $(html).find("[data-local-placeholder]").each(function () {
         var placeholderValue = $(this).attr("data-local-placeholder");
         var placeholder = $(this).attr("placeholder");
         var newPlaceholder = $.i18n.map[placeholderValue];
-        html = html.replace(placeholder, newPlaceholder);
+        if(newPlaceholder != undefined && newPlaceholder != false && newPlaceholder != "") {
+            html = html.replace(placeholder, newPlaceholder);
+        }
     });
 
     return html;

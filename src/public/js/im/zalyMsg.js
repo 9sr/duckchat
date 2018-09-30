@@ -127,6 +127,9 @@ function appendOrInsertRoomList(msg, isInsert, showNotification)
             msgContent = msg["notice"].body;
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
             break;
+        case MessageType.MessageWebNotice:
+            msgContent = msg["webNotice"].title;
+            break
         case MessageType.MessageAudio:
             msgContent = "[语音消息]";
             break;
@@ -872,7 +875,10 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageWebNotice:
-                html =  msg['webNotice'].code;
+                var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                html = template("tpl-receive-msg-web-notice", {
+                    hrefUrl:hrefUrl
+                });
                 break;
             case MessageType.MessageWeb :
                 var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
@@ -980,18 +986,9 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageWebNotice :
-                var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
-                var hrefUrl = msg['webNotice'].hrefURL;
+                var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
                 html = template("tpl-receive-msg-web-notice", {
-                    roomType: msg.roomType == GROUP_MSG ? 1 : 0,
-                    nickname: msg.nickname,
-                    msgId : msgId,
-                    msgTime : msgTime,
-                    userId :msg.fromUserId,
-                    groupUserImg : groupUserImageClassName,
-                    avatar:msg.userAvatar,
-                    hrefURL:hrefUrl,
-                    linkUrl:linkUrl,
+                    hrefUrl:hrefUrl
                 });
                 break;
             case MessageType.MessageWeb :

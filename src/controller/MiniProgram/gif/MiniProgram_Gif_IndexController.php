@@ -85,7 +85,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
                 "toId" => $this->toId,
                 "fromUserId" => $this->userId,
             ];
-            $type = $_GET['type'] ? $_GET['type'] : "";
+            $type = isset($_GET['type']) ? $_GET['type'] : "";
             if($type == "see_gif") {
                 $gifId = isset($_GET['gifId']) ? $_GET['gifId'] : 'LbdKkLxXXbcatS2t';
                 $gif = $this->ctx->SiteUserGifTable->getGifInfo($this->userId, $gifId);
@@ -107,7 +107,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
             } else {
                 $gifs = $this->ctx->SiteUserGifTable->getGifByUserId($this->userId, 0, $this->limit);
                 foreach ($gifs as $key => $gif) {
-                    $gif['gifUrl'] = "index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
+                    $gif['gifUrl'] = "./index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
                     $gif['isDefault'] = $gif['userId'] === 0 ?  0 : 1;
                     $gifs[$key] = $gif;
                 }

@@ -232,7 +232,7 @@
     <div class="msg-row msg-text">
         <div class="right-msg-body text-align-center">
             <div class="text-align-right msg-notice">
-                <iframe src="{{linkUrl}}" frameborder="no" height="100%;" class="zalyiframe"></iframe>
+                <iframe src="{{hrefUrl}}" frameborder="no" height="100%;" class="zalyiframe"></iframe>
             </div>
         </div>
     </div>
@@ -338,7 +338,7 @@
             <img src="../../public/img/msg/apply_list.png" />
             <div  class="apply-friend-list apply_friend_num" style="display: none;" ></div>
         </div>
-        <div class="pw-contact-row-name" data-local-value="newFriendsTip">New Friends</div>
+        <div class="pw-contact-row-name" data-local-value="newFriendsTip">新朋友</div>
     </div>
 </script>
 
@@ -363,14 +363,14 @@
             </div>
             <div class="apply-body">
                 <div class="apply-friend-body">
-                    <div class="apply-friend-desc">{{nickname}} <span data-local-value="applyFriendTip">Apply Friend</span></div>
+                    <div class="apply-friend-desc">{{nickname}} <span data-local-value="applyFriendTip">新朋友</span></div>
                     <div class="apply-friend-operation" userId="{{userId}}">
-                        <button class="refused-apply" data-local-value="refuseTip"> Refuse</button>
-                        <button class="agreed-apply" data-local-value="agreeTip"> Agree </button>
+                        <button class="refused-apply" data-local-value="refuseTip"> 拒绝</button>
+                        <button class="agreed-apply" data-local-value="agreeTip"> 接受 </button>
                     </div>
                 </div>
                 <div class="apply-friend-msg">
-                    <span data-local-value="introductionTip">Introduction</span>{{greetings}}
+                    <span data-local-value="introductionTip">附言</span>{{greetings}}
 
                 </div>
             </div>
@@ -382,25 +382,25 @@
 <script id="tpl-group-user-menu" type="text/html">
     <div id="group-user-menu" userId="{{userId}}" >
         {{if isFriend == 1}}
-            <div class="item p-2" id="open-temp-chat" data-local-value="openChatTip"> Open Chat</div>
+            <div class="item p-2" id="open-temp-chat" data-local-value="openChatTip">发起聊天</div>
         {{else}}
 <!--            <div class="item p-2" id="open-temp-chat" data-local-value="openTempChatTip"> Open Temp Chat</div>-->
-            <div class="item p-2" id="add-friend" data-local-value="addFriendTip"> Add Friend</div>
+            <div class="item p-2" id="add-friend" data-local-value="addFriendTip"> 添加好友</div>
         {{/if}}
         {{if isAdmin == 1}}
             {{if (isOwner == 1 && !memberIsAdmin)}}
-                <div class="item p-2" id="set-admin" data-local-value="setAdminTip">Set Admin</div>
+                <div class="item p-2" id="set-admin" data-local-value="setAdminTip">设为管理员</div>
             {{else if (isOwner == 1 && memberIsAdmin != false)}}
-                 <div class="item p-2" id="remove-admin" data-local-value="removeAdminTip"> Remove Admin</div>
+                 <div class="item p-2" id="remove-admin" data-local-value="removeAdminTip">移除管理员</div>
             {{/if}}
 
             {{if (isOwner == 1 && !memberIsSpeaker)}}
-                    <div class="item p-2" id="set-speaker" data-local-value="setSpeakerTip"> Set Speaker</div>
+                    <div class="item p-2" id="set-speaker" data-local-value="setSpeakerTip">设为发言人</div>
             {{else if (isOwner == 1 && memberIsSpeaker != false)}}
-                    <div class="item p-2" id="remove-speaker" data-local-value="removeSpeakerTip">Remove Speaker</div>
+                    <div class="item p-2" id="remove-speaker" data-local-value="removeSpeakerTip">移除发言人</div>
             {{/if}}
 
-            <div class="item p-2" id="remove-group-chat" data-local-value="removeGroupMemberTip"> Remove Member</div>
+            <div class="item p-2" id="remove-group-chat" data-local-value="removeGroupMemberTip">移除成员</div>
         {{/if}}
     </div>
 
@@ -432,10 +432,10 @@
         <div style="text-align: center;margin:0 auto;width: 34rem; height:1px;background:rgba(223,223,223,1);" ></div>
         <div class="d-flex flex-row justify-content-center">
             <div class="self-qrcode" id="self-qrcode" style="margin-top: 1rem;" >
-                <span class="self-qrcode" data-local-value="friendQrcodeTip" onclick="getSelfQrcode()">Self Qrcode</span>
+                <span class="self-qrcode" data-local-value="friendQrcodeTip" onclick="getSelfQrcode()">二维码</span>
             </div>
             <div class="self-qrcode" id="logout" >
-                <span class="logout-span" id="logout-span" data-local-value="logoutTip" onclick="logout(event)">Logout</span>
+                <span class="logout-span" id="logout-span" data-local-value="logoutTip" onclick="logout(event)">退出</span>
             </div>
         </div>
     </div>
@@ -488,6 +488,9 @@
 </script>
 
 <script id="tpl-group-member-info" type="text/html">
+    <div style="position: relative;">
+        <img style="width: 1rem;height:1rem; position: absolute;right: 2rem;top: 1rem;cursor: pointer" onclick="closeGroupMemberInfo()"  src="../../public/img/msg/btn-close.png">
+    </div>
     <div class="group-member-img">
         <img class="useravatar info-avatar-{{userId}}" src="{{avatar}}" />
     </div>
@@ -550,7 +553,9 @@
     </div>
 </script>
 <script id="tpl-group-member-body-detail" type="text/html">
-    <img class="useravatar group-member-avatar info-avatar-{{userId}} group-member-avatar-{{userId}}" aria-label="{{nickname}}" src="../../public/img/msg/default_user.png" />
+    <div style="display: flex" class="hint--bottom-left" aria-label="{{nickname}}">
+        <img class="useravatar group-member-avatar info-avatar-{{userId}} group-member-avatar-{{userId}} " aria-label="{{nickname}}" src="../../public/img/msg/default_user.png" />
+    </div>
 </script>
 
 
@@ -575,7 +580,7 @@
             <div class="p-2">
                 <img class="no_data_img" src="../../public/img/no_data.png"/>
             </div>
-            <div class="p-2 no_data_tip" data-local-value="noFriendDataTip">No Friends For Invite</div>
+            <div class="p-2 no_data_tip" data-local-value="noFriendDataTip">暂无好友</div>
         </div>
     </div>
 </script>
@@ -618,14 +623,14 @@
         </div>
 
         <div class="d-flex flex-row justify-content-center width-percent100" style="margin-top: 2rem;" >
-            <button type="button" class="btn create_button copy-share-group"  data-local-value="copyGroupQrcodeUrlTip">Copy Group Url</button>
-            <button type="button" class="btn create_button save-share-group" data-local-value="saveGroupQrcodeImg">Save Qrcode</button>
+            <button type="button" class="btn create_button copy-share-group"  data-local-value="copyGroupQrcodeUrlTip">复制链接</button>
+            <button type="button" class="btn create_button save-share-group" data-local-value="saveGroupQrcodeImg">保存图片</button>
         </div>
 </script>
 
 <script id="tpl-download-app-div" type="text/html">
-    <div class="app_download_header">分享站点</div>
-    <div class="app_download_subheader">随时随地享受畅聊体验，同时还有语音聊天功能等你来哦！</div>
+    <div class="app_download_header" data-local-value="shareSiteTip" >分享站点</div>
+    <div class="app_download_subheader" data-local-value="shareSiteCommentTip">随时随地享受畅聊体验，同时还有语音聊天功能等你来哦！</div>
     <div id="qrcodeCanvas"></div>
     <div class="download_button_div" style="margin-left:26rem;margin-top:2rem">
         <div class="ios_info">
@@ -641,7 +646,7 @@
 <script id="tpl-add-friend-div" type="text/html">
 
         <div class="flex-container justify-content-center" >
-            <div class="header_tip_font  align-items-center" style="margin-top: 6rem;" data-local-value="addFriendTip">Add Friend</div>
+            <div class="header_tip_font  align-items-center" style="margin-top: 6rem;" data-local-value="addFriendTip">添加好友</div>
         </div>
 
         <div class="d-flex flex-row justify-content-center add-friend-div-img"  >
@@ -652,13 +657,13 @@
         </div>
 
         <div class="d-flex flex-row justify-content-center" >
-            <input type="text" class="form-control  create_group_box_div_input apply-friend-reason" onkeydown="addFriendByKeyDown(event)" data-local-placeholder="addFriendReasonPlaceholder"  placeholder="Please Enter Introduce" >
+            <input type="text" class="form-control  create_group_box_div_input apply-friend-reason" onkeydown="addFriendByKeyDown(event)" data-local-placeholder="addFriendReasonPlaceholder"  placeholder="请输入附言" >
         </div>
 
         <div class="line"></div>
 
         <div class="d-flex flex-row justify-content-center width-percent100 margin-top10" style="text-align:center; ">
-            <button type="button" class="btn create_button apply-friend" data-local-value="sendTip">Send</button>
+            <button type="button" class="btn create_button apply-friend" data-local-value="sendTip">发送</button>
         </div>
 
     </script>
