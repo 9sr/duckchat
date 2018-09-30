@@ -30,7 +30,7 @@ return array(
             'port' => 25,
         ),
     'dbType' => 'sqlite',
-    'dbVersion' => '3',
+    'dbVersion' => '2',
     'sqlite' =>
         array(
             'sqliteDBPath' => '.',
