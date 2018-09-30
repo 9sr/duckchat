@@ -9,6 +9,8 @@
     <script type="text/javascript" src="../../../public/js/jquery.min.js"></script>
     <script src="../../../public/js/zalyjsNative.js"></script>
     <script src="../../../public/js/template-web.js"></script>
+    <script src="../../../public/js/zalyHelper.js"></script>
+
     <style>
         body, html {
             font-size: 10.66px;
@@ -95,8 +97,7 @@
     var addGifType = "add_gif";
     var delGifType = "del_gif";
 
-    var languageName = navigator.language == "en-US" ? "en" : "zh";
-    var languageNum = languageName == "zh" ? UserClientLangZH : UserClientLangEN;
+    var languageNum = getLanguage();
 
     if(gifLength>1) {
         for(var i=1; i<gifLength ;i ++) {

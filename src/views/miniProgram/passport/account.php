@@ -67,9 +67,8 @@
 <script src="../../public/js/im/zalyClient.js"></script>
 <script src="../../public/js/im/zalyBaseWs.js"></script>
 <script type="text/javascript">
-       var languageName = navigator.language == "en-US" ? "en" : "zh";
-    var languageNum = languageName == "zh" ? UserClientLangZH : UserClientLangEN;
-
+    var languageName = getLanguageName();
+    var languageNum = getLanguage();
     jQuery.i18n.properties({
         name: "lang",
         path: '../../public/js/config/',
@@ -255,7 +254,9 @@
                 var error = JSON.parse(resp);
                 if(error["errCode"].length>1) {
                     zalyjsAlert(error['errCode']);
+                    return;
                 }
+                window.close();
             },
             failed:function (error) {
                 console.log(error);

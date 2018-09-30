@@ -24,8 +24,14 @@ MessageType = {
     MessageEventFriendRequest : "MessageEventFriendRequest",
     MessageEventStatus  : "MessageEventStatus",   // -> StatusMessage
     MessageEventSyncEnd :"MessageEventSyncEnd",
-
 };
+
+
+SetSpeakerType = {
+    AddSpeaker    : "AddSpeaker",    //add new speakers
+    RemoveSpeaker  : "RemoveSpeaker",    //remove old speakers
+    CloseSpeaker  : "CloseSpeaker",    //close speaker function
+}
 
 UserClientLangZH = "1";
 UserClientLangEN = "0";
@@ -164,6 +170,7 @@ chatTypeKey = "chat_type";
 WidgetChat = "widget_chat";
 DefaultChat = "default_chat";
 MobileChat = "mobile_chat";
+speakerUserIdsKey="speaker_userIds_";
 
 DefaultTitle = "DuckChat 聊天室";
 
@@ -185,12 +192,27 @@ reqTimeout = 1000*60*5;///5分钟
 defaultUserName = "匿名";
 
 downloadFileUrl = "./index.php?action=http.file.downloadFile";
-languageName = navigator.language == "en-US" ? "en" : "zh";
+
+function getLanguage() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return UserClientLangZH;
+    }
+    return UserClientLangEN;
+}
+
+function getLanguageName() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return "zh";
+    }
+    return "en";
+}
+
+languageName = getLanguageName();
+languageNum = getLanguage();
 
 uploadFileUrl = './index.php?action=http.file.uploadWeb';
-
-languageNum = languageName == "en" ? UserClientLangEN : UserClientLangZH;
-
 isSyncingMsg = false;
 isPreSyncingMsgTime="";
 

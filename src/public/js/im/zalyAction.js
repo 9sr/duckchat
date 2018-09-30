@@ -43,6 +43,7 @@ var ZalyAction = {
     api_passport_passwordModifyPassword : "site.ApiPassportPasswordModifyPasswordRequest",
 
     api_friend_search:"site.ApiFriendSearchRequest",
+    api_group_setSpeaker: "site.ApiGroupSetSpeakerRequest",
 
     im_stc_news :"im.stc.news",
     im_stc_message_key :"im.stc.message",

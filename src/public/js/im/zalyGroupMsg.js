@@ -88,8 +88,6 @@ function handleSendFriendApplyReq()
     alert("已经发送好友请求");
 }
 
-getNotMsgImg(token, avatar);
-
 function getNotMsgImg(userId, avatarImgId)
 {
     if(avatarImgId == undefined || avatarImgId == "" || avatarImgId.length<1) {
@@ -124,6 +122,7 @@ function getNotMsgImg(userId, avatarImgId)
     xhttp.send();
 }
 
+
 function getMsgImg(imgId, isGroupMessage, msgId)
 {
     if(imgId == undefined || imgId == "" || imgId.length<1) {
@@ -145,13 +144,14 @@ function getMsgImg(imgId, isGroupMessage, msgId)
     xhttp.send();
 }
 
+getNotMsgImg(token, avatar);
 
 unselectMemberOffset = 0;
 
 $(document).on("click", ".invite_people", function () {
     unselectMemberOffset = 0;
     var action = "api.group.invitableFriends";
-    groupId = localStorage.getItem(chatSessionIdKey);
+    var groupId = localStorage.getItem(chatSessionIdKey);
     var reqData = {
         "groupId": groupId,
         "offset" : unselectMemberOffset,
@@ -183,7 +183,7 @@ function getUnselectMemberListHtml(results)
     if(list) {
         $(".pw-left").html("");
         var i;
-        unselectMemberOffset = (unselectMemberOffset+defaultCountKey);
+        unselectMemberOffset = Number(unselectMemberOffset+defaultCountKey);
         var length = list.length;
         for(i=0; i<length ; i++) {
             var user = list[i];
@@ -219,6 +219,7 @@ $(function(){
     });
 });
 
+
 function appendUnselectMemberList(results)
 {
     var html = getUnselectMemberListHtml(results);
@@ -236,24 +237,27 @@ unselectRemoveMemberOffset = 0;
 $(document).on("click", ".remove_member", function () {
     unselectRemoveMemberOffset = 0;
     showWindow($("#group-remove-people"));
+    $(".remove-people-div").html("");
+    getGroupMembers(unselectRemoveMemberOffset, defaultCountKey, initGroupRemoveMemberList);
+});
+
+function getGroupMembers(offset, count, callback)
+{
     var action = "api.group.members";
     var groupId = localStorage.getItem(chatSessionIdKey);
     var reqData = {
         "groupId": groupId,
-        "offset" : unselectRemoveMemberOffset,
-        "count" : defaultCountKey,
+        "offset" : offset,
+        "count" : count,
     }
-    $(".remove-people-div").html("");
+    handleClientSendRequest(action, reqData, callback);
+}
 
-    handleClientSendRequest(action, reqData, initGroupMemberList);
-});
-
-
-function initGroupMemberList(results)
+function initGroupRemoveMemberList(results)
 {
     var list = results.list;
     if(list) {
-        unselectRemoveMemberOffset = (unselectRemoveMemberOffset+defaultCountKey);
+        unselectRemoveMemberOffset = Number(unselectRemoveMemberOffset+defaultCountKey);
         var length = list.length;
         var html = "";
         for(i=0; i<length ; i++) {
@@ -263,7 +267,6 @@ function initGroupMemberList(results)
                 nickname:user.nickname
             })
             html = handleHtmlLanguage(html);
-
             $(".remove-people-div").append(html);
             getNotMsgImg(user.userId, user.avatar);
         }
@@ -304,7 +307,24 @@ $(document).on("click", ".remove_member_from_group", function () {
     }
     removeMemberFromGroup(groupId, removeUserIds, removeMemberItemFromGroup)
 });
+removeMemberId="";
+function handleRemoveMember()
+{
+   try{
+       $("."+removeMemberId).remove();
+   }catch (error) {
 
+   }
+}
+
+$(document).on("click", ".remove_group_btn", function () {
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var userId = $(this).attr("userId");
+    removeMemberId=userId;
+    var removeUserIds = new Array();
+    removeUserIds.push(userId);
+    removeMemberFromGroup(groupId, removeUserIds, handleRemoveMember);
+});
 
 function removeMemberFromGroup(groupId, removeUserIds, callback)
 {
@@ -354,11 +374,123 @@ function quiteFromGroup()
     handleClientSendRequest(action, reqData, reloadPage);
 }
 
+unselectSpeakerMemberOffset = 0;
+function initSpeakerGroupMemberList(results)
+{
+    var list = results.list;
+    if(list) {
+        unselectSpeakerMemberOffset = Number(unselectSpeakerMemberOffset+defaultCountKey);
+        var length = list.length;
+        var html = "";
+        var groupId = localStorage.getItem(chatSessionIdKey);
+        var groupProfile = getGroupProfile(groupId);
+        var groupOwnerId = getGroupOwner(groupProfile);
+        var groupAdminIds = getGroupAdmins(groupProfile);
+        var speakerListMemberIds = getGroupSpeakers(groupProfile);
+
+        for(i=0; i<length ; i++) {
+            var user = list[i].profile;
+            var userId = user.userId;
+            var isType = "member";
+
+            if(groupOwnerId == userId) {
+                isType = "owner"
+            }
+            if(groupAdminIds && groupAdminIds.indexOf(userId) != -1) {
+                isType = "admin";
+            }
+
+            if(speakerListMemberIds && speakerListMemberIds.indexOf(userId) != -1) {
+                continue;
+            }
+
+            html = template("tpl-speaker-member", {
+                userId: user.userId,
+                nickname: user.nickname,
+                isSpeaker: false,
+                avatar: user.avatar,
+                isType:isType,
+            })
+            html = handleHtmlLanguage(html);
+            $(".speaker-group-member-div").append(html);
+            getNotMsgImg(user.userId, user.avatar);
+        }
+    }
+}
+
+$(".group_speakers").on("click", function () {
+    showWindow($("#group-speaker-people"));
+    unselectSpeakerMemberOffset =0;
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var groupProfileJsonStr = localStorage.getItem(profileKey+groupId);
+    var groupProfile = JSON.parse(groupProfileJsonStr);
+    var isAdmin = false;
+    if(checkGroupMemberAdminType(token, groupProfile)) {
+        isAdmin = true;
+    }
+    if(checkGroupOwnerType(token, groupProfile)){
+        isAdmin = true;
+    }
+    $(".speaker-people-div").html('');
+    if(isAdmin == false) {
+        $(".remove-all-speaker")[0].style.display = "none";
+    }
+
+    if(groupProfile.hasOwnProperty("speakers")) {
+        var speakers = groupProfile.speakers;
+        var speakersLength = speakers.length;
+        for(var i=0; i<speakersLength;i++){
+            var speaker = speakers[i];
+            var html = template("tpl-speaker-member", {
+                userId:speaker.userId,
+                nickname:speaker.nickname,
+                avatar:speaker.avatar,
+                isAdmin:isAdmin,
+                isSpeaker:true,
+                isType:"member",
+            });
+            html = handleHtmlLanguage(html);
+            $(".speaker-people-div").append(html);
+            getNotMsgImg(speaker.userId, speaker.avatar)
+        }
+    }
+
+    if(isAdmin) {
+        $(".speaker-group-member").remove();
+        var html = template("tpl-group-member-for-speaker", {});
+        html = handleHtmlLanguage(html);
+        $(".speaker-content").append(html);
+        $(".speaker-group-member-div").html('');
+        getGroupMembers(unselectSpeakerMemberOffset, defaultCountKey, initSpeakerGroupMemberList);
+    }
+});
+
+$(function () {
+    ////加载设置群成员列表
+    $('.speaker-content').scroll(function(){
+        var pwLeft = $(".speaker-content")[0];
+        var ch  = pwLeft.clientHeight;
+        var sh = pwLeft.scrollHeight;
+        var st = $('.speaker-content').scrollTop();
+
+        ////文档的高度-视口的高度-滚动条的高度
+        if((sh - ch - st) == 0){
+            groupId = localStorage.getItem(chatSessionIdKey);
+            var action = "api.group.members";
+            var reqData = {
+                "groupId": groupId,
+                "offset" : unselectSpeakerMemberOffset,
+                "count"  : defaultCountKey
+            }
+            handleClientSendRequest(action, reqData, initSpeakerGroupMemberList);
+        }
+    });
+});
+
 
 $(document).on("click", ".l-sb-item", function(){
     var currentActive = $(".left-sidebar").find(".l-sb-item-active");
     $(currentActive).removeClass("l-sb-item-active");
-
     $(this).addClass("l-sb-item-active");
 
     var dataType  = $(this).attr("data");
@@ -584,7 +716,7 @@ function  getFriendListHtml(results)
     }
     var u2List = results.friends;
     if(u2List) {
-        friendOffset = (friendOffset + defaultCountKey);
+        friendOffset = Number(friendOffset + defaultCountKey);
         var u2Length = u2List.length;
         for(i=0; i<u2Length; i++) {
             var u2 = u2List[i].profile;
@@ -645,7 +777,7 @@ function getGroupListHtml(results) {
     }
     var groupList = results.list;
     if(groupList) {
-        groupOffset = (groupOffset + defaultCountKey);
+        groupOffset = Number(groupOffset + defaultCountKey);
         var groupLength = groupList.length;
         html = "";
         for(i=0; i<groupLength; i++) {
@@ -680,17 +812,145 @@ $(function () {
     });
 });
 
+
+function displayGroupMemberForGroupInfo(results)
+{
+    var list = results.list;
+    $(".group-member-body").html("");
+    if(list) {
+        var length = list.length;
+        var html = "";
+        var bodyDivNum = undefined;
+        var divNum = 0;
+        var groupId = localStorage.getItem(chatSessionIdKey);
+        var groupProfile = getGroupProfile(groupId);
+
+        for(i=0; i<length ; i++) {
+            var newBodyNum=Math.floor((i/6));
+            if(newBodyNum != bodyDivNum) {
+                divNum = divNum+1;
+                html = template("tpl-group-member-body", {
+                    num:divNum
+                })
+                $(".group-member-body").append(html);
+            }
+            var user = list[i].profile;
+            html = template("tpl-group-member-body-detail", {
+                userId : user.userId,
+                nickname:user.nickname
+            });
+            html = handleHtmlLanguage(html);
+            $(".member_body_"+divNum).append(html);
+            getNotMsgImg(user.userId, user.avatar);
+            bodyDivNum = newBodyNum;
+        }
+    }
+}
+
 $(document).on("click", ".see_group_profile", function () {
     var chatSessionId   = localStorage.getItem(chatSessionIdKey);
     var chatSessionType = localStorage.getItem(chatSessionId);
 
+
     if(chatSessionType == U2_MSG) {
         sendFriendProfileReq(chatSessionId);
     } else {
-        sendGroupProfileReq(chatSessionId);
+        getGroupMembers(0, 18, displayGroupMemberForGroupInfo);
+        sendGroupProfileReq(chatSessionId, handleGetGroupProfile);
     }
     $('.right-body-sidebar').show();
 });
+
+groupMemberListOffset=0;
+groupMemberListAdmins=[];
+
+function addHtmlToGroupList(user, isType)
+{
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var groupProfile = getGroupProfile(groupId);
+
+    var isGroupOwner = checkGroupOwnerType(token, groupProfile);
+    var isGroupAdmin = checkGroupMemberAdminType(token, groupProfile);
+    var isPermission = isGroupOwner || isGroupAdmin ? "admin" : "member";
+
+    var html = template("tpl-group-member-list", {
+        userId : user.userId,
+        nickname:user.nickname,
+        isType:isType,
+        isPermission:isPermission
+    })
+    html = handleHtmlLanguage(html);
+    $(".group-member-content").append(html);
+    getNotMsgImg(user.userId, user.avatar);
+}
+
+function initGroupMemberForGroupMemberList(results)
+{
+    var list = results.list;
+    if(list) {
+        groupMemberListOffset = Number(groupMemberListOffset+defaultCountKey);
+        var length = list.length;
+        for(var i=0; i<length ; i++) {
+            var user = list[i].profile;
+            if(groupMemberListAdmins.indexOf(user.userId) == -1) {
+                addHtmlToGroupList(user, "member");
+            }
+        }
+    }
+}
+
+function addOwnerAndAdminsToGroupMemberList()
+{
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var groupProfile = getGroupProfile(groupId);
+    var owner = groupProfile.owner;
+    groupMemberListAdmins.push(owner.userId);
+    addHtmlToGroupList(owner, "owner", "admin");
+
+    if(groupProfile.hasOwnProperty("admins")) {
+        var admins = groupProfile.admins;
+        if(admins == null ){
+            return false;
+        }
+        var length = admins.length;
+        for(var i=0; i<length; i++) {
+            var admin = admins[i];
+            addHtmlToGroupList(admin, "admin");
+            groupMemberListAdmins.push(admin.userId);
+        }
+    }
+}
+
+$(document).on("click", ".see_all_group_member", function () {
+    groupMemberListOffset = 0;
+    showWindow($("#group-member-list"));
+    $(".group-member-content").html("");
+    addOwnerAndAdminsToGroupMemberList();
+    getGroupMembers(groupMemberListOffset, defaultCountKey, initGroupMemberForGroupMemberList);
+});
+
+$(function () {
+    ////加载设置群成员列表
+    $('.group-member-content').scroll(function(){
+        var pwLeft = $(".group-member-content")[0];
+        var ch  = pwLeft.clientHeight;
+        var sh = pwLeft.scrollHeight;
+        var st = $('.group-member-content').scrollTop();
+
+        ////文档的高度-视口的高度-滚动条的高度
+        if((sh - ch - st) == 0){
+            var groupId = localStorage.getItem(chatSessionIdKey);
+            var action = "api.group.members";
+            var reqData = {
+                "groupId": groupId,
+                "offset" : groupMemberListOffset,
+                "count"  : defaultCountKey
+            }
+            handleClientSendRequest(action, reqData, initGroupMemberForGroupMemberList);
+        }
+    });
+});
+
 
 $(document).on("click", ".group-profile", function () {
     var groupId =  $(this).attr("chat-session-id");
@@ -885,7 +1145,7 @@ function getGroupProfile(groupId)
         }
     }
 
-    if(reqProfileTime != false && reqProfileTime != null && ((nowTimestamp-reqProfileTime)<reqTimeout)) {
+    if(reqProfileTime != false && reqProfileTime != null && ((nowTimestamp-reqProfileTime)<reqTimeout) ) {
         return false;
     }
     sessionStorage.setItem(groupInfoReqKey, nowTimestamp);
@@ -994,12 +1254,12 @@ $(document).on("click", ".send_msg" , function(){
     sendMsgBySend();
 });
 
-function sendMsgBySend() {
+
+function sendMsgBySend()
+{
     var chatSessionId   = localStorage.getItem(chatSessionIdKey);
     var chatSessionType = localStorage.getItem(chatSessionId);
-
     var msgContent = $(".msg_content").val();
-
     var imgData = $("#msgImage img").attr("src");
 
     if(imgData) {
@@ -1307,8 +1567,8 @@ $(document).on("click", ".group-user-img", function(){
     var groupProfile = getGroupProfile(groupId);
     var isOwner = groupProfile.memberType == GroupMemberType.GroupMemberOwner ? 1 : 0;
     var isAdmin = groupProfile.memberType == GroupMemberType.GroupMemberAdmin || isOwner ? 1 : 0 ;
-    var memberIsAdmin = checkGroupMemberType(userId, groupProfile, "admin");
-    var memberIsSpeaker = checkGroupMemberType(userId, groupProfile, "speakers");
+    var memberIsAdmin = checkGroupMemberAdminType(userId, groupProfile);
+    var memberIsSpeaker = checkGroupMemberSpeakerType(userId, groupProfile)
 
     var isFriend = localStorage.getItem(friendRelationKey+userId) == FriendRelation.FriendRelationFollow ? 1 : 0;
     var html = template("tpl-group-user-menu", {
@@ -1324,15 +1584,38 @@ $(document).on("click", ".group-user-img", function(){
     $(node).append($(html));
 });
 
-
-function checkGroupMemberType(userId, groupProfile, memberType)
+function checkGroupMemberCanSpeaker(userId, groupProfile)
 {
     var users;
-    if(memberType == 'admin') {
-        users = groupProfile.admins;
-    } else if (memberType == 'speakers') {
-        users = groupProfile.speakers;
+    var speakersAll=false;
+    var usersJsonStr = localStorage.getItem(speakerUserIdsKey+groupProfile.id);
+    if(groupProfile.hasOwnProperty("speakers")) {
+        speakersAll = groupProfile.speakers;
     }
+    var isCanSpeak = false;
+
+    if((usersJsonStr == false || usersJsonStr == "undefined") && (speakersAll == false)) {
+        return isCanSpeak;
+    }
+
+   if(usersJsonStr != false && usersJsonStr != "undefined" && usersJsonStr != null) {
+       users = JSON.parse(usersJsonStr);
+       if(users != null ){
+           var length = users.length;
+           for(var i=0; i<length; i++) {
+               var speakerUserId = users[i];
+               if(speakerUserId == userId) {
+                   isCanSpeak = true;
+               }
+           }
+       }
+   }
+    return isCanSpeak;
+}
+
+function checkGroupMemberSpeakerType(userId, groupProfile)
+{
+    var users = groupProfile.speakers;
     if(users == null ){
         return false;
     }
@@ -1346,6 +1629,75 @@ function checkGroupMemberType(userId, groupProfile, memberType)
     }
     return false;
 }
+
+function checkGroupMemberAdminType(userId, groupProfile)
+{
+    var users = groupProfile.admins;
+    if(users == null ){
+        return false;
+    }
+    var length = users.length;
+    var i;
+    for(i=0; i<length; i++) {
+        var user = users[i];
+        if(user.userId == userId) {
+            return user;
+        }
+    }
+    return false;
+}
+
+function checkGroupOwnerType(userId, groupProfile)
+{
+    var owner = groupProfile.owner;
+    ///检查是否为群主
+    if(owner.userId == userId) {
+        return true;
+    }
+    return false;
+}
+
+
+function getGroupAdmins(groupProfile)
+{
+    var users = groupProfile.admins;
+    var groupAdminId =[];
+    if(users == null ){
+        return false;
+    }
+    var length = users.length;
+    var i;
+    for(i=0; i<length; i++) {
+        var user = users[i];
+        groupAdminId.push(user.userId);
+    }
+    return groupAdminId;
+}
+
+function getGroupSpeakers(groupProfile)
+{
+    var groupSpeakerId = [];
+
+    var users = groupProfile.speakers;
+    if(users == null ){
+        return groupSpeakerId;
+    }
+    var length = users.length;
+    var i;
+    for(i=0; i<length; i++) {
+        var user = users[i];
+        groupSpeakerId.push(user.userId);
+    }
+    return groupSpeakerId;
+}
+
+function  getGroupOwner(groupProfile)
+{
+    var owner = groupProfile.owner;
+    return  owner.userId;
+}
+
+
 ////设置新的聊天界面
 $(document).on("click", "#open-temp-chat", function () {
     var node = $(this)[0].parentNode;
@@ -1566,6 +1918,7 @@ function displayCurrentProfile()
                         } else {
                             $('.invite_people')[0].style.display = "none";
                         }
+
                         $('.permission-join')[0].style.display = "none";
                         $('.quit-group')[0].style.display = "flex";
                         $('.delete-group')[0].style.display = "none";
@@ -1822,7 +2175,6 @@ $(document).on("click", "#remove-admin", function () {
     }
 });
 
-
 $(document).on("click", "#set-speaker", function () {
     var groupId = localStorage.getItem(chatSessionIdKey);
     var node = $(this)[0].parentNode;
@@ -1831,13 +2183,124 @@ $(document).on("click", "#set-speaker", function () {
     ////追加操作
     if(confirm($.i18n.map['setSpeakerJsTip'])) {
         speakerUserIds.push(userId);
-        var values = {
-            type : ApiGroupUpdateType.ApiGroupUpdateSpeaker,
-            writeType:DataWriteType.WriteAdd,
-            speakerUserIds : speakerUserIds,
-        }
-        updateGroupProfile(groupId, values);
+        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.AddSpeaker, handleSetSpeaker);
     }
+});
+
+function updateGroupSpeaker(groupId, speakerUserIds, type, callback)
+{
+    var action = "api.group.setSpeaker";
+    var reqData = {
+        "groupId": groupId,
+        "setType" : type,
+        "speakerUserIds" :speakerUserIds,
+    }
+    handleClientSendRequest(action, reqData, callback);
+}
+
+function handleSetSpeaker(result)
+{
+    try{
+        var speakerUserIds = result.speakerUserIds;
+        var speakerKey = speakerUserIdsKey+localStorage.getItem(chatSessionIdKey);
+        localStorage.setItem(speakerKey, JSON.stringify(speakerUserIds));
+    }catch (error) {
+
+    }
+}
+addSpeakerInfo=[];
+
+function handleAddSpeaker()
+{
+    var addSpeakerIdLenght = addSpeakerInfo.length;
+    for(var i=0; i<addSpeakerIdLenght; i++) {
+        var speakerInfo = addSpeakerInfo[i];
+        $("."+speakerInfo.userId).remove();
+        var html = template("tpl-speaker-member",{
+            nickname:speakerInfo.nickname,
+            userId:speakerInfo.userId,
+            avatar:speakerInfo.avatar,
+            isSpeaker:true,
+            isType:"member",
+        });
+        html = handleHtmlLanguage(html);
+        $(".speaker-people-div").append(html);
+        getNotMsgImg(speakerInfo.userId, speakerInfo.avatar)
+    }
+    addSpeakerInfo=[];
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    sendGroupProfileReq(groupId, handleGetGroupProfile);
+}
+
+$(document).on("click", ".add_speaker_btn", function () {
+    var userId = $(this).attr("userId");
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var speakerUserIds = [];
+    speakerUserIds.push(userId);
+    var speakerInfo = {
+        userId:userId,
+        nickname:$(this).attr("nickname"),
+        avatar:$(this).attr("avatar"),
+    }
+    addSpeakerInfo.push(speakerInfo);
+    updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.AddSpeaker, handleAddSpeaker)
+});
+
+deleteSpeakerInfo=[];
+function handleRemoveSpeaker()
+{
+    var delSpeakerLength=deleteSpeakerInfo.length;
+
+    for(var i=0; i<delSpeakerLength; i++) {
+        var speakerInfo = deleteSpeakerInfo[i];
+        $("."+speakerInfo.userId).remove();
+        var html = template("tpl-speaker-member",{
+            nickname:speakerInfo.nickname,
+            userId:speakerInfo.userId,
+            avatar:speakerInfo.avatar,
+            isSpeaker:false,
+            isType:"member",
+        });
+        html = handleHtmlLanguage(html);
+        $(".speaker-group-member-div").append(html);
+        getNotMsgImg(speakerInfo.userId, speakerInfo.avatar)
+    }
+    deleteSpeakerInfo=[];
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    sendGroupProfileReq(groupId, handleGetGroupProfile);
+}
+
+$(document).on("click", ".remove_speaker_btn", function () {
+    var userId = $(this).attr("userId");
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var speakerUserIds = [];
+    speakerUserIds.push(userId);
+    var speakerInfo = {
+        userId:userId,
+        nickname:$(this).attr("nickname"),
+        avatar:$(this).attr("avatar"),
+    }
+    deleteSpeakerInfo.push(speakerInfo);
+    updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleRemoveSpeaker)
+});
+
+$(document).on("click", ".remove-all-speaker", function () {
+    var removeSpeakers = $(".remove-speaker");
+    var removeSpeakersLength = removeSpeakers.length;
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var speakerUserIds = [];
+    for(var i=0; i<removeSpeakersLength;i++) {
+        var speakers = removeSpeakers[i];
+        var userId = $(speakers).attr("userId");
+        speakerUserIds.push(userId);
+        var speakerInfo = {
+            userId:userId,
+            nickname:$(speakers).attr("nickname"),
+            avatar:$(speakers).attr("avatar"),
+        }
+        deleteSpeakerInfo.push(speakerInfo);
+    }
+    updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleRemoveSpeaker)
 });
 
 $(document).on("click", "#remove-speaker", function () {
@@ -1848,12 +2311,7 @@ $(document).on("click", "#remove-speaker", function () {
     ////追加操作
     if(confirm($.i18n.map['removeSpeakerJsTip'])) {
         speakerUserIds.push(userId);
-        var values = {
-            type : ApiGroupUpdateType.ApiGroupUpdateSpeaker,
-            writeType:DataWriteType.WriteDel,
-            speakerUserIds : speakerUserIds,
-        }
-        updateGroupProfile(groupId, values);
+        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleSetSpeaker)
     }
 });
 
@@ -2013,7 +2471,7 @@ function getApplyFriendListHtml(results)
     var html = "";
     setFriendListTip(results.totalCount);
     if(lists) {
-        applyFriendListOffset = (applyFriendListOffset + defaultCountKey);
+        applyFriendListOffset = Number(applyFriendListOffset + defaultCountKey);
         var length = lists.length;
         for (i = 0; i < length; i++) {
             var applyInfo = lists[i];
@@ -2475,7 +2933,6 @@ $(document).on("click", ".msg_img", function () {
 });
 
 $(document).on("click", ".right_msg_file_div", function () {
-
     downloadFile($(this));
 
 });

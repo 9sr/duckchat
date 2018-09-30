@@ -234,6 +234,7 @@ abstract class HttpBaseController extends \Wpf_Controller
         $params['jumpRoomId'] = $this->jumpRoomId;
         $params['jumpRoomType'] = $this->jumpRoomType;
         $params['jumpRelation'] = $this->jumpRelation;
+        $params['versionCode'] = ZalyConfig::getConfig("siteVersionCode");
 
         return parent::display($viewName, $params);
     }

@@ -50,13 +50,12 @@ html, body{
 
 
 /* Basic Layout**/
-
 .wrapper {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: stretch;
-    background-color: rgba(245,244,249,1);
+    background-color: rgba(245,244,249,1) !important;
 }
 
 .layout-left {
@@ -71,11 +70,11 @@ html, body{
 
 .left-sidebar {
     width: 7.5rem;
-    background: rgba(0,0,0,0.95);
+    background: rgba(0,0,0,0.95) !important;
 }
 
 .left-body {
-    background: rgba(255,255,255,1);
+    background: rgba(255,255,255,1) !important;
     width: 28.14rem;
     display: flex;
     flex-direction: column;
@@ -585,22 +584,118 @@ html, body{
     box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
 }
 
+#group-speaker-people, #group-member-list {
+    width:39rem;
+    height:59rem;
+    background:rgba(255,255,255,1);
+    box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
+}
 
+.group-member-content{
+    height:54rem;
+    overflow-y: scroll;
+}
+.sub-speaker-div{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    overflow-y: scroll;
+}
+.sub-speaker-title {
+    width:10.69rem;
+    height:1.88rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(102,102,102,1);
+    line-height:1.88rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.remove-all-speaker {
+    margin-right: 1rem;
+    width:12.95rem;
+    height:1.88rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(76,59,177,1);
+    line-height:1.88rem;
+    cursor: pointer;
+}
+.speaker-line{
+    width:35.18rem;
+    height:0.09rem;
+    background:rgba(243,243,243,1);
+    margin-left: 2rem;
+}
+
+.speaker-content{
+    height:48rem;
+    overflow-y: scroll;
+}
+
+.speaker-group-member-div {
+    overflow-y: scroll;
+}
+
+.remove_speaker_btn {
+    width:4.69rem;
+    height:2.63rem;
+    border-radius:0.38rem;
+    border:0.09rem solid rgba(76,59,177,1);
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(76,59,177,1);
+    cursor: pointer;
+    outline: none;
+}
+.speaker_remove_people, .speaker_add_people {
+    cursor: pointer;
+    outline: none;
+}
+.remove_member_btn_div {
+    cursor: pointer;
+    outline: none;
+    margin-right: 1rem;
+    margin-top: 1rem;
+}
+
+.add_speaker_btn {
+    width:4.69rem;
+    height:2.63rem;
+    background:rgba(76,59,177,1);
+    border-radius:0.38rem;
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    cursor: pointer;
+    outline: none;
+}
 .remove-people-div {
     overflow: scroll;
     height: 45rem;
+}
+
+.speaker-people-div {
 }
 
 #group-invite-people .pw-right {
     width: 30rem;
     display: flex;
     flex-direction: column;
-    margin-left: 1rem;
 }
 
 .pw-right-header {
-    height: 3.75rem;
     overflow: hidden;
+    height:4.69rem;
+    background:rgba(255,255,255,1);
+    box-shadow:0rem 0.09rem 0.38rem 0rem rgba(223,223,223,1);
+
     display: flex;
     align-items: center;
 
@@ -1005,7 +1100,6 @@ html, body{
     right:1rem;
     width: 2rem;
     height: 2rem;
-
     background-color: red;
     position: absolute;
     border-radius: 50%;
@@ -1100,11 +1194,13 @@ html, body{
 
 .mute {
     position: absolute;
-
     bottom: 1rem;
     right: 2rem;
     top: 4rem;
+    width: 1.4rem;
+    height: 1.5rem;
 }
+
 .mute_div {
     background-color: red;
     width: 1rem;
@@ -1142,6 +1238,20 @@ html, body{
     font-size:1.13rem;
     color:rgba(153,153,153,1);
 }
+.group-member-body {
+    height: 14rem;
+}
+.see_all_group_member {
+    height:1.5rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(76,59,177,1);
+    line-height:1.5rem;
+    cursor: pointer;
+    outline: none;
+}
+
 .group-desc-body textarea {
     width:24.27rem;
     height:13.04rem;
@@ -1209,9 +1319,10 @@ html, body{
     color:rgba(153,153,153,1);
     display: block;
 }
-.share-group {
+.share-group , .group_speakers{
     cursor: pointer;
 }
+
 #share_group {
     width:75rem;
     height: 47rem;
@@ -1546,6 +1657,21 @@ button:active{
     justify-content: center;
     margin-top: 2rem;
 }
+.ios_info, .android_info {
+    width:11rem;
+    height:1.88rem;
+    font-size:2.25rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(102,102,102,1);
+    display: flex;
+}
+
+.download_button_div {
+    display: flex;
+    justify-content: space-between;
+    width: 24rem;
+}
 
 
 .download_ios {
@@ -1638,4 +1764,37 @@ button:active{
     margin-top:2rem;
     text-align: left;
     width: 17rem;
+}
+
+.group_owner{
+    height:1.69rem;
+    background:rgba(244,67,54,1);
+    border: 0.09rem solid rgba(244,67,54,1);
+    border-radius:0.19rem;
+    font-size:0.94rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+}
+
+.group_admin{
+    height:1.69rem;
+    background:rgba(47,182,161,1);
+    border: 0.09rem solid rgba(47,182,161,1);
+    border-radius:0.19rem;
+    font-size:0.94rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+}
+.remove_group_btn{
+    height:2.63rem;
+    border-radius:0.38rem;
+    border:0.09rem solid rgba(76,59,177,1);
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(76,59,177,1);
+    cursor: pointer;
+    outline: none;
 }

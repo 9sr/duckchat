@@ -4,16 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <title>DuckChat 私有部署IM、社群运营神奇，支持iOS、Android、Web，最多支持500台服务器集群！</title>
-    <link rel="stylesheet" href="../../public/css/zaly-action-row.css" />
-    <link rel="stylesheet" href="../../public/css/zaly_contact.css" />
-    <link rel="stylesheet" href="../../public/css/zaly_apply_friend_list.css" />
-    <link rel="stylesheet" href="../../public/css/hint.min.css">
-    <link rel="stylesheet" href="../../public/css/zaly_msg.css" />
-    <link rel="stylesheet" media="(max-height: 650px)" href="../../public/css/zaly_media.css" />
-    <script src="../../public/js/jquery.min.js"></script>
-    <script src="../../public/js/template-web.js"></script>
-    <script src="../../public/js/jquery.i18n.properties.min.js"></script>
-    <script src="../../public/js/im/zalyKey.js"></script>
+    <link rel="stylesheet" href="../../public/css/zaly-action-row.css?_version=<?php echo $versionCode?>" />
+    <link rel="stylesheet" href="../../public/css/zaly_contact.css?_version=<?php echo $versionCode?>" />
+    <link rel="stylesheet" href="../../public/css/zaly_apply_friend_list.css?_version=<?php echo $versionCode?>" />
+    <link rel="stylesheet" href="../../public/css/hint.min.css?_version=<?php echo $versionCode?>">
+    <link rel="stylesheet" href="../../public/css/zaly_msg.css?_version=<?php echo $versionCode?>" />
+    <link rel="stylesheet" media="(max-height: 650px)" href="../../public/css/zaly_media.css?_version=<?php echo $versionCode?>" />
+    <script src="../../public/js/jquery.min.js?_version=<?php echo $versionCode?>"></script>
+    <script src="../../public/js/template-web.js?_version=<?php echo $versionCode?>"></script>
+    <script src="../../public/js/jquery.i18n.properties.min.js?_version=<?php echo $versionCode?>"></script>
+    <script src="../../public/js/im/zalyKey.js?_version=<?php echo $versionCode?>"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -40,21 +40,19 @@
 <?php include(dirname(__DIR__) . '/base/template.php'); ?>
 <?php include(dirname(__DIR__) . '/base/template_msg.php'); ?>
 
-<script src="../../public/js/im/zalyAction.js"></script>
-<script src="../../public/js/im/zalyClient.js"></script>
-<script src="../../public/js/im/zalyBaseWs.js"></script>
-<script src="../../public/js/im/zalyIm.js"></script>
-<script src="../../public/js/im/zalyMsg.js"></script>
-<script src="../../public/js/im/zalyGroupMsg.js"></script>
-<script src="../../public/js/zalyjsNative.js"></script>
-<script src="../../public/js/im/zalyHelper.js"></script>
-<script src="../../public/js/qrcode.js" ></script>
-<script src="../../public/js/utf.js" ></script>
-<script src="../../public/js/jquery.qrcode.js"></script>
+<script src="../../public/js/im/zalyAction.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/im/zalyClient.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/im/zalyBaseWs.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/im/zalyIm.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/im/zalyMsg.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/im/zalyGroupMsg.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/zalyjsNative.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/im/zalyHelper.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/qrcode.js?_version=<?php echo $versionCode?>" ></script>
+<script src="../../public/js/utf.js?_version=<?php echo $versionCode?>" ></script>
+<script src="../../public/js/jquery.qrcode.js?_version=<?php echo $versionCode?>"></script>
 
 <script type="text/javascript">
-
-    languageName = navigator.language == "en-US" ? "en" : "zh";
 
     $(window).resize(function () {
         setFontSize();
@@ -127,8 +125,6 @@
 
     if (window.Notification && Notification.permission !== "granted") {
         Notification.requestPermission().then(function(result) {
-            console.log("Notification.permission result======+++" + result);
-
             if (result === 'denied') {
                 console.log('Permission wasn\'t granted. Allow a retry.');
                 return;

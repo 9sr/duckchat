@@ -444,7 +444,6 @@
             kkkkkkkk
         </div>
     </div>
-
 </div>
 
 </script>
@@ -461,6 +460,74 @@
     </div>
 </div>
 
+</script>
+
+
+<script id="tpl-speaker-member" type="text/html">
+       {{if isSpeaker == true}}
+        <div class="pw-contact-row choose-member remove-speaker {{userId}} "  userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}">
+        {{else}}
+        <div class="pw-contact-row choose-member {{userId}} "  userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}">
+        {{/if}}
+        <div class="pw-contact-row-image">
+            <img class="useravatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" />
+        </div>
+        <div class="pw-contact-row-name">{{nickname}}</div>
+            {{if isType == "member"}}
+                {{if isSpeaker == true}}
+                <div class="pw-contact-row-btn speaker_remove_people" >
+                    <button class="remove_speaker_btn" userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="cancelTip">取消</button>
+                </div>
+                {{else}}
+                <div class="pw-contact-row-btn speaker_add_people" >
+                    <button class="add_speaker_btn" userId="{{userId}}" nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="addTip">添加</button>
+                </div>
+                {{/if}}
+            {{/if}}
+        </div>
+</script>
+
+<script id="tpl-group-member-for-speaker" type="text/html">
+    <div class="speaker-group-member">
+        <div class="sub-speaker-div">
+            <div class="sub-speaker-title" data-local-value="allGroupMemberTip"> 群成员 </div>
+        </div>
+        <div class="speaker-line"></div>
+        <div class="speaker-group-member-div" style="width: 100%;">
+        </div>
+    </div>
+</script>
+
+<script id="tpl-group-member-list" type="text/html">
+        <div class="pw-contact-row choose-member {{userId}} "  userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}">
+            <div class="pw-contact-row-image">
+                <img class="useravatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" />
+            </div>
+            <div class="pw-contact-row-name">{{nickname}}</div>
+            {{if isType == "owner"}}
+            <div class="pw-contact-row-btn speaker_remove_people" >
+                <button class="group_owner" userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="groupOwnerTip" disabled>群主</button>
+            </div>
+            {{else if isType == "admin" }}
+            <div class="pw-contact-row-btn speaker_add_people" >
+                <button class="group_admin" userId="{{userId}}" nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="groupAdminTip"   disabled>管理员</button>
+            </div>
+            {{else}}
+            {{if isPermission == "admin"}}
+                <div class="remove_member_btn_div" >
+                    <button class="remove_group_btn" userId="{{userId}}" data-local-value="removeMemberTip" >移除</button>
+                </div>
+            {{/if}}
+            {{/if}}
+        </div>
+</script>
+
+<script id="tpl-group-member-body" type="text/html">
+    <div class="group-member-body-div member_body_{{num}}">
+    </div>
+</script>
+<script id="tpl-group-member-body-detail" type="text/html">
+    <img class="useravatar group-member-avatar info-avatar-{{userId}} group-member-avatar-{{userId}}" aria-label="{{nickname}}" src="../../public/img/msg/default_user.png" />
 </script>
 
 
@@ -537,8 +604,14 @@
     <div class="app_download_header">分享站点</div>
     <div class="app_download_subheader">随时随地享受畅聊体验，同时还有语音聊天功能等你来哦！</div>
     <div id="qrcodeCanvas"></div>
-    <div class="download_button_div">
-        <button class="download_ios"><img src="../../public/img/msg/ios.png" style="width: 1.4rem;height:2rem;margin-right: 1.9rem;">iOS</button> <button class="download_android"><img src="../../public/img/msg/android.png" style="width: 2rem;height:2rem;">Android</button>
+    <div class="download_button_div" style="margin-left:26rem;margin-top:2rem">
+        <div class="ios_info">
+            <img src="../../public/img/msg/ios.png" style="width: 2.1rem;height:2.8rem;margin-right:1rem;">iOS
+
+        </div>
+        <div class="android_info">
+            <img src="../../public/img/msg/android.png" style="width: 2.3rem;height:2.8rem;margin-right: 1rem;">Android
+        </div>
     </div>
 </script>
 
