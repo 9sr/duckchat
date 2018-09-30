@@ -118,7 +118,7 @@ class Api_Group_SetSpeakerController extends Api_Group_BaseController
         return $groupSpeakers;
     }
 
-    private function closeGroupSpeaker($groupId)
+    private function closeGroupSpeaker($groupId, $groupSpeakers)
     {
         if (empty($groupSpeakers)) {
             return true;

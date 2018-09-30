@@ -971,7 +971,7 @@ function handleGetGroupMemberInfo(result)
 
 $(document).on("click", ".open_chat", function () {
     var userId = $(this).attr("userId");
-    openU2Chat(userId);
+    sendFriendProfileReq(userId, openU2Chat);
     removeWindow($("#group-member-list-div"));
 });
 $(document).on("click", ".add-friend-by-group-member",function () {
@@ -1788,20 +1788,31 @@ function  getGroupOwner(groupProfile)
 $(document).on("click", "#open-temp-chat", function () {
     var node = $(this)[0].parentNode;
     var userId = $(node).attr("userId");
-    openU2Chat(userId);
+    sendFriendProfileReq(userId, openU2Chat);
 });
 
-function openU2Chat(userId)
+function openU2Chat(result)
 {
-    if(userId == undefined) {
-        return ;
+    handleGetFriendProfile(result);
+
+    if(result == undefined) {
+        return;
     }
-    localStorage.setItem(chatSessionIdKey, userId);
-    localStorage.setItem(userId, U2_MSG);
-    $(".user-desc-body").html(userId);
-    sendFriendProfileReq(userId);
-    handleMsgRelation(undefined, userId);
-    insertU2Room(userId);
+    var profile = result.profile;
+
+    if(profile != undefined && profile["profile"]) {
+        var userProfile = profile["profile"];
+        var userId = userProfile.userId;
+
+        if(userId == undefined) {
+            return ;
+        }
+        localStorage.setItem(chatSessionIdKey, userId);
+        localStorage.setItem(userId, U2_MSG);
+        $(".user-desc-body").html(userId);
+        handleMsgRelation(undefined, userId);
+        insertU2Room(userId);
+    }
 }
 
 function insertU2Room(userId)
@@ -2288,11 +2299,20 @@ $(document).on("click", "#set-speaker", function () {
 function updateGroupSpeaker(groupId, speakerUserIds, type, callback)
 {
     var action = "api.group.setSpeaker";
-    var reqData = {
-        "groupId": groupId,
-        "setType" : type,
-        "speakerUserIds" :speakerUserIds,
+    var reqData;
+    if(speakerUserIds.length > 0 ) {
+        reqData = {
+            "groupId": groupId,
+            "setType" : type,
+            "speakerUserIds" :speakerUserIds,
+        }
+    } else {
+        reqData = {
+            "groupId": groupId,
+            "setType" : type,
+        }
     }
+
     handleClientSendRequest(action, reqData, callback);
 }
 
@@ -2409,11 +2429,9 @@ $(document).on("click", ".remove-all-speaker", function () {
     var removeSpeakers = $(".remove-speaker");
     var removeSpeakersLength = removeSpeakers.length;
     var groupId = localStorage.getItem(chatSessionIdKey);
-    var speakerUserIds = [];
     for(var i=0; i<removeSpeakersLength;i++) {
         var speakers = removeSpeakers[i];
         var userId = $(speakers).attr("userId");
-        speakerUserIds.push(userId);
         var speakerInfo = {
             userId:userId,
             nickname:$(speakers).attr("nickname"),
@@ -2421,7 +2439,7 @@ $(document).on("click", ".remove-all-speaker", function () {
         }
         deleteSpeakerInfo.push(speakerInfo);
     }
-    updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleRemoveSpeaker)
+    updateGroupSpeaker(groupId, [], SetSpeakerType.CloseSpeaker, handleRemoveSpeaker)
 });
 
 $(document).on("click", "#remove-speaker", function () {
@@ -2481,28 +2499,34 @@ function updateGroupProfile(groupId, values)
 $(document).on("click", ".add-friend-btn", function(){
     var userId = localStorage.getItem(chatSessionIdKey);
     $("#add-friend-div").attr("userId", userId);
-    displayAddFriend(userId);
+    sendFriendProfileReq(userId, displayAddFriend);
 });
 
 $(document).on("click", "#add-friend", function () {
     var node = $(this)[0].parentNode;
     var userId = $(node).attr("userId");
-    displayAddFriend(userId)
+    sendFriendProfileReq(userId, displayAddFriend);
 });
 
-function displayAddFriend(userId)
+function displayAddFriend(result)
 {
+    handleGetFriendProfile(result);
+    if(result == undefined) {
+        return;
+    }
+    var profile = result.profile;
 
-    $("#add-friend-div").attr("userId", userId);
-    var friendProfile = getFriendProfile(userId, true,handleGetFriendProfile);
-    var nickname = friendProfile != false ? friendProfile.nickname : "";
-    var html = template("tpl-add-friend-div", {
-        nickname: nickname,
-        userId : userId,
-    });
-    $("#add-friend-div").html(html);
-    getNotMsgImg(userId, friendProfile.avatar);
-    showWindow($('#add-friend-div'));
+    if(profile != undefined && profile["profile"]) {
+        var friendProfile = profile["profile"];
+        $("#add-friend-div").attr("userId", friendProfile.userId);
+        var html = template("tpl-add-friend-div", {
+            nickname: friendProfile.nickname,
+            userId : friendProfile.userId,
+        });
+        $("#add-friend-div").html(html);
+        getNotMsgImg(friendProfile.userId, friendProfile.avatar);
+        showWindow($('#add-friend-div'));
+    }
 }
 
 
@@ -2533,6 +2557,7 @@ function sendFriendApplyReq(userId, greetings, callback)
     };
     handleClientSendRequest(action, reqData, callback)
 }
+
 function handleApplyFriend(results)
 {
     removeWindow($("#add-friend-div"));
