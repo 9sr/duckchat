@@ -233,7 +233,7 @@
                     </div>
                     <div class="item-body">
                         <div class="item-body-display">
-                            <div class="item-body-desc">
+                            <div class="item-body-desc" onclick="showUserChat('<?php echo $user["userId"] ?>')">
                                 <?php echo $user['nickname'] ?>
                             </div>
 
@@ -319,6 +319,15 @@
             return 1;
         }
         return 0;
+    }
+
+    function zalyjsGotoPage(gotoUrl) {
+
+        if (isAndroid()) {
+            window.Android.zalyjsGoto(gotoUrl)
+        } else {
+            window.webkit.messageHandlers.zalyjsGoto.postMessage(gotoUrl)
+        }
     }
 
     function zalyjsNavOpenPage(url) {
@@ -447,7 +456,8 @@
         }
     });
 
-    $(".applyButton").click(function () {
+
+    $("#square-body").on("click", '.applyButton', function () {
         var lang = getLanguage();
         var myNickname = $("#myUserId").attr("nickname");
         var title = lang == 1 ? "申请好友" : "Apply Friend";
@@ -551,11 +561,20 @@
                     userHtml += '<div class="division-line"></div>';
 
                     $(".list-item-center").append(userHtml);
+
+                    $(".applyButton").bind("click");
                 });
             }
 
         }
 
+    }
+
+    function showUserChat(userId) {
+
+        var url = "duckchat://0.0.0.0/page=u2Profile&x=u-" + userId;
+        alert(url);
+        zalyjsGotoPage(url);
     }
 
 </script>

@@ -62,6 +62,7 @@ class Im_Cts_MessageController extends Im_BaseController
 
                     if (!$this->isGroupAdmin($this->toId) && !in_array($this->userId, $speakers)) {
                         $noticeText = ZalyText::getText(ZalyText::$textGroupNotSpeaker);
+                        $noticeText .= $this->getSpeakersName($speakers);
                         $this->returnGroupNotLawfulMessage($msgId, $msgRoomType, $fromUserId, $this->toId, $noticeText);
                         return;
                     }
@@ -128,8 +129,7 @@ class Im_Cts_MessageController extends Im_BaseController
 
         $title = '[notice]';
         $code = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="background: #DFDFDF;margin:0;padding:0"><div style="text-align: center;font-size: 14px"> <font color=#FFFFFF>' . $toUserName . ' is not your friend, add friend to chat </font><font color=#4C3BB1><br/>send a friend apply</font></div></body></html>';
-
-        $hrefUrl = 'zaly://0.0.0.0/goto?page=friend_apply&userId=' . $toUserId;
+        $hrefUrl = 'duckchat://0.0.0.0/goto?page=applyFriend&x=u-' . $toUserId;
         $height = '135';
 
         //代发一个web消息给from
@@ -217,4 +217,28 @@ class Im_Cts_MessageController extends Im_BaseController
         return '';
     }
 
+    /**
+     * @param array $speakers
+     * @return string
+     */
+    private function getSpeakersName(array $speakers)
+    {
+        $speakersName = "";
+        if (!empty($speakers)) {
+            $speakersInfo = $this->ctx->SiteUserTable->getUserByUserIds($speakers);
+
+            foreach ($speakersInfo as $num => $speaker) {
+
+                $nickname = $speaker['nickname'];
+                if ($num == 0) {
+                    $speakersName .= $nickname;
+                } else {
+                    $speakersName .= "," . $nickname;
+                }
+
+            }
+        }
+
+        return $speakersName;
+    }
 }
