@@ -15,19 +15,21 @@ class Http_File_UploadWebController extends \HttpBaseController
 
         try{
             $tag = __CLASS__.'-'.__FUNCTION__;
-            $isMessageAttachment = isset( $_POST['isMessageAttachment']) ?  $_POST['isMessageAttachment'] : false;
-
-            $fileType = isset( $_POST['fileType']) ?  $_POST['fileType'] : \Zaly\Proto\Core\FileType::FileInvalid;
-            if($fileType == "FileInvalid") {
-                throw new Exception( "文件类型不符合要求，上传失败");
-            }
             $file = $_FILES['file'];
-            $this->ctx->Wpf_Logger->error($tag, "shaoye files info =" . json_encode($_FILES));
 
             if($file['error'] != UPLOAD_ERR_OK) {
                 throw new Exception("上传失败");
             }
+            $maxFileSize = $this->ctx->Site_Config->getFileSizeConfig();
 
+            $isUploadAllowed = $this->ctx->File_Manager->judgeFileSize($file['size'], $maxFileSize);
+            if(!$isUploadAllowed) {
+                throw new Exception("文件过大");
+            }
+            $fileType = isset( $_POST['fileType']) ?  $_POST['fileType'] : \Zaly\Proto\Core\FileType::FileInvalid;
+            if($fileType == "FileInvalid") {
+                throw new Exception( "文件类型不符合要求，上传失败");
+            }
             switch ($fileType) {
                 case \Zaly\Proto\Core\FileType::FileImage:
                 case \Zaly\Proto\Core\FileType::FileAudio:
@@ -37,11 +39,11 @@ class Http_File_UploadWebController extends \HttpBaseController
                     $originFileName = $this->saveFile($file, \Zaly\Proto\Core\FileType::FileDocument);
                     break;
             }
-            $fileInfo = ["fileId" => $originFileName];
+            $fileInfo = ["fileId" => $originFileName, "errorInfo" => ""];
             echo json_encode($fileInfo);
         }catch (Exception $ex) {
             $this->ctx->Wpf_Logger->error($tag, "shaoye error msg =" . $ex->getMessage());
-            $fileInfo = ["fileId" => $originFileName];
+            $fileInfo = ["fileId" => $originFileName, "errorInfo" => $ex->getMessage()];
             echo json_encode($fileInfo);
         }
     }

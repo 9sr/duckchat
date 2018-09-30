@@ -28,10 +28,13 @@ class Api_File_UploadController extends \BaseController
 
         $response = new \Zaly\Proto\Site\ApiFileUploadResponse();
         try {
-
             //check max file size ，default 10M
             $maxFileSize = $this->ctx->Site_Config->getFileSizeConfig();
-
+            $isUploadAllowed = $this->ctx->File_Manager->judgeFileSize(strlen($file), $maxFileSize);
+            if(!$isUploadAllowed) {
+                $errorInfo = ZalyText::getText("upload.file.size", $this->language);
+                throw new Exception($errorInfo);
+            }
 
             $fileId = $this->ctx->File_Manager->saveFile($file);
             if (empty($fileId)) {

@@ -365,4 +365,23 @@ class File_Manager
 
         return $picElements;
     }
+
+    /**
+     * @param $fileSize 单位bytes
+     * @param $maxFileSize 单位M
+     * @return bool
+     */
+    public function judgeFileSize($fileSize, $maxFileSize)
+    {
+        if($maxFileSize ) {
+            $maxFileSizeKB = $maxFileSize*1024*1024;
+            error_log("maxFileSizeKB =====" .$maxFileSizeKB);
+            error_log("fileSize =====" .$fileSize);
+
+            if($maxFileSizeKB < $fileSize) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
