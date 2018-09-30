@@ -739,21 +739,17 @@ function getMessageDocumentSize(size)
     return size;
 }
 
-function getMessageDocumentName(name, url)
+function getMessageDocumentName(name)
 {
-    var urlSuffix = url.split('.');
-    urlSuffix = urlSuffix.pop();
-    var urlSuffixLength = urlSuffix.length;
-    if(name.length>(20-urlSuffixLength)) {
+    if(name.length>20) {
         var names = name.split('.');
         var ext = names.pop();
         var extLength = ext.length;
         var prefix = names.shift();
-        var num = (20-extLength-3-urlSuffixLength)/2;
+        var num = (20-extLength-3)/2;
         prefix = prefix.substr(0, num) + "..." + prefix.substr(prefix.length-num, prefix.length);
         name = prefix+"."+ext;
     }
-    name = name +'.'+urlSuffix;
     return name;
 }
 
@@ -826,7 +822,7 @@ function appendMsgHtml(msg)
                 break;
             case MessageType.MessageDocument:
                 var size = getMessageDocumentSize(msg['document'].size);
-                var fileName =  getMessageDocumentName(msg['document'].name, msg['document'].url);
+                var fileName =  getMessageDocumentName(msg['document'].name);
                 var url = msg['document'].url;
                 var originName = msg['document'].name;
                 html = template("tpl-send-msg-file", {
@@ -967,7 +963,7 @@ function appendMsgHtml(msg)
                 break;
             case MessageType.MessageDocument:
                 var size = getMessageDocumentSize(msg['document'].size);
-                var fileName =  getMessageDocumentName(msg['document'].name, msg['document'].url);
+                var fileName =  getMessageDocumentName(msg['document'].name);
                 var url = msg['document'].url;
                 var originName = msg['document'].name;
                 html = template("tpl-receive-msg-file", {

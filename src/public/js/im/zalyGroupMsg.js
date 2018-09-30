@@ -3006,10 +3006,10 @@ function closeMaskDiv(str)
     removeWindow($(str));
 }
 
-function downloadFile(elementB) {
-    var fileId = $(this).attr("url");
-    var msgId = $(this).attr("msgId");
-    var originName = $(this).attr("originName");
+function downloadFile(elementObject) {
+    var fileId = elementObject.attr("url");
+    var msgId = elementObject.attr("msgId");
+    var originName = elementObject.attr("originName");
     var currentRoom = localStorage.getItem(chatSessionIdKey);
     var isGroupMessage = localStorage.getItem(currentRoom) == GROUP_MSG ? 1 : 0;
     var requestUrl = downloadFileUrl +  "&fileId="+fileId + "&returnBase64=0&isGroupMessage="+isGroupMessage+"&messageId="+msgId;
