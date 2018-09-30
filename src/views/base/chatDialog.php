@@ -130,7 +130,7 @@
 
         </div>
     </div>
-    <div class="right-body-sidebar " style="display: none;">
+    <div class="right-body-sidebar">
 
         <div class="right-body-sidebar-menu">
             <img src="../../public/img/msg/btn-close.png" onclick="$('.right-body-sidebar').hide()" />

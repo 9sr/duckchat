@@ -473,7 +473,7 @@
             <img class="useravatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" />
         </div>
         <div class="pw-contact-row-name">{{nickname}}</div>
-            {{if isType == "member"}}
+            {{if isType == "member" && isAdmin == true}}
                 {{if isSpeaker == true}}
                 <div class="pw-contact-row-btn speaker_remove_people" >
                     <button class="remove_speaker_btn" userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="cancelTip">取消</button>

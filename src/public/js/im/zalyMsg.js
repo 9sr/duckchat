@@ -134,7 +134,7 @@ function appendOrInsertRoomList(msg, isInsert, showNotification)
             msgContent = "[语音消息]";
             break;
         case MessageType.MessageDocument:
-            msgContent = "[文件消息]";
+            msgContent = "[文件]";
             break;
         case MessageType.MessageWeb:
             msgContent = "[" + msg["web"].title + "]";
@@ -741,12 +741,12 @@ function getMessageDocumentSize(size)
 
 function getMessageDocumentName(name)
 {
-    if(name.length>20) {
+    if(name.length>15) {
         var names = name.split('.');
         var ext = names.pop();
         var extLength = ext.length;
         var prefix = names.shift();
-        var num = (20-extLength-3)/2;
+        var num = (15-extLength-3)/2;
         prefix = prefix.substr(0, num) + "..." + prefix.substr(prefix.length-num, prefix.length);
         name = prefix+"."+ext;
     }

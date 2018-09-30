@@ -388,7 +388,13 @@ function initSpeakerGroupMemberList(results)
         var groupOwnerId = getGroupOwner(groupProfile);
         var groupAdminIds = getGroupAdmins(groupProfile);
         var speakerListMemberIds = getGroupSpeakers(groupProfile);
-
+        var isAdmin = false;
+        if(checkGroupMemberAdminType(token, groupProfile)) {
+            isAdmin = true;
+        }
+        if(checkGroupOwnerType(token, groupProfile)){
+            isAdmin = true;
+        }
         for(i=0; i<length ; i++) {
             var user = list[i].profile;
             var userId = user.userId;
@@ -411,6 +417,7 @@ function initSpeakerGroupMemberList(results)
                 isSpeaker: false,
                 avatar: user.avatar,
                 isType:isType,
+                isAdmin:isAdmin
             })
             html = handleHtmlLanguage(html);
             $(".speaker-group-member-div").append(html);
@@ -419,51 +426,59 @@ function initSpeakerGroupMemberList(results)
     }
 }
 
+function handelGroupSpeakerList(result)
+{
+    var groupProfile = result.profile;
+    if(groupProfile) {
+        var isAdmin = false;
+        if(checkGroupMemberAdminType(token, groupProfile)) {
+            isAdmin = true;
+        }
+        if(checkGroupOwnerType(token, groupProfile)){
+            isAdmin = true;
+        }
+        $(".speaker-people-div").html('');
+        if(isAdmin == false) {
+            $(".remove-all-speaker")[0].style.display = "none";
+            $(".speaker-group-member")[0].style.display = "none";
+        }
+
+        if(groupProfile.hasOwnProperty("speakers")) {
+            var speakers = groupProfile.speakers;
+            var speakersLength = speakers.length;
+            for(var i=0; i<speakersLength;i++){
+                var speaker = speakers[i];
+                var html = template("tpl-speaker-member", {
+                    userId:speaker.userId,
+                    nickname:speaker.nickname,
+                    avatar:speaker.avatar,
+                    isAdmin:isAdmin,
+                    isSpeaker:true,
+                    isType:"member",
+                });
+                html = handleHtmlLanguage(html);
+                $(".speaker-people-div").append(html);
+                getNotMsgImg(speaker.userId, speaker.avatar)
+            }
+        }
+
+        if(isAdmin) {
+            $(".speaker-group-member").remove();
+            var html = template("tpl-group-member-for-speaker", {});
+            html = handleHtmlLanguage(html);
+            $(".speaker-content").append(html);
+            $(".speaker-group-member-div").html('');
+            getGroupMembers(unselectSpeakerMemberOffset, defaultCountKey, initSpeakerGroupMemberList);
+        }
+    }
+    handleGetGroupProfile(result);
+}
+
 $(".group_speakers").on("click", function () {
     showWindow($("#group-speaker-people"));
     unselectSpeakerMemberOffset =0;
     var groupId = localStorage.getItem(chatSessionIdKey);
-    var groupProfileJsonStr = localStorage.getItem(profileKey+groupId);
-    var groupProfile = JSON.parse(groupProfileJsonStr);
-    var isAdmin = false;
-    if(checkGroupMemberAdminType(token, groupProfile)) {
-        isAdmin = true;
-    }
-    if(checkGroupOwnerType(token, groupProfile)){
-        isAdmin = true;
-    }
-    $(".speaker-people-div").html('');
-    if(isAdmin == false) {
-        $(".remove-all-speaker")[0].style.display = "none";
-    }
-
-    if(groupProfile.hasOwnProperty("speakers")) {
-        var speakers = groupProfile.speakers;
-        var speakersLength = speakers.length;
-        for(var i=0; i<speakersLength;i++){
-            var speaker = speakers[i];
-            var html = template("tpl-speaker-member", {
-                userId:speaker.userId,
-                nickname:speaker.nickname,
-                avatar:speaker.avatar,
-                isAdmin:isAdmin,
-                isSpeaker:true,
-                isType:"member",
-            });
-            html = handleHtmlLanguage(html);
-            $(".speaker-people-div").append(html);
-            getNotMsgImg(speaker.userId, speaker.avatar)
-        }
-    }
-
-    if(isAdmin) {
-        $(".speaker-group-member").remove();
-        var html = template("tpl-group-member-for-speaker", {});
-        html = handleHtmlLanguage(html);
-        $(".speaker-content").append(html);
-        $(".speaker-group-member-div").html('');
-        getGroupMembers(unselectSpeakerMemberOffset, defaultCountKey, initSpeakerGroupMemberList);
-    }
+    sendGroupProfileReq(groupId, handelGroupSpeakerList);
 });
 
 $(function () {
@@ -904,26 +919,29 @@ function initGroupMemberForGroupMemberList(results)
     }
 }
 
-function addOwnerAndAdminsToGroupMemberList()
+function addGroupMemberToGroupMemberList(result)
 {
-    var groupId = localStorage.getItem(chatSessionIdKey);
-    var groupProfile = getGroupProfile(groupId);
-    var owner = groupProfile.owner;
-    groupMemberListAdmins.push(owner.userId);
-    addHtmlToGroupList(owner, "owner", "admin");
+    handleGetGroupProfile(result);
+    var groupProfile = result.profile;
+    if(groupProfile) {
+        var owner = groupProfile.owner;
+        groupMemberListAdmins.push(owner.userId);
+        addHtmlToGroupList(owner, "owner", "admin");
 
-    if(groupProfile.hasOwnProperty("admins")) {
-        var admins = groupProfile.admins;
-        if(admins == null ){
-            return false;
-        }
-        var length = admins.length;
-        for(var i=0; i<length; i++) {
-            var admin = admins[i];
-            addHtmlToGroupList(admin, "admin");
-            groupMemberListAdmins.push(admin.userId);
+        if(groupProfile.hasOwnProperty("admins")) {
+            var admins = groupProfile.admins;
+            if(admins == null ){
+                return false;
+            }
+            var length = admins.length;
+            for(var i=0; i<length; i++) {
+                var admin = admins[i];
+                addHtmlToGroupList(admin, "admin");
+                groupMemberListAdmins.push(admin.userId);
+            }
         }
     }
+    getGroupMembers(groupMemberListOffset, defaultCountKey, initGroupMemberForGroupMemberList);
 }
 
 function handleGetGroupMemberInfo(result)
@@ -987,13 +1005,11 @@ $(document).on("click", ".group-member", function (event) {
 
 $(document).on("click", ".see_all_group_member", function () {
     groupMemberListOffset = 0;
-
-
     showWindow($("#group-member-list-div"));
     $(".group-member-info")[0].style.display="none";
     $(".group-member-content").html("");
-    addOwnerAndAdminsToGroupMemberList();
-    getGroupMembers(groupMemberListOffset, defaultCountKey, initGroupMemberForGroupMemberList);
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    sendGroupProfileReq(groupId, addGroupMemberToGroupMemberList);
 });
 
 $(function () {
@@ -1639,7 +1655,8 @@ $(document).on("click", ".group-user-img", function(){
     var isOwner = groupProfile.memberType == GroupMemberType.GroupMemberOwner ? 1 : 0;
     var isAdmin = groupProfile.memberType == GroupMemberType.GroupMemberAdmin || isOwner ? 1 : 0 ;
     var memberIsAdmin = checkGroupMemberAdminType(userId, groupProfile);
-    var memberIsSpeaker = checkGroupMemberSpeakerType(userId, groupProfile)
+    var memberIsSpeaker = checkGroupMemberSpeakerType(userId, groupProfile);
+    console.log("memberIsSpeaker ====" + memberIsSpeaker);
 
     var isFriend = localStorage.getItem(friendRelationKey+userId) == FriendRelation.FriendRelationFollow ? 1 : 0;
     var html = template("tpl-group-user-menu", {
@@ -1651,9 +1668,9 @@ $(document).on("click", ".group-user-img", function(){
         memberIsAdmin:memberIsAdmin == false ? false : true,
     });
     html = handleHtmlLanguage(html);
-
     $(node).append($(html));
 });
+
 
 function checkGroupMemberCanSpeaker(userId, groupProfile)
 {
@@ -1957,6 +1974,8 @@ function displayCurrentProfile()
             }catch (error) {
 
             }
+            getGroupMembers(0, 18, displayGroupMemberForGroupInfo);
+
             try{
                 var permissionJoin = groupProfile.permissionJoin;
                 var memberType = groupProfile != false && groupProfile != null ? groupProfile.memberType : GroupMemberType.GroupMemberGuest ;
@@ -2231,6 +2250,7 @@ $(document).on("click", "#set-admin", function () {
             adminUserIds : adminUserIds,
         }
         updateGroupProfile(groupId, values);
+        removeWindow($("#group-user-menu"));
     }
 });
 
@@ -2249,6 +2269,7 @@ $(document).on("click", "#remove-admin", function () {
             adminUserIds : adminUserIds,
         }
         updateGroupProfile(groupId, values);
+        removeWindow($("#group-user-menu"));
     }
 });
 
@@ -2262,6 +2283,7 @@ $(document).on("click", "#set-speaker", function () {
     if(confirm(tip)) {
         speakerUserIds.push(userId);
         updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.AddSpeaker, handleSetSpeaker);
+        removeWindow($("#group-user-menu"));
     }
 });
 
@@ -2282,6 +2304,8 @@ function handleSetSpeaker(result)
         var speakerUserIds = result.speakerUserIds;
         var speakerKey = speakerUserIdsKey+localStorage.getItem(chatSessionIdKey);
         localStorage.setItem(speakerKey, JSON.stringify(speakerUserIds));
+        var groupId = localStorage.getItem(chatSessionIdKey);
+        sendGroupProfileReq(groupId, handleGetGroupProfile);
     }catch (error) {
 
     }
@@ -2290,6 +2314,17 @@ addSpeakerInfo=[];
 
 function handleAddSpeaker()
 {
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var groupProfile = getGroupProfile(groupId);
+
+    var isAdmin = false;
+    if(checkGroupMemberAdminType(token, groupProfile)) {
+        isAdmin = true;
+    }
+    if(checkGroupOwnerType(token, groupProfile)){
+        isAdmin = true;
+    }
+
     var addSpeakerIdLenght = addSpeakerInfo.length;
     for(var i=0; i<addSpeakerIdLenght; i++) {
         var speakerInfo = addSpeakerInfo[i];
@@ -2300,13 +2335,13 @@ function handleAddSpeaker()
             avatar:speakerInfo.avatar,
             isSpeaker:true,
             isType:"member",
+            isAdmin:isAdmin
         });
         html = handleHtmlLanguage(html);
         $(".speaker-people-div").append(html);
         getNotMsgImg(speakerInfo.userId, speakerInfo.avatar)
     }
     addSpeakerInfo=[];
-    var groupId = localStorage.getItem(chatSessionIdKey);
     sendGroupProfileReq(groupId, handleGetGroupProfile);
 }
 
@@ -2329,6 +2364,16 @@ function handleRemoveSpeaker()
 {
     var delSpeakerLength=deleteSpeakerInfo.length;
 
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var groupProfile = getGroupProfile(groupId);
+
+    var isAdmin = false;
+    if(checkGroupMemberAdminType(token, groupProfile)) {
+        isAdmin = true;
+    }
+    if(checkGroupOwnerType(token, groupProfile)){
+        isAdmin = true;
+    }
     for(var i=0; i<delSpeakerLength; i++) {
         var speakerInfo = deleteSpeakerInfo[i];
         $("."+speakerInfo.userId).remove();
@@ -2338,13 +2383,13 @@ function handleRemoveSpeaker()
             avatar:speakerInfo.avatar,
             isSpeaker:false,
             isType:"member",
+            isAdmin:isAdmin
         });
         html = handleHtmlLanguage(html);
         $(".speaker-group-member-div").append(html);
         getNotMsgImg(speakerInfo.userId, speakerInfo.avatar)
     }
     deleteSpeakerInfo=[];
-    var groupId = localStorage.getItem(chatSessionIdKey);
     sendGroupProfileReq(groupId, handleGetGroupProfile);
 }
 
@@ -2390,7 +2435,9 @@ $(document).on("click", "#remove-speaker", function () {
     var tip = $.i18n.map['removeSpeakerJsTip'] != undefined ? $.i18n.map['removeSpeakerJsTip']: "确定要移除发言权限?";
     if(confirm(tip)) {
         speakerUserIds.push(userId);
-        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleSetSpeaker)
+        updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleSetSpeaker);
+        removeWindow($("#group-user-menu"));
+        sendGroupProfileReq(groupId, handleGetGroupProfile);
     }
 });
 

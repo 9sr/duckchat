@@ -157,7 +157,6 @@ abstract class BaseController extends \Wpf_Controller
             $this->rpcReturn($this->action, null);
             exit();
         }
-        $this->checkDBVersion();
 
         $this->ctx = new BaseCtx();
         $this->logger = new Wpf_Logger();
