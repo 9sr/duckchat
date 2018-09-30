@@ -28,6 +28,11 @@ class Api_File_UploadController extends \BaseController
 
         $response = new \Zaly\Proto\Site\ApiFileUploadResponse();
         try {
+
+            //check max file size ，default 10M
+            $maxFileSize = $this->ctx->Site_Config->getConfigValue(SiteConfig::SITE_FILE_SIZE);
+
+
             $fileId = $this->ctx->File_Manager->saveFile($file);
             if (empty($fileId)) {
                 $this->setRpcError("error.file.wrong", "the file type is not supported.");
