@@ -474,16 +474,18 @@
             <img class="useravatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" />
         </div>
         <div class="pw-contact-row-name">{{nickname}}</div>
-        {{if isSpeaker == true}}
-        <div class="pw-contact-row-btn speaker_remove_people" >
-            <button class="remove_speaker_btn" userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}">取消</button>
+            {{if isType == "member"}}
+                {{if isSpeaker == true}}
+                <div class="pw-contact-row-btn speaker_remove_people" >
+                    <button class="remove_speaker_btn" userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="cancelTip">取消</button>
+                </div>
+                {{else}}
+                <div class="pw-contact-row-btn speaker_add_people" >
+                    <button class="add_speaker_btn" userId="{{userId}}" nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="addTip">添加</button>
+                </div>
+                {{/if}}
+            {{/if}}
         </div>
-        {{else}}
-        <div class="pw-contact-row-btn speaker_add_people" >
-            <button class="add_speaker_btn" userId="{{userId}}" nickname="{{nickname}}" avatar="{{avatar}}">添加</button>
-        </div>
-        {{/if}}
-    </div>
 </script>
 
 <script id="tpl-group-member-for-speaker" type="text/html">
@@ -497,6 +499,35 @@
     </div>
 </script>
 
+<script id="tpl-group-member-list" type="text/html">
+        <div class="pw-contact-row choose-member {{userId}} "  userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}">
+            <div class="pw-contact-row-image">
+                <img class="useravatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" />
+            </div>
+            <div class="pw-contact-row-name">{{nickname}}</div>
+            {{if isType == "owner"}}
+            <div class="pw-contact-row-btn speaker_remove_people" >
+                <button class="group_owner" userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="groupOwnerTip" disabled>群主</button>
+            </div>
+            {{else if isType == "admin" }}
+            <div class="pw-contact-row-btn speaker_add_people" >
+                <button class="group_admin" userId="{{userId}}" nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="groupAdminTip"   disabled>管理员</button>
+            </div>
+            {{else}}
+            <div class="pw-contact-row-btn speaker_add_people" >
+                <button class="remove_group_btn" userId="{{userId}}" data-local-value="removeMemberTip" >移除</button>
+            </div>
+            {{/if}}
+        </div>
+</script>
+
+<script id="tpl-group-member-body" type="text/html">
+    <div class="group-member-body-div member_body_{{num}}">
+    </div>
+</script>
+<script id="tpl-group-member-body-detail" type="text/html">
+    <img class="useravatar group-member-avatar info-avatar-{{userId}} group-member-avatar-{{userId}}" aria-label="{{nickname}}" src="../../public/img/msg/default_user.png" />
+</script>
 
 
 <script id="tpl-invite-member" type="text/html">

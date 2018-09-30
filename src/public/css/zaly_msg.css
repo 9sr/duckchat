@@ -584,13 +584,17 @@ html, body{
     box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
 }
 
-#group-speaker-people {
+#group-speaker-people, #group-member-list {
     width:39rem;
     height:59rem;
     background:rgba(255,255,255,1);
     box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
 }
 
+.group-member-content{
+    height:54rem;
+    overflow-y: scroll;
+}
 .sub-speaker-div{
     display: flex;
     justify-content: space-between;
@@ -1229,6 +1233,20 @@ html, body{
     font-size:1.13rem;
     color:rgba(153,153,153,1);
 }
+.group-member-body {
+    height: 14rem;
+}
+.see_all_group_member {
+    height:1.5rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(76,59,177,1);
+    line-height:1.5rem;
+    cursor: pointer;
+    outline: none;
+}
+
 .group-desc-body textarea {
     width:24.27rem;
     height:13.04rem;
@@ -1741,4 +1759,36 @@ button:active{
     margin-top:2rem;
     text-align: left;
     width: 17rem;
+}
+
+.group_owner{
+    height:1.69rem;
+    background:rgba(244,67,54,1);
+    border-radius:0.19rem;
+    font-size:0.94rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+}
+
+.group_admin{
+    height:1.69rem;
+    background:rgba(47,182,161,1);
+    border-radius:0.19rem;
+    font-size:0.94rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+}
+.remove_group_btn{
+    width:4.69rem;
+    height:2.63rem;
+    border-radius:0.38rem;
+    border:0.09rem solid rgba(76,59,177,1);
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(76,59,177,1);
+    cursor: pointer;
+    outline: none;
 }

@@ -138,8 +138,17 @@
 
         <div style="position: relative">
             <div class="group-profile-desc">
+
                 <div class="group-desc">
-                    <div class="group-desc-title" style="position: relative" data-local-value="groupProfileDescTip">群介绍                    </div>
+                    <div class="group-desc-title" style="position: relative" data-local-value="groupMemberTip">群成员</div>
+                    <div class="group-member-body">
+                    </div>
+                    <div class="see_all_group_member" data-local-value="allGroupMemberTip">查看全部</div>
+                </div>
+
+
+                <div class="group-desc">
+                    <div class="group-desc-title" style="position: relative" data-local-value="groupProfileDescTip">群介绍</div>
                     <button class="save_group_introduce" style=" margin-top: -2rem;" data-local-value="saveGroupDescTip">Save</button>
 
                     <div class="group-desc-body">
@@ -148,6 +157,7 @@
                 </div>
 
                 <div class="action-group">
+
                     <div class="action-row action-row-disclosure edit_group_name">
                         <div class="action-title" data-local-value="groupProfileNameTip">群名称</div>
                         <div class="action-btn groupName" style="width: auto;">
@@ -156,12 +166,12 @@
                         <img src="../../public/img/edit.png" style="width: 1rem; height:1rem; margin-right: 2rem;margin-top: 2rem;"/>
                     </div>
 
-                    <div class="action-row action-row-disclosure remove_member">
-                        <div class="action-title" data-local-value="removeGroupMemberTip">移除成员</div>
-                        <div class="action-btn">
-                            <img src="../../public/img/msg/icon_disclosure.png" />
-                        </div>
-                    </div>
+<!--                    <div class="action-row action-row-disclosure remove_member">-->
+<!--                        <div class="action-title" data-local-value="removeGroupMemberTip">移除成员</div>-->
+<!--                        <div class="action-btn">-->
+<!--                            <img src="../../public/img/msg/icon_disclosure.png" />-->
+<!--                        </div>-->
+<!--                    </div>-->
 
                     <div class="action-row mute-group">
                         <div class="action-title" data-local-value="muteTip">静音</div>

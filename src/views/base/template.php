@@ -55,7 +55,12 @@
             <div class="speaker-people-div" style="width: 100%;">
             </div>
         </div>
+    </div>
 
+    <div id="group-member-list" class="pop-window pop-window-member-people">
+        <div class="pw-right-header" style="justify-content: center" data-local-value="groupMembersTip" >Group members</div>
+        <div class="group-member-content">
+        </div>
     </div>
 
     <div id="create-group">
