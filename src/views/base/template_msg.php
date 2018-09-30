@@ -327,7 +327,7 @@
         <div class="pw-contact-row-image">
             <img class="user-info-avatar info-avatar-{{userId}}"  src="../../public/img/msg/default_user.png"  userId="{{userId}}" />
         </div>
-        <div class="pw-contact-row-name">{{nickname}}</div>
+        <div class="pw-contact-row-name nickname_{{userId}}">{{nickname}}</div>
     </div>
 </script>
 

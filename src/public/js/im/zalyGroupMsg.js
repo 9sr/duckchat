@@ -1092,9 +1092,10 @@ $(document).on("click", ".u2-profile", function () {
     $(".user-image-for-add").attr("class", "user-image-for-add");
     $(".user-image-for-add").attr("src", "../../public/img/msg/default_user.png");
 
-    var friendProfile = getFriendProfile(userId, true, handleGetFriendProfile);
+    getFriendProfile(userId, true, handleGetFriendProfile);
+    var nickname = $(".nickname_"+userId).html();
     var nickname = template("tpl-string", {
-        string : friendProfile.nickname
+        string : nickname
     });
     $(".chatsession-title").html(nickname);
 
