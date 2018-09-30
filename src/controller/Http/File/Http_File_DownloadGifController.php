@@ -28,11 +28,12 @@ class Http_File_DownloadGifController extends \HttpBaseController
             if(strlen($fileContent)<1) {
                 throw new Exception("load file void");
             }
+            
             header('Cache-Control: max-age=86400, public');
-            header("Content-type:text/html");
+            header("Content-type:$mimeType");
 
             if($returnBase64) {
-                $fileContent =  base64_decode($fileContent);
+                $fileContent =  base64_encode($fileContent);
             } else {
                 $fileContent =  $fileContent;
             }
