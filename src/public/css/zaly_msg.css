@@ -1300,6 +1300,9 @@ html, body{
 .group-member-body {
     height: 14rem;
 }
+.group-member-body-div {
+    display: flex;
+}
 .see_all_group_member {
     height:1.5rem;
     font-size:1.31rem;

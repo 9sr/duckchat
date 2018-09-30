@@ -85,7 +85,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
                 "toId" => $this->toId,
                 "fromUserId" => $this->userId,
             ];
-            $type = $_GET['type'] ? $_GET['type'] : "";
+            $type = isset($_GET['type']) ? $_GET['type'] : "";
             if($type == "see_gif") {
                 $gifId = isset($_GET['gifId']) ? $_GET['gifId'] : 'LbdKkLxXXbcatS2t';
                 $gif = $this->ctx->SiteUserGifTable->getGifInfo($this->userId, $gifId);
@@ -107,7 +107,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
             } else {
                 $gifs = $this->ctx->SiteUserGifTable->getGifByUserId($this->userId, 0, $this->limit);
                 foreach ($gifs as $key => $gif) {
-                    $gif['gifUrl'] = "index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
+                    $gif['gifUrl'] = "./index.php?action=http.file.downloadGif&gifId=".$gif['gifId'];
                     $gif['isDefault'] = $gif['userId'] === 0 ?  0 : 1;
                     $gifs[$key] = $gif;
                 }
@@ -122,7 +122,6 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
     {
         $gifId = $data['gifId'];
         $roomType = $this->roomType ? \Zaly\Proto\Core\MessageRoomType::MessageRoomU2 : \Zaly\Proto\Core\MessageRoomType::MessageRoomGroup;
-
         if($roomType == \Zaly\Proto\Core\MessageRoomType::MessageRoomU2) {
             $userRelationReq = new \Zaly\Proto\Plugin\DuckChatUserRelationRequest();
             $userRelationReq->setUserId($this->userId);
@@ -150,7 +149,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
 
         $gifInfo = $this->ctx->SiteUserGifTable->getGifByGifId($gifId);
         $gifUrl = "index.php?action=http.file.downloadGif&gifId=".$gifInfo['gifId'];
-        $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'.$gifUrl.'" width="100%" > </body> </html>';
+        $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><style>body, html{margin:0; padding:0;}</style></head> <body> <img src="'.$gifUrl.'" width="100%" height="100%"> </body> </html>';
 
         $landingPageUrl = "index.php?action=miniProgram.gif.index&type=see_gif&gifId=".$gifInfo['gifId'];
 
