@@ -197,16 +197,17 @@ case $operation in
 
 			echo 
 			echo "#" docker run -itd -p $httpPort:80 -p $wsPort:2031 -p $zalyPort:2021 --name $duckchatName -v $originDirName:/home/gaga $duckchatDockerName 
-
+			
+			su -c "setenforce 0" 2>/dev/null
 			docker run -itd -p $httpPort:80 -p $wsPort:2031 -p $zalyPort:2021 --name $duckchatName -v $originDirName:/home/gaga $duckchatDockerName 
 			if [ $? != 0 ];then
 				echo "[DuckChat] 启动duckchat镜像失败"
 				exit
 			fi
 			
-			echo "[DuckChat] 请稍后片刻"
-			sleep 5
 			chmod -R 777 $originDirName/src
+			echo "[DuckChat] 请稍后片刻"
+			sleep 9
 			echo "[DuckChat] 启动duckchat镜像成功"
 		fi
 		;;
