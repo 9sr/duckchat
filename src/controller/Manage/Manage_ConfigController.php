@@ -29,6 +29,12 @@ class Manage_ConfigController extends Manage_CommonController
             $config[SiteConfig::SITE_WEB_NUM] = 1;
         }
 
+        $maxFileSize = $config[SiteConfig::SITE_FILE_SIZE];
+
+        if (empty($maxFileSize)) {
+            $config[SiteConfig::SITE_FILE_SIZE] = 10;
+        }
+
         echo $this->display("manage_config_index", $config);
         return;
     }

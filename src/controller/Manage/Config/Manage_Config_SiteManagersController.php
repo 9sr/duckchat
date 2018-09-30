@@ -25,9 +25,6 @@ class Manage_Config_SiteManagersController extends Manage_CommonController
 
             $params['userList'] = $this->getSiteManagerList($managerList);
 
-            $this->ctx->Wpf_Logger->info("------------", $managerList);
-            $this->ctx->Wpf_Logger->info("------------", "json=" . json_encode($managerList));
-
             echo $this->display("manage_config_siteManagers", $params);
             return;
         } catch (Exception $e) {

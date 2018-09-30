@@ -571,7 +571,6 @@
     }
 
     function showUserChat(userId) {
-
         var url = "duckchat://0.0.0.0/goto?page=u2Profile&x=u-" + userId;
         alert(url);
         zalyjsGotoPage(url);
