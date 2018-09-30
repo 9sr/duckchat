@@ -122,7 +122,6 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
     {
         $gifId = $data['gifId'];
         $roomType = $this->roomType ? \Zaly\Proto\Core\MessageRoomType::MessageRoomU2 : \Zaly\Proto\Core\MessageRoomType::MessageRoomGroup;
-
         if($roomType == \Zaly\Proto\Core\MessageRoomType::MessageRoomU2) {
             $userRelationReq = new \Zaly\Proto\Plugin\DuckChatUserRelationRequest();
             $userRelationReq->setUserId($this->userId);
@@ -150,7 +149,7 @@ class MiniProgram_Gif_IndexController extends  MiniProgramController
 
         $gifInfo = $this->ctx->SiteUserGifTable->getGifByGifId($gifId);
         $gifUrl = "index.php?action=http.file.downloadGif&gifId=".$gifInfo['gifId'];
-        $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></head> <body> <img src="'.$gifUrl.'" width="100%" > </body> </html>';
+        $webCode = '<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><style>body, html{margin:0; padding:0;}</style></head> <body> <img src="'.$gifUrl.'" width="100%" height="100%"> </body> </html>';
 
         $landingPageUrl = "index.php?action=miniProgram.gif.index&type=see_gif&gifId=".$gifInfo['gifId'];
 
