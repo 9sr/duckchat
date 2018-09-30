@@ -30,7 +30,7 @@ class Api_File_UploadController extends \BaseController
         try {
 
             //check max file size ，default 10M
-            $maxFileSize = $this->ctx->Site_Config->getFileSizeConfig(SiteConfig::SITE_FILE_SIZE);
+            $maxFileSize = $this->ctx->Site_Config->getFileSizeConfig();
 
 
             $fileId = $this->ctx->File_Manager->saveFile($file);

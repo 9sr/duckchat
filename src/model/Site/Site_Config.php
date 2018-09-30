@@ -31,9 +31,9 @@ class Site_Config
         return $defaultValue;
     }
 
-    public function getFileSizeConfig($configKey)
+    public function getFileSizeConfig()
     {
-        return $this->getConfigValue($configKey, 10);
+        return $this->getConfigValue(SiteConfig::SITE_FILE_SIZE, 10);
     }
 
     public function getAllConfig()

@@ -131,6 +131,17 @@
             color: rgba(255, 255, 255, 1);
         }
 
+        .chatButton {
+            width: 80px;
+            height: 28px;
+            background: rgba(0, 0, 0, 0.09);
+            border-radius: 4px;
+            border-width: 0;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+        }
+
         /* mask and new window */
         .wrapper-mask {
             background: rgba(0, 0, 0, 0.8);
@@ -243,6 +254,10 @@
                                     <button class="addButton applyButton" userId="<?php echo $user['userId'] ?>">
                                         添加好友
                                     </button>
+                                <?php } else { ?>
+                                    <button class="chatButton" userId="<?php echo $user['userId'] ?>">
+                                        发起会话
+                                    </button>
                                 <?php } ?>
 
                             </div>
@@ -278,7 +293,7 @@
         <div class="" style="text-align:center;">
             <?php if ($lang == "1") { ?>
                 <button id="update-user-button" type="button" class="create_button" data=""
-                        onclick="sendRequest();"> 发送
+                        onclick="sendRequest();">发送
                 </button>
             <?php } else { ?>
                 <button id="update-user-button" type="button" class="create_button" data=""
@@ -554,6 +569,8 @@
 
                     if (!user['isFollow']) {
                         userHtml += '<button class="addButton applyButton" userId="' + user["userId"] + '" > 添加好友 </button>';
+                    } else {
+                        userHtml += '<button class=" chatButton" userId="' + user["userId"] + '" > 发起会话 </button>';
                     }
 
 
