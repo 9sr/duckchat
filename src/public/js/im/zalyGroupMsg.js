@@ -337,7 +337,8 @@ function removeMemberFromGroup(groupId, removeUserIds, callback)
 }
 
 $(document).on("click", "#remove-group-chat", function () {
-   if(confirm($.i18n.map['removeMemberFromGroupJsTip'])) {
+    var tip = $.i18n.map['removeMemberFromGroupJsTip'] != undefined ? $.i18n.map['removeMemberFromGroupJsTip']: "确定要移除群聊?";
+   if(confirm(tip)) {
        var groupId = localStorage.getItem(chatSessionIdKey);
        var node = $(this)[0].parentNode;
        var userId = $(node).attr("userId");
@@ -557,6 +558,10 @@ $(document).on("click", ".l-sb-item", function(){
 
 function displayDownloadApp() {
     var html = template("tpl-download-app-div", {});
+    console.log("old html ==="+html);
+    html = handleHtmlLanguage(html);
+    console.log("new html ==="+html);
+
     $("#download-app-div").html(html);
     var urlLink = changeZalySchemeToDuckChat("", "download_app");
     var src = "../../public/img/duckchat.png";
@@ -1416,7 +1421,9 @@ function sortRoomList(jqElement)
 }
 
 $(document).on("click", ".quit-group", function () {
-    if(confirm($.i18n.map['quitGroupJsTip'])) {
+    var tip = $.i18n.map['quitGroupJsTip'] != undefined ? $.i18n.map['quitGroupJsTip']: "退出群组?";
+
+    if(confirm(tip)) {
         var groupId = localStorage.getItem(chatSessionIdKey);
         var action = "api.group.quit";
         var reqData = {
@@ -1427,13 +1434,13 @@ $(document).on("click", ".quit-group", function () {
 });
 
 $(document).on("click", ".delete-group", function () {
-    if(confirm($.i18n.map['disbandGroupJsTip'])) {
+    var tip = $.i18n.map['disbandGroupJsTip'] != undefined ? $.i18n.map['disbandGroupJsTip']: "解散群?";
+    if(confirm(tip)) {
         var groupId = localStorage.getItem(chatSessionIdKey);
         var action = "api.group.delete";
         var reqData = {
             "groupId": groupId
         };
-
         handleClientSendRequest(action, reqData, handleDeleteOrQuitGroup);
     }
 });
@@ -1567,7 +1574,8 @@ function createGroup()
     var groupName = $(".group_name").val();
     if(groupName.length > 10 || groupName.length < 1) {
         ////TODO 换成 页面漂浮报错
-        alert($.i18n.map['createGroupNameTip']);
+        var tip = $.i18n.map['createGroupNameTip'] != undefined ? $.i18n.map['createGroupNameTip']: "群组名称长度限制1-10";
+        alert(tip);
         return false;
     }
     removeWindow($("#create-group"));
@@ -2213,7 +2221,8 @@ $(document).on("click", "#set-admin", function () {
     var userId = $(node).attr("userId");
     var adminUserIds = [];
     ////追加操作
-    if(confirm($.i18n.map['setAdminJsTip'])) {
+    var tip = $.i18n.map['setAdminJsTip'] != undefined ? $.i18n.map['setAdminJsTip']: "设置管理员";
+    if(confirm(tip)) {
         adminUserIds.push(userId);
         var values = {
             type : ApiGroupUpdateType.ApiGroupUpdateAdmin,
@@ -2230,7 +2239,8 @@ $(document).on("click", "#remove-admin", function () {
     var userId = $(node).attr("userId");
     var adminUserIds = [];
     ////追加操作
-    if(confirm($.i18n.map['removeAdminJsTip'])) {
+    var tip = $.i18n.map['removeAdminJsTip'] != undefined ? $.i18n.map['removeAdminJsTip']: "移除管理员";
+    if(confirm(tip)) {
         adminUserIds.push(userId);
         var values = {
             type : ApiGroupUpdateType.ApiGroupUpdateAdmin,
@@ -2247,7 +2257,8 @@ $(document).on("click", "#set-speaker", function () {
     var userId = $(node).attr("userId");
     var speakerUserIds = [];
     ////追加操作
-    if(confirm($.i18n.map['setSpeakerJsTip'])) {
+    var tip = $.i18n.map['setSpeakerJsTip'] != undefined ? $.i18n.map['setSpeakerJsTip']: "设置发言人";
+    if(confirm(tip)) {
         speakerUserIds.push(userId);
         updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.AddSpeaker, handleSetSpeaker);
     }
@@ -2375,7 +2386,8 @@ $(document).on("click", "#remove-speaker", function () {
     var userId = $(node).attr("userId");
     var speakerUserIds = [];
     ////追加操作
-    if(confirm($.i18n.map['removeSpeakerJsTip'])) {
+    var tip = $.i18n.map['removeSpeakerJsTip'] != undefined ? $.i18n.map['removeSpeakerJsTip']: "确定要移除发言权限?";
+    if(confirm(tip)) {
         speakerUserIds.push(userId);
         updateGroupSpeaker(groupId, speakerUserIds, SetSpeakerType.RemoveSpeaker, handleSetSpeaker)
     }
@@ -2600,14 +2612,16 @@ function deleteFriendListTip()
 
 $(document).on("click", ".refused-apply", function () {
     var node =  $(this)[0].parentNode;
-    if(confirm($.i18n.map["refuseFriendJsTip"])) {
+    var tip = $.i18n.map['refuseFriendJsTip'] != undefined ? $.i18n.map['refuseFriendJsTip']: "确定拒绝对方?";
+    if(confirm(tip)) {
         friendApplyAccept($(node), false);
     }
 });
 
 $(document).on("click", ".agreed-apply", function () {
     var node =  $(this)[0].parentNode;
-    if(confirm($.i18n.map["agreeFriendJsTip"])) {
+    var tip = $.i18n.map['agreeFriendJsTip'] != undefined ? $.i18n.map['agreeFriendJsTip']: "确定同意对方的好友申请?";
+    if(confirm(tip)) {
         friendApplyAccept($(node), true);
     }
 });
@@ -2637,8 +2651,8 @@ $(document).on("click", "#logout", function (event) {
 function logout(event)
 {
     event.stopPropagation();
-
-    if(confirm($.i18n.map["logoutJsTip"])) {
+    var tip = $.i18n.map['logoutJsTip'] != undefined ? $.i18n.map['logoutJsTip']: "退出账号，将会清空聊天记录";
+    if(confirm(tip)) {
         $.ajax({
             method: "POST",
             url:"./index.php?action=page.logout",
@@ -2729,7 +2743,8 @@ $(document).on("click", ".selfInfo", function () {
 });
 
 $(document).on("click", ".delete-friend", function () {
-    if(confirm($.i18n.map['deleteFriendJsTip'])){
+    var tip = $.i18n.map['deleteFriendJsTip'] != undefined ? $.i18n.map['deleteFriendJsTip']: "确定要删除好友么?";
+    if(confirm(tip)){
         var userId = localStorage.getItem(chatSessionIdKey);
         var action = "api.friend.delete";
         var reqData = {
