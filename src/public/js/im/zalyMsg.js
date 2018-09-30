@@ -1233,6 +1233,7 @@ function uploadMsgFileToServer(formData, src, type, params)
         success:function(fileInfo){
             var fileInfo = JSON.parse(fileInfo);
             var fileName = fileInfo['fileId'];
+            var errorInfo = fileInfo['errorInfo'];
 
             if(fileName) {
                 if(fileName == "failed") {
@@ -1252,7 +1253,7 @@ function uploadMsgFileToServer(formData, src, type, params)
                     sendMsg(chatSessionId, chatSessionType, fileName, MessageType.MessageDocument, params);
                 }
             } else {
-                alert("上传失败");
+                alert(errorInfo);
             }
         },
         error:function(err){

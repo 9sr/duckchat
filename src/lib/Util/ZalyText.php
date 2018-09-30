@@ -18,6 +18,7 @@ class ZalyText
         "text.group.notSpeaker" => ["only speakers and admin can speak,speakers are ", "当前只允许群管理以及发言者发言，发言人者："],
         "text.group.notMember" => ["you aren't group member", "你不是群组成员"],
         "text.group.create" => ["group created,invite your friends to join chat", "群组已创建成功,邀请你的好友加入群聊吧"],
+        "upload.file.size" => ["file exceeds maximum limit", "文件超过最大限制"],
     ];
 
     public static $keyGroupInvite = "{key.group.invite}";

@@ -1656,8 +1656,6 @@ $(document).on("click", ".group-user-img", function(){
     var isAdmin = groupProfile.memberType == GroupMemberType.GroupMemberAdmin || isOwner ? 1 : 0 ;
     var memberIsAdmin = checkGroupMemberAdminType(userId, groupProfile);
     var memberIsSpeaker = checkGroupMemberSpeakerType(userId, groupProfile);
-    console.log("memberIsSpeaker ====" + memberIsSpeaker);
-
     var isFriend = localStorage.getItem(friendRelationKey+userId) == FriendRelation.FriendRelationFollow ? 1 : 0;
     var html = template("tpl-group-user-menu", {
         userId : userId,
