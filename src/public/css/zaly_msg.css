@@ -657,6 +657,12 @@ html, body{
     cursor: pointer;
     outline: none;
 }
+.remove_member_btn_div {
+    cursor: pointer;
+    outline: none;
+    margin-right: 1rem;
+    margin-top: 1rem;
+}
 
 .add_speaker_btn {
     width:4.69rem;
@@ -682,7 +688,6 @@ html, body{
     width: 30rem;
     display: flex;
     flex-direction: column;
-    margin-left: 1rem;
 }
 
 .pw-right-header {
@@ -1764,6 +1769,7 @@ button:active{
 .group_owner{
     height:1.69rem;
     background:rgba(244,67,54,1);
+    border: 0.09rem solid rgba(244,67,54,1);
     border-radius:0.19rem;
     font-size:0.94rem;
     font-family:PingFangSC-Regular;
@@ -1774,6 +1780,7 @@ button:active{
 .group_admin{
     height:1.69rem;
     background:rgba(47,182,161,1);
+    border: 0.09rem solid rgba(47,182,161,1);
     border-radius:0.19rem;
     font-size:0.94rem;
     font-family:PingFangSC-Regular;
@@ -1781,7 +1788,6 @@ button:active{
     color:rgba(255,255,255,1);
 }
 .remove_group_btn{
-    width:4.69rem;
     height:2.63rem;
     border-radius:0.38rem;
     border:0.09rem solid rgba(76,59,177,1);

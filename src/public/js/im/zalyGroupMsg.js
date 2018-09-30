@@ -396,11 +396,11 @@ function initSpeakerGroupMemberList(results)
             if(groupOwnerId == userId) {
                 isType = "owner"
             }
-            if(groupAdminIds.indexOf(userId) != -1) {
+            if(groupAdminIds && groupAdminIds.indexOf(userId) != -1) {
                 isType = "admin";
             }
 
-            if(speakerListMemberIds.indexOf(userId) != -1) {
+            if(speakerListMemberIds && speakerListMemberIds.indexOf(userId) != -1) {
                 continue;
             }
 
@@ -432,6 +432,9 @@ $(".group_speakers").on("click", function () {
         isAdmin = true;
     }
     $(".speaker-people-div").html('');
+    if(isAdmin == false) {
+        $(".remove-all-speaker")[0].style.display = "none";
+    }
 
     if(groupProfile.hasOwnProperty("speakers")) {
         var speakers = groupProfile.speakers;
@@ -819,7 +822,9 @@ function displayGroupMemberForGroupInfo(results)
         var html = "";
         var bodyDivNum = undefined;
         var divNum = 0;
-        console.log("num length =="+length);
+        var groupId = localStorage.getItem(chatSessionIdKey);
+        var groupProfile = getGroupProfile(groupId);
+
         for(i=0; i<length ; i++) {
             var newBodyNum=Math.floor((i/6));
             if(newBodyNum != bodyDivNum) {
@@ -846,12 +851,13 @@ $(document).on("click", ".see_group_profile", function () {
     var chatSessionId   = localStorage.getItem(chatSessionIdKey);
     var chatSessionType = localStorage.getItem(chatSessionId);
 
+
     if(chatSessionType == U2_MSG) {
         sendFriendProfileReq(chatSessionId);
     } else {
+        getGroupMembers(0, 18, displayGroupMemberForGroupInfo);
         sendGroupProfileReq(chatSessionId, handleGetGroupProfile);
     }
-    getGroupMembers(0, 18, displayGroupMemberForGroupInfo);
     $('.right-body-sidebar').show();
 });
 
@@ -860,10 +866,18 @@ groupMemberListAdmins=[];
 
 function addHtmlToGroupList(user, isType)
 {
+    var groupId = localStorage.getItem(chatSessionIdKey);
+    var groupProfile = getGroupProfile(groupId);
+
+    var isGroupOwner = checkGroupOwnerType(token, groupProfile);
+    var isGroupAdmin = checkGroupMemberAdminType(token, groupProfile);
+    var isPermission = isGroupOwner || isGroupAdmin ? "admin" : "member";
+
     var html = template("tpl-group-member-list", {
         userId : user.userId,
         nickname:user.nickname,
-        isType:isType
+        isType:isType,
+        isPermission:isPermission
     })
     html = handleHtmlLanguage(html);
     $(".group-member-content").append(html);
@@ -891,7 +905,8 @@ function addOwnerAndAdminsToGroupMemberList()
     var groupProfile = getGroupProfile(groupId);
     var owner = groupProfile.owner;
     groupMemberListAdmins.push(owner.userId);
-    addHtmlToGroupList(owner, "owner");
+    addHtmlToGroupList(owner, "owner", "admin");
+
     if(groupProfile.hasOwnProperty("admins")) {
         var admins = groupProfile.admins;
         if(admins == null ){
@@ -1903,6 +1918,7 @@ function displayCurrentProfile()
                         } else {
                             $('.invite_people')[0].style.display = "none";
                         }
+
                         $('.permission-join')[0].style.display = "none";
                         $('.quit-group')[0].style.display = "flex";
                         $('.delete-group')[0].style.display = "none";

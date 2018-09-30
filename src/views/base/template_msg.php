@@ -444,7 +444,6 @@
             kkkkkkkk
         </div>
     </div>
-
 </div>
 
 </script>
@@ -514,9 +513,11 @@
                 <button class="group_admin" userId="{{userId}}" nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="groupAdminTip"   disabled>管理员</button>
             </div>
             {{else}}
-            <div class="pw-contact-row-btn speaker_add_people" >
-                <button class="remove_group_btn" userId="{{userId}}" data-local-value="removeMemberTip" >移除</button>
-            </div>
+            {{if isPermission == "admin"}}
+                <div class="remove_member_btn_div" >
+                    <button class="remove_group_btn" userId="{{userId}}" data-local-value="removeMemberTip" >移除</button>
+                </div>
+            {{/if}}
             {{/if}}
         </div>
 </script>
