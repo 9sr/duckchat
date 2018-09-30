@@ -57,9 +57,20 @@
         </div>
     </div>
 
-    <div id="group-member-list" class="pop-window pop-window-member-people">
-        <div class="pw-right-header" style="justify-content: center" data-local-value="groupMembersTip" >Group members</div>
-        <div class="group-member-content">
+
+
+    <div id="group-member-list-div" class="pop-window pop-window-member-people">
+        <div class="group-member-info" style="display: none">
+
+        </div>
+        <div id="group-member-list" class="pop-window pop-window-member-people">
+
+            <div>
+                <div class="pw-right-header" style="justify-content: center" data-local-value="groupMembersTip" >Group members</div>
+
+                <div class="group-member-content">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -72,7 +83,7 @@
         </div>
 
         <div class="d-flex flex-row justify-content-center">
-            <input type="text" class="form-control group_name create_group_box_div_input" onkeypress="createGroupByKeyPress()" onkeydown="createGroupByKeyPress()"  data-local-placeholder="enterGroupNamePlaceholder" placeholder="Please Enter Group Name" >
+            <input type="text" class="form-control group_name create_group_box_div_input"  onkeydown="createGroupByKeyDown(event)"  data-local-placeholder="enterGroupNamePlaceholder" placeholder="Please Enter Group Name" >
         </div>
 
         <div class="line"></div>

@@ -585,15 +585,74 @@ html, body{
 }
 
 #group-speaker-people, #group-member-list {
-    width:39rem;
     height:59rem;
     background:rgba(255,255,255,1);
     box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
+    position: relative;
 }
 
 .group-member-content{
     height:54rem;
+    width: 39.4rem;
     overflow-y: scroll;
+}
+.group-member-info {
+    position: absolute;
+    top:11rem;
+    margin-left: -42.5rem;
+    width:42.21rem;
+    text-align: center;
+    height:25.33rem;
+    background:rgba(255,255,255,1);
+    border-radius:0.56rem;
+    border:0.09rem solid rgba(223,223,223,1);
+}
+.group-member-img {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.group-member-img img {
+    width:7rem;
+    height: 7rem;
+    border-radius: 50%;
+}
+
+.group-member-line{
+    width:38.46rem;
+    height:0.09rem;
+    background:rgba(223,223,223,1);
+    margin-left: 2rem;
+    margin-top: 4rem;
+}
+.group-member-nickname  {
+    height:1.69rem;
+    font-size:1.88rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(20,16,48,1);
+    line-height:1.69rem;
+}
+
+.group-member-loginname {
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(102,102,102,1);
+}
+
+.group-member-btn{
+    width:17.82rem;
+    height:3.75rem;
+    background:rgba(76,59,177,1);
+    border-radius:0.38rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(255,255,255,1);
+    cursor: pointer;
+    outline: none;
+    margin-top:2rem;
 }
 .sub-speaker-div{
     display: flex;

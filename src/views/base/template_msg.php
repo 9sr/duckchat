@@ -487,6 +487,29 @@
         </div>
 </script>
 
+<script id="tpl-group-member-info" type="text/html">
+    <div class="group-member-img">
+        <img class="useravatar info-avatar-{{userId}}" src="{{avatar}}" />
+    </div>
+    <div class="group-member-nickname">
+        {{nickname}}
+    </div>
+    <div class="group-member-loginname">
+        {{loginName}}
+    </div>
+    <div class="group-member-line">
+    </div>
+    {{if relation == "FriendRelationFollow"}}
+        <button class="group-member-btn open_chat" data-local-value="openChatTip" userId="{{userId}}" > 发起聊天</button>
+    {{else}}
+     <button class="group-member-btn add-friend-by-group-member" data-local-value="addFriendTip" userId="{{userId}}">添加好友</button>
+
+    {{/if}}
+
+</script>
+
+
+
 <script id="tpl-group-member-for-speaker" type="text/html">
     <div class="speaker-group-member">
         <div class="sub-speaker-div">
@@ -499,18 +522,18 @@
 </script>
 
 <script id="tpl-group-member-list" type="text/html">
-        <div class="pw-contact-row choose-member {{userId}} "  userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}">
+        <div class="pw-contact-row choose-member  group-member {{userId}} "  userId="{{userId}}" nickname="{{nickname}}"  loginName="{{loginName}}">
             <div class="pw-contact-row-image">
                 <img class="useravatar info-avatar-{{userId}}" src="../../public/img/msg/default_user.png" />
             </div>
             <div class="pw-contact-row-name">{{nickname}}</div>
             {{if isType == "owner"}}
             <div class="pw-contact-row-btn speaker_remove_people" >
-                <button class="group_owner" userId="{{userId}}"  nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="groupOwnerTip" disabled>群主</button>
+                <button class="group_owner" userId="{{userId}}"  data-local-value="groupOwnerTip" disabled>群主</button>
             </div>
             {{else if isType == "admin" }}
             <div class="pw-contact-row-btn speaker_add_people" >
-                <button class="group_admin" userId="{{userId}}" nickname="{{nickname}}" avatar="{{avatar}}" data-local-value="groupAdminTip"   disabled>管理员</button>
+                <button class="group_admin" userId="{{userId}}" data-local-value="groupAdminTip"   disabled>管理员</button>
             </div>
             {{else}}
             {{if isPermission == "admin"}}
