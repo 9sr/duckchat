@@ -255,9 +255,9 @@
                                         添加好友
                                     </button>
                                 <?php } else { ?>
-                                    <button class="chatButton" userId="<?php echo $user['userId'] ?>">
-                                        发起会话
-                                    </button>
+<!--                                    <button class="chatButton" userId="--><?php //echo $user['userId'] ?><!--">-->
+<!--                                        发起会话-->
+<!--                                    </button>-->
                                 <?php } ?>
 
                             </div>
@@ -580,7 +580,7 @@
                     if (!user['isFollow']) {
                         userHtml += '<button class="addButton applyButton" userId="' + user["userId"] + '" > 添加好友 </button>';
                     } else {
-                        userHtml += '<button class="chatButton" userId="' + user["userId"] + '" > 发起会话 </button>';
+                        // userHtml += '<button class="chatButton" userId="' + user["userId"] + '" > 发起会话 </button>';
                     }
 
 
