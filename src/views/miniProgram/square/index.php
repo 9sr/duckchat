@@ -185,11 +185,11 @@
             font-size: 20px;
             font-family: PingFangSC-Regular;
             /*color: rgba(205, 205, 205, 1);*/
-            line-height: 20px;
+            line-height: 22px;
             margin-top: 65px;
             width: 250px;
-            height: 20px;
-            overflow: hidden;
+            height: 30px;
+            overflow: auto;
         }
 
         .create_button,
@@ -471,6 +471,16 @@
         }
     });
 
+    $("#square-body").on("click", ".chatButton", function () {
+        var friendId = $(this).attr("userId");
+        var url = "duckchat://0.0.0.0/goto?page=u2Profile&x=" + friendId;
+        try {
+            zalyjsGotoPage(url);
+        } catch (e) {
+            alert(getLanguage() == 1 ? "客户端暂不支持，请升级客户端" : "Please upgrade the client version.");
+        }
+    });
+
 
     $("#square-body").on("click", '.applyButton', function () {
         var lang = getLanguage();
@@ -570,7 +580,7 @@
                     if (!user['isFollow']) {
                         userHtml += '<button class="addButton applyButton" userId="' + user["userId"] + '" > 添加好友 </button>';
                     } else {
-                        userHtml += '<button class=" chatButton" userId="' + user["userId"] + '" > 发起会话 </button>';
+                        userHtml += '<button class="chatButton" userId="' + user["userId"] + '" > 发起会话 </button>';
                     }
 
 
@@ -585,12 +595,6 @@
 
         }
 
-    }
-
-    function showUserChat(userId) {
-        var url = "duckchat://0.0.0.0/goto?page=u2Profile&x=u-" + userId;
-        alert(url);
-        zalyjsGotoPage(url);
     }
 
 </script>
