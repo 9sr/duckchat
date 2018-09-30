@@ -21,9 +21,18 @@ class ApiPassportPasswordFindPasswordRequest extends \Google\Protobuf\Internal\M
      */
     private $loginName = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $loginName
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiPassportPasswordFindPassword::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

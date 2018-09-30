@@ -18,9 +18,18 @@ class DuckChatUserRelationResponse extends \Google\Protobuf\Internal\Message
      */
     private $relationType = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $relationType
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Plugin\DuckchatUserRelation::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

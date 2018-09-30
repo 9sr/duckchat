@@ -26,17 +26,38 @@ class WebMessage extends \Google\Protobuf\Internal\Message
      */
     private $height = 0;
     /**
-     * Generated from protobuf field <code>string hrefURL = 4;</code>
-     */
-    private $hrefURL = '';
-    /**
+     *string hrefURL  = 4;
+     *
      * Generated from protobuf field <code>string title = 5;</code>
      */
     private $title = '';
+    /**
+     * Generated from protobuf field <code>int32 pluginId = 6;</code>
+     */
+    private $pluginId = 0;
+    /**
+     * Generated from protobuf field <code>.core.SimplePluginProfile jumpPluginProfile = 7;</code>
+     */
+    private $jumpPluginProfile = null;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $code
+     *     @type int $width
+     *     @type int $height
+     *     @type string $title
+     *          string hrefURL  = 4;
+     *     @type int $pluginId
+     *     @type \Zaly\Proto\Core\SimplePluginProfile $jumpPluginProfile
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Message::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -106,28 +127,8 @@ class WebMessage extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string hrefURL = 4;</code>
-     * @return string
-     */
-    public function getHrefURL()
-    {
-        return $this->hrefURL;
-    }
-
-    /**
-     * Generated from protobuf field <code>string hrefURL = 4;</code>
-     * @param string $var
-     * @return $this
-     */
-    public function setHrefURL($var)
-    {
-        GPBUtil::checkString($var, True);
-        $this->hrefURL = $var;
-
-        return $this;
-    }
-
-    /**
+     *string hrefURL  = 4;
+     *
      * Generated from protobuf field <code>string title = 5;</code>
      * @return string
      */
@@ -137,6 +138,8 @@ class WebMessage extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     *string hrefURL  = 4;
+     *
      * Generated from protobuf field <code>string title = 5;</code>
      * @param string $var
      * @return $this
@@ -145,6 +148,50 @@ class WebMessage extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->title = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 pluginId = 6;</code>
+     * @return int
+     */
+    public function getPluginId()
+    {
+        return $this->pluginId;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 pluginId = 6;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setPluginId($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->pluginId = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>.core.SimplePluginProfile jumpPluginProfile = 7;</code>
+     * @return \Zaly\Proto\Core\SimplePluginProfile
+     */
+    public function getJumpPluginProfile()
+    {
+        return $this->jumpPluginProfile;
+    }
+
+    /**
+     * Generated from protobuf field <code>.core.SimplePluginProfile jumpPluginProfile = 7;</code>
+     * @param \Zaly\Proto\Core\SimplePluginProfile $var
+     * @return $this
+     */
+    public function setJumpPluginProfile($var)
+    {
+        GPBUtil::checkMessage($var, \Zaly\Proto\Core\SimplePluginProfile::class);
+        $this->jumpPluginProfile = $var;
 
         return $this;
     }

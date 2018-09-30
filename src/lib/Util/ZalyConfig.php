@@ -29,6 +29,12 @@ class ZalyConfig
         }
         return false;
     }
+    public static function getAllConfig()
+    {
+        self::getConfigFile();
+        return self::$config;
+    }
+
 
     public static function getSessionVerifyUrl($pluginId)
     {
@@ -40,13 +46,21 @@ class ZalyConfig
     public static function getApiPageJumpUrl()
     {
         $domain = self::getDomain();
-        return $domain.self::$config['apiPageJump'];
+        $pageJumpUrl = self::$config['apiPageJump'];
+        if(strpos($pageJumpUrl,"./") == 0) {
+            $pageJumpUrl = str_replace("./", "/", $pageJumpUrl);
+        }
+        return $domain.$pageJumpUrl;
     }
 
     public static function getApiPageWidget()
     {
         $domain = self::getDomain();
-        return $domain.self::$config['apiPageWidget'];
+        $pageWidgetUrl = self::$config['apiPageWidget'];
+        if(strpos($pageWidgetUrl,"./") == 0) {
+            $pageWidgetUrl = str_replace("./", "/", $pageWidgetUrl);
+        }
+        return $domain.$pageWidgetUrl;
     }
 
     public static function getDomain()

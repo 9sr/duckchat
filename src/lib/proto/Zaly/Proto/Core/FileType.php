@@ -8,7 +8,7 @@ namespace Zaly\Proto\Core;
  * there are lots of mime.types here:
  * http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
  *
- * Protobuf enum <code>Core\FileType</code>
+ * Protobuf type <code>core.FileType</code>
  */
 class FileType
 {
@@ -28,5 +28,15 @@ class FileType
      * Generated from protobuf enum <code>FileAudio = 2;</code>
      */
     const FileAudio = 2;
+    /**
+     *the server should find the exactly extension, ex: http://php.net/manual/en/function.mime-content-type.php
+     *
+     * Generated from protobuf enum <code>FileDocument = 3;</code>
+     */
+    const FileDocument = 3;
+    /**
+     * Generated from protobuf enum <code>FileVideo = 4;</code>
+     */
+    const FileVideo = 4;
 }
 

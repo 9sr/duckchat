@@ -44,7 +44,7 @@ class Api_Passport_PasswordResetPasswordController extends BaseController
         $tokenTime  = $codeInfo['timeReg'];
         $timeExpire =  $time - $tokenTime;
 
-        if(!$codeInfo || $token != $codeInfo['token'] || ($timeExpire > $this->tokenExipreTime)) {
+        if(!$codeInfo || $token !== $codeInfo['token'] || ($timeExpire > $this->tokenExipreTime)) {
             $errorCode = $this->zalyError->errorVerifyToken;
             $errorInfo = $this->zalyError->getErrorInfo($errorCode);
             $this->setRpcError($errorCode, $errorInfo);

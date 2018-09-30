@@ -16,9 +16,9 @@ function handleClientSendRequest(action, reqData, callback)
         var header = {};
         header[HeaderSessionid] = sessionId;
         header[HeaderHostUrl] = originDomain;
-        header[HeaderUserClientLang] = languageName  == "en-US" ? "0" : "1";
+        header[HeaderUserClientLang] = getLanguage();
         header[HeaderUserAgent] = navigator.userAgent;
-
+        header[HeaderUserAgent] = navigator.userAgent;
         var packageId = localStorage.getItem(PACKAGE_ID);
 
         var transportData = {
@@ -55,7 +55,7 @@ function handleClientReceivedMessage(resp, callback)
         var result = JSON.parse(resp);
         if(result.header != undefined && result.header.hasOwnProperty(HeaderErrorCode)) {
             if(result.header[HeaderErrorCode] != "success") {
-                if(result.header[HeaderErrorCode] == ErrorSessionCode ) {
+                if(result.header[HeaderErrorCode] == ErrorSessionCode || result.header[HeaderErrorCode] == ErrorSiteInit) {
                     localStorage.clear();
                     window.location.href = "./index.php?action=page.logout";
                     return ;

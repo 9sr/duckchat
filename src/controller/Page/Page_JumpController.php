@@ -18,9 +18,8 @@ class Page_JumpController extends  HttpBaseController
     {
         header('Access-Control-Allow-Origin: *');
         $jumpUrl = isset($_GET["jumpUrl"]) ? $_GET["jumpUrl"] : "";
-        $siteName = $this->getSiteConfigFromDB([SiteConfig::SITE_NAME]);
+        $siteName = $this->ctx->Site_Config->getConfigValue(SiteConfig::SITE_NAME);
         echo $this->display("jump_index", ["siteName" => $siteName, "jumpUrl" => $jumpUrl]);
-
         return;
     }
 

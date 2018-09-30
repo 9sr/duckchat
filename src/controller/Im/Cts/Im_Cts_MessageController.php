@@ -20,7 +20,6 @@ class Im_Cts_MessageController extends Im_BaseController
     public function rpcRequestClassName()
     {
         return $this->classNameForCtsRequest;
-
     }
 
     /**
@@ -48,26 +47,38 @@ class Im_Cts_MessageController extends Im_BaseController
             $this->toId = $message->getToGroupId();
 
             //if group exist isLawful
-            $isLawful = $this->checkGroupExisted($this->toId);
-            if (!$isLawful) {
+            $groupProfile = $this->checkGroupExisted($this->toId);
+            if (empty($groupProfile)) {
                 //if group is not exist
-                $noticeText = "group chat is not exist";
+                $noticeText = ZalyText::getText(ZalyText::$textGroupNotExists);
                 $this->returnGroupNotLawfulMessage($msgId, $msgRoomType, $fromUserId, $this->toId, $noticeText);
                 return;
+            } else {
+                //check
+                $speakers = $groupProfile['speakers'];
+
+                if (!empty($speakers)) {
+                    $speakers = explode(",", $speakers);
+
+                    if (!$this->isGroupAdmin($this->toId) && !in_array($this->userId, $speakers)) {
+                        $noticeText = ZalyText::getText(ZalyText::$textGroupNotSpeaker);
+                        $noticeText .= $this->getSpeakersName($speakers);
+                        $this->returnGroupNotLawfulMessage($msgId, $msgRoomType, $fromUserId, $this->toId, $noticeText);
+                        return;
+                    }
+                }
             }
 
             // if lawful go on
             $isLawful = $this->checkIsGroupMember($fromUserId, $this->toId);
             if (!$isLawful) {
                 //if user is not group member
-                $noticeText = "you are not group member";
+                $noticeText = ZalyText::getText(ZalyText::$textGroupNotMember);
                 $this->returnGroupNotLawfulMessage($msgId, $msgRoomType, $fromUserId, $this->toId, $noticeText);
                 return;
             }
 
-
             $result = $this->ctx->Message_Client->sendGroupMessage($msgId, $fromUserId, $this->toId, $msgType, $message);
-
 
         } else if (Zaly\Proto\Core\MessageRoomType::MessageRoomU2 == $msgRoomType) {
             $this->isGroupRoom = false;
@@ -118,8 +129,7 @@ class Im_Cts_MessageController extends Im_BaseController
 
         $title = '[notice]';
         $code = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="background: #DFDFDF;margin:0;padding:0"><div style="text-align: center;font-size: 14px"> <font color=#FFFFFF>' . $toUserName . ' is not your friend, add friend to chat </font><font color=#4C3BB1><br/>send a friend apply</font></div></body></html>';
-
-        $hrefUrl = 'zaly://0.0.0.0/goto?page=friend_apply&userId=' . $toUserId;
+        $hrefUrl = 'duckchat://0.0.0.0/goto?page=applyFriend&x=u-' . $toUserId;
         $height = '135';
 
         //代发一个web消息给from
@@ -145,10 +155,7 @@ class Im_Cts_MessageController extends Im_BaseController
     private function checkGroupExisted($groupId)
     {
         $groupProfile = $this->ctx->SiteGroupTable->getGroupInfo($groupId);
-        if ($groupProfile) {
-            return true;
-        }
-        return false;
+        return $groupProfile;
     }
 
     private function checkIsGroupMember($userId, $groupId)
@@ -179,6 +186,19 @@ class Im_Cts_MessageController extends Im_BaseController
         return false;
     }
 
+    private function isGroupAdmin($groupId)
+    {
+        $ownerType = \Zaly\Proto\Core\GroupMemberType::GroupMemberOwner;
+        $adminType = \Zaly\Proto\Core\GroupMemberType::GroupMemberAdmin;
+        $tag = __CLASS__ . '-' . __FUNCTION__;
+
+        $user = $this->ctx->SiteGroupUserTable->getGroupAdmin($groupId, $this->userId, $adminType, $ownerType);
+        if (empty($user)) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @param $msgType
      * @param \Zaly\Proto\Core\Message $message
@@ -197,4 +217,28 @@ class Im_Cts_MessageController extends Im_BaseController
         return '';
     }
 
+    /**
+     * @param array $speakers
+     * @return string
+     */
+    private function getSpeakersName(array $speakers)
+    {
+        $speakersName = "";
+        if (!empty($speakers)) {
+            $speakersInfo = $this->ctx->SiteUserTable->getUserByUserIds($speakers);
+
+            foreach ($speakersInfo as $num => $speaker) {
+
+                $nickname = $speaker['nickname'];
+                if ($num == 0) {
+                    $speakersName .= $nickname;
+                } else {
+                    $speakersName .= "," . $nickname;
+                }
+
+            }
+        }
+
+        return $speakersName;
+    }
 }

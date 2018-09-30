@@ -25,9 +25,19 @@ class ApiFriendApplyRequest extends \Google\Protobuf\Internal\Message
      */
     private $greetings = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $toUserId
+     *     @type string $greetings
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiFriendApply::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

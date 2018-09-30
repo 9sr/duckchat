@@ -169,9 +169,8 @@ class Api_Group_BaseController extends BaseController
             $groupProfile->setAdmins($adminUsers);
         }
 
-        $speakers = (isset($group['speakers']) && $group['speakers'] != "")
-            ? json_decode($group['speakers'], true)
-            : [];
+        $speakers = !empty($group['speakers']) ? explode(",", $group['speakers']) : [];
+
         if (count($speakers)) {
             $speakers = $this->ctx->SiteGroupUserTable->getGroupUsers($group['groupId'], $speakers);
             if (count($speakers)) {

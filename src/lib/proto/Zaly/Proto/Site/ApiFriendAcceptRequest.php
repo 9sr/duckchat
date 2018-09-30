@@ -29,9 +29,21 @@ class ApiFriendAcceptRequest extends \Google\Protobuf\Internal\Message
      */
     private $agree = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $applyUserId
+     *          user who apply me as friend
+     *     @type bool $agree
+     *          true：accept false：refuse
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiFriendAccept::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

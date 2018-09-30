@@ -45,14 +45,14 @@ class Duckchat_Session_ProfileController extends Duckchat_MiniProgramController
             $sessionId = $this->ctx->ZalyAes->decrypt($duckchatSessionId, $authKey);
 
             if (empty($sessionId)) {
-                throw new Exception("user sesssionId is empty");
+                throw new Exception("decrypt user sesssionId is empty");
             }
 
             //sessionId -> userId
             $sessionInfo = $this->ctx->SiteSessionTable->getSessionInfoBySessionId($sessionId);
 
             if (empty($sessionInfo)) {
-                throw new Exception("user sesssionId is empty");
+                throw new Exception("check user sesssionId is empty");
             }
 
 

@@ -25,9 +25,19 @@ class ImCtsUpdatePointerRequest extends \Google\Protobuf\Internal\Message
      */
     private $groupsPointer;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int|string $u2Pointer
+     *     @type array|\Google\Protobuf\Internal\MapField $groupsPointer
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ImCtsUpdatePointer::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

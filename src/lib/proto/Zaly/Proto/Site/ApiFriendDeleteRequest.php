@@ -21,9 +21,18 @@ class ApiFriendDeleteRequest extends \Google\Protobuf\Internal\Message
      */
     private $toUserId = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $toUserId
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Site\ApiFriendDelete::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

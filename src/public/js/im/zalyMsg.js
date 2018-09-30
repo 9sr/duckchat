@@ -1,6 +1,7 @@
 
 
 msgImageSize = "";
+webObject={};
 
 function getRoomList()
 {
@@ -27,7 +28,7 @@ function getRoomList()
             localStorage.setItem( msg.chatSessionId, msg.roomType);
         }
         msg = handleMsgInfo(msg);
-        appendOrInsertRoomList(msg, false);
+        appendOrInsertRoomList(msg, false, false);
     }
     displayCurrentProfile();
     displayRightPage(DISPLAY_CHAT);
@@ -100,7 +101,7 @@ function removeRoomFromRoomList(chatSessionId)
     return roomList;
 }
 
-function appendOrInsertRoomList(msg, isInsert)
+function appendOrInsertRoomList(msg, isInsert, showNotification)
 {
     if(msg != undefined && msg.hasOwnProperty("type") && msg.type == MessageStatus.MessageEventSyncEnd) {
         return ;
@@ -112,21 +113,28 @@ function appendOrInsertRoomList(msg, isInsert)
     var msgContent;
 
     switch (msgType) {
-        case MessageTypeNum.MessageText:
         case MessageType.MessageText:
             msgContent = msg.hasOwnProperty("text") ? msg['text'].body: JSON.parse(msg['content']).body;
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
             break;
-        case MessageTypeNum.MessageImage:
         case MessageType.MessageImage:
             msgContent = "[图片消息]";
+            break;
+        case MessageType.MessageAudio:
+            msgContent = "[语音消息]";
             break;
         case MessageType.MessageNotice:
             msgContent = msg["notice"].body;
             msgContent = msgContent && msgContent.length > 10 ? msgContent.substr(0,10)+"..." : msgContent;
             break;
+        case MessageType.MessageWebNotice:
+            msgContent = msg["webNotice"].title;
+            break
         case MessageType.MessageAudio:
             msgContent = "[语音消息]";
+            break;
+        case MessageType.MessageDocument:
+            msgContent = "[文件]";
             break;
         case MessageType.MessageWeb:
             msgContent = "[" + msg["web"].title + "]";
@@ -171,6 +179,9 @@ function appendOrInsertRoomList(msg, isInsert)
         if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
             $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
         }
+        if(msg.fromUserId != token && showNotification) {
+            showWebNotification(msg, msgContent);
+        }
         return ;
     }
 
@@ -189,7 +200,8 @@ function appendOrInsertRoomList(msg, isInsert)
         avatar:avatar,
         timeServer:msgTime,
         msgServerTime:msg.timeServer,
-    });
+    })
+
     if($(".chatsession-row").length > 0 ) {
         $(html).insertBefore($(".chatsession-row")[0]);
     } else {
@@ -200,6 +212,9 @@ function appendOrInsertRoomList(msg, isInsert)
 
     if(msg.chatSessionId == localStorage.getItem(chatSessionIdKey)) {
         $(".chat_session_id_"+msg.chatSessionId).addClass("chatsession-row-active");
+    }
+    if(msg.fromUserId != token && showNotification) {
+        showWebNotification(msg, msgContent);
     }
 }
 
@@ -235,7 +250,7 @@ function handleMsgInfo(msg)
     var unreadMuteKey = msgUnReadMuteKey+msg.chatSessionId;
     msg.isMuteMsgNum = localStorage.getItem(unreadMuteKey) == 1 ? 1 : 0;
 
-    var userProfile = getFriendProfile(userId);
+    var userProfile = getFriendProfile(userId, handleGetFriendProfile());
     if(userProfile) {
         msg.nickname   = userProfile['nickname'];
         msg.userAvatar = userProfile['avatar'];
@@ -393,15 +408,18 @@ function handleSyncMsg(msg)
 
     ///是自己群的消息，并且是新消息
     if(msg.chatSessionId  == currentChatSessionId && isNewMsg) {
+        var isEndMsgDialog = isCheckEndMsgDialog();
         appendMsgHtml(msg);
-        msgBoxScrollToBottom();
+        if(isEndMsgDialog == true) {
+            msgBoxScrollToBottom();
+        }
     } else if(msg.chatSessionId != currentChatSessionId && isNewMsg) {
         if(msg.chatSessionId != token) {
             setRoomMsgUnreadNum(msg.chatSessionId);
             setDocumentTitle("new_msg");
         }
     }
-    appendOrInsertRoomList(msg, true);
+    appendOrInsertRoomList(msg, true, true);
 }
 
 function handleMsgStatusResult(msgId, msgStatus)
@@ -596,15 +614,6 @@ function compare(msg1, msg2) {
     return 0;
 }
 
-
-function getMsgTime()
-{
-    var date = new Date(); //获取一个时间对象
-    var minutes =  date.getMinutes()>=10 ? date.getMinutes():"0"+date.getMinutes();
-    var month = date.getMonth() >=10 ? date.getMonth() : "0"+date.getMonth();
-    return date.getFullYear() + '-' + month + '-' +date.getDate() + " " + date.getHours()+":"+minutes;  // 获取完整的年份(4位,1970)
-}
-
 function getMsgTimeByMsg(time)
 {
     time = Number(time);
@@ -623,7 +632,7 @@ function getRoomMsgTime(time)
     return date.getHours()+":"+minutes;
 }
 
-function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
+function sendMsg( chatSessionId, chatSessionType, msgContent, msgType, params)
 {
     var action = "im.cts.message";
     var msgId  = Date.now();
@@ -652,10 +661,14 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
             displayContent = msgContent;
             break;
         case MessageType.MessageImage:
-            console.log("MessageType.MessageImage msgImageSize==" + JSON.stringify(msgImageSize));
             message['type'] = MessageType.MessageImage;
             message['image'] = {url:msgContent, width:msgImageSize.width, height:msgImageSize.height};
             displayContent = "[图片消息]";
+            break;
+        case MessageType.MessageDocument:
+            message['type'] = MessageType.MessageDocument;
+            message['document'] = {url:msgContent, size:params.size, name:params.name};
+            displayContent = "[文件消息]";
             break;
     }
 
@@ -667,7 +680,7 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
 
     handleImSendRequest(action, reqData, "");
     message['chatSessionId'] = chatSessionId;
-    appendOrInsertRoomList(message, true);
+    appendOrInsertRoomList(message, true, false);
     handleMsgForMsgRoom(chatSessionId, message);
     addMsgToChatDialog(chatSessionId, message);
 };
@@ -676,6 +689,7 @@ function sendMsg( chatSessionId, chatSessionType, msgContent, msgType)
 function addMsgToChatDialog(chatSessionId, msg)
 {
     msg.status = MessageStatus.MessageStatusSending;
+
     appendMsgHtml(msg);
 
     var node = $(".chat_dession_id_"+chatSessionId);
@@ -695,9 +709,66 @@ function addMsgToChatDialog(chatSessionId, msg)
             }
         }
     }, 10000);///10秒执行
-
-
+    ///在上部分查看消息的时候不滚动
     msgBoxScrollToBottom();
+}
+
+function isCheckEndMsgDialog()
+{
+    var rightchatBox = $(".right-chatbox")[0];
+    var sh = rightchatBox.scrollHeight;
+    var ch = rightchatBox.clientHeight;
+    var st = $(".right-chatbox").scrollTop();
+    if(sh - ch - st == 0) {
+        return true
+    }
+    return false;
+}
+
+function getMessageDocumentSize(size)
+{
+    if(Number(size) < 1024) {
+        size = size+" bytes";
+    } else if(Number(size)>=1024&&Number(size)<Number(1024*1024)) {
+        size = Math.ceil(size/1024)+" KB";
+    }  else if(Number(size)>=Number(1024*1024) && Number(size)<Number(1024*1024*1024)) {
+        size = Math.ceil(size/(1024*1024))+" M";
+    } else {
+        size = Math.ceil(size/(1024*1024*1024))+" G";
+    }
+    return size;
+}
+
+function getMessageDocumentName(name)
+{
+    if(name.length>15) {
+        var names = name.split('.');
+        var ext = names.pop();
+        var extLength = ext.length;
+        var prefix = names.shift();
+        var num = (15-extLength-3)/2;
+        prefix = prefix.substr(0, num) + "..." + prefix.substr(prefix.length-num, prefix.length);
+        name = prefix+"."+ext;
+    }
+    return name;
+}
+
+function getWebMessageSize(imageNaturalHeight, imageNaturalWidth, h, w)
+{
+    var webObject = {};
+    if (imageNaturalWidth < w && imageNaturalHeight<h) {
+        webObject.width  = imageNaturalWidth == 0 ? w : imageNaturalWidth;
+        webObject.height = imageNaturalHeight == 0 ? h : imageNaturalHeight;
+    } else {
+        if (w / h <= imageNaturalWidth/ imageNaturalHeight) {
+            webObject.width  = w;
+            webObject.height = w* (imageNaturalHeight / imageNaturalWidth);
+        } else {
+            webObject.width  = h * (imageNaturalWidth / imageNaturalHeight);
+            webObject.height = h;
+        }
+    }
+    return webObject;
 }
 
 function appendMsgHtml(msg)
@@ -732,6 +803,7 @@ function appendMsgHtml(msg)
     var userAvatar = sendBySelf ? avatar : msg.userAvatar;
     var userAvatarSrc = sendBySelf ?  localStorage.getItem(selfInfoAvatar) : "";
     if(sendBySelf) {
+        getNotMsgImg(token, userAvatar);
         switch(msgType) {
             case MessageType.MessageText :
                 var msgContent = msg['text'].body;
@@ -745,6 +817,27 @@ function appendMsgHtml(msg)
                     avatar:userAvatar,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
+                    timeServer:msg.timeServer
+                });
+                break;
+            case MessageType.MessageDocument:
+                var size = getMessageDocumentSize(msg['document'].size);
+                var fileName =  getMessageDocumentName(msg['document'].name);
+                var url = msg['document'].url;
+                var originName = msg['document'].name;
+                html = template("tpl-send-msg-file", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    url:url,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    avatar:userAvatar,
+                    userAvatarSrc:userAvatarSrc,
+                    userId:token,
+                    fileSize:size,
+                    fileName:fileName,
+                    originName:originName,
                     timeServer:msg.timeServer
                 });
                 break;
@@ -765,14 +858,12 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageAudio:
-                var msgContent = "[你发了一条语音消息，下载客户端，收听语音消息吧！] ";
                 html = template("tpl-send-msg-audio", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
                     msgTime : msgTime,
                     msgStatus:msgStatus,
-                    msgContent:msgContent,
                     avatar:userAvatar,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
@@ -780,22 +871,30 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageWebNotice:
-                html =  msg['notice'].code;
+                var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                html = template("tpl-receive-msg-web-notice", {
+                    hrefUrl:hrefUrl
+                });
                 break;
             case MessageType.MessageWeb :
-                var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var hrefUrl =  msg['web'].hrefURL;
+                var webSize = getWebMessageSize(msg['web'].height, msg['web'].width, 300, 400);
                 html = template("tpl-send-msg-web", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
+                    webWidth:webSize.width,
+                    webHeight:webSize.height,
                     msgId : msgId,
                     msgTime : msgTime,
                     userId :msg.fromUserId,
                     groupUserImg : groupUserImageClassName,
                     avatar:userAvatar,
                     hrefURL:hrefUrl,
+                    linkUrl :linkUrl,
                     userAvatarSrc:userAvatarSrc,
                     userId:token,
-                    timeServer:msg.timeServer
+                    timeServer:msg.timeServer,
                 });
                 break;
             case MessageType.MessageNotice:
@@ -806,8 +905,8 @@ function appendMsgHtml(msg)
                 });
                 break;
             default:
-                var msgContent = "[暂不支持此类型消息] ";
-                html = template("tpl-send-msg-audio", {
+                var msgContent = "[当前版本不支持此信息，请尝试升级客户端版本] ";
+                html = template("tpl-send-msg-default", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
@@ -822,6 +921,7 @@ function appendMsgHtml(msg)
                 break;
         }
     } else {
+        getNotMsgImg(msg.fromUserId,msg.userAvatar);
         switch(msgType) {
             case MessageType.MessageText:
                 var msgContent = msg['text'].body;
@@ -851,44 +951,59 @@ function appendMsgHtml(msg)
                 });
                 break;
             case MessageType.MessageAudio:
-                var msgContent = "[你收到一条语音消息，下载客户端收听语音消息吧！]";
                 html = template("tpl-receive-msg-audio", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
                     msgId : msgId,
                     userId :msg.fromUserId,
-                    msgContent:msgContent,
                     msgTime : msgTime,
                     groupUserImg : groupUserImageClassName,
                     avatar:msg.userAvatar,
+                });
+                break;
+            case MessageType.MessageDocument:
+                var size = getMessageDocumentSize(msg['document'].size);
+                var fileName =  getMessageDocumentName(msg['document'].name);
+                var url = msg['document'].url;
+                var originName = msg['document'].name;
+                html = template("tpl-receive-msg-file", {
+                    roomType: msg.roomType,
+                    nickname:nickname,
+                    msgId : msgId,
+                    url:url,
+                    msgTime : msgTime,
+                    msgStatus:msgStatus,
+                    avatar:msg.userAvatar,
+                    userId:msg.fromUserId,
+                    fileSize:size,
+                    fileName:fileName,
+                    originName:originName,
+                    timeServer:msg.timeServer
                 });
                 break;
             case MessageType.MessageWebNotice :
-                // html =  msg['webNotice'].code;
                 var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
                 html = template("tpl-receive-msg-web-notice", {
-                    roomType: msg.roomType == GROUP_MSG ? 1 : 0,
-                    nickname: msg.nickname,
-                    msgId : msgId,
-                    msgTime : msgTime,
-                    userId :msg.fromUserId,
-                    groupUserImg : groupUserImageClassName,
-                    avatar:msg.userAvatar,
-                    hrefURL:hrefUrl
+                    hrefUrl:hrefUrl
                 });
                 break;
             case MessageType.MessageWeb :
-                // html = "请前往客户端查看web消息";
-                var hrefUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var linkUrl = getWebMsgHref(msg.msgId, msg.roomType);
+                var hrefUrl =  msg['web'].hrefURL;
+                var webSize = getWebMessageSize(msg['web'].height, msg['web'].width, 300, 400);
                 html = template("tpl-receive-msg-web", {
                     roomType: msg.roomType,
                     nickname: msg.nickname,
                     msgId : msgId,
                     msgTime : msgTime,
+                    webWidth:webSize.width,
+                    webHeight:webSize.height,
+                    leftWebWidth:Number(webSize.width+25),
                     userId :msg.fromUserId,
                     groupUserImg : groupUserImageClassName,
                     avatar:msg.userAvatar,
-                    hrefURL:hrefUrl
+                    hrefURL:hrefUrl,
+                    linkUrl:linkUrl,
                 });
                 break;
             case MessageType.MessageNotice:
@@ -898,17 +1013,16 @@ function appendMsgHtml(msg)
                 });
                 break;
             default:
-                var msgContent = "[暂不支持此类型消息] ";
-                html = template("tpl-receive-msg-audio", {
+                var msgContent = "[当前版本不支持此信息，请尝试升级客户端版本] ";
+                html = template("tpl-receive-msg-default", {
                     roomType: msg.roomType,
                     nickname:nickname,
                     msgId : msgId,
                     msgTime : msgTime,
                     msgStatus:msgStatus,
                     msgContent:msgContent,
-                    avatar:userAvatar,
-                    userAvatarSrc:userAvatarSrc,
-                    userId:token,
+                    avatar:msg.userAvatar,
+                    userId :msg.fromUserId,
                     timeServer:msg.timeServer
                 });
                 break;
@@ -921,7 +1035,6 @@ function appendMsgHtml(msg)
 
     // html = "请前往客户端查看web消息";
     $(".right-chatbox").append(html);
-    getNotMsgImg(userId, userAvatar);
     getMsgImgSrc(msg, msgId);
 }
 
@@ -963,6 +1076,7 @@ function getMsgSizeForDiv(msg)
     return getMsgSize(msg['image'].width, msg['image'].height, h, w);
 }
 
+
 function getWebMsgHref(msgId, msgRoomType)
 {
     var url = "./index.php?action=http.file.downloadWebMsg&msgId="+msgId+"&isGroupMessage="+(msgRoomType==GROUP_MSG ? 1 : 0);
@@ -979,20 +1093,26 @@ function msgBoxScrollToBottom()
 
 }
 
-function uploadMsgImgFromInput(obj) {
-
-    console.log(" upload msg from " + obj.files.length)
+function uploadMsgFileFromInput(obj, fileType) {
 
     if (obj) {
         if (obj.files) {
             formData = new FormData();
-
             formData.append("file", obj.files.item(0));
-            formData.append("fileType", FileType.FileImage);
+            formData.append("fileType", fileType);
             formData.append("isMessageAttachment",true);
             var src = window.URL.createObjectURL(obj.files.item(0));
-            getMsgImageSize(src);
-            uploadMsgImgToServer(formData, src, uploadImgForMsg);
+            if(fileType == FileType.FileDocument) {
+                var params = {
+                    size:obj.files.item(0).size,
+                    name:obj.files.item(0).name
+                };
+                console.log("file info ==" + JSON.stringify(params));
+                uploadMsgFileToServer(formData, src, uploadFileForMsg, params);
+            } else if(fileType == FileType.FileImage) {
+                getMsgImageSize(src);
+                uploadMsgFileToServer(formData, src, uploadImgForMsg, "");
+            }
 
             return window.URL.createObjectURL(obj.files.item(0));
         }
@@ -1011,7 +1131,7 @@ function uploadMsgImgFromCopy(image)
     formData.append("isMessageAttachment",true);
     var src = window.URL.createObjectURL(blob);
     getMsgImageSize(src);
-    uploadMsgImgToServer(formData, src, uploadImgForMsg);
+    uploadMsgFileToServer(formData, src, uploadImgForMsg, "");
 }
 
 function getMsgImageSize(src)
@@ -1023,7 +1143,6 @@ function getMsgImageSize(src)
             width:image.width,
             height:image.height
         }
-        console.log("msgImageSize==" + JSON.stringify(msgImageSize));
     };
 }
 
@@ -1100,7 +1219,7 @@ function base64ToBlob(base64, mime)
 }
 
 
-function uploadMsgImgToServer(formData, src, type)
+function uploadMsgFileToServer(formData, src, type, params)
 {
     var chatSessionId = localStorage.getItem(chatSessionIdKey);
     var chatSessionType = localStorage.getItem(chatSessionId);
@@ -1114,6 +1233,7 @@ function uploadMsgImgToServer(formData, src, type)
         success:function(fileInfo){
             var fileInfo = JSON.parse(fileInfo);
             var fileName = fileInfo['fileId'];
+            var errorInfo = fileInfo['errorInfo'];
 
             if(fileName) {
                 if(fileName == "failed") {
@@ -1124,15 +1244,16 @@ function uploadMsgImgToServer(formData, src, type)
                     // alert("上传成功！");
                     var imgKey = sendMsgImgUrlKey+fileName;
                     localStorage.setItem(imgKey, src);
-
-                    sendMsg(chatSessionId, chatSessionType, fileName, MessageType.MessageImage);
+                    sendMsg(chatSessionId, chatSessionType, fileName, MessageType.MessageImage, "");
                     $("#msgImage").html("");
                     $("#msgImage")[0].style.display = "none";
                 } else if(type == uploadImgForSelfAvatar) {
                     updateUserAvatar(fileName);
+                }else if(type == uploadFileForMsg) {
+                    sendMsg(chatSessionId, chatSessionType, fileName, MessageType.MessageDocument, params);
                 }
             } else {
-                alert("上传失败");
+                alert(errorInfo);
             }
         },
         error:function(err){
@@ -1155,7 +1276,7 @@ function uploadUserImgFromInput(obj) {
             var src = window.URL.createObjectURL(obj.files.item(0));
             getMsgImageSize(src);
 
-            uploadMsgImgToServer(formData, src, uploadImgForSelfAvatar);
+            uploadMsgFileToServer(formData, src, uploadImgForSelfAvatar, "");
 
             $(".user-image-upload").attr("src", src);
         }
@@ -1173,5 +1294,3 @@ function updateUserAvatar(fileName)
     values.push(value);
     updateUserInfo(values);
 }
-
-

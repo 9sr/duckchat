@@ -19,15 +19,21 @@ class Site_Config
 
     /**
      * @param $configKey
+     * @param null $defaultValue
      * @return null
      */
-    public function getConfigValue($configKey)
+    public function getConfigValue($configKey, $defaultValue = null)
     {
         $configValues = $this->ctx->SiteConfigTable->selectSiteConfig($configKey);
         if ($configValues) {
             return $configValues[$configKey];
         }
-        return null;
+        return $defaultValue;
+    }
+
+    public function getFileSizeConfig()
+    {
+        return $this->getConfigValue(SiteConfig::SITE_FILE_SIZE, 10);
     }
 
     public function getAllConfig()

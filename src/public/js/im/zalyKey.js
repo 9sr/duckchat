@@ -17,31 +17,24 @@ MessageType = {
     MessageAudio   : "MessageAudio",
     MessageWeb     : "MessageWeb",
     MessageWebNotice : "MessageWebNotice",
+    MessageDocument:"MessageDocument",
+    MessageVideo:"MessageVideo",
 
     // event message start
     MessageEventFriendRequest : "MessageEventFriendRequest",
     MessageEventStatus  : "MessageEventStatus",   // -> StatusMessage
     MessageEventSyncEnd :"MessageEventSyncEnd",
-
 };
+
+
+SetSpeakerType = {
+    AddSpeaker    : "AddSpeaker",    //add new speakers
+    RemoveSpeaker  : "RemoveSpeaker",    //remove old speakers
+    CloseSpeaker  : "CloseSpeaker",    //close speaker function
+}
 
 UserClientLangZH = "1";
 UserClientLangEN = "0";
-
-MessageTypeNum = {
-    MessageInvalid : 0,
-    MessageNotice  : "1",
-    MessageText    : "2",
-    MessageImage   : "3",
-    MessageAudio   : "4",
-    MessageWeb     : "5",
-    MessageWebNotice : "6",
-
-    // event message start
-    MessageEventFriendRequest : "MessageEventFriendRequest",
-    MessageEventStatus  : "MessageEventStatus",   // -> StatusMessage
-    MessageEventSyncEnd :"MessageEventSyncEn",
-};
 
 FriendRelation = {
     FriendRelationInvalid : "FriendRelationInvalid",
@@ -65,9 +58,11 @@ DataWriteType = {
 }
 
 FileType =  {
-    FileInvalid : "FileInvalid",
-    FileImage : "FileImage", // the server should find the exactly extension, ex: http://php.net/manual/en/function.mime-content-type.php
-    FileAudio : "FileAudio", // the server should find the exactly extension, ex: http://php.net/manual/en/function.mime-content-type.php
+    FileInvalid : "0",
+    FileImage : "1", // the server should find the exactly extension, ex: http://php.net/manual/en/function.mime-content-type.php
+    FileAudio : "2", // the server should find the exactly extension, ex: http://php.net/manual/en/function.mime-content-type.php
+    FileDocument:"3",
+    FileVideo:"4",
 }
 
 ApiGroupUpdateType  = {
@@ -113,6 +108,7 @@ apiUrl = "server_address_for_api";
 
 ErrorSessionCode = "error.session";
 PageLoginAction  = "page.index";
+ErrorSiteInit = "error.site.init";
 
 sessionId = $(".session_id").attr("data");
 domain    = $(".domain").attr("data");
@@ -174,6 +170,7 @@ chatTypeKey = "chat_type";
 WidgetChat = "widget_chat";
 DefaultChat = "default_chat";
 MobileChat = "mobile_chat";
+speakerUserIdsKey="speaker_userIds_";
 
 DefaultTitle = "DuckChat 聊天室";
 
@@ -187,6 +184,7 @@ selfInfoAvatar="self_avatar";
 
 uploadImgForMsg  = "uploadImgForMsg";
 uploadImgForSelfAvatar = "uploadImgForSelfAvatar";
+uploadFileForMsg = "uploadFileForMsg";
 
 ProfileTimeout =  1000*60*60*24*30;////1个月
 reqTimeout = 1000*60*5;///5分钟
@@ -194,12 +192,27 @@ reqTimeout = 1000*60*5;///5分钟
 defaultUserName = "匿名";
 
 downloadFileUrl = "./index.php?action=http.file.downloadFile";
-languageName = navigator.language == "en-US" ? "en" : "zh";
+
+function getLanguage() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return UserClientLangZH;
+    }
+    return UserClientLangEN;
+}
+
+function getLanguageName() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return "zh";
+    }
+    return "en";
+}
+
+languageName = getLanguageName();
+languageNum = getLanguage();
 
 uploadFileUrl = './index.php?action=http.file.uploadWeb';
-
-languageName = "zh";
-languageNum = languageName == "en" ? UserClientLangEN : UserClientLangZH;
-
 isSyncingMsg = false;
 isPreSyncingMsgTime="";
+

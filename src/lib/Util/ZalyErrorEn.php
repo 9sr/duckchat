@@ -20,7 +20,7 @@ class ZalyErrorEn extends  ZalyErrorBase
         "error.group.create.permission" => "Not allow create group",
         "error.group.create"  => "Create failed",
         "error.group.exist"   => "The group has been dissolved",
-        "error.group.owner"   => "只有群主可以操作",
+        "error.group.owner"   => "No permission to operate",
         "error.group.admin"   => "No permission to operate",
         "error.group.delete"  => "No permission to operate",
         "error.group.maxMemberCount" => "Full of members",
@@ -40,6 +40,7 @@ class ZalyErrorEn extends  ZalyErrorBase
         "error.friend.apply.friendExist" => "Already a friend",
         "error.friend.update" => "Update failed",
         "error.friend.delete" => "Delete failed",
+        "error.friend" => "not friend",
         "error.file.download" => "Downlod Failed",
         "error.group.invite"  => "Invitation failed",
 

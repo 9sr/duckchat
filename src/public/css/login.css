@@ -5,7 +5,6 @@ body,html {
     padding:0;
     margin:0;
     -webkit-tap-highlight-color: transparent;
-    background:url("https://duckchat.akaxin.com/border_line.png") no-repeat;
 }
 
 .zaly_container {
@@ -89,7 +88,9 @@ body,html {
     top: 0;
     bottom: 0;
     margin: auto 0;
+    cursor: pointer;
 }
+
 .register_span_div {
     display: flex;
     margin-top: 1rem;
@@ -144,6 +145,13 @@ input::-webkit-input-placeholder,
     color:rgba(153,153,153,1);
     vertical-align:middle;
     width: 25rem;
+}
+
+input::placeholder {
+    font-size:1.31rem;
+    font-family:PingFangSC-Regular;
+    color:rgba(153,153,153,1);
+    vertical-align:middle;
 }
 
 input:focus,

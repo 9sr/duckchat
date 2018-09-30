@@ -845,7 +845,8 @@
     }
 
 
-    $(document).mouseup(function (e) {
+    // $(document).mouseup(function (e) {
+    $(".wrapper-mask").mouseup(function (e) {
         var targetId = e.target.id;
         var targetClassName = e.target.className;
 
@@ -872,7 +873,7 @@
     }
 
 
-    $(document).on("click", "#user-nickname", function () {
+    $("#user-nickname").click(function () {
         var title = $(this).find(".item-body-desc").html();
         var inputBody = $(this).find(".item-body-value").html();
 
@@ -884,7 +885,7 @@
 
     });
 
-    $(document).on("click", "#user-loginName", function () {
+    $("#user-loginName").click(function () {
         var title = $(this).find(".item-body-desc").html();
         var inputBody = $(this).find(".item-body-value").html();
 
@@ -925,6 +926,8 @@
         if (res.errCode != "success") {
             alert(getLanguage() == 1 ? "更新成功" : "update name error");
         }
+
+        location.reload();
     }
 
     //enable realName
@@ -979,8 +982,7 @@
     }
 
 
-    $(document).on("click", "#user-group-list", function () {
-
+    $("#user-group-list").click(function () {
         var userId = $("#user-id").attr("data");
 
         var url = "index.php?action=manage.user.groups&userId=" + userId + "&lang=" + getLanguage();
@@ -989,8 +991,7 @@
     });
 
 
-    $(document).on("click", "#remove-user", function () {
-
+    $("#remove-user").click(function () {
         var userId = $("#user-id").attr("data");
 
         var url = "index.php?action=manage.user.delete&lang=" + getLanguage();

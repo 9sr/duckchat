@@ -58,6 +58,8 @@ class SiteConfig
     const SITE_MOBILE_NUM = "maxMobileNum";//默认1，可修改
     const SITE_WEB_NUM = "maxWebNum";//默认永远1，不可修改
 
+    const SITE_FILE_SIZE = "maxFileSize";//文件支持的大小
+
     public static function getPubkAndPrikPem()
     {
         $pair = ZalyRsa::newRsaKeyPair(2048);
@@ -111,6 +113,7 @@ class SiteConfig
 
         self::SITE_MOBILE_NUM,
         self::SITE_WEB_NUM,
+        self::SITE_FILE_SIZE,
     ];
 
 
@@ -154,6 +157,7 @@ class SiteConfig
 
         self::SITE_MOBILE_NUM => 1,
         self::SITE_WEB_NUM => 1,
+        self::SITE_FILE_SIZE => 10, //10M
     ];
 
 }

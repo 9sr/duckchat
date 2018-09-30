@@ -1,7 +1,26 @@
 
-var languageName = navigator.language == "en-US" ? "en" : "zh";
 
-var languageName = "zh";
+UserClientLangZH = "1";
+UserClientLangEN = "0";
+
+function getLanguage() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return UserClientLangZH;
+    }
+    return UserClientLangEN;
+}
+
+function getLanguageName() {
+    var nl = navigator.language;
+    if ("zh-cn" == nl || "zh-CN" == nl) {
+        return "zh";
+    }
+    return "en";
+}
+var languageName = getLanguageName();
+
+
 jQuery.i18n.properties({
     name: "lang",
     path: '../../public/js/config/',
@@ -72,6 +91,7 @@ function zalyLoginConfig(results) {
 
 function loginSuccess()
 {
+
     handleRedirect();
 }
 
@@ -353,7 +373,21 @@ function loginNameNotExist()
 }
 
 $(document).on("click", ".register_button", function () {
-    var isType = $(this).attr("is_type");
+    registerAndLogin();
+});
+
+
+function registerAndLoginByKeyDown(event)
+{
+    if(!checkIsEnterBack(event)){
+        return false;
+    }
+    registerAndLogin();
+}
+
+function registerAndLogin()
+{
+    var isType = $(".register_button").attr("is_type");
     invitationCode = $(".register_input_code").val();
 
     if(isType == updateInvitationCodeType) {
@@ -366,7 +400,7 @@ $(document).on("click", ".register_button", function () {
         var jsUrl = "./index.php?action=page.js&loginName="+registerLoginName+"&success_callback=loginNameExist&fail_callback=loginNameNotExist";
         addJsByDynamic(jsUrl);
     }
-});
+}
 
 $(document).on("click", ".update_code_btn", function () {
     invitationCode = $(".update_input_code").val();
@@ -414,6 +448,38 @@ function validateEmail(email)
 
 
 $(document).on("click", ".login_button", function () {
+    loginPassport();
+});
+
+function checkIsEnterBack(event)
+{
+    var event = event || window.event;
+    var isIE = (document.all) ? true : false;
+    var key;
+
+    if(isIE) {
+        key = event.keyCode;
+    } else {
+        key = event.which;
+    }
+
+    if(key != 13) {
+        return false;
+    }
+    return true;
+}
+
+function loginPassportByKeyPress(event) {
+    if(checkIsEnterBack(event) == false) {
+        return false;
+    }
+    loginPassport();
+}
+
+
+
+function loginPassport()
+{
     loginName = $(".login_input_loginName").val();
     loginPassword  = $(".login_input_pwd").val();
     var isFocus = false;
@@ -442,7 +508,7 @@ $(document).on("click", ".login_button", function () {
         return false;
     }
     apiPassportPasswordLogin(handleApiPassportPasswordLogin);
-});
+}
 
 
 function apiPassportPasswordLogin(callback)

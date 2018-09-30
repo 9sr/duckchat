@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\GroupDescriptionType</code>
+ * Protobuf type <code>core.GroupDescriptionType</code>
  */
 class GroupDescriptionType
 {

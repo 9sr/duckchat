@@ -3,7 +3,8 @@
 class File_Manager
 {
     private $attachmentDir = "attachment";
-
+    private $defaultSuffix = ".duckchat";
+    private $gifDir = "gif";
     private $mimeConfig = array(
         "image/png" => "png",
         "image/jpeg" => "jpeg",
@@ -13,12 +14,19 @@ class File_Manager
         "audio/mp4" => "mp4",
         "audio/x-m4a" => "m4a",
         "video/mp4" => "mp4",
+        'application/pdf' => "pdf",
+        'application/x-rar-compressed' => "rar",
+        'application/zip'=> "zip",
+        'application/msword' => "word",
+        'application/xml' => "xml",
+        'application/vnd.ms-powerpoint' => "ppt"
     );
 
-    private $defaultImgType = [
+    private $defaultFileType = [
         "image/jpeg",
         "image/jpg",
         "image/png",
+        "image/gif",
         "audio/mp4",
         "audio/x-m4a",
         "video/mp4",
@@ -50,9 +58,10 @@ class File_Manager
         $dirName = $fileName[0];
         $fileId = $fileName[1];
 
-        $path = $this->getPath($dirName, $fileId, false);
+        $path = $this->getPath($dirName, $fileId,false);
         return file_get_contents($path);
     }
+
 
     public function contentType($fileId)
     {
@@ -63,13 +72,15 @@ class File_Manager
         $fileName = explode("-", $fileId);
         $dirName = $fileName[0];
         $fileId = $fileName[1];
-        $path = $this->getPath($dirName, $fileId);
+        $path = $this->getPath($dirName, $fileId, false);
         return mime_content_type($path);
     }
 
-    public function saveFile($content)
+    public function saveFile($content, $dateDir = false)
     {
-        $dateDir = date("Ymd");
+        if (!$dateDir) {
+            $dateDir = date("Ymd");
+        }
 
         $fileName = sha1(uniqid());
 
@@ -78,7 +89,7 @@ class File_Manager
 
         $mime = mime_content_type($path);
 
-        if (!in_array($mime, $this->defaultImgType)) {
+        if (!in_array($mime, $this->defaultFileType)) {
             throw new Exception("file type error");
         }
 
@@ -88,6 +99,22 @@ class File_Manager
             rename($path, $this->getPath($dateDir, $fileName));
         }
 
+        return $dateDir . "-" . $fileName;
+    }
+
+    public function saveDocument($content, $ext, $dateDir = false)
+    {
+        if (!$dateDir) {
+            $dateDir = date("Ymd");
+        }
+        $fileName = sha1(uniqid());
+        $path = $this->getPath($dateDir, $fileName);
+        file_put_contents($path, $content);
+        if (false == empty($ext)) {
+            $fileName = $fileName . "." . $ext;
+        }
+        $fileName = $fileName.$this->defaultSuffix;
+        rename($path, $this->getPath($dateDir, $fileName));
         return $dateDir . "-" . $fileName;
     }
 
@@ -132,7 +159,7 @@ class File_Manager
             $fileNameArray = explode("-", $fileId);
             $dirName = $fileNameArray[0];
             $fileName = $fileNameArray[1];
-            return $this->getPath($dirName, $fileName);
+            return $this->getPath($dirName, $fileName, false);
         } catch (Exception $e) {
             $this->wpf_Logger->error($tag, $e->getMessage());
         }
@@ -337,5 +364,21 @@ class File_Manager
         }
 
         return $picElements;
+    }
+
+    /**
+     * @param $fileSize 单位bytes
+     * @param $maxFileSize 单位M
+     * @return bool
+     */
+    public function judgeFileSize($fileSize, $maxFileSize)
+    {
+        if($maxFileSize ) {
+            $maxFileSizeKB = $maxFileSize*1024*1024;
+            if($maxFileSizeKB < $fileSize) {
+                return false;
+            }
+        }
+        return true;
     }
 }

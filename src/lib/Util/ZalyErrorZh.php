@@ -41,6 +41,7 @@ class ZalyErrorZh extends ZalyErrorBase
         "error.friend.apply.friendExist" => "已经是好友",
         "error.friend.update" => "更新数据失败",
         "error.friend.delete" => "删除失败",
+        "error.friend" => "不是好友",
         "error.file.download" => "下载失败",
         "error.group.invite"  => "邀请失败",
 

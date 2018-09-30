@@ -18,9 +18,18 @@ class TextMessage extends \Google\Protobuf\Internal\Message
      */
     private $body = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $body
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Message::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

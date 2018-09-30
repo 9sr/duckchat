@@ -18,9 +18,18 @@ class GwSocketWriteResponse extends \Google\Protobuf\Internal\Message
      */
     private $length = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $length
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Gateway\GwSocketWrite::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

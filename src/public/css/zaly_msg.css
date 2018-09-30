@@ -50,13 +50,12 @@ html, body{
 
 
 /* Basic Layout**/
-
 .wrapper {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: stretch;
-    background-color: rgba(245,244,249,1);
+    background-color: rgba(245,244,249,1) !important;
 }
 
 .layout-left {
@@ -71,11 +70,11 @@ html, body{
 
 .left-sidebar {
     width: 7.5rem;
-    background: rgba(0,0,0,0.95);
+    background: rgba(0,0,0,0.95) !important;
 }
 
 .left-body {
-    background: rgba(255,255,255,1);
+    background: rgba(255,255,255,1) !important;
     width: 28.14rem;
     display: flex;
     flex-direction: column;
@@ -96,13 +95,17 @@ html, body{
 .right-body {
     background: green;
     flex-grow: 1;
-    height: 90%;
     position: relative;
     display: flex;
     align-items: stretch;
     flex-direction: row;
     overflow-y: hidden;
-
+    top: 7.1rem;
+    right: 1rem;
+    left: 1rem;
+    bottom: 0;
+    display: flex;
+    position: absolute;
 }
 
 .right-body-chat {
@@ -111,7 +114,6 @@ html, body{
     border-bottom: 0.2rem solid rgba(0,0,0,0.1);
     height: 1;
     overflow: hidden;
-    padding: 2rem 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -317,6 +319,7 @@ html, body{
     background: #fff;
     border-bottom: 0.2rem solid rgba(0,0,0,0.1);
     position: relative;
+    box-shadow:0rem 0.09rem 0.09rem 0rem rgba(0,0,0,0.2);
 }
 .right-head .title {
     font-size:2.25rem;
@@ -451,18 +454,21 @@ html, body{
 
 .msg-right .msg-content-img .msg_img{
     border-radius: 0.94rem 0rem 0.94rem 0.94rem;
+    cursor: pointer;
 }
 
 .msg-left .msg-content-img .msg_img{
     border-radius: 0rem 0.94rem  0.94rem 0.94rem;
+    cursor: pointer;
 }
 
 /*right-input*/
 .right-input {
     display: flex;
     flex-direction: column;
-    height: 10.98rem;
+    height: 9rem;
     flex-shrink: 0;
+    margin-bottom: 1rem;
     box-shadow:0rem -0.09rem 0.38rem 0rem rgba(223,223,223,1);
 }
 
@@ -493,9 +499,9 @@ html, body{
     flex-grow: 1;
     font-size:1.5rem;
     color:#C9C9C9;
-    line-height:2.06rem;
-    padding-top: 3rem;
+    padding-top: 1.5rem;
     resize: none;
+    height: 2rem;
     word-break: break-all;
 }
 
@@ -508,7 +514,7 @@ html, body{
 }
 .input-line {
     height:0.19rem;
-    color:rgba(153,153,153,1);
+    background:rgba(201,201,201,1);
     margin-left: 2rem;
     overflow: hidden;
     margin-right: 16rem;
@@ -518,20 +524,18 @@ html, body{
 }
 
 .right-input .input-box .input-btn {
-    width: 15rem;
-    display: flex;
-    flex-direction: column-reverse;
-    border-radius:0.47rem;
+    margin-right: 2rem;
 }
 
 .right-input .input-box .input-btn button {
-    width:13.13rem;
+    width:11.26rem;
     height:3.75rem;
     background:rgba(76,59,177,1);
     border-radius:0.47rem;
-    font-size:1.69rem;
-    color: #fff;
-    line-height:2.35rem;
+    font-size:1.88rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(255,255,255,1);
 }
 
 /* mask and new window */
@@ -580,22 +584,177 @@ html, body{
     box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
 }
 
+#group-speaker-people, #group-member-list {
+    height:59rem;
+    background:rgba(255,255,255,1);
+    box-shadow:0rem 0.17rem 2.25rem 0rem rgba(0,0,0,0.3);
+    position: relative;
+}
 
+.group-member-content{
+    height:54rem;
+    width: 39.4rem;
+    overflow-y: scroll;
+}
+.group-member-info {
+    position: absolute;
+    top:11rem;
+    margin-left: -42.5rem;
+    width:42.21rem;
+    text-align: center;
+    height:25.33rem;
+    background:rgba(255,255,255,1);
+    border-radius:0.56rem;
+    border:0.09rem solid rgba(223,223,223,1);
+}
+.group-member-img {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.group-member-img img {
+    width:7rem;
+    height: 7rem;
+    border-radius: 50%;
+}
+
+.group-member-line{
+    width:38.46rem;
+    height:0.09rem;
+    background:rgba(223,223,223,1);
+    margin-left: 2rem;
+    margin-top: 4rem;
+}
+.group-member-nickname  {
+    height:1.69rem;
+    font-size:1.88rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(20,16,48,1);
+    line-height:1.69rem;
+}
+
+.group-member-loginname {
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(102,102,102,1);
+}
+
+.group-member-btn{
+    width:17.82rem;
+    height:3.75rem;
+    background:rgba(76,59,177,1);
+    border-radius:0.38rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(255,255,255,1);
+    cursor: pointer;
+    outline: none;
+    margin-top:2rem;
+}
+.sub-speaker-div{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    overflow-y: scroll;
+}
+.sub-speaker-title {
+    width:10.69rem;
+    height:1.88rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(102,102,102,1);
+    line-height:1.88rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.remove-all-speaker {
+    margin-right: 1rem;
+    width:12.95rem;
+    height:1.88rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(76,59,177,1);
+    line-height:1.88rem;
+    cursor: pointer;
+}
+.speaker-line{
+    width:35.18rem;
+    height:0.09rem;
+    background:rgba(243,243,243,1);
+    margin-left: 2rem;
+}
+
+.speaker-content{
+    height:48rem;
+    overflow-y: scroll;
+}
+
+.speaker-group-member-div {
+    overflow-y: scroll;
+}
+
+.remove_speaker_btn {
+    width:4.69rem;
+    height:2.63rem;
+    border-radius:0.38rem;
+    border:0.09rem solid rgba(76,59,177,1);
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(76,59,177,1);
+    cursor: pointer;
+    outline: none;
+}
+.speaker_remove_people, .speaker_add_people {
+    cursor: pointer;
+    outline: none;
+}
+.remove_member_btn_div {
+    cursor: pointer;
+    outline: none;
+    margin-right: 1rem;
+    margin-top: 1rem;
+}
+
+.add_speaker_btn {
+    width:4.69rem;
+    height:2.63rem;
+    background:rgba(76,59,177,1);
+    border-radius:0.38rem;
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    cursor: pointer;
+    outline: none;
+}
 .remove-people-div {
     overflow: scroll;
     height: 45rem;
+}
+
+.speaker-people-div {
 }
 
 #group-invite-people .pw-right {
     width: 30rem;
     display: flex;
     flex-direction: column;
-    margin-left: 1rem;
 }
 
 .pw-right-header {
-    height: 3.75rem;
     overflow: hidden;
+    height:4.69rem;
+    background:rgba(255,255,255,1);
+    box-shadow:0rem 0.09rem 0.38rem 0rem rgba(223,223,223,1);
+
     display: flex;
     align-items: center;
 
@@ -995,18 +1154,17 @@ html, body{
     width:4.68rem;
     height:4.68rem;
 }
- .unread-num {
+.unread-num {
     top:1.5rem;
     right:1rem;
     width: 2rem;
     height: 2rem;
-
     background-color: red;
     position: absolute;
     border-radius: 50%;
     color: white;
-     text-align: center;
-     line-height: 2rem;
+    text-align: center;
+    line-height: 2rem;
 }
 
 .unread-num-mute {
@@ -1077,7 +1235,7 @@ html, body{
 }
 
 /*.logout:hover {*/
-    /*background-color: #4C3BB1;*/
+/*background-color: #4C3BB1;*/
 /*}*/
 
 .permission-join, .can-guest-read-message, .quit-group,
@@ -1095,11 +1253,13 @@ html, body{
 
 .mute {
     position: absolute;
-
     bottom: 1rem;
     right: 2rem;
     top: 4rem;
+    width: 1.4rem;
+    height: 1.5rem;
 }
+
 .mute_div {
     background-color: red;
     width: 1rem;
@@ -1137,6 +1297,23 @@ html, body{
     font-size:1.13rem;
     color:rgba(153,153,153,1);
 }
+.group-member-body {
+    height: 14rem;
+}
+.group-member-body-div {
+    display: flex;
+}
+.see_all_group_member {
+    height:1.5rem;
+    font-size:1.31rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(76,59,177,1);
+    line-height:1.5rem;
+    cursor: pointer;
+    outline: none;
+}
+
 .group-desc-body textarea {
     width:24.27rem;
     height:13.04rem;
@@ -1204,9 +1381,10 @@ html, body{
     color:rgba(153,153,153,1);
     display: block;
 }
-.share-group {
+.share-group , .group_speakers{
     cursor: pointer;
 }
+
 #share_group {
     width:75rem;
     height: 47rem;
@@ -1322,25 +1500,15 @@ button:active{
     cursor: pointer;
 }
 
-.appDownload {
-    cursor: pointer;
-    text-align: center;
-    width:8rem;
-    left:-0.3rem;
-    position: absolute;
-    bottom:2rem;
-    cursor: pointer;
-}
-
-.qrcodeCanvas {
-    width:23rem;
-    height: 23rem;
-    text-align: center;
-    background:rgba(255,255,255,1);
-    box-shadow:0rem 0.19rem 0.75rem 0.09rem rgba(223,223,223,1);
-    border-radius:0.56rem;
-    padding:1rem 0rem 0rem 1rem ;
-}
+/*.qrcodeCanvas {*/
+    /*width:23rem;*/
+    /*height: 23rem;*/
+    /*text-align: center;*/
+    /*background:rgba(255,255,255,1);*/
+    /*box-shadow:0rem 0.19rem 0.75rem 0.09rem rgba(223,223,223,1);*/
+    /*border-radius:0.56rem;*/
+    /*padding:1rem 0rem 0rem 1rem ;*/
+/*}*/
 
 .group_avatar {
     width:6rem;
@@ -1506,9 +1674,189 @@ button:active{
     cursor: pointer;
 }
 
-#selfQrcode{
-    padding: 1rem;
-    box-shadow: 0rem 0.19rem 0.75rem 0.09rem rgba(223,223,223,1);
-    border-radius: 0.56rem;
+#selfQrcodeCanvas {
+    height: 100%;
+    margin-top: 3rem;
+}
+
+#selfQrcode {
+    width: 17rem;
+    height:17rem;
+}
+
+#download-app-div {
+    width:75.05rem;
+    height:46.9rem;
+    background:rgba(255,255,255,1);
+    border-radius:0.94rem;
+}
+.app_download_header {
+    height:3.1rem;
+    font-size:2.25rem;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+    color:rgba(20,16,48,1);
+    line-height:3.1rem;
+    display: flex;
+    justify-content: center;
+    margin-top:3rem;
+    margin-bottom: 1rem;
+}
+
+.app_download_subheader {
+    height:2.35rem;
+    font-size:1.69rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(20,16,48,1);
+    line-height:2.35rem;
+    display: flex;
+    justify-content: center;
+}
+
+#download-app-div #qrcodeCanvas {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+.ios_info, .android_info {
+    width:11rem;
+    height:1.88rem;
+    font-size:2.25rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(102,102,102,1);
+    display: flex;
+}
+
+.download_button_div {
+    display: flex;
+    justify-content: space-between;
+    width: 24rem;
+}
+
+
+.download_ios {
+    width:11.26rem;
+    height:3.75rem;
+    background:rgba(99,169,255,1);
+    border-radius:0.38rem;
+    border:0.19rem solid rgba(76,169,255,1);
+    margin-left: 25rem;
+    margin-top:3rem;
+    font-size:1.88rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    line-height: 3.75rem;
+    margin-right: 2rem;
+    outline:  none;
     cursor: pointer;
+}
+
+.download_android {
+    width:11.26rem;
+    height:3.75rem;
+    margin-top:3rem;
+    background:rgba(90,200,44,1);
+    border:0.19rem solid rgba(90,200,44,1);
+    border-radius:0.38rem;
+    font-size:1.88rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    outline:  none;
+    cursor: pointer;
+}
+
+.left_msg_file_div {
+    width:23.64rem;
+    height:6.94rem;
+    background:rgba(255,255,255,1);
+    box-shadow:0rem 0.09rem 0.38rem 0rem rgba(233,233,233,1);
+    border-radius:0.56rem 0rem 0.56rem 0.56rem;
+    display: flex;
+    cursor: pointer;
+}
+
+.left_msg_file_div img {
+    width:5rem;
+    height:5rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+
+.msg_file_info {
+    font-size:1.31rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(33,33,33,1);
+    margin-left: 1rem;
+    margin-top:2rem;
+}
+
+.msg_file_size {
+    color:rgba(153,153,153,1);
+}
+
+.right_msg_file_div {
+    width:23.64rem;
+    height:6.94rem;
+    background:rgba(255,255,255,1);
+    border-radius:0.56rem 0rem 0.56rem 0.56rem;
+    border:0.09rem solid rgba(243,243,243,1);
+    display: flex;
+    justify-content:space-between;
+    cursor: pointer;
+}
+
+.right_msg_file_div img {
+    width:5rem;
+    height:5rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+
+.right_msg_file_info {
+    font-size:1.31rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(33,33,33,1);
+    margin-left:1rem;
+    margin-top:2rem;
+    text-align: left;
+    width: 17rem;
+}
+
+.group_owner{
+    height:1.69rem;
+    background:rgba(244,67,54,1);
+    border: 0.09rem solid rgba(244,67,54,1);
+    border-radius:0.19rem;
+    font-size:0.94rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+}
+
+.group_admin{
+    height:1.69rem;
+    background:rgba(47,182,161,1);
+    border: 0.09rem solid rgba(47,182,161,1);
+    border-radius:0.19rem;
+    font-size:0.94rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+}
+.remove_group_btn{
+    height:2.63rem;
+    border-radius:0.38rem;
+    border:0.09rem solid rgba(76,59,177,1);
+    font-size:1.13rem;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+    color:rgba(76,59,177,1);
+    cursor: pointer;
+    outline: none;
 }

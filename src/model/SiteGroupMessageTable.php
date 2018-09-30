@@ -310,7 +310,8 @@ class SiteGroupMessageTable extends BaseTable
         $sql = "select 
                     siteGroupUser.userId,
                     siteGroupMessage.groupId,
-                    siteGroupMessage.content
+                    siteGroupMessage.content,
+                    siteGroupMessage.msgType
                 from 
                     siteGroupMessage
                 inner join 

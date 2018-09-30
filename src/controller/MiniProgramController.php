@@ -15,9 +15,13 @@ abstract class MiniProgramController extends \Wpf_Controller
 {
     protected $logger;
 
+    /**
+     * @var \Zaly\Proto\Core\PublicUserProfile
+     */
+    protected $userProfile;
     protected $userId;
-    protected $userInfo;
-    protected $sessionId;
+    protected $loginName;
+
     protected $success = "success";
     protected $error = "error.alert";
 
@@ -25,7 +29,7 @@ abstract class MiniProgramController extends \Wpf_Controller
 
     protected $language = Zaly\Proto\Core\UserClientLangType::UserClientLangEN;
     protected $requestData;
-    protected $loginName;
+
 
     public function __construct(Wpf_Ctx $context)
     {
@@ -86,6 +90,7 @@ abstract class MiniProgramController extends \Wpf_Controller
                 throw new Exception("get empty user profile by duckchat_sessionid error");
             }
 
+            $this->userProfile = $userPublicProfile;
             $this->userId = $userPublicProfile->getUserId();
             $this->loginName = $userPublicProfile->getLoginName();
             $this->ctx->Wpf_Logger->info("", "Mini Program Request UserId=" . $this->userId);
@@ -270,7 +275,7 @@ abstract class MiniProgramController extends \Wpf_Controller
 
     protected function getAndSetClientLang()
     {
-        $headLang = $_GET['lang'];
+        $headLang = isset($_GET['lang']) ? $_GET['lang'] : "";
 
         if (isset($headLang) && $headLang == Zaly\Proto\Core\UserClientLangType::UserClientLangZH) {
             $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangZH;
@@ -284,6 +289,16 @@ abstract class MiniProgramController extends \Wpf_Controller
     protected function getCurrentTimeMills()
     {
         return ZalyHelper::getMsectime();
+    }
+
+    protected function finish_request()
+    {
+        if (!function_exists("fastcgi_finish_request")) {
+            function fastcgi_finish_request()
+            {
+            }
+        }
+        fastcgi_finish_request();
     }
 
 }

@@ -27,48 +27,53 @@ class Duckchat_Message_SendController extends Duckchat_MiniProgramController
      */
     public function rpc(\Google\Protobuf\Internal\Message $request, \Google\Protobuf\Internal\Message $transportData)
     {
-        $message = $request->getMessage();
 
-        $fromUserId = $message->getFromUserId();
+        try {
+            $message = $request->getMessage();
+            $fromUserId = $message->getFromUserId();
+            $msgRoomType = $message->getRoomType();
+            $msgId = $message->getMsgId();
+            $msgType = $message->getType();
+            $result = false;
+            if (Zaly\Proto\Core\MessageRoomType::MessageRoomGroup == $msgRoomType) {
+                $this->isGroupRoom = true;
+                $this->toId = $message->getToGroupId();
 
-        $msgRoomType = $message->getRoomType();
-        $msgId = $message->getMsgId();
-        $msgType = $message->getType();
+                //if group exist isLawful
+                $isLawful = $this->checkGroupExisted($this->toId);
+                if (!$isLawful) {
+                    //if group is not exist
+                    $noticeText = "group chat is not exist";
+                    $this->returnGroupNotLawfulMessage($msgId, $msgRoomType, $fromUserId, $this->toId, $noticeText);
+                    return;
+                }
 
-        $result = false;
+                $result = $this->ctx->Message_Client->sendGroupMessage($msgId, $fromUserId, $this->toId, $msgType, $message);
 
-        if (Zaly\Proto\Core\MessageRoomType::MessageRoomGroup == $msgRoomType) {
-            $this->isGroupRoom = true;
-            $this->toId = $message->getToGroupId();
+            } else if (Zaly\Proto\Core\MessageRoomType::MessageRoomU2 == $msgRoomType) {
+                $this->isGroupRoom = false;
+                $this->toId = $message->getToUserId();
 
-            //if group exist isLawful
-            $isLawful = $this->checkGroupExisted($this->toId);
-            if (!$isLawful) {
-                //if group is not exist
-                $noticeText = "group chat is not exist";
-                $this->returnGroupNotLawfulMessage($msgId, $msgRoomType, $fromUserId, $this->toId, $noticeText);
-                return;
+                $fromMsgId = $this->buildU2MsgId($fromUserId);
+                $result = $this->ctx->Message_Client->sendU2Message($fromMsgId, $this->toId, $fromUserId, $this->toId, $msgType, $message);
+                $this->ctx->Message_News->tellClientNews(false, $this->toId);
+
+                $toMsgId = $this->buildU2MsgId($this->toId);
+                $result = $this->ctx->Message_Client->sendU2Message($toMsgId, $fromUserId, $fromUserId, $this->toId, $msgType, $message);
+                $this->ctx->Message_News->tellClientNews(false, $fromUserId);
+
             }
 
-            $result = $this->ctx->Message_Client->sendGroupMessage($msgId, $fromUserId, $this->toId, $msgType, $message);
 
-        } else if (Zaly\Proto\Core\MessageRoomType::MessageRoomU2 == $msgRoomType) {
-            $this->isGroupRoom = false;
-            $this->toId = $message->getToUserId();
+            $this->returnSuccessRPC(new \Zaly\Proto\Plugin\DuckChatMessageSendResponse());
 
-            $fromMsgId = $this->buildU2MsgId($fromUserId);
-            $result = $this->ctx->Message_Client->sendU2Message($fromMsgId, $this->toId, $fromUserId, $this->toId, $msgType, $message);
-
-            $toMsgId = $this->buildU2MsgId($this->toId);
-            $result = $this->ctx->Message_Client->sendU2Message($toMsgId, $fromUserId, $this->toId, $fromUserId, $msgType, $message);
-
-            $this->ctx->Message_News->tellClientNews($this->isGroupRoom, $fromUserId);
+            $this->returnMessage($msgId, $msgRoomType, $msgType, $message, $fromUserId, $this->toId, $result);
+        } catch (Exception $e) {
+            $this->logger->error($this->action, $e);
+            $this->returnErrorRPC(new \Zaly\Proto\Plugin\DuckChatMessageSendResponse(), $e);
         }
 
-        $this->returnMessage($msgId, $msgRoomType, $msgType, $message, $fromUserId, $this->toId, $result);
-
         $this->ctx->Wpf_Logger->error("duckchat.message.send", "");
-
         return;
     }
 

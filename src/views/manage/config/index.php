@@ -213,7 +213,7 @@
             line-height: 20px;
             margin-top: 65px;
             width: 250px;
-            height: 20px;
+            height: 25px;
             overflow: hidden;
         }
 
@@ -325,6 +325,9 @@
             transform: translateX(20px);
         }
 
+        .select-color-primary {
+            color: #4C3BB1;
+        }
     </style>
 
 </head>
@@ -338,8 +341,7 @@
 
         <div class="list-item-center">
 
-            <!--      part1: site name      -->
-            <div class="item-row" id="site-name">
+            <div class="item-row" id="site-name" onclick="showSiteName()">
                 <div class="item-body">
                     <div class="item-body-display">
 
@@ -539,6 +541,28 @@
                             <?php } ?>
                         </div>
 
+                    </div>
+
+                </div>
+            </div>
+            <div class="division-line"></div>
+
+            <div class="item-row" id="file-max-size">
+                <div class="item-body">
+                    <div class="item-body-display">
+                        <?php if ($lang == "1") { ?>
+                            <div class="item-body-desc">文件大小</div>
+                        <?php } else { ?>
+                            <div class="item-body-desc">File Size</div>
+                        <?php } ?>
+
+                        <div class="item-body-tail">
+                            <div class="item-body-value"><?php echo $maxFileSize ?></div>
+                            &nbsp;(M)
+                            <div class="item-body-value"><img class="more-img"
+                                                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAnCAYAAAAVW4iAAAABfElEQVRIS8WXvU6EQBCAZ5YHsdTmEk3kJ1j4HDbGxMbG5N7EwkIaCy18DxtygMFopZ3vAdkxkMMsB8v+XqQi2ex8ux/D7CyC8NR1fdC27RoRszAMv8Ux23ccJhZFcQoA9wCQAMAbEd0mSbKxDTzM6wF5nq+CIHgGgONhgIi+GGPXURTlLhDstDRN8wQA5zOB3hljFy66sCzLOyJaL6zSSRdWVXVIRI9EdCaDuOgavsEJY+wFEY8WdmKlS5ZFMo6xrj9AF3EfukaAbcp61TUBdJCdn85J1yzApy4pwJeuRYAPXUqAqy4tgIsubYCtLiOAjS5jgKkuK8BW1w0APCgOo8wKMHcCzoA+AeDSGKA4AXsOEf1wzq/SNH01AtjUKG2AiZY4jj9GXYWqazDVIsZT7sBGizbAVosWwEWLEuCqZRHgQ4sU4EvLLMCnlgnAt5YRYB9aRoD/7q77kivWFlVZ2R2XdtdiyTUNqpNFxl20bBGT7ppz3t12MhctIuwXEK5/O55iCBQAAAAASUVORK5CYII="/>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -906,7 +930,7 @@
     <div class="config-hidden" id="popup-group">
 
         <div class="flex-container">
-            <div class="header_tip_font popup-group-title">创建群组</div>
+            <div class="header_tip_font popup-group-title"></div>
         </div>
 
         <div class="" style="text-align: center">
@@ -1179,7 +1203,7 @@
     }
 
 
-    $(document).mouseup(function (e) {
+    $(".wrapper-mask").mouseup(function (e) {
         var targetId = e.target.id;
         var targetClassName = e.target.className;
 
@@ -1199,6 +1223,27 @@
             wrapperMask.style.visibility = "hidden";
         }
     });
+
+    // $(document).mouseup(function (e) {
+    //     var targetId = e.target.id;
+    //     var targetClassName = e.target.className;
+    //
+    //     if (targetId == "wrapper-mask") {
+    //         var wrapperMask = document.getElementById("wrapper-mask");
+    //         var length = wrapperMask.children.length;
+    //         var i;
+    //         for (i = 0; i < length; i++) {
+    //             var node = wrapperMask.children[i];
+    //             node.remove();
+    //             // addTemplate(node);
+    //             $(".popup-template").append(node);
+    //             $(".popup-template").hide();
+    //         }
+    //         $(".popup-group-input").val("");
+    //         $("#updatePopupButton").attr("data", "");
+    //         wrapperMask.style.visibility = "hidden";
+    //     }
+    // });
 
 
     $(function () {
@@ -1234,7 +1279,18 @@
         }
     }
 
-    $(document).on("click", "#site-name", function () {
+    function showSiteName() {
+        var title = $("#site-name").find(".item-body-desc").html();
+        var inputBody = $("#site-name").find(".item-body-value").html();
+
+        showWindow($(".config-hidden"));
+
+        $(".popup-group-title").html(title);
+        $(".popup-group-input").val(inputBody);
+        $("#updatePopupButton").attr("key-value", "name");
+    }
+
+    $("#file-max-size").click(function () {
         var title = $(this).find(".item-body-desc").html();
         var inputBody = $(this).find(".item-body-value").html();
 
@@ -1242,10 +1298,10 @@
 
         $(".popup-group-title").html(title);
         $(".popup-group-input").val(inputBody);
-        $("#updatePopupButton").attr("key-value", "name");
+        $("#updatePopupButton").attr("key-value", "maxFileSize");
     });
 
-    $(document).on("click", "#group-max-members", function () {
+    $("#group-max-members").click(function () {
         var title = $(this).find(".item-body-desc").html();
         var inputBody = $(this).find(".item-body-value").html();
 
@@ -1268,7 +1324,7 @@
     }
 
 
-    $(document).on("click", "#web-ws-port", function () {
+    $("#web-ws-port").click(function () {
         var title = $(this).find(".item-body-desc").html();
         var inputBody = $(this).find(".item-body-value").html();
 
@@ -1591,8 +1647,7 @@
     });
 
 
-    //push 推送 类型
-    $(document).on("click", '#push-notice-type', function () {
+    $("#push-notice-type").click(function () {
         var language = getLanguage();
 
         /**
@@ -1607,7 +1662,7 @@
             },
             actions: [{
                 text: language == 0 ? "Show Content" : "显示文本内容",
-                className: "color-primary weui-dialog__btn",
+                className: "select-color-primary",
                 onClick: function () {
                     $("#push-notice-type-text").html(language == 0 ? "Show Content" : "显示文本内容");
                     $("#push-notice-type").attr("data", "2");
@@ -1615,7 +1670,7 @@
                 }
             }, {
                 text: language == 0 ? "Hide Content" : "不显示文本内容",
-                className: "color-primary weui-dialog__btn",
+                className: "select-color-primary",
                 onClick: function () {
                     $("#push-notice-type-text").html(language == 0 ? "Hide Content" : "不显示文本内容");
                     $("#push-notice-type").attr("data", "1");
@@ -1623,7 +1678,7 @@
                 }
             }, {
                 text: language == 0 ? "Push Disable" : "禁止推送通知",
-                className: "color-primary weui-dialog__btn",
+                className: "select-color-primary",
                 onClick: function () {
                     $("#push-notice-type-text").html(language == 0 ? "Push Disable" : "禁止推送通知");
                     $("#push-notice-type").attr("data", "0");

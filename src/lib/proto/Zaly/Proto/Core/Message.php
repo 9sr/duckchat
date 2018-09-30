@@ -52,9 +52,39 @@ class Message extends \Google\Protobuf\Internal\Message
     protected $toRoom;
     protected $maybe;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $msgId
+     *           basic info
+     *     @type string $fromUserId
+     *     @type int|string $pointer
+     *     @type int|string $timeServer
+     *     @type int $roomType
+     *           type info
+     *     @type string $toUserId
+     *     @type string $toGroupId
+     *     @type int $type
+     *           body info
+     *     @type \Zaly\Proto\Core\TextMessage $text
+     *     @type \Zaly\Proto\Core\ImageMessage $image
+     *     @type \Zaly\Proto\Core\AudioMessage $audio
+     *     @type \Zaly\Proto\Core\WebMessage $web
+     *     @type \Zaly\Proto\Core\StatusMessage $status
+     *     @type \Zaly\Proto\Core\NoticeMessage $notice
+     *     @type \Zaly\Proto\Core\WebNoticeMessage $webNotice
+     *     @type \Zaly\Proto\Core\DocumentMessage $document
+     *     @type \Zaly\Proto\Core\VideoMessage $video
+     *     @type bool $treatPointerAsU2Pointer
+     *           reverts 15-50
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Message::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -395,6 +425,50 @@ class Message extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkMessage($var, \Zaly\Proto\Core\WebNoticeMessage::class);
         $this->writeOneof(15, $var);
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>.core.DocumentMessage document = 16;</code>
+     * @return \Zaly\Proto\Core\DocumentMessage
+     */
+    public function getDocument()
+    {
+        return $this->readOneof(16);
+    }
+
+    /**
+     * Generated from protobuf field <code>.core.DocumentMessage document = 16;</code>
+     * @param \Zaly\Proto\Core\DocumentMessage $var
+     * @return $this
+     */
+    public function setDocument($var)
+    {
+        GPBUtil::checkMessage($var, \Zaly\Proto\Core\DocumentMessage::class);
+        $this->writeOneof(16, $var);
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>.core.VideoMessage video = 17;</code>
+     * @return \Zaly\Proto\Core\VideoMessage
+     */
+    public function getVideo()
+    {
+        return $this->readOneof(17);
+    }
+
+    /**
+     * Generated from protobuf field <code>.core.VideoMessage video = 17;</code>
+     * @param \Zaly\Proto\Core\VideoMessage $var
+     * @return $this
+     */
+    public function setVideo($var)
+    {
+        GPBUtil::checkMessage($var, \Zaly\Proto\Core\VideoMessage::class);
+        $this->writeOneof(17, $var);
 
         return $this;
     }

@@ -54,9 +54,27 @@ class PluginProfile extends \Google\Protobuf\Internal\Message
      */
     private $userSessionId = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type int $id
+     *     @type string $name
+     *     @type string $logo
+     *     @type int $order
+     *     @type string $landingPageUrl
+     *     @type bool $landingPageWithProxy
+     *     @type int[]|\Google\Protobuf\Internal\RepeatedField $usageTypes
+     *     @type int $loadingType
+     *     @type int $permissionType
+     *     @type string $userSessionId
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Core\Plugin::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

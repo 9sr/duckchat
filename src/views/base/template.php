@@ -44,6 +44,35 @@
         </div>
     </div>
 
+    <div id="group-speaker-people" class="pop-window pop-window-speaker-people">
+        <div class="pw-right-header" style="justify-content: center" data-local-value="speakerTip" >Group spokesman</div>
+        <div class="sub-speaker-div">
+            <div class="sub-speaker-title" data-local-value="currentSpeakerTip"> 当前发言人 </div>
+            <div class="remove-all-speaker" data-local-value="removeAllSpeakerTip"> 移除所有发言人 </div>
+        </div>
+        <div class="speaker-line"></div>
+        <div class="speaker-content">
+            <div class="speaker-people-div" style="width: 100%;">
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="group-member-list-div" class="pop-window pop-window-member-people">
+        <div class="group-member-info" style="display: none">
+
+        </div>
+        <div id="group-member-list" class="pop-window pop-window-member-people">
+
+            <div>
+                <div class="pw-right-header" style="justify-content: center" data-local-value="groupMembersTip" >Group members</div>
+
+                <div class="group-member-content">
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="create-group">
         <div class="close_div">
@@ -54,7 +83,7 @@
         </div>
 
         <div class="d-flex flex-row justify-content-center">
-            <input type="text" class="form-control group_name create_group_box_div_input"  data-local-placeholder="enterGroupNamePlaceholder" placeholder="Please Enter Group Name" >
+            <input type="text" class="form-control group_name create_group_box_div_input"  onkeydown="createGroupByKeyDown(event)"  data-local-placeholder="enterGroupNamePlaceholder" placeholder="Please Enter Group Name" >
         </div>
 
         <div class="line"></div>
@@ -77,7 +106,7 @@
         </div>
 
         <div class="d-flex flex-row justify-content-center" style="">
-            <input type="text" class="form-control remark_name create_group_box_div_input "  data-local-placeholder="remarkNamePlaceholder"  placeholder="Please Enter Remark Name" >
+            <input type="text" class="form-control remark_name create_group_box_div_input " onkeydown="editFriendRemarkByKeyDown(event)" data-local-placeholder="remarkNamePlaceholder"  placeholder="Please Enter Remark Name" >
         </div>
 
         <div class="line"></div>
@@ -137,6 +166,10 @@
 
     <div id="share_group" >
 
+    </div>
+
+    <div id="download-app-div">
+        
     </div>
 </div>
 

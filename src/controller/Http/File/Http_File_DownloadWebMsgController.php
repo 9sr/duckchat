@@ -29,11 +29,11 @@ class Http_File_DownloadWebMsgController extends \HttpBaseController
                 $info = $this->ctx->SiteU2MessageTable->queryMessageByMsgId([$msgId]);
 
                 if(!$info) {
-                    throw new Exception("can't u2 load file");
+                    throw new Exception("no msg, can't u2 load file");
                 }
                 $info = array_shift($info);
                 if($info['fromUserId'] != $this->userId && $info['toUserId'] != $this->userId) {
-                    throw new Exception("can't u2 load file");
+                    throw new Exception("no permission, can't u2 load file");
                 }
             }
             $contentJson = $info['content'];

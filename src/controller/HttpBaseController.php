@@ -28,6 +28,7 @@ abstract class HttpBaseController extends \Wpf_Controller
         "page.passport.login",
         "page.passport.account",
         "page.jump",
+        "http.file.downloadGif"
     ];
     private $groupType = "g";
     private $u2Type = "u";
@@ -40,7 +41,6 @@ abstract class HttpBaseController extends \Wpf_Controller
 
     public function __construct(BaseCtx $context)
     {
-
         if (!$this->checkDBIsExist()) {
             $initUrl = ZalyConfig::getConfig("apiPageSiteInit");
             header("Location:" . $initUrl);
@@ -233,6 +233,7 @@ abstract class HttpBaseController extends \Wpf_Controller
         $params['jumpRoomId'] = $this->jumpRoomId;
         $params['jumpRoomType'] = $this->jumpRoomType;
         $params['jumpRelation'] = $this->jumpRelation;
+        $params['versionCode'] = ZalyConfig::getConfig("siteVersionCode");
 
         return parent::display($viewName, $params);
     }

@@ -240,44 +240,53 @@ class Im_Cts_SyncController extends Im_BaseController
                     }
                 }
 
+                $content = $u2OrGroupMessage["content"];
+
                 switch ($message->getType()) {
                     case \Zaly\Proto\Core\MessageType::MessageNotice:
-                        $contentMsg = new \Zaly\Proto\Core\NoticeMessage();
-                        $contentMsg->mergeFromJsonString($u2OrGroupMessage["content"]);
+                        $contentMsg = ZalyText::buildMessageNotice($content, $this->language);
                         $message->setNotice($contentMsg);
                         break;
                     case \Zaly\Proto\Core\MessageType::MessageText:
-                        $contentMsg = new \Zaly\Proto\Core\TextMessage();
-                        $contentMsg->mergeFromJsonString($u2OrGroupMessage["content"]);
+                        $contentMsg = ZalyText::buildMessageText($content, $this->language);
                         $message->setText($contentMsg);
                         break;
                     case \Zaly\Proto\Core\MessageType::MessageImage:
                         $contentMsg = new \Zaly\Proto\Core\ImageMessage();
-                        $contentMsg->mergeFromJsonString($u2OrGroupMessage["content"]);
+                        $contentMsg->mergeFromJsonString($content);
                         $message->setImage($contentMsg);
                         break;
                     case \Zaly\Proto\Core\MessageType::MessageAudio:
                         $contentMsg = new \Zaly\Proto\Core\AudioMessage();
-                        $contentMsg->mergeFromJsonString($u2OrGroupMessage["content"]);
+                        $contentMsg->mergeFromJsonString($content);
                         $message->setAudio($contentMsg);
                         break;
                     case \Zaly\Proto\Core\MessageType::MessageWeb:
                         $contentMsg = new \Zaly\Proto\Core\WebMessage();
-                        $contentMsg->mergeFromJsonString($u2OrGroupMessage["content"]);
+                        $contentMsg->mergeFromJsonString($content);
                         $message->setWeb($contentMsg);
                         break;
                     case \Zaly\Proto\Core\MessageType::MessageWebNotice:
                         $contentMsg = new \Zaly\Proto\Core\WebNoticeMessage();
-                        $contentMsg->mergeFromJsonString($u2OrGroupMessage["content"]);
+                        $contentMsg->mergeFromJsonString($content);
                         $message->setWebNotice($contentMsg);
                         break;
                     case \Zaly\Proto\Core\MessageType::MessageEventFriendRequest:
                         $this->ctx->Wpf_Logger->error("im.stc.message", "sync MessageEventFriendRequest");
                         break;
+                    case Zaly\Proto\Core\MessageType::MessageDocument:
+                        $documentMsg = new Zaly\Proto\Core\DocumentMessage();
+                        $documentMsg->mergeFromJsonString($content);
+                        $message->setDocument($documentMsg);
+                        break;
+                    case Zaly\Proto\Core\MessageType::MessageVideo:
+                        $vedioMsg = new Zaly\Proto\Core\VideoMessage();
+                        $vedioMsg->mergeFromJsonString($content);
+                        $message->setVideo($vedioMsg);
+                        break;
                     default:
                         $this->ctx->Wpf_Logger->error("im.stc.message", "sync message with error msgType");
                 }
-
                 $message->setTimeServer($u2OrGroupMessage["msgTime"]);
                 $list[] = $message;
             }

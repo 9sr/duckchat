@@ -67,9 +67,8 @@ function handleImSendRequest(action, reqData, callback)
         var header = {};
         header[HeaderSessionid] = sessionId;
         header[HeaderHostUrl] = originDomain;
-        header[HeaderUserClientLang] = languageName  == "en-US" ? UserClientLangEN : UserClientLangZH;
+        header[HeaderUserClientLang] = getLanguage();
         header[HeaderUserAgent] = navigator.userAgent;
-
         var packageId = localStorage.getItem(PACKAGE_ID);
 
         var transportData = {
@@ -125,7 +124,7 @@ function handleReceivedImMessage(resp, callback)
 
         if(result.header != undefined && result.header.hasOwnProperty(HeaderErrorCode)) {
             if(result.header[HeaderErrorCode] != "success") {
-                if(result.header[HeaderErrorCode] == ErrorSessionCode ) {
+                if(result.header[HeaderErrorCode] == ErrorSessionCode || result.header[HeaderErrorCode] == ErrorSiteInit) {
                     if(wsImObj != "" && wsImObj != undefined) {
                         wsImObj.close();
                     }

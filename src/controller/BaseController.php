@@ -157,6 +157,7 @@ abstract class BaseController extends \Wpf_Controller
             $this->rpcReturn($this->action, null);
             exit();
         }
+
         $this->ctx = new BaseCtx();
         $this->logger = new Wpf_Logger();
     }
@@ -374,8 +375,6 @@ abstract class BaseController extends \Wpf_Controller
         $headers = $requestTransportData->getHeader();
 
         $headLang = isset($headers[TransportDataHeaderKey::HeaderUserClientLang]) ? $headers[TransportDataHeaderKey::HeaderUserClientLang] : "";
-
-        $this->ctx->Wpf_Logger->info("client-language", "==" . $headLang);
 
         if (isset($headLang) && $headLang == Zaly\Proto\Core\UserClientLangType::UserClientLangZH) {
             $this->language = Zaly\Proto\Core\UserClientLangType::UserClientLangZH;

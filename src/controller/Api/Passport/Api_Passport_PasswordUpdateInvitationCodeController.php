@@ -72,7 +72,7 @@ class Api_Passport_PasswordUpdateInvitationCodeController extends BaseController
 
             $this->ctx->BaseTable->db->beginTransaction();
 
-            if($userInfo['invitationCode'] != $invitationCode) {
+            if($userInfo['invitationCode'] !== $invitationCode) {
                 $updateData = [
                     "invitationCode" => $invitationCode,
                 ];

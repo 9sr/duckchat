@@ -5,7 +5,7 @@
 namespace Zaly\Proto\Core;
 
 /**
- * Protobuf enum <code>Core\PluginUsageType</code>
+ * Protobuf type <code>core.PluginUsageType</code>
  */
 class PluginUsageType
 {
