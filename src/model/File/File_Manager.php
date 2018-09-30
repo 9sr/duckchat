@@ -375,9 +375,6 @@ class File_Manager
     {
         if($maxFileSize ) {
             $maxFileSizeKB = $maxFileSize*1024*1024;
-            error_log("maxFileSizeKB =====" .$maxFileSizeKB);
-            error_log("fileSize =====" .$fileSize);
-
             if($maxFileSizeKB < $fileSize) {
                 return false;
             }
