@@ -921,9 +921,55 @@ function addOwnerAndAdminsToGroupMemberList()
     }
 }
 
+function handleGetGroupMemberInfo(result)
+{
+    if(result == undefined) {
+        return;
+    }
+    var profile = result.profile;
+
+    if(profile != undefined && profile["profile"]) {
+        var userProfile = profile["profile"];
+        var relation = profile.relation == undefined ? FriendRelation.FriendRelationInvalid : profile.relation;
+
+        var html = template("tpl-group-member-info", {
+            userId : userProfile.userId,
+            nickname:userProfile.nickname,
+            loginName:userProfile.loginName,
+            relation:relation
+        });
+        html = handleHtmlLanguage(html);
+        $(".group-member-info").html(html);
+        getNotMsgImg(userProfile.userId, userProfile.avatar);
+        $(".group-member-info")[0].style.display='block';
+    }
+    handleGetFriendProfile(result);
+}
+
+$(document).on("click", ".open_chat", function () {
+    var userId = $(this).attr("userId");
+    openU2Chat(userId);
+    removeWindow($("#group-member-list-div"));
+});
+$(document).on("click", ".add-friend-by-group-member",function () {
+    var userId = $(this).attr("userId");
+    sendFriendApplyReq(userId, "", "");
+    $(this).attr("disabled", "disabled");
+    alert("发送申请成功");
+    $(".group-member-info")[0].style.display='none';
+});
+
+
+$(document).on("click", ".group-member", function (event) {
+    event.stopPropagation();
+    event.preventDefault();
+    var userId = $(this).attr("userId");
+    getFriendProfile(userId, true, handleGetGroupMemberInfo);
+});
+
 $(document).on("click", ".see_all_group_member", function () {
     groupMemberListOffset = 0;
-    showWindow($("#group-member-list"));
+    showWindow($("#group-member-list-div"));
     $(".group-member-content").html("");
     addOwnerAndAdminsToGroupMemberList();
     getGroupMembers(groupMemberListOffset, defaultCountKey, initGroupMemberForGroupMemberList);
@@ -1025,7 +1071,7 @@ $(document).on("click", ".u2-profile", function () {
     $(".user-image-for-add").attr("class", "user-image-for-add");
     $(".user-image-for-add").attr("src", "../../public/img/msg/default_user.png");
 
-    var friendProfile = getFriendProfile(userId, true);
+    var friendProfile = getFriendProfile(userId, true, handleGetFriendProfile);
     var nickname = template("tpl-string", {
         string : friendProfile.nickname
     });
@@ -1186,7 +1232,7 @@ function handleGetGroupProfile(result)
     }
 }
 
-function getFriendProfile(userId, isForceSend)
+function getFriendProfile(userId, isForceSend, callback)
 {
     var friendInfoReqKey = reqProfile + userId;
     var nowTimestamp = Date.parse(new Date());
@@ -1200,7 +1246,7 @@ function getFriendProfile(userId, isForceSend)
         if(!userProfile.hasOwnProperty("nickname")) {
             userProfile['nickname'] = defaultUserName;
         }
-        if ((nowTimestamp - userProfile['updateTime'] ) < ProfileTimeout) {
+        if ((nowTimestamp - userProfile['updateTime'] ) < ProfileTimeout && isForceSend == false) {
             return userProfile;
         }
     }
@@ -1208,17 +1254,17 @@ function getFriendProfile(userId, isForceSend)
         return false;
     }
     sessionStorage.setItem(friendInfoReqKey, nowTimestamp);
-    sendFriendProfileReq(userId);
-    return false;
+    sendFriendProfileReq(userId, callback);
+    return userProfile;
 }
 
-function sendFriendProfileReq(userId)
+function sendFriendProfileReq(userId, callback)
 {
     var action = "api.friend.profile";
     var reqData = {
         "userId" : userId
     };
-    handleClientSendRequest(action, reqData, handleGetFriendProfile);
+    handleClientSendRequest(action, reqData, callback);
 }
 
 function handleGetFriendProfile(result)
@@ -1473,7 +1519,7 @@ $(document).on("click", ".create_group_button" , function(){
     createGroup();
 });
 
-function createGroupByKeyPress(event)
+function createGroupByKeyDown(event)
 {
 
     if(checkIsEnterBack(event) == false) {
@@ -1702,8 +1748,12 @@ function  getGroupOwner(groupProfile)
 $(document).on("click", "#open-temp-chat", function () {
     var node = $(this)[0].parentNode;
     var userId = $(node).attr("userId");
+    openU2Chat(userId);
+});
+
+function openU2Chat(userId)
+{
     if(userId == undefined) {
-        alert("not found userId by click open-temp-chat");
         return ;
     }
     localStorage.setItem(chatSessionIdKey, userId);
@@ -1712,7 +1762,7 @@ $(document).on("click", "#open-temp-chat", function () {
     sendFriendProfileReq(userId);
     handleMsgRelation(undefined, userId);
     insertU2Room(userId);
-});
+}
 
 function insertU2Room(userId)
 {
@@ -1749,7 +1799,7 @@ function updateInfo(profileId, profileType)
     var name ;
     var mute;
     if(profileType == U2_MSG) {
-        var friendProfile = getFriendProfile(profileId, false);
+        var friendProfile = getFriendProfile(profileId, false, handleGetFriendProfile);
         name = friendProfile != false && friendProfile != null ? friendProfile.nickname : "";
         getNotMsgImg(friendProfile.userId, friendProfile.avatar);
     } else {
@@ -1793,7 +1843,7 @@ function displayCurrentProfile()
             $(".add_friend")[0].style.display="inline";
             $(".user-image-for-add").addClass("info-avatar-"+chatSessionId);
 
-            var friendProfile = getFriendProfile(chatSessionId, false);
+            var friendProfile = getFriendProfile(chatSessionId, false, handleGetFriendProfile);
 
             if(friendProfile) {
                 var nickname = friendProfile.nickname;
@@ -2034,7 +2084,7 @@ function hideGroupUserMenu()
 $(document).on("click", ".edit-remark", function () {
     var userId = localStorage.getItem(chatSessionIdKey);
     $("#edit-remark").attr("userId", userId);
-    var userProfile = getFriendProfile(userId, false);
+    var userProfile = getFriendProfile(userId, false, handleGetFriendProfile);
     if(userProfile) {
         $(".remark_name").val(userProfile['nickname']);
     }
@@ -2370,7 +2420,7 @@ function displayAddFriend(userId)
 {
 
     $("#add-friend-div").attr("userId", userId);
-    var friendProfile = getFriendProfile(userId, true);
+    var friendProfile = getFriendProfile(userId, true,handleGetFriendProfile);
     var nickname = friendProfile != false ? friendProfile.nickname : "";
     var html = template("tpl-add-friend-div", {
         nickname: nickname,
@@ -2387,12 +2437,20 @@ $(document).on("click", ".apply-friend", function () {
     applyFriend();
 });
 
+function addFriendByKeyDown(event)
+{
+    if(checkIsEnterBack(event)) {
+        applyFriend();
+    }
+}
+
 function applyFriend() {
     var userId = $("#add-friend-div").attr("userId");
     var greetings = $(".apply-friend-reason").val();
     sendFriendApplyReq(userId, greetings, handleApplyFriend);
 
 }
+
 function sendFriendApplyReq(userId, greetings, callback)
 {
     var action = "api.friend.apply";
@@ -2779,7 +2837,7 @@ function getSelfQrcode() {
 
 function updateSelfNickName(event)
 {
-    if(checkIsEnterBack() == false) {
+    if(checkIsEnterBack(event) == false) {
         return;
     }
     var nickname = $(".nickname").val();

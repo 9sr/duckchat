@@ -247,7 +247,7 @@ function handleMsgInfo(msg)
     var unreadMuteKey = msgUnReadMuteKey+msg.chatSessionId;
     msg.isMuteMsgNum = localStorage.getItem(unreadMuteKey) == 1 ? 1 : 0;
 
-    var userProfile = getFriendProfile(userId);
+    var userProfile = getFriendProfile(userId, handleGetFriendProfile());
     if(userProfile) {
         msg.nickname   = userProfile['nickname'];
         msg.userAvatar = userProfile['avatar'];
