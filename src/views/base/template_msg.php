@@ -652,7 +652,7 @@
         </div>
 
         <div class="d-flex flex-row justify-content-center" >
-            <input type="text" class="form-control  create_group_box_div_input apply-friend-reason" data-local-placeholder="addFriendReasonPlaceholder"  placeholder="Please Enter Introduce" >
+            <input type="text" class="form-control  create_group_box_div_input apply-friend-reason" onkeydown="addFriendByKeyDown(event)" data-local-placeholder="addFriendReasonPlaceholder"  placeholder="Please Enter Introduce" >
         </div>
 
         <div class="line"></div>

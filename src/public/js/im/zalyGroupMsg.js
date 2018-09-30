@@ -2437,12 +2437,20 @@ $(document).on("click", ".apply-friend", function () {
     applyFriend();
 });
 
+function addFriendByKeyDown(event)
+{
+    if(checkIsEnterBack(event)) {
+        applyFriend();
+    }
+}
+
 function applyFriend() {
     var userId = $("#add-friend-div").attr("userId");
     var greetings = $(".apply-friend-reason").val();
     sendFriendApplyReq(userId, greetings, handleApplyFriend);
 
 }
+
 function sendFriendApplyReq(userId, greetings, callback)
 {
     var action = "api.friend.apply";
