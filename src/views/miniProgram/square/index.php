@@ -256,7 +256,7 @@
                                     </button>
                                 <?php } else { ?>
                                     <button class="chatButton" userId="<?php echo $user['userId'] ?>">
-                                        发起会话
+                                        已添加
                                     </button>
                                 <?php } ?>
 
@@ -475,7 +475,7 @@
         var friendId = $(this).attr("userId");
         var url = "duckchat://0.0.0.0/goto?page=u2Profile&x=" + friendId;
         try {
-            zalyjsGotoPage(url);
+            // zalyjsGotoPage(url);
         } catch (e) {
             alert(getLanguage() == 1 ? "客户端暂不支持，请升级客户端" : "Please upgrade the client version.");
         }
@@ -580,7 +580,8 @@
                     if (!user['isFollow']) {
                         userHtml += '<button class="addButton applyButton" userId="' + user["userId"] + '" > 添加好友 </button>';
                     } else {
-                        userHtml += '<button class="chatButton" userId="' + user["userId"] + '" > 发起会话 </button>';
+                        // userHtml += '<button class="chatButton" userId="' + user["userId"] + '" > 发起会话 </button>';
+                        userHtml += '<button class="chatButton" userId="' + user["userId"] + '" > 已添加 </button>';
                     }
 
 
