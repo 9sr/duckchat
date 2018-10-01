@@ -26,7 +26,6 @@ abstract class HttpBaseController extends \Wpf_Controller
         "page.js",
         "page.siteConfig",
         "page.passport.login",
-        "page.passport.account",
         "page.jump"
     ];
     private $groupType = "g";
