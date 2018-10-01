@@ -23,24 +23,24 @@
         </div>
 
         <div class="pw-right">
-            <div class="pw-right-header justify-content-center" data-local-value="selectContactTip">Selected Contact</div>
+            <div class="pw-right-header justify-content-center" data-local-value="selectContactTip">选择好友</div>
             <div class="pw-right-body">
 
             </div>
             <div class="pw-right-btn">
-                <button class="btn-default cancle_invite_people" data-local-value="cancelTip">Cancel</button>
-                <button class="btn-primary add_member_to_group" data-local-value="addTip">Add</button>
+                <button class="btn-default cancle_invite_people" data-local-value="cancelTip">取消</button>
+                <button class="btn-primary add_member_to_group" data-local-value="addTip">添加</button>
             </div>
         </div>
     </div>
 
     <div id="group-remove-people" class="pop-window pop-window-remove-people">
-        <div class="pw-right-header" style="justify-content: center" data-local-value="removeTip" >Select Member For Remove</div>
+        <div class="pw-right-header" style="justify-content: center" data-local-value="removeTip">移除群成员</div>
 
         <div class="remove-people-div" style="width: 100%;">
         </div>
         <div style="text-align: center;">
-            <button class="btn-primary remove_member_from_group" style="font-size:1.67rem;" data-local-value="removeGroupMemberTip">Remove Member</button>
+            <button class="btn-primary remove_member_from_group" style="font-size:1.67rem;" data-local-value="removeGroupMemberTip">removeGroupMemberTip</button>
         </div>
     </div>
 
@@ -66,7 +66,7 @@
         <div id="group-member-list" class="pop-window pop-window-member-people">
 
             <div>
-                <div class="pw-right-header" style="justify-content: center" data-local-value="groupMembersTip" >Group members</div>
+                <div class="pw-right-header" style="justify-content: center" data-local-value="groupMemberTip">群成员</div>
 
                 <div class="group-member-content">
                 </div>
@@ -79,21 +79,21 @@
             <img src="../../public/img/close.png" onclick="closeMaskDiv('#create-group');">
         </div>
         <div class="flex-container justify-content-center" >
-            <div class="header_tip_font align-items-center"  data-local-value="createGroupTip">Create Group</div>
+            <div class="header_tip_font align-items-center"  data-local-value="createGroupTip">创建群组</div>
         </div>
 
         <div class="d-flex flex-row justify-content-center">
-            <input type="text" class="form-control group_name create_group_box_div_input"  onkeydown="createGroupByKeyDown(event)"  data-local-placeholder="enterGroupNamePlaceholder" placeholder="Please Enter Group Name" >
+            <input type="text" class="form-control group_name create_group_box_div_input"  onkeydown="createGroupByKeyDown(event)"  data-local-placeholder="enterGroupNamePlaceholder" placeholder="请输入群组名称" >
         </div>
 
         <div class="line"></div>
 
         <div  class="d-flex flex-row justify-content-center  data_tip" data-local-value="createGroupNameTip">
-            The Length Of Group Name between 1 and 20
+            群组名称长度限制1-10
         </div>
 
         <div class="d-flex flex-row justify-content-center width-percent100 margin-top10" style="text-align:center; ">
-            <button type="button" class="btn create_button create_group_button" data-local-value="createTip">Create</button>
+            <button type="button" class="btn create_button create_group_button" data-local-value="createTip">创建</button>
         </div>
     </div>
 
@@ -102,18 +102,17 @@
             <img src="../../public/img/close.png" onclick="closeMaskDiv('#edit-remark');">
         </div>
         <div class="flex-container" style="display: flex;justify-content: center;">
-            <div class="header_tip_font align-items-center" data-local-value="editRemarkTip">Edit Remark</div>
+            <div class="header_tip_font align-items-center" data-local-value="editRemarkTip">修改备注</div>
         </div>
 
         <div class="d-flex flex-row justify-content-center" style="">
-            <input type="text" class="form-control remark_name create_group_box_div_input " onkeydown="editFriendRemarkByKeyDown(event)" data-local-placeholder="remarkNamePlaceholder"  placeholder="Please Enter Remark Name" >
+            <input type="text" class="form-control remark_name create_group_box_div_input " onkeydown="editFriendRemarkByKeyDown(event)" data-local-placeholder="remarkNamePlaceholder"  placeholder="请输入备注" >
         </div>
 
         <div class="line"></div>
 
-
         <div class="d-flex flex-row justify-content-center width-percent100 margin-top10" style="text-align:center; ">
-            <button type="button" class="btn create_button edit_remark_for_friend" data-local-value="sureTip">Sure</button>
+            <button type="button" class="btn create_button edit_remark_for_friend" data-local-value="sureTip">保存</button>
         </div>
     </div>
 
@@ -132,13 +131,13 @@
         </div>
         <div class="flex-container" style="display: flex;justify-content: center;">
             <div class="header_tip_line_left "></div>
-            <div class="header_tip_font  font-size-12  align-items-center" data-local-value="joinGroupPermissionsTip">Add Group Permissions</div>
+            <div class="header_tip_font  font-size-12  align-items-center" data-local-value="joinGroupPermissionsTip">邀请入群权限</div>
             <div class="header_tip_line_right"></div>
         </div>
 
         <div class="d-flex flex-row" style="margin-top: 5rem; margin-left:23rem;">
             <div class="permission-join-operation join-by-admin">
-                <div class="d-flex flex-row" style="width: 50%"  data-local-value="groupAdminTip">Administrator Invitation</div>
+                <div class="d-flex flex-row" style="width: 50%"  data-local-value="groupAdminInvitationTip">管理员邀请</div>
                 <div  class="d-flex flex-row ">
                     <img class="imgDiv" src="../../public/img/msg/member_unselect.png"  permissionJoin="GroupJoinPermissionAdmin">
                 </div>
@@ -152,7 +151,7 @@
                 </div>
             </div>
             <div class="permission-join-operation join-by-public">
-                <div class="d-flex flex-row" style="width: 50%" data-local-value="groupPublicTip"> Public</div>
+                <div class="d-flex flex-row" style="width: 50%" data-local-value="groupPublicTip"> 公开</div>
                 <div class="d-flex flex-row ">
                     <img class="imgDiv" src="../../public/img/msg/member_unselect.png" permissionJoin="GroupJoinPermissionPublic">
                 </div>
@@ -160,7 +159,7 @@
         </div>
 
         <div class="d-flex flex-row justify-content-center width-percent100 margin-top10" style="text-align:center; ">
-            <button type="button" class="btn create_button save-permission-join" style="margin-bottom: 5rem;" data-local-value="saveTip">Save</button>
+            <button type="button" class="btn create_button save-permission-join" style="margin-bottom: 5rem;" data-local-value="saveTip">保存</button>
         </div>
     </div>
 

@@ -27,8 +27,7 @@ abstract class HttpBaseController extends \Wpf_Controller
         "page.siteConfig",
         "page.passport.login",
         "page.passport.account",
-        "page.jump",
-        "http.file.downloadGif"
+        "page.jump"
     ];
     private $groupType = "g";
     private $u2Type = "u";
@@ -50,11 +49,6 @@ abstract class HttpBaseController extends \Wpf_Controller
         $this->logger = $context->getLogger();
         $this->ctx = $context;
 
-        $flag = $this->ctx->Site_Config->getConfigValue(SiteConfig::SITE_OPEN_WEB_EDITION);
-        if ($flag != 1) {
-            echo "该站点没有开起web版本";
-            die();
-        }
     }
 
 
@@ -76,6 +70,11 @@ abstract class HttpBaseController extends \Wpf_Controller
             }
 
             if (!in_array($action, $this->whiteAction)) {
+                $flag = $this->ctx->Site_Config->getConfigValue(SiteConfig::SITE_OPEN_WEB_EDITION);
+                if ($flag != 1) {
+                    echo "该站点没有开起web版本";
+                    die();
+                }
                 $this->getUserIdByCookie();
             }
 

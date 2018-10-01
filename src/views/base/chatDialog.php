@@ -120,7 +120,7 @@
             <div class="input-box">
                 <div id="msgImage">
                 </div>
-                <textarea class="input-box-text msg_content" placeholder="Type a message…." id="msg_content"></textarea>
+                <textarea class="input-box-text msg_content" placeholder="输入消息…."data-local-placeholder="enterMsgContentPlaceholder"  id="msg_content"></textarea>
 
                 <div class="input-btn">
                     <button class="send_msg" data-local-value="sendTip">发送</button>
@@ -149,7 +149,7 @@
 
                 <div class="group-desc">
                     <div class="group-desc-title" style="position: relative" data-local-value="groupProfileDescTip">群介绍</div>
-                    <button class="save_group_introduce" style=" margin-top: -2rem;" data-local-value="saveGroupDescTip">Save</button>
+                    <button class="save_group_introduce" style=" margin-top: -2rem;" data-local-value="saveGroupDescTip">保存</button>
 
                     <div class="group-desc-body">
                         <textarea class="group-introduce"></textarea>
