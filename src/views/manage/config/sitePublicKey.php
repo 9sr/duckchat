@@ -6,112 +6,8 @@
     <title><?php if ($lang == "1") { ?>站点公钥<?php } else { ?>Site Public Key<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!--    <link rel=stylesheet href="../../public/css/manage_base.css"/>-->
-
+    <link rel="stylesheet" href="../../public/manage/config.css"/>
     <style>
-
-        html, body {
-            padding: 0px;
-            margin: 0px;
-            font-family: PingFangSC-Regular, "MicrosoftYaHei";
-            /*overflow: hidden;*/
-            width: 100%;
-            height: 100%;
-            background: rgba(245, 245, 245, 1);
-            font-size: 14px;
-
-        }
-
-        .wrapper {
-            width: 100%;
-            height: 100%;
-            /*display: flex;*/
-            align-items: stretch;
-        }
-
-        .layout-all-row {
-            width: 100%;
-            /*background: white;*/
-            background: rgba(245, 245, 245, 1);;
-            /*display: flex;*/
-            /*align-items: stretch;*/
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .item-row {
-            background: rgba(255, 255, 255, 1);
-            display: flex;
-            flex-direction: row;
-            text-align: center;
-            height: 44px;
-        }
-
-        /*.item-row:hover{*/
-        /*background: rgba(255, 255, 255, 0.2);*/
-        /*}*/
-
-        .item-row:active {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .item-bottom {
-            background: rgba(245, 245, 245, 1);
-            display: flex;
-            flex-direction: row;
-            text-align: center;
-            height: 25px;
-        }
-
-        .item-body {
-            width: 100%;
-            height: 44px;
-            flex-direction: row;
-        }
-
-        .list-item-center {
-            width: 100%;
-            /*height: 11rem;*/
-            /*background: rgba(255, 255, 255, 1);*/
-            padding-bottom: 11px;
-            /*padding-left: 1rem;*/
-
-        }
-
-        .item-body-display {
-            display: flex;
-            justify-content: space-between;
-            /*margin-right: 7rem;*/
-            /*margin-bottom: 3rem;*/
-            height: 100%;
-            /*line-height: 3rem;*/
-        }
-
-        .item-body-desc {
-            height: 44px;
-            font-size: 16px;
-            /*color: rgba(76, 59, 177, 1);*/
-            margin-left: 10px;
-            line-height: 44px;
-        }
-
-        .line {
-            width: 28.14rem;
-            height: 0.01rem;
-            border: 0.09rem solid rgba(153, 153, 153, 1);
-            overflow: hidden;
-            text-align: center;
-            margin: 0 auto;
-            margin-top: 0.1rem;
-        }
-
-        .division-line {
-            height: 1px;
-            background: rgba(243, 243, 243, 1);
-            margin-left: 40px;
-            overflow: hidden;
-        }
-
         .site-pubk-pem {
             height: 230px;
             background: rgba(245, 245, 245, 1);
@@ -179,7 +75,7 @@
 
 </div>
 
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+<script type="text/javascript" src="../../public/jquery/jquery-3.3.1.min.js"></script>
 
 <script type="text/javascript">
 

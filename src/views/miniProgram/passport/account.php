@@ -18,12 +18,12 @@
     <div class="zaly_login zaly_site_register zaly_site_register-repwd" >
         <div class="login_input_div" >
             <div class="d-flex flex-row justify-content-center login-header " style="text-align: center;margin-top: 8rem;">
-                <span class="login_phone_tip_font"  data-local-value="resetPwdTip">Reset Password</span>
+                <span class="login_phone_tip_font"  data-local-value="resetPwdTip">重置密码</span>
             </div>
 
             <div class="login_name_div login_name_div_mobile">
                 <image src="../../public/img/login/loginName.png" class="img"/>
-                <input type="text" class="input_login_site forget_input_loginName" datatype="s" autocapitalize="off"  data-local-placeholder="loginNamePlaceholder" placeholder="Please Enter LoginName">
+                <input type="text" class="input_login_site forget_input_loginName" datatype="s" autocapitalize="off"  data-local-placeholder="loginNamePlaceholder" placeholder="输入登录名">
                 <img src="../../../public/img/msg/msg_failed.png" class="img-failed forget_input_loginName_failed">
                 <div class="line"></div>
             </div>
@@ -31,7 +31,7 @@
 
             <div class="login_name_div forget_input_pwd_div margin-top2"  >
                 <image src="../../public/img/login/pwd.png" class="img"/>
-                <input type="password" class="input_login_site forget_input_oldPwd" autocapitalize="off"  data-local-placeholder="enterOldPasswordPlaceholder"  placeholder="Please Enter Password" >
+                <input type="password" class="input_login_site forget_input_oldPwd" autocapitalize="off"  data-local-placeholder="enterOldPasswordPlaceholder"  placeholder="输入旧密码" >
                 <div class="pwd_div" onclick="changeImgByClickOldPwd()"><image src="../../public/img/login/hide_pwd.png" class="oldPwd" img_type="hide"/></div>
                 <img src="../../../public/img/msg/msg_failed.png" class="img-failed forget_input_oldPwd_failed">
 
@@ -40,7 +40,7 @@
 
             <div class="login_name_div forget_input_pwd_div margin-top2"  >
                 <image src="../../public/img/login/pwd.png" class="img"/>
-                <input type="password" class="input_login_site forget_input_pwd"  autocapitalize="off"  data-local-placeholder="enterPasswordPlaceholder"  placeholder="Please Enter Password" >
+                <input type="password" class="input_login_site forget_input_pwd"  autocapitalize="off"  data-local-placeholder="enterPasswordPlaceholder"  placeholder="输入密码,长度5到20个字符" >
                 <div class="pwd_div" onclick="changeImgByClickPwd()"><image src="../../public/img/login/hide_pwd.png" class="pwd" img_type="hide"/></div>
                 <img src="../../../public/img/msg/msg_failed.png" class="img-failed forget_input_pwd_failed">
 
@@ -49,7 +49,7 @@
 
             <div class="login_name_div forget_input_repwd_div margin-top2" >
                 <image src="../../public/img/login/re_pwd.png" class="img"/>
-                <input type="password" class="input_login_site forget_input_repwd" autocapitalize="off"   data-local-placeholder="enterRepasswordPlaceholder"  placeholder="Please Enter Password Again"  >
+                <input type="password" class="input_login_site forget_input_repwd" autocapitalize="off"   data-local-placeholder="enterRepasswordPlaceholder"  placeholder="再次输入密码"  >
                 <div class="repwd_div" onclick="changeImgByClickRepwd()"><image src="../../public/img/login/hide_pwd.png" class="repwd" img_type="hide"/></div>
                 <img src="../../../public/img/msg/msg_failed.png" class="img-failed forget_input_repwd_failed">
 
@@ -57,7 +57,7 @@
             </div>
 
             <div class="d-flex flex-row justify-content-center ">
-                <button type="button" class="btn reset_pwd_button"><span class="span_btn_tip" data-local-value="updatePwdTip">Update Password</span></button>
+                <button type="button" class="btn reset_pwd_button"><span class="span_btn_tip" data-local-value="updatePwdTip">修改密码</span></button>
             </div>
         </div>
     </div>

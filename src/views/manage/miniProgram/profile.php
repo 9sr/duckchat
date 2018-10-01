@@ -6,9 +6,8 @@
     <title><?php if ($lang == "1") { ?>小程序资料<?php } else { ?>Mini Program Profile<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
-
-    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.css"/>
+    <link rel="stylesheet" href="../../public/jquery/weui.min.css"/>
+    <link rel="stylesheet" href="../../public/jquery/jquery-weui.min.css"/>
 
     <style>
 
@@ -22,8 +21,6 @@
             background: rgba(245, 245, 245, 1);
             font-size: 14px;
             overflow-x: hidden;
-            overflow-y: hidden;
-
         }
 
         /* mask and new window */
@@ -794,11 +791,9 @@
 </div>
 
 
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
-<script src="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.js"></script>
-
-<!--<script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"></script>-->
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>
+<script type="text/javascript" src="../../public/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../../public/jquery/jquery-weui.min.js"></script>
+<script type="text/javascript" src="../../public/js/jquery-confirm.js"></script>
 
 <script type="text/javascript">
 

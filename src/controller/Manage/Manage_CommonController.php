@@ -16,7 +16,7 @@ abstract class Manage_CommonController extends MiniProgramController
 
     protected function getMiniProgramId()
     {
-        return 101;
+        return 100;
     }
 
 

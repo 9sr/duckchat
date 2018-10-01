@@ -6,8 +6,6 @@
     <title><?php if ($lang == "1") { ?>群资料<?php } else { ?>Group Profile<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!--    <link rel=stylesheet href="../../public/css/manage_base.css"/>-->
-
     <style>
 
         html, body {
@@ -330,9 +328,6 @@
 
     </style>
 
-
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
-
 </head>
 
 <body>
@@ -596,6 +591,8 @@
 
 </div>
 
+
+<script type="text/javascript" src="../../public/jquery/jquery-3.3.1.min.js"></script>
 
 <script type="text/javascript">
 

@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+<script src="../../public/js/jquery.min.js?_version=<?php echo $versionCode?>"></script>
 
 <script src="../../public/js/im/zalyKey.js"></script>
 <script src="../../public/js/im/zalyAction.js"></script>

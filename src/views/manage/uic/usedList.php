@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title><?php if ($lang == "1") { ?>已使用邀请码<?php } else { ?>Used Invitation Code<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.css" rel="stylesheet">
 
     <style>
 
@@ -373,9 +372,7 @@
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
-<script src="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.js"></script>
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>
+<script type="text/javascript" src="../../public/jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
 
     function isAndroid() {

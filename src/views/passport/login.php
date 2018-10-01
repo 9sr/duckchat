@@ -5,10 +5,10 @@
     <title>站点登录</title>
     <!-- Latest compiled and minified CSS -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="../../public/css/login.css">
+    <link rel="stylesheet" href="../../public/css/login.css?_version=<?php echo $versionCode?>">
     <script type="text/javascript" src="../../public/js/jquery.min.js"></script>
     <script src="../../public/js/jquery.i18n.properties.min.js"></script>
-        <script src="../../public/js/zalyjsNative.js"></script>
+        <script src="../../public/js/zalyjsNative.js?_version=<?php echo $versionCode?>"></script>
     <script src="../../public/js/template-web.js"></script>
 
 </head>
@@ -147,11 +147,11 @@
 </div>
 <?php include(dirname(__DIR__) . '/passport/template_login.php'); ?>
 
-<script src="../../public/js/im/zalyKey.js"></script>
-<script src="../../public/js/im/zalyAction.js"></script>
-<script src="../../public/js/im/zalyClient.js"></script>
-<script src="../../public/js/im/zalyBaseWs.js"></script>
-<script src="../../public/js/login/login.js"></script>
+<script src="../../public/js/im/zalyKey.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/im/zalyAction.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/im/zalyClient.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/im/zalyBaseWs.js?_version=<?php echo $versionCode?>"></script>
+<script src="../../public/js/login/login.js?_version=<?php echo $versionCode?>"></script>
 
 </body>
 </html>

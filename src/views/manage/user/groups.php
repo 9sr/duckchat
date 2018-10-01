@@ -6,9 +6,6 @@
     <title><?php if ($lang == "1") { ?>用户群组<?php } else { ?>User Groups<?php } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
-    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.css"/>
-
     <style>
 
         html, body {
@@ -479,9 +476,7 @@
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
-<script src="http://cdn.bootcss.com/jquery-confirm/3.1.0/jquery-confirm.min.js"></script>
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.js"></script>
+<script type="text/javascript" src="../../public/jquery/jquery-3.3.1.min.js"></script>
 
 <script type="text/javascript">
 
