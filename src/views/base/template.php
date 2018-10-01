@@ -40,12 +40,12 @@
         <div class="remove-people-div" style="width: 100%;">
         </div>
         <div style="text-align: center;">
-            <button class="btn-primary remove_member_from_group" style="font-size:1.67rem;" data-local-value="removeGroupMemberTip">removeGroupMemberTip</button>
+            <button class="btn-primary remove_member_from_group" style="font-size:1.67rem;" data-local-value="removeGroupMemberTip">移除成员</button>
         </div>
     </div>
 
     <div id="group-speaker-people" class="pop-window pop-window-speaker-people">
-        <div class="pw-right-header" style="justify-content: center" data-local-value="speakerTip" >Group spokesman</div>
+        <div class="pw-right-header" style="justify-content: center" data-local-value="speakerTip" >群发言人</div>
         <div class="sub-speaker-div">
             <div class="sub-speaker-title" data-local-value="currentSpeakerTip"> 当前发言人 </div>
             <div class="remove-all-speaker" data-local-value="removeAllSpeakerTip"> 移除所有发言人 </div>
