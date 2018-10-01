@@ -219,7 +219,7 @@
     </style>
 
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
-<!--    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.css"/>-->
+    <!--    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.css"/>-->
 </head>
 
 <body id="square-body">
@@ -306,7 +306,8 @@
 
 </div>
 
-<script type="text/javascript" src="../../public/js/jquery.min.js"></script>
+<!--<script type="text/javascript" src="../../public/js/jquery.min.js"></script>-->
+<script type="text/javascript" src="../../public/jquery/jquery-3.3.1.min.js"></script>
 
 <script type="text/javascript">
 
