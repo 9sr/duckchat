@@ -16,9 +16,11 @@ class Manage_Group_ProfileController extends Manage_CommonController
         $params = $this->getGroupProfile($groupId);
         $params['lang'] = $this->language;
 
-        $config = $this->ctx->SiteConfigTable->selectSiteConfig(SiteConfig::SITE_DEFAULT_GROUPS);
+        $config = $this->ctx->Site_Config->getAllConfig();
+//        $config = $this->ctx->SiteConfigTable->selectSiteConfig(SiteConfig::SITE_DEFAULT_GROUPS);
 
         $defaultGroupsStr = $config[SiteConfig::SITE_DEFAULT_GROUPS];
+        $maxGroupMembers = $config[SiteConfig::SITE_MAX_GROUP_MEMBERS];
 
         if ($defaultGroupsStr) {
             $defaultGroupsList = explode(",", $defaultGroupsStr);
@@ -27,6 +29,14 @@ class Manage_Group_ProfileController extends Manage_CommonController
                 $params['isDefaultGroup'] = 1;
             }
         }
+
+        $maxMembers = $params["maxMembers"];
+        if (empty($maxMembers)) {
+            $maxMembers = $maxGroupMembers;
+        } else {
+            $maxMembers = min($maxMembers, $maxGroupMembers);
+        }
+        $params["maxMembers"] = $maxMembers;
 
         echo $this->display("manage_group_profile", $params);
         return;

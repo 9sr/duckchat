@@ -13,9 +13,6 @@ class Manage_Group_DeleteController extends Manage_CommonController
     {
         $groupId = $_POST['groupId'];
 
-
-        $this->ctx->Wpf_Logger->info("-----manage.group.delete--------", "group=" . $groupId);
-
         $response = [
             'errCode' => "error",
         ];
@@ -37,7 +34,29 @@ class Manage_Group_DeleteController extends Manage_CommonController
 
     private function deleteGroup($groupId)
     {
-        return $this->ctx->SiteGroupTable->deleteGroup($groupId);
+        //删除群成员(必须先删除这里)
+        $result = $this->ctx->SiteGroupUserTable->deleteGroupMembers($groupId);
+
+        if ($result) {
+            //删除资料
+            $result = $this->ctx->SiteGroupTable->deleteGroup($groupId);
+        }
+
+        //删除群消息 && 群消息游标
+        $this->deleteGroupMessage($groupId);
+        return $result;
     }
 
+    private function deleteGroupMessage($groupId)
+    {
+        $tag = __CLASS__ . "->" . __FUNCTION__;
+        try {
+            $result = $this->ctx->SiteGroupMessageTable->deleteGroupMessage($groupId);
+            if ($result) {
+                $result = $this->ctx->SiteGroupMessageTable->deleteGroupMessagePointer($groupId);
+            }
+        } catch (Exception $e) {
+            $this->logger->error($tag, $e);
+        }
+    }
 }

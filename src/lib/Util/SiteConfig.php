@@ -116,6 +116,14 @@ class SiteConfig
         self::SITE_FILE_SIZE,
     ];
 
+    public static $numericKeys = [
+        self::SITE_MAX_GROUP_MEMBERS,
+        self::SITE_WS_PORT,
+        self::SITE_ZALY_PORT,
+        self::SITE_MOBILE_NUM,
+        self::SITE_WEB_NUM,
+        self::SITE_FILE_SIZE,
+    ];
 
     public static $siteConfig = [
         self::SITE_NAME => "duckchat-site",

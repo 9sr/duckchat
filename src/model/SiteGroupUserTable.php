@@ -31,6 +31,19 @@ class SiteGroupUserTable extends BaseTable
         return $this->insertData($this->table, $groupUserInfo, $this->columns);
     }
 
+    public function deleteGroupMembers($groupId)
+    {
+        $tag = __CLASS__ . '->' . __FUNCTION__;
+        $sql = "delete from $this->table where groupId=:groupId;";
+
+        $prepare = $this->db->prepare($sql);
+        $prepare->bindValue(":groupId", $groupId);
+
+        $result = $prepare->execute();
+
+        return $this->handlerResult($result, $prepare, $tag);
+    }
+
     public function updateGroupUserInfo($where, $data)
     {
         return $this->updateInfo($this->table, $where, $data, $this->columns);

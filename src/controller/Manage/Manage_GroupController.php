@@ -22,7 +22,7 @@ class Manage_GroupController extends Manage_CommonController
         }
 
         if (!$length) {
-            $length = 50;
+            $length = 500;
         }
 
         $params['groupList'] = $this->getGroupListByOffset($offset, $length);

@@ -37,6 +37,45 @@ class SiteGroupMessageTable extends BaseTable
     }
 
     /**
+     * 删除群的所有消息
+     * @param $groupId
+     * @return bool
+     * @throws Exception
+     */
+    function deleteGroupMessage($groupId)
+    {
+        $tag = __CLASS__ . '->' . __FUNCTION__;
+        $sql = "delete from $this->table where groupId=:groupId;";
+
+        $prepare = $this->db->prepare($sql);
+        $prepare->bindValue(":groupId", $groupId);
+
+        $result = $prepare->execute();
+
+        return $this->handlerResult($result, $prepare, $tag);
+    }
+
+    /**
+     * 删除群的所有游标
+     *
+     * @param $groupId
+     * @return bool
+     * @throws Exception
+     */
+    function deleteGroupMessagePointer($groupId)
+    {
+        $tag = __CLASS__ . '->' . __FUNCTION__;
+        $sql = "delete from $this->pointerTable where groupId=:groupId;";
+
+        $prepare = $this->db->prepare($sql);
+        $prepare->bindValue(":groupId", $groupId);
+
+        $result = $prepare->execute();
+
+        return $this->handlerResult($result, $prepare, $tag);
+    }
+
+    /**
      * 查询群组消息
      * @param $groupId
      * @param $offset

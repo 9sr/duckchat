@@ -26,6 +26,13 @@ class Manage_Config_UpdateController extends Manage_CommonController
                 throw new Exception("config key permission error");
             }
 
+            //判断是否为数字
+            if (in_array($configKey, SiteConfig::$numericKeys)) {
+                if (!is_numeric($configValue)) {
+                    throw new Exception("value error");
+                }
+            }
+
             if ("pluginPublicKey" == $configKey) {
                 $configValue = $this->ctx->ZalyHelper->generateStrKey(32);
             }

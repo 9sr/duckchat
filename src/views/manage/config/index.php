@@ -384,28 +384,29 @@
             </div>
             <div class="division-line"></div>
 
-<!--            <div class="item-row">-->
-<!--                <div class="item-body">-->
-<!--                    <div class="item-body-display">-->
-<!--                        --><?php //if ($lang == "1") { ?>
-<!--                            <div class="item-body-desc">开启Web版本</div>-->
-<!--                        --><?php //} else { ?>
-<!--                            <div class="item-body-desc">Open Web Edition</div>-->
-<!--                        --><?php //} ?>
-<!---->
-<!--                        <div class="item-body-tail">-->
-<!--                            --><?php //if ($openWebEdition == 1) { ?>
-<!--                                <input id="openWebEditionSwitch" class="weui_switch" type="checkbox" checked>-->
-<!--                            --><?php //} else { ?>
-<!--                                <input id="openWebEditionSwitch" class="weui_switch" type="checkbox">-->
-<!--                            --><?php //} ?>
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="division-line"></div>-->
+            <!--            <div class="item-row">-->
+            <!--                <div class="item-body">-->
+            <!--                    <div class="item-body-display">-->
+            <!--                        --><?php //if ($lang == "1") { ?>
+            <!--                            <div class="item-body-desc">开启Web版本</div>-->
+            <!--                        --><?php //} else { ?>
+            <!--                            <div class="item-body-desc">Open Web Edition</div>-->
+            <!--                        --><?php //} ?>
+            <!---->
+            <!--                        <div class="item-body-tail">-->
+            <!--                            --><?php //if ($openWebEdition == 1) { ?>
+            <!--                                <input id="openWebEditionSwitch" class="weui_switch" type="checkbox" checked>-->
+            <!--                            --><?php //} else { ?>
+            <!--                                <input id="openWebEditionSwitch" class="weui_switch" type="checkbox">-->
+            <!--                            --><?php //} ?>
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--            <div class="division-line"></div>-->
 
-<!--            <div class="web-condition" style='--><?php //echo $openWebEdition == 1 ? '' : 'display: none;'; ?><!--'>-->
+            <!--            <div class="web-condition" style='-->
+            <?php //echo $openWebEdition == 1 ? '' : 'display: none;'; ?><!--'>-->
             <div class="web-condition">
                 <div class="item-row" id="web-ws-port">
                     <div class="item-body">
@@ -823,7 +824,7 @@
         if ("success" == res.errCode) {
             window.location.reload();
         } else {
-            alert("error:" + result.errInfo);
+            alert("error : " + res.errInfo);
         }
     }
 

@@ -31,7 +31,7 @@ class Manage_UserController extends Manage_CommonController
             }
 
             if (empty($length)) {
-                $length = 50;
+                $length = 500;
             }
 
             $params['userList'] = $this->getUserListByOffset($offset, $length);

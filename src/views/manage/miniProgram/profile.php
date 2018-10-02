@@ -764,7 +764,7 @@
 </div>
 
 
-<div class="popup-template" style="visibility:hidden;">
+<div class="popup-template" style="display:none;">
 
     <div class="config-hidden" id="popup-group">
 

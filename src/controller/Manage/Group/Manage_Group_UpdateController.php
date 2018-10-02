@@ -47,6 +47,14 @@ class Manage_Group_UpdateController extends Manage_CommonController
                         throw new Exception("maxMembers is null");
                     }
 
+                    $siteGroupMaxMembers = $this->ctx->Site_Config->getConfigValue(SiteConfig::SITE_MAX_GROUP_MEMBERS);
+
+                    if (empty($siteGroupMaxMembers)) {
+                        $siteGroupMaxMembers = 100;
+                    }
+
+                    $updateValue = min($updateValue, $siteGroupMaxMembers);
+
                     if ($this->updateGroupProfile($groupId, $updateKey, $updateValue)) {
                         $response['errCode'] = "success";
                     }
