@@ -391,7 +391,7 @@ class InstallDBController
             ],
             [
                 'pluginId' => 101,
-                'name' => "平台登陆小程序",
+                'name' => "平台登陆",
                 'logo' => "",
                 'sort' => 101,
                 'landingPageUrl' => "http://open.akaxin.com:5208/index.php?action=page.login",
@@ -403,7 +403,7 @@ class InstallDBController
             ],
             [
                 'pluginId' => 102,
-                'name' => "密码登陆小程序",
+                'name' => "密码登陆",
                 'logo' => "",
                 'sort' => 102, //order = 102
                 'landingPageUrl' => "index.php?action=page.passport.login",
@@ -451,7 +451,7 @@ class InstallDBController
 //            ],
             [
                 'pluginId' => 105,
-                'name' => "账户密码管理小程序",
+                'name' => "账户密码管理",
                 'logo' => "",
                 'sort' => 104, //order = 2
                 'landingPageUrl' => "index.php?action=miniProgram.passport.account",
